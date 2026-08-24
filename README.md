@@ -189,6 +189,7 @@ it, and whether it has actually run.
 | `plugin/` | The Claude Code plugin. A skill is copied here once a confirmation run gives it a verdict |
 | `evals/` | `decision_evals`, the evaluation harness. Paired experiments, exact tests, cluster-aware resampling, and chance-corrected inter-rater reliability |
 | `datasets/` | The answer key: parameterised scenario templates with *computed* ground truth, the trigger corpus, and the SHA-256 lockfile for the third-party corpus `de fetch` downloads |
+| `preregistration/` | The contract a confirmation run is bound to, one file per skill per version: hypothesis, primary metric, item count, minimum detectable effect, alpha, guards, stopping rule, and a SHA-256 lock on both the skill body and the analysis code. `de confirm` refuses a run that does not match |
 | `results/` | Published run records: raw transcripts and a README per run |
 | `notebook/` | Append-only research log. Predictions go in *before* runs |
 | `docs/` | Protocol, status, the research programme, related work, limitations, and what was rejected. Start at [`docs/README.md`](docs/README.md), or [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit |

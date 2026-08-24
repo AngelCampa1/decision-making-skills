@@ -1,14 +1,22 @@
 # Decision register
 
-**Every change to `datasets/triggers/`, `datasets/tailoring/` or `skills/`
-needs an entry here, and `de check` refuses one that does not have it.**
+**Every change to `datasets/triggers/`, `datasets/tailoring/`, `skills/` or
+`evals/src/decision_evals/arenas.py` needs an entry here, and `de check` refuses
+one that does not have it.**
 
-Those paths are answer keys, or the product. A change to any of them moves
+The first three are answer keys, or the product. A change to any of them moves
 numbers that are already published: on 2026-08-13 one turn moved from the
 positives to the negatives, recall rose 3 to 5 points on every arm on disk, and
 **not one call was re-made**. That was a correct maintainer decision, and in a
 JSONL file it is indistinguishable from a model result. The reasoning has to
 live somewhere a reader of the numbers can reach.
+
+The fourth is the model registry, added 2026-08-24. `MODELS` in `arenas.py`
+decides which runs may become *evidence*: moving one row from `screen` to
+`confirm` promotes a whole venue's results, and moving one the other way demotes
+every number already published from it. Neither move shows up in a checkpoint, a
+label, or a diff of the answer key, which is the same invisibility the trigger
+labels had.
 
 The reasoning already existed — in commit bodies, and they are good ones. But
 `git log` is not greppable by topic and is invisible to anyone reading `docs/`.
@@ -1467,3 +1475,51 @@ lookup negatives and no near-miss, and `m25p` went to the most explicit
 recommendation phrasing available. Unanimity of 1.000 on three rewritten items
 is partly bought and nothing here measures how much. The `l24n1` repair moves
 one item back toward the line, and that is one item.
+
+## 2026-08-10 — The model registry, and the arena that may emit a verdict
+
+**Commits:** `6b642e9`
+
+Backfilled 2026-08-24, when `evals/src/decision_evals/arenas.py` joined the
+governed paths. Transcribed from the commit body, which carried the reasoning at
+the time; that body is the full argument.
+
+The commit created `ARENAS` and the model table behind it. Exactly one arena
+emits a verdict, and that arena is holdout-only, hash-locked and gated on a
+pre-registration. Model tier is checked in both directions: a frontier model in
+`dev` spends quota on a run that cannot produce a verdict, and a local model in
+`confirm` produces a verdict about a different model entirely. Neither is caught
+by any downstream analysis.
+
+`ollama` and `mockllm` landed in `dev`, `haiku` in `screen`, `sonnet` and `opus`
+in `confirm`. That single assignment is what decides which of this repository's
+runs are allowed to become evidence, and it has been true of every number
+published since.
+
+## 2026-08-21 — A third backend, and every model on it screens
+
+**Commits:** `a2e3b58`
+
+Backfilled 2026-08-24 for the same reason as the entry above. The commit body
+carries the measurements and the two canaries.
+
+`agy` 1.1.12 serves Gemini, Claude and GPT-OSS from one binary, which is the
+first thing on this machine that can support the claim ladder's sentence about
+frontier models in the plural. Three rows went into `MODELS`, all namespaced
+under `agy/`, and all three landed in `screen`.
+
+**The tier of the weights did not decide that.** `agy/gemini-3.1-pro-high` is a
+frontier model and sits in `screen` beside `agy/gpt-oss`. What decided it is the
+venue: a six-word prompt costs 13,742 input tokens on `gemini-3.7-flash-low` and
+15,750 on `claude-sonnet-4-6`, the `init` event declares 57 tools, and there is
+no `--system-prompt`, no `--tools` and no `--setting-sources` to remove any of
+it. The published arms are a bare description under a replaced system prompt
+where the description is most of the context. Here it would be about 1% of an
+agent scaffold.
+
+**The ids are namespaced because they collide.** `agy` serves a model it calls
+`claude-opus-4-6` and `claude -p` accepts that id too, so a bare id cannot say
+which venue answered. One of those venues is `confirm` tier and the other is a
+coding agent with 57 tools. `ModelEntry` keys the arena on the model **and** the
+backend for exactly this reason, and `assert_model_allowed` checks the backend
+against the registry rather than trusting the caller.

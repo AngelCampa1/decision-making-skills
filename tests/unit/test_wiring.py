@@ -334,6 +334,14 @@ def test_an_issue_renders_as_module_then_message() -> None:
 
 
 def test_census_reports_the_real_tree() -> None:
+    """Every floored module is reachable, and nothing is declared unwired.
+
+    This asserted the opposite until 2026-08-24: `floored > reachable` and at
+    least one declaration, which pinned the defect rather than the rule.
+    `decision_evals.prereg` was the module holding both halves open, and
+    `de confirm` is the caller that closed them. Written this way, the test goes
+    red the day a floored module loses its last caller.
+    """
     floored, reachable, declared = census(Path(__file__).resolve().parents[2])
-    assert floored > reachable >= 1
-    assert declared >= 1
+    assert floored == reachable >= 1
+    assert declared == 0

@@ -378,6 +378,7 @@ Every command the harness answers to:
 | Command | What it does |
 | --- | --- |
 | `de check` | Run the full local gate. No model calls, fully deterministic. |
+| `de confirm` | Check the pre-registration locks a confirmation run is bound to. |
 | `de deployed` | Report whether the published site is a build of the current `main`. |
 | `de drift` | List the documents whose subject has moved since anyone recorded reading them. |
 | `de fetch` | Download the vendored corpora and verify them against their locks. |
@@ -386,6 +387,7 @@ Every command the harness answers to:
 | `de mirror` | Regenerate the cross-tool mirrors (`.agents/skills/`, `CLAUDE.md`). |
 | `de power` | Print the minimum detectable effect across item counts and discordance. |
 | `de rescore` | Stamp every checkpoint with its answer key, and bridge the older ones. |
+| `de screen` | Run the screening instrument, forwarding every argument to its runner. |
 | `de site` | Build the site and record what it was built from. |
 | `de sync` | Rewrite every generated region and inline fact from its source. |
 <!-- /de:generated -->
