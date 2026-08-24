@@ -144,7 +144,7 @@ with every number in it derived in a comment above the fields.
 5. the supplied baseline accuracy falls inside the difficulty band;
 6. the projected cost is within budget.
 
-**All six run today, and the run still stops.** `decision_evals.prereg`
+**Five of the six bite today, and the run still stops.** `decision_evals.prereg`
 implements the refusals and `de confirm` is the caller that reaches them, which
 is what changed on 2026-08-24. The module carried a 100% line-and-branch
 coverage floor with nothing importing it, and this section described the
@@ -160,14 +160,22 @@ of the tree until a verdict publishes, and no confirmation runner reads it yet.
 making a call. Every number on record remains a `screen`-tier trigger
 measurement.
 
-**Point 2 is scoped to confirmation runs rather than to every run in
-`results/<skill>/`.** Screening precedes a pre-registration by design: it runs
-the public split, its items are disjoint from the holdout's, and its result
-never enters the final p-value. Counting a screening run as a postdiction would
-refuse every skill this repository has ever measured, and a gate no known-good
-case can pass is a gate somebody turns off. `cli.confirmation_runs` reads the
+**Point 2 is the sixth, and it is the one that does not bite yet.** It is scoped
+to confirmation runs rather than to every run in `results/<skill>/`, because
+screening precedes a pre-registration by design: screening runs the public
+split, its items are disjoint from the holdout's, and its result never enters
+the final p-value. Counting a screening run as a postdiction would refuse every
+skill this repository has ever measured, and a gate no known-good case can pass
+is a gate somebody turns off. `cli.confirmation_runs` reads the
 `**Pre-registration:**` line a confirmation run's README carries, which is the
 only thing in a run directory that separates the two.
+
+**Nothing writes that line and no gate requires it, so today the check passes
+over an empty set.** `de confirm` prints the count it checked against for that
+reason. Two things would close it: the confirmation runner writing the line, and
+a run-provenance rule refusing a run in the `confirm` arena that carries no
+pre-registration. Both belong with the runner. Until then point 2 **will
+refuse** a postdiction, and has never had one to refuse.
 
 Editing one word of a skill after pre-registration aborts the run and names the
 next version. Proceeding requires writing `-v2.yaml`, which is a new, dated,

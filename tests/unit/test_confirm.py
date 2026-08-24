@@ -117,6 +117,20 @@ class TestTheLocksAreReached:
         assert "both hash locks match" in result.output
         assert "holdout split and there is none on disk" in result.output
 
+    def test_the_holdout_readme_is_not_a_holdout(self, repo: Path) -> None:
+        """The real directory holds a README and no records, and must read as empty.
+
+        A looser pattern here would take that README for a split, report the
+        holdout present, and stop on the wrong sentence. ``HOLDOUT_GLOB`` is the
+        same pattern ``.gitignore`` excludes, which is what keeps a real split
+        both visible here and uncommittable.
+        """
+        (repo / "datasets" / "holdout").mkdir(parents=True)
+        (repo / "datasets" / "holdout" / "README.md").write_text("# empty\n", encoding="utf-8")
+        result = _confirm(repo)
+        assert result.exit_code == 1
+        assert "there is none on disk" in result.output
+
     def test_a_holdout_on_disk_stops_on_the_missing_runner_instead(self, repo: Path) -> None:
         """The other side of the same branch, so neither arm is a claim nobody checked."""
         (repo / "datasets" / "holdout").mkdir(parents=True)
@@ -271,17 +285,49 @@ class TestTheGatheredRepoState:
             "preregistration/x-v1.yaml", SKILL_NAME
         ).committed_and_clean
 
+    def test_a_failed_git_status_reads_as_dirty(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        """An answer git could not give is not an answer that the file is clean."""
+
+        def git(args: list[str]) -> str | None:
+            return None if args[0] == "status" else "deadbee"
+
+        monkeypatch.setattr(cli, "REPO_ROOT", tmp_path)
+        monkeypatch.setattr(cli, "_git_output", git)
+        state = cli._gather_repo_state("preregistration/x-v1.yaml", SKILL_NAME)
+        assert not state.committed_and_clean
+
     def test_a_preregistration_with_no_commit_is_not_on_this_history(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
     ) -> None:
+        """Ancestry is forced true, so only the empty sha can fail this."""
+
         def git(args: list[str]) -> str | None:
             return "" if args[0] in {"status", "log"} else "deadbee"
 
         monkeypatch.setattr(cli, "REPO_ROOT", tmp_path)
         monkeypatch.setattr(cli, "_git_output", git)
-        assert not cli._gather_repo_state(
-            "preregistration/x-v1.yaml", SKILL_NAME
-        ).is_ancestor_of_head
+        monkeypatch.setattr(cli, "_is_ancestor", lambda ancestor, descendant: True)
+        state = cli._gather_repo_state("preregistration/x-v1.yaml", SKILL_NAME)
+        assert not state.is_ancestor_of_head
+
+    def test_the_registering_commit_is_the_earliest_that_added_the_file(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        """``git log`` prints newest first, so the *last* line is the registration.
+
+        Reading the first line would date a pre-registration by the last time its
+        path was re-added, which is later, and later is weaker in the one
+        direction this check exists to be strong in.
+        """
+        monkeypatch.setattr(cli, "REPO_ROOT", tmp_path)
+        monkeypatch.setattr(
+            cli,
+            "_git_output",
+            lambda args: "1111111\n2222222\n3333333" if args[0] == "log" else "",
+        )
+        assert cli._first_commit_adding("preregistration/x-v1.yaml") == "3333333"
 
     def test_a_confirmation_run_the_preregistration_postdates_is_refused(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
@@ -364,6 +410,7 @@ class TestScreen:
 
         def fake_run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[bytes]:
             seen["command"] = command
+            seen["kwargs"] = kwargs
             return subprocess.CompletedProcess(command, 0)
 
         monkeypatch.setattr(cli.subprocess, "run", fake_run)
@@ -371,6 +418,9 @@ class TestScreen:
         assert result.exit_code == 0
         assert seen["command"][-4:] == ["--model", "haiku", "--band", "s"]
         assert seen["command"][1].endswith("run_triggers.py")
+        # The runner resolves its own paths against the repository root, and a
+        # non-zero exit has to come back as a value rather than an exception.
+        assert seen["kwargs"] == {"cwd": cli.REPO_ROOT, "check": False}
 
     def test_the_runners_exit_code_becomes_the_commands_exit_code(
         self, monkeypatch: pytest.MonkeyPatch
@@ -410,6 +460,30 @@ class TestTheShippedPreregistration:
         )
         body = (cli.REPO_ROOT / "skills" / prereg.skill / "SKILL.md").read_text(encoding="utf-8")
         assert prereg.skill_sha256 == sha256_text(body)
+
+    def test_the_command_reaches_the_locks_against_the_real_repository(self) -> None:
+        """The whole claim, end to end, with nothing monkeypatched.
+
+        Every other command test runs against a fixture tree with ancestry
+        forced true. This one shells out to the real git, hashes the real skill
+        and the real runner, and asserts the refusal this pathway exists to
+        produce. If the pre-registration is ever left uncommitted or edited
+        after commit, this goes red, which is the point.
+        """
+        result = runner.invoke(
+            app,
+            [
+                "confirm",
+                str(cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"),
+                "--baseline-accuracy",
+                "0.55",
+                "--projected-cost",
+                "7.42",
+            ],
+        )
+        assert result.exit_code == 1
+        assert "both hash locks match" in result.output
+        assert "there is none on disk" in result.output
 
     def test_the_analysis_lock_hashes_the_runner(self) -> None:
         prereg = cli.load_preregistration(

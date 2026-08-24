@@ -37,7 +37,14 @@
 #                              design, so the projection is a ceiling.
 #
 # The two hashes are sha256 over the file with line endings normalised, which is
-# decision_evals.prereg.sha256_text. Recompute them with:
+# decision_evals.prereg.sha256_text. `skill_sha256` is over
+# skills/decision-making/SKILL.md and `analysis_script_sha256` is over
+# scripts/run_triggers.py.
+#
+# `Preregistration` has no field for either path, and forbids extras, so the
+# paths live here in prose and in `de confirm`'s --analysis argument. That is a
+# real gap: the hash proves the file was not edited and cannot say which file it
+# was. Closing it means a schema change and a v2. Recompute both with:
 #
 #   python -c "import sys; sys.path.insert(0, 'evals/src'); \
 #              from pathlib import Path; \

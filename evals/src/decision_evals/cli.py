@@ -112,6 +112,13 @@ TRIGGER_RUNNER: Final = "scripts/run_triggers.py"
 #: of a checkout rather than a broken one.
 HOLDOUT_DIR: Final = "datasets/holdout"
 
+#: What counts as a holdout record. **The same pattern ``.gitignore`` excludes**,
+#: and that agreement is the point: a split built to any other extension would be
+#: invisible here *and* committable, which is the one file in this repository
+#: that may never be committed. ``datasets/holdout/README.md`` says so too, and
+#: three statements of one fact is two too many, so this is the one to change.
+HOLDOUT_GLOB: Final = "*.jsonl"
+
 #: The line a confirmation run's README carries, naming the pre-registration it
 #: ran under. Nothing else in a run directory separates a confirm-arena run from
 #: the screening runs beside it, and :func:`confirmation_runs` needs that
@@ -1292,8 +1299,14 @@ def screen(ctx: typer.Context) -> None:
     ``screen`` is an arena before it is a command, and the arena already has a
     runner: ``scripts/run_triggers.py`` is the script behind every model call on
     record. What was missing is a documented way in to it. Arguments pass
-    through untouched, so there is one parser here rather than two that drift
-    apart, and ``python scripts/run_triggers.py --help`` describes the run.
+    through untouched and the runner's exit code becomes this one's, so there is
+    one parser here rather than two that drift apart.
+
+    **``--help`` is the exception.** Typer answers it before the arguments reach
+    this function, so ``de screen --help`` describes the wrapper and
+    ``python scripts/run_triggers.py --help`` describes the run. Forwarding it
+    would mean disabling the wrapper's help option, which also makes a bare
+    ``de screen`` launch a default run on the strength of a typo.
 
     This spends quota. ``de check`` makes no model calls; this makes one per
     case, per repeat, per arm.
@@ -1340,7 +1353,17 @@ def _gather_repo_state(relative: str, skill: str) -> RepoState:
 
     Outside a git repository every fact is false rather than skipped. A
     pre-registration's whole value is its timestamp, so a tree that cannot show
-    one has nothing the locks can read, and refusing is the honest answer.
+    one has nothing the locks can read, and refusing is the honest answer. A
+    failed ``git status`` reads as dirty for the same reason: an answer git
+    could not give is not an answer that the file is clean.
+
+    **``precedes_results`` inherits :func:`_is_ancestor`'s treatment of a commit
+    as its own ancestor**, so a pre-registration committed in the same commit as
+    a confirmation run's results passes. That is generous, and it is the one
+    ordering this check cannot see: a squash puts "written before" and "written
+    after" in the same object. What would close it is publishing the run in a
+    commit later than its pre-registration, which is what the workflow does
+    anyway.
     """
     if _git_output(["rev-parse", "HEAD"]) is None:
         return RepoState(
@@ -1352,7 +1375,7 @@ def _gather_repo_state(relative: str, skill: str) -> RepoState:
     registered = _first_commit_adding(relative)
 
     return RepoState(
-        committed_and_clean=tracked and not pending,
+        committed_and_clean=tracked and pending == "",
         is_ancestor_of_head=bool(registered) and _is_ancestor(registered, "HEAD"),
         precedes_results=all(
             _is_ancestor(registered, published)
@@ -1373,9 +1396,9 @@ def confirm(
         typer.Option(
             "--baseline-accuracy",
             help=(
-                "Control accuracy measured on the screening split, checked against the "
-                "pre-registered difficulty band. Required, because an invented parameter "
-                "is indistinguishable from a measured one three days later."
+                "Control accuracy on the screening split, checked against the "
+                "pre-registered difficulty band. Supplied by the operator and taken on "
+                "trust: nothing here measures it and nothing records what was passed."
             ),
         ),
     ],
@@ -1386,7 +1409,7 @@ def confirm(
             help=(
                 "Notional API-equivalent cost of the whole run, from "
                 "`decision_evals.budget.project_cost`, checked against the pre-registered "
-                "budget."
+                "budget. Operator-supplied on the same terms as --baseline-accuracy."
             ),
         ),
     ],
@@ -1408,6 +1431,12 @@ def confirm(
 
     The run itself stops after the locks, and the message says which piece is
     missing. Nothing here fabricates a holdout to get past its own gate.
+
+    **Two of the six checks are on the operator's word.** The difficulty band
+    reads ``--baseline-accuracy`` and the budget reads ``--projected-cost``, and
+    neither is measured here or written anywhere afterwards. They are required
+    rather than defaulted so nothing invents them, which is a weaker property
+    than measuring them and is the honest description of what this does.
     """
     _echo_header("confirm")
 
@@ -1418,9 +1447,9 @@ def confirm(
         raise typer.Exit(1) from error
 
     skill_path = REPO_ROOT / "skills" / prereg.skill / "SKILL.md"
-    analysis_path = Path(analysis)
-    if not analysis_path.is_absolute():
-        analysis_path = REPO_ROOT / analysis_path
+    # `/` returns the right-hand side unchanged when it is absolute, so this
+    # takes an absolute --analysis as given without a branch to say so.
+    analysis_path = REPO_ROOT / analysis
     for required in (skill_path, analysis_path):
         if not required.is_file():
             typer.secho(
@@ -1452,14 +1481,19 @@ def confirm(
         typer.secho(str(error), fg=typer.colors.RED)
         raise typer.Exit(1) from error
 
+    published = confirmation_runs(REPO_ROOT, prereg.skill)
     typer.secho(
-        f"{relative} holds: committed, on this history, ahead of every confirmation run "
-        f"for {prereg.skill}, and both hash locks match.",
+        f"{relative} holds: committed, on this history, and both hash locks match.",
         fg=typer.colors.GREEN,
+    )
+    typer.echo(
+        f"  checked for postdiction against {len(published)} confirmation run(s) for "
+        f"{prereg.skill}. At zero that check passes over an empty set, and the marker it "
+        f"reads ({PREREGISTRATION_MARKER}) is one no gate yet requires of a run."
     )
 
     policy = policy_for("confirm")
-    if not sorted((REPO_ROOT / HOLDOUT_DIR).glob("*.jsonl")):
+    if not sorted((REPO_ROOT / HOLDOUT_DIR).glob(HOLDOUT_GLOB)):
         typer.secho(
             f"Stopping: the {policy.name} arena reads the {policy.split} split and there "
             f"is none on disk. `{HOLDOUT_DIR}/` is regenerated from a passphrase-derived "

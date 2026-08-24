@@ -344,4 +344,6 @@ def test_census_reports_the_real_tree() -> None:
     """
     floored, reachable, declared = census(Path(__file__).resolve().parents[2])
     assert floored == reachable >= 1
+    # The register may only shrink, which at zero entries means it may not grow.
+    # A future floored module with no caller is wired or it is not floored.
     assert declared == 0
