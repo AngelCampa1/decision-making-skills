@@ -1523,3 +1523,40 @@ which venue answered. One of those venues is `confirm` tier and the other is a
 coding agent with 57 tools. `ModelEntry` keys the arena on the model **and** the
 backend for exactly this reason, and `assert_model_allowed` checks the backend
 against the registry rather than trusting the caller.
+
+## 2026-08-24 — `arenas.py` joins the register, because it decides what counts as evidence
+
+**Commits:** `1d39da4`
+
+The scope change itself is in `9ac0446`, which added
+`evals/src/decision_evals/arenas.py` to `GOVERNED`. `1d39da4` is the first commit
+the widened rule caught, and it puts the rule in the file's own docstring so
+whoever edits `MODELS` reads it before the gate tells them.
+
+`MODELS` maps a model and the backend it is reached through to an arena, and the
+arena decides whether a run is evidence. `confirm` is the only one that emits a
+verdict. So moving one row from `screen` to `confirm` promotes a whole venue's
+results, and moving one the other way demotes every number already published
+from it.
+
+**Neither move is visible to any other gate here.** A checkpoint records the
+model id and not the arena. The answer key does not change. The run-provenance
+step binds a README to its records and to the commit that registered its
+prediction, and reads nothing about which venue produced them. That is the same
+invisibility a trigger label move had on 2026-08-13, when recall rose 3 to 5
+points on every arm and not one call was re-made.
+
+**Scoped to the file rather than to `evals/`.** The rest of the harness computes
+numbers, and an entry for every change to a scorer or an estimator is the noise
+an advisory gate becomes before somebody turns it off. This file decides which
+numbers count, and it had been touched twice in the repository's history before
+today, which is a volume the rule can carry.
+
+The two are backfilled above from their own commit bodies: `6b642e9`, which
+created the registry and the arena that may emit a verdict, and `a2e3b58`, which
+added a third backend and put every model on it in `screen` regardless of tier.
+
+**What this does not close.** `arenas.py` also holds `UNPINNED_ALIASES` and the
+three `assert_*` helpers, so a change to any of those is governed too. That is
+wider than the argument above needs. The alternative was a rule keyed to a region
+of a file, and nothing here can check one.
