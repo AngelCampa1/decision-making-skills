@@ -1420,8 +1420,22 @@ def main() -> int:
         # registered arm rather than a formatting preference: pooling a
         # schema-enforced verdict with a prose one is the thing that experiment
         # exists to make impossible.
+        #
+        # So is the model, and this backend is the one that cannot do without
+        # it. One binary serves Gemini, GPT-OSS and Claude, so a vendor sweep
+        # would otherwise write three arms to one path: the second run would
+        # resume over the first's rows, skip every case id it found and report
+        # itself complete on nothing. `models_comparable` refuses to pool those
+        # records, and the checkpoint keys on the same stamp so the refusal
+        # never has to fire.
+        #
+        # The `claude` side carries the same hazard and does not address it.
+        # Every run on record there was made at one tier, which is the only
+        # reason it has not bitten, and renaming those files now would orphan
+        # every checkpoint on disk.
+        model_slug = args.model.split("/")[-1]
         checkpoint = checkpoint.with_name(
-            f"{checkpoint.stem}-{args.backend}-{args.contract}{checkpoint.suffix}"
+            f"{checkpoint.stem}-{args.backend}-{args.contract}-{model_slug}{checkpoint.suffix}"
         )
     if set_path != default_set:
         # A different corpus is a different answer key, so it cannot share a

@@ -1138,3 +1138,68 @@ class TestTheRowCarriesHowTheCallEnded:
         assert reply.verdict == (True, "timing", None)
         assert reply.status == "ERROR"
         assert reply.num_turns == 4
+
+
+class _FakePreflightReceipt:
+    """What `main()` prints a preflight line from, and nothing more."""
+
+    tools = frozenset({"run_command"})
+    permission_mode = "request-review"
+
+    def assert_isolated(self, *, model: str, cwd: str) -> None:
+        return None
+
+
+class TestAgyCheckpointsCarryTheModel:
+    """One binary serves three vendors, so the venue alone does not name a file.
+
+    Without the model in the name a vendor sweep writes three arms to one path.
+    The second run resumes over the first's rows, finds every case id already
+    present, skips all of them and reports itself complete having made no call.
+    """
+
+    def _drive(self, monkeypatch: pytest.MonkeyPatch, model: str) -> Path:
+        captured: dict[str, Any] = {}
+
+        def fake_collect(*args: Any, **kwargs: Any) -> dict[tuple[str, int], dict[str, object]]:
+            captured["checkpoint"] = kwargs["checkpoint"]
+            return _fake_collect_from_labels(*args, **kwargs)
+
+        monkeypatch.setattr(runner, "collect", fake_collect)
+        monkeypatch.setattr(
+            runner.antigravity,
+            "preflight",
+            lambda **_kwargs: (_FakePreflightReceipt(), None),
+        )
+        monkeypatch.setattr(sys, "argv", ["run_triggers.py", "--backend", "agy", "--model", model])
+        assert runner.main() == 0
+        return Path(captured["checkpoint"])
+
+    def test_two_vendors_do_not_share_a_checkpoint(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        gemini = self._drive(monkeypatch, "agy/gemini-3.7-flash-low")
+        gpt_oss = self._drive(monkeypatch, "agy/gpt-oss-120b-medium")
+        assert gemini != gpt_oss
+
+    def test_the_namespace_is_stripped_from_the_filename(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """`agy/` is already carried by the backend segment, so it is not repeated."""
+        checkpoint = self._drive(monkeypatch, "agy/gemini-3.7-flash-low")
+        assert "agy-schema-gemini-3.7-flash-low" in checkpoint.name
+        assert "agy-schema-agy-" not in checkpoint.name
+
+    def test_the_claude_checkpoint_name_is_untouched(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """The claude side is deliberately not renamed: every checkpoint on disk
+
+        was written under the old name and renaming them now would orphan the lot.
+        """
+        captured: dict[str, Any] = {}
+
+        def fake_collect(*args: Any, **kwargs: Any) -> dict[tuple[str, int], dict[str, object]]:
+            captured["checkpoint"] = kwargs["checkpoint"]
+            return _fake_collect_from_labels(*args, **kwargs)
+
+        monkeypatch.setattr(runner, "collect", fake_collect)
+        monkeypatch.setattr(sys, "argv", ["run_triggers.py"])
+        assert runner.main() == 0
+        assert captured["checkpoint"] == runner.CHECKPOINT
