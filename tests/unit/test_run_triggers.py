@@ -105,8 +105,23 @@ def _case(**overrides: Any) -> TriggerCase:
 
 
 class _FakeResult:
-    def __init__(self, text: str) -> None:
+    """A `CliResult` stand-in, down to the two fields the Claude backend leaves
+
+    at their defaults. `claude -p` reports no status and no turn count, so the
+    real class hands back `""` and `0`.
+
+    Both are settable, and that is load-bearing rather than tidy. A fake that
+    always said `""` would pass `ask()` whether it read `result.status` or wrote
+    the literal, so the property the runner advertises for a backend that starts
+    reporting would have no test behind it. `_FakeChat` passes them through, and
+    `test_the_claude_leg_reads_the_result_rather_than_writing_a_literal` sets
+    them to values no CLI on this machine produces.
+    """
+
+    def __init__(self, text: str, *, status: str = "", num_turns: int = 0) -> None:
         self.text = text
+        self.status = status
+        self.num_turns = num_turns
 
 
 class _FakeReceipt:
@@ -115,12 +130,14 @@ class _FakeReceipt:
 
 
 class _FakeChat:
-    def __init__(self, text: str) -> None:
+    def __init__(self, text: str, *, status: str = "", num_turns: int = 0) -> None:
         self._text = text
+        self._status = status
+        self._num_turns = num_turns
         self.receipt = _FakeReceipt()
 
     def send(self, prompt: str) -> _FakeResult:
-        return _FakeResult(self._text)
+        return _FakeResult(self._text, status=self._status, num_turns=self._num_turns)
 
     def __enter__(self) -> _FakeChat:
         return self
@@ -132,13 +149,21 @@ class _FakeChat:
 class _FakeConversationFactory:
     """Records every call's keyword arguments; returns a scripted reply."""
 
-    def __init__(self, text: str = '{"fire": true, "procedure": "ledger"}') -> None:
+    def __init__(
+        self,
+        text: str = '{"fire": true, "procedure": "ledger"}',
+        *,
+        status: str = "",
+        num_turns: int = 0,
+    ) -> None:
         self.text = text
+        self.status = status
+        self.num_turns = num_turns
         self.calls: list[dict[str, Any]] = []
 
     def __call__(self, **kwargs: Any) -> _FakeChat:
         self.calls.append(kwargs)
-        return _FakeChat(self.text)
+        return _FakeChat(self.text, status=self.status, num_turns=self.num_turns)
 
 
 class TestAskThreadsInSitu:
@@ -162,13 +187,12 @@ class TestAskThreadsInSitu:
         """Venue changes where the description sits, not how the reply is read."""
         fake = _FakeConversationFactory('{"fire": true, "procedure": "ledger"}')
         monkeypatch.setattr(runner, "Conversation", fake)
-        (fired, procedure, p_fire), raw = runner.ask(
-            "d", _case(), "haiku", runner.SYSTEM, in_situ=True
-        )
+        reply = runner.ask("d", _case(), "haiku", runner.SYSTEM, in_situ=True)
+        fired, procedure, p_fire = reply.verdict
         assert fired is True
         assert procedure == "ledger"
         assert p_fire is None
-        assert raw == fake.text
+        assert reply.raw == fake.text
 
 
 # --------------------------------------------------------------------------- #
@@ -181,7 +205,7 @@ class TestCollectStampsVenue:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         def fake_ask(description, case, model, system, allowed=(), *, in_situ=False, **_kwargs):
-            return (True, None, None), "raw"
+            return runner.Reply(verdict=(True, None, None), raw="raw", status="", num_turns=0)
 
         monkeypatch.setattr(runner, "ask", fake_ask)
         cases = (_case(id="p1"), _case(id="n1", should_fire=False))
@@ -197,7 +221,7 @@ class TestCollectStampsVenue:
         """Run first, by standing rule 2's spirit: the existing arms are unchanged."""
 
         def fake_ask(description, case, model, system, allowed=(), *, in_situ=False, **_kwargs):
-            return (True, None, None), "raw"
+            return runner.Reply(verdict=(True, None, None), raw="raw", status="", num_turns=0)
 
         monkeypatch.setattr(runner, "ask", fake_ask)
         cases = (_case(id="p1"),)
@@ -211,7 +235,7 @@ class TestCollectStampsVenue:
 
         def fake_ask(description, case, model, system, allowed=(), *, in_situ=False, **_kwargs):
             seen.append(in_situ)
-            return (True, None, None), "raw"
+            return runner.Reply(verdict=(True, None, None), raw="raw", status="", num_turns=0)
 
         monkeypatch.setattr(runner, "ask", fake_ask)
         cases = (_case(id="p1"),)
@@ -245,7 +269,7 @@ class TestCollectStampsSkillVersion:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         def fake_ask(description, case, model, system, allowed=(), *, in_situ=False, **_kwargs):
-            return (True, None, None), "raw"
+            return runner.Reply(verdict=(True, None, None), raw="raw", status="", num_turns=0)
 
         monkeypatch.setattr(runner, "ask", fake_ask)
         cases = (_case(id="p1"), _case(id="n1", should_fire=False))
@@ -268,7 +292,7 @@ class TestCollectStampsSkillVersion:
         """
 
         def fake_ask(description, case, model, system, allowed=(), *, in_situ=False, **_kwargs):
-            return (True, None, None), "raw"
+            return runner.Reply(verdict=(True, None, None), raw="raw", status="", num_turns=0)
 
         monkeypatch.setattr(runner, "ask", fake_ask)
         cases = (_case(id="p1"),)
@@ -964,3 +988,153 @@ class TestAgainstReachesCompare:
         # only the refusal is asserted here; the guard-by-guard assertions are
         # above, on `report_against` directly. The refusal *is* the output.
         assert "REFUSED" in out
+
+
+# --------------------------------------------------------------------------- #
+# collect(): how the call ended reaches the row
+# --------------------------------------------------------------------------- #
+
+
+class _FakeAgyReceipt:
+    def assert_isolated(self, *, model: str, cwd: str) -> None:
+        return None
+
+
+def _fake_agy_run(status: str, num_turns: int) -> Any:
+    """An `antigravity.run` that reports a status, against a real `CliResult`.
+
+    The provider is where `status` and `num_turns` enter the harness, so the
+    tests below fake the transport and nothing above it: the real `ask`, the
+    real `ask_agy`, the real `collect`, and a row read back off disk.
+    """
+    from decision_evals.providers.claude_code import CliResult
+
+    def run(prompt: str, *, model: str, cwd: str, json_schema: str | None = None) -> Any:
+        return _FakeAgyReceipt(), CliResult(
+            text='{"fire": true, "procedure": "timing"}',
+            model=model,
+            cost_usd=0.0,
+            input_tokens=0,
+            output_tokens=0,
+            duration_ms=0,
+            session_id="s",
+            status=status,
+            num_turns=num_turns,
+        )
+
+    return run
+
+
+class TestTheRowCarriesHowTheCallEnded:
+    """The provider has recorded `status` and `num_turns` since 2026-08-21, on a
+
+    measured surprise: an `agy` call returned `status: "ERROR"` and a valid
+    `structured_output` in the same event. `ask()` dropped both on the way back,
+    so every row in the 90-call `agy` canary carries 22 fields and neither of
+    these, which makes the answered-then-died call and the clean one one record.
+
+    Five of the six tests here fake only the transport and read the row back off
+    disk, so against the old runner each fails on `KeyError: 'status'`: the
+    absent column, which is the defect itself. The sixth reads `Reply.verdict`
+    and fails on the shape, a weaker reason, which is why it is not the test
+    carrying the ERROR case. Verified by running this class against
+    `git show HEAD:scripts/run_triggers.py`.
+    """
+
+    def _one_row(self, checkpoint: Path, model: str, **kwargs: Any) -> dict[str, Any]:
+        """Run one case through the real `collect()` and read the row off disk."""
+        trigger_set = TriggerSet(skill="decision-making", cases=(_case(id="p1"),), version=4)
+        runner.collect(trigger_set, "d", model, 1, checkpoint=checkpoint, **kwargs)
+        lines = checkpoint.read_text(encoding="utf-8").splitlines()
+        assert len(lines) == 1
+        return json.loads(lines[0])
+
+    def test_an_error_status_carrying_a_verdict_is_written_with_its_status(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The measured case, end to end. Both halves survive to the record."""
+        monkeypatch.setattr(runner.antigravity, "run", _fake_agy_run("ERROR", 3))
+        row = self._one_row(tmp_path / "v.jsonl", "agy/gemini-3.7-flash-low", backend="agy")
+        assert row["status"] == "ERROR"
+        assert row["num_turns"] == 3
+        # The verdict is kept, which is the decision the field exists to serve.
+        assert row["fired"] is True
+        assert row["procedure"] == "timing"
+
+    def test_a_success_call_records_its_status(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The other half of the pair. A status is only worth writing if the
+
+        clean case writes one too: a column that appears solely on failures
+        cannot separate them from the calls that predate the column.
+        """
+        monkeypatch.setattr(runner.antigravity, "run", _fake_agy_run("SUCCESS", 1))
+        row = self._one_row(tmp_path / "v.jsonl", "agy/gemini-3.7-flash-low", backend="agy")
+        assert row["status"] == "SUCCESS"
+        assert row["num_turns"] == 1
+        assert row["fired"] is True
+
+    def test_the_claude_backend_records_the_default_rather_than_a_fabricated_value(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """`claude -p` reports no status and no turn count, so its rows carry
+
+        `CliResult`'s own defaults. Asserting the empty string is the point: a
+        backend that says nothing is a fact about the venue, and a runner that
+        filled the column with `"SUCCESS"` would assert something no CLI said.
+        """
+        monkeypatch.setattr(runner, "Conversation", _FakeConversationFactory())
+        row = self._one_row(tmp_path / "v.jsonl", "haiku", backend="claude")
+        assert row["status"] == ""
+        assert row["num_turns"] == 0
+        assert row["fired"] is True
+
+    def test_the_claude_leg_reads_the_result_rather_than_writing_a_literal(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The test above passes against a runner that hardcodes `""` and `0` on
+
+        this leg, because that is what the CLI reports today. This one pins the
+        mechanism instead of the value: a `CliResult` carrying a status the
+        Claude backend has never produced still reaches the row, so the claim
+        that a backend which starts reporting needs no edit here is checked
+        rather than asserted.
+        """
+        monkeypatch.setattr(
+            runner,
+            "Conversation",
+            _FakeConversationFactory(status="A-STATUS-CLAUDE-HAS-NEVER-SENT", num_turns=7),
+        )
+        row = self._one_row(tmp_path / "v.jsonl", "haiku", backend="claude")
+        assert row["status"] == "A-STATUS-CLAUDE-HAS-NEVER-SENT"
+        assert row["num_turns"] == 7
+
+    def test_a_failed_call_takes_the_empty_pair_and_invents_nothing(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A `CliError` has no result behind it, so there is no status to read."""
+        from decision_evals.providers.claude_code import CliError
+
+        def fake_ask(description, case, model, system, allowed=(), **_kwargs):
+            raise CliError("the process died")
+
+        monkeypatch.setattr(runner, "ask", fake_ask)
+        row = self._one_row(tmp_path / "v.jsonl", "haiku")
+        assert row["fired"] is None
+        assert row["status"] == ""
+        assert row["num_turns"] == 0
+        assert row["raw"] == "the process died"
+
+    def test_ask_agy_hands_back_what_the_provider_reported(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The one leg the four above cannot isolate: `ask()` on the `agy` route,
+
+        read at its own return rather than through the row it ends up in.
+        """
+        monkeypatch.setattr(runner.antigravity, "run", _fake_agy_run("ERROR", 4))
+        reply = runner.ask("d", _case(), "agy/gemini-3.7-flash-low", runner.SYSTEM, backend="agy")
+        assert reply.verdict == (True, "timing", None)
+        assert reply.status == "ERROR"
+        assert reply.num_turns == 4

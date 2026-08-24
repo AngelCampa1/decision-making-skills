@@ -66,7 +66,7 @@ import argparse
 import json
 import sys
 from collections.abc import Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Final
 
@@ -266,6 +266,45 @@ def agy_response_schema(system: str, allowed: tuple[str, ...]) -> str:
     return json.dumps({"type": "object", "properties": properties, "required": ["fire", key]})
 
 
+@dataclass(frozen=True)
+class Reply:
+    """What one returned call is worth keeping: the verdict, the text it arrived
+
+    in, the backend's own word on how it ended, and how many turns it took.
+
+    A named record, because ``raw`` and ``status`` are both ``str``. In a
+    positional ``(verdict, raw, status, num_turns)`` each of those two has an
+    unlabelled slot that accepts the other's value in silence, and a status
+    written into the ``raw`` column reads downstream as a model reply. Names
+    make that a ``TypeError`` where it is written.
+
+    **Every field is required.** The argument above buys nothing if a call site
+    can leave one out: a default would let a caller holding a real ``status``
+    drop it and get ``""``, which is a value with a meaning, and mypy would say
+    nothing. The one site with genuinely nothing to report passes ``""`` and
+    ``0`` in the open, where a reader can see the claim being made.
+
+    ``status`` and ``num_turns`` are copied off :class:`CliResult` and reach the
+    row unchanged. The Claude backend reports neither, so its rows carry that
+    class's own defaults, which is a fact about the venue.
+    """
+
+    verdict: Verdict
+    raw: str
+    #: How the backend said the call ended, verbatim. On ``agy`` an ``ERROR``
+    #: here can sit beside a well-formed verdict: measured 2026-08-21, an agent
+    #: answered, then reached outside its sandbox and was terminated by the
+    #: CLI's own protection boundary. Both cases reached the checkpoint as
+    #: identical rows until this field did, so a pre-registration could state a
+    #: rule about ERROR-status calls and no analysis could apply it. Whether such
+    #: a verdict may be scored stays an analysis decision, which is the whole
+    #: reason the record has to carry the distinction.
+    status: str
+    #: Turns the backend took. Above one means the agent used tools before it
+    #: answered, which on an agentic venue is a covariate worth having.
+    num_turns: int
+
+
 def ask_agy(
     prompt: str,
     model: str,
@@ -273,7 +312,7 @@ def ask_agy(
     allowed: tuple[str, ...],
     *,
     contract: str = "schema",
-) -> tuple[Verdict, str]:
+) -> Reply:
     """One call against the Antigravity CLI.
 
     There is no ``in_situ`` switch here and its absence is the point: this
@@ -300,7 +339,12 @@ def ask_agy(
     with isolated_cwd("de-trigger-") as cwd:
         receipt, result = antigravity.run(prompt, model=model, cwd=cwd, json_schema=schema)
         receipt.assert_isolated(model=model, cwd=cwd)
-    return decision(result.text, allowed), result.text
+    return Reply(
+        verdict=decision(result.text, allowed),
+        raw=result.text,
+        status=result.status,
+        num_turns=result.num_turns,
+    )
 
 
 def ask(
@@ -313,13 +357,19 @@ def ask(
     in_situ: bool = False,
     backend: str = "claude",
     contract: str = "schema",
-) -> tuple[Verdict, str]:
-    """The verdict **and the raw reply**.
+) -> Reply:
+    """The verdict, **the raw reply, and how the call ended**.
 
     The raw text is returned so it can be stored, because on 2026-08-12 a parser
     whitelist discarded every answer in a 365-call run and the records kept
     nothing to recover from — the run had to be repeated. ``ShardedRecord`` had
     already learned this and says so in its own docstring; this runner had not.
+
+    ``status`` and ``num_turns`` ride along for the same reason, one venue over.
+    The provider has recorded both since 2026-08-21 and this function threw them
+    away, so a checkpoint said an ``agy`` call carrying an ERROR status beside a
+    valid verdict was an ordinary row. :class:`Reply` holds the shape and the
+    argument for it.
 
     ``allowed`` defaults to ``None``, which :func:`~decision_evals.triggers.decision`
     resolves to :func:`~decision_evals.triggers.default_procedures` itself --
@@ -350,7 +400,15 @@ def ask(
     ):
         result = chat.send(prompt)
         chat.receipt.assert_isolated()
-    return decision(result.text, allowed), result.text
+    # No branch on the backend. ``claude -p`` reports neither field, so what
+    # this carries is whatever its ``CliResult`` holds: the class defaults
+    # today, and whatever the CLI starts reporting without an edit here.
+    return Reply(
+        verdict=decision(result.text, allowed),
+        raw=result.text,
+        status=result.status,
+        num_turns=result.num_turns,
+    )
 
 
 CHECKPOINT = REPO_ROOT / "results" / "triggers" / "verdicts.jsonl"
@@ -477,7 +535,7 @@ def collect(
                     continue
                 allowed = tuple(entry_names) if entry_names else default_procedures()
                 try:
-                    (fired, procedure, p_fire), raw = ask(
+                    reply = ask(
                         description,
                         case,
                         model,
@@ -490,8 +548,18 @@ def collect(
                 except IsolationError:
                     raise
                 except CliError as error:
-                    fired, procedure, p_fire, raw = None, None, None, str(error)
+                    # A call that raised has no result to read a status off,
+                    # so the empty pair is written here in the open: it is a
+                    # claim that nothing was reported, and it is the only place
+                    # in this file where those two values are chosen rather
+                    # than copied. `fired is None` is what marks the row as a
+                    # failure; a fabricated status would read as something the
+                    # backend said.
+                    reply = Reply(
+                        verdict=(None, None, None), raw=str(error), status="", num_turns=0
+                    )
                     print(f"  r{repeat} {case.id}: call failed -- {error}")
+                fired, procedure, p_fire = reply.verdict
                 # ``covers`` is the routing outcome that survives a changing
                 # entry count: at n=2 the model names ``ledger-fit`` and the
                 # label is ``ledger``, so equality is the wrong test. Computed
@@ -620,7 +688,34 @@ def collect(
                     "stakes": case.stakes,
                     "ask": case.ask,
                     "kind": case.kind,
-                    "raw": raw,
+                    # How the backend said the call ended, and how many turns it
+                    # took. The provider has carried both since 2026-08-21 and
+                    # this runner dropped them on the floor, which left the one
+                    # distinction that decision was made to preserve absent from
+                    # every row: an `agy` call that answered and then died
+                    # reaching outside its sandbox looked exactly like a clean
+                    # one. An arm can now pre-register a rule about ERROR-status
+                    # calls and the analysis can apply it.
+                    #
+                    # Empty and zero mean the backend reported nothing: every
+                    # `claude` row, every failed call, and an `agy` event whose
+                    # result carries no `status` key, which
+                    # `antigravity.parse_events` also resolves to `""`. The
+                    # values come off `CliResult`, so a backend that starts
+                    # reporting needs no edit here.
+                    #
+                    # **A row with no `status` key at all is a different thing**
+                    # and means only that it predates this line. Resuming an
+                    # `agy` checkpoint written before 2026-08-24 leaves one file
+                    # holding both shapes, and reading an absent key as "nothing
+                    # was reported" would put the 90 rows of
+                    # `canary-band-s-agy-gemini-3.7-flash-low-v6.jsonl` back in
+                    # the pool this field exists to separate. Absent is unknown,
+                    # the way `models_comparable` already reads an absent
+                    # `model`.
+                    "status": reply.status,
+                    "num_turns": reply.num_turns,
+                    "raw": reply.raw,
                 }
                 handle.write(json.dumps(row) + "\n")
                 handle.flush()
