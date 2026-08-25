@@ -28,6 +28,7 @@ that direction.
 | [`2026-08-19-d52236a-n7-remaining-arms`](../results/decision-making/2026-08-19-d52236a-n7-remaining-arms/) | v4 | [`2026-08-18-prediction-n7-the-remaining-description-arms.md`](../notebook/2026-08-18-prediction-n7-the-remaining-description-arms.md) | **none** |
 | [`2026-08-25-5ed5d38-n10-six-arms-v6`](../results/decision-making/2026-08-25-5ed5d38-n10-six-arms-v6/) | v6 | [`2026-08-24-prediction-n10-the-six-description-arms-on-v6.md`](../notebook/2026-08-24-prediction-n10-the-six-description-arms-on-v6.md) | **none** |
 | [`2026-08-10-baseline-corpus`](../results/evidence-ledger/2026-08-10-baseline-corpus/) *(baselined)* | — | **none** | **none** |
+| [`2026-08-25-28311e2-ledger-v2-screen`](../results/track-h/2026-08-25-28311e2-ledger-v2-screen/) | v2 | [`2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md`](../notebook/2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md) | **none** |
 | [`2026-08-25-f578604-ledger-yield-and-ceiling`](../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/) | v1 | [`2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md`](../notebook/2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md) | **none** |
 
 ## Notebook entry to run
@@ -54,4 +55,5 @@ that direction.
 | [`2026-08-18-prediction-n7-the-remaining-description-arms.md`](../notebook/2026-08-18-prediction-n7-the-remaining-description-arms.md) | [`2026-08-19-d52236a-n7-remaining-arms`](../results/decision-making/2026-08-19-d52236a-n7-remaining-arms/) |
 | [`2026-08-19-prediction-n9-does-position-move-firing.md`](../notebook/2026-08-19-prediction-n9-does-position-move-firing.md) | [`2026-08-19-505b236-n9-in-situ-void`](../results/decision-making/2026-08-19-505b236-n9-in-situ-void/) |
 | [`2026-08-24-prediction-n10-the-six-description-arms-on-v6.md`](../notebook/2026-08-24-prediction-n10-the-six-description-arms-on-v6.md) | [`2026-08-25-5ed5d38-n10-six-arms-v6`](../results/decision-making/2026-08-25-5ed5d38-n10-six-arms-v6/) |
+| [`2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md`](../notebook/2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md) | [`2026-08-25-28311e2-ledger-v2-screen`](../results/track-h/2026-08-25-28311e2-ledger-v2-screen/) |
 | [`2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md`](../notebook/2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md) | [`2026-08-25-f578604-ledger-yield-and-ceiling`](../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/) |

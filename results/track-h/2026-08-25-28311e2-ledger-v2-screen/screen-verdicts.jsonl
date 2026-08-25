@@ -1,0 +1,9 @@
+{"set_version": 2, "blind_id": "v02", "role": "base", "instance": 0, "answer": 24}
+{"set_version": 2, "blind_id": "v02", "role": "base", "instance": 1, "answer": 24}
+{"set_version": 2, "blind_id": "v02", "role": "base", "instance": 2, "answer": 24}
+{"set_version": 2, "blind_id": "v01", "role": "treatment", "instance": 0, "answer": 18}
+{"set_version": 2, "blind_id": "v01", "role": "treatment", "instance": 1, "answer": 18}
+{"set_version": 2, "blind_id": "v01", "role": "treatment", "instance": 2, "answer": 18}
+{"set_version": 2, "blind_id": "v00", "role": "control", "instance": 0, "answer": 24}
+{"set_version": 2, "blind_id": "v00", "role": "control", "instance": 1, "answer": 24}
+{"set_version": 2, "blind_id": "v00", "role": "control", "instance": 2, "answer": 24}

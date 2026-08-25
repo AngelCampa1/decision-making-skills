@@ -127,6 +127,7 @@ hand-maintained while the table under it is counted. The count is twelve.
 | **trigger instrument** | **working** | 2,555 calls, 0 unparseable, 0 isolation failures |
 | `tailoring` triplets (Track H) | **building — blocked** | 2 usable of 8 authored across two passes; causal-rule overlap AUC 0.740 against a [0.40, 0.60] band |
 | `ledger` triplets (Track H, volume dial) | **closed — ceiling** | unaided J = 1.000 over 45 blind readings; both registered kills fired, yield at 2 of 5 |
+| **Family A entire** (scalar triplet: `ledger`, `timing`, `fit`) | **closed — ceiling** | 18 arms, 99 blind readings, every arm unanimous and equal to key, across six domains and three difficulty dials |
 
 **2026-08-25, `ledger`.** The sixth venue and the first closed before its corpus
 was built. Five triplets were authored in parallel to test whether difficulty
@@ -161,6 +162,38 @@ measured the unaided ceiling whatever else it was built for, and it should be
 read that way *before* the corpus is authored.
 
 Record: [`results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/`](../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/README.md).
+**2026-08-25, Family A.** The reviewers who cut the v1 items also named the
+mechanism and two repairs for it, so a nine-call screen tested them before
+anything else was authored: identify the governed entity by a property resolved
+through the sibling set rather than naming it, and route the rule on two
+quantities rather than one. Both applied together, skeleton identity preserved.
+
+The item got harder by every measure anyone proposed. Effective sibling width
+went from 1-of-2 and 3-of-10 to **10 of 10 in every arm**, with three blind
+readers naming no bullet they could have dropped. The single-column read is
+available, integral, and wrong in both directions at once. Every one of the nine
+readers wrote out all five subtractions — they went through the structure rather
+than past it.
+
+Three arms, three instances, **all unanimous, all equal to key, unaided
+J = 1.000.** The registered kill closed **Family A entirely** rather than
+dropping it to `timing`, and it fires.
+
+What makes it decisive is the prediction that held: the registration said that if
+the repairs could only be met by making the matched fact subtle they had
+collapsed into `fit`'s mechanism and were not repairs. They had not — the matched
+fact is the loudest bullet in the file. Two of four predictions were wrong, both
+flattering the repair, and they are scored in the run README.
+
+**Three difficulty dials have now been tried and the elicitation form outlives
+all three:** neutraliser subtlety in `fit` (yield 1 in 5, unaffordable), volume in
+`ledger` v1, and multi-input binding in `ledger` v2. A scenario compact enough to
+fit one prompt and answerable by one number is not, for a current model, hard.
+
+This says nothing about volume, long context, delegation or multi-turn work,
+where the failures these procedures describe mostly live. Record:
+[`results/track-h/2026-08-25-28311e2-ledger-v2-screen/`](../results/track-h/2026-08-25-28311e2-ledger-v2-screen/README.md).
+
 Not a published run — the calls were dispatched as sub-agents rather than
 through `scripts/run_triggers.py`, so there is no checkpoint and no notional
 cost, and nothing from it belongs in [`SCORECARD.md`](../SCORECARD.md).

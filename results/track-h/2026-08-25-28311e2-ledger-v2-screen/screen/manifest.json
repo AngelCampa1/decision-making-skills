@@ -1,0 +1,23 @@
+{
+  "v00": {
+    "file": "V01-thurlmere-images-weeks-matched.yaml",
+    "arm": "matched",
+    "role": "control",
+    "unit": "weeks",
+    "expected": 24
+  },
+  "v01": {
+    "file": "V01-thurlmere-images-weeks-governing.yaml",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "weeks",
+    "expected": 18
+  },
+  "v02": {
+    "file": "V01-thurlmere-images-weeks-base.yaml",
+    "arm": "base",
+    "role": "base",
+    "unit": "weeks",
+    "expected": 24
+  }
+}

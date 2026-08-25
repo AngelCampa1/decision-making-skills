@@ -1,0 +1,229 @@
+# Track H triplet V01, arm: matched. Construct: ledger. Repair probe, 2026-08-25.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+#
+# set_version is 2, not 1. These items are authored under R-a and R-b and are
+# not comparable with the v1 candidates; the version refuses the comparison.
+set_version: 2
+construct: ledger
+triplet: V01
+arm: matched
+role: control
+domain: archive_digitisation
+mechanism_type: netted-capacity-bottleneck
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: weeks from today until the last image of the Thurlmere series is signed off
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Isolde Farquharson-Adeyemi, digitisation manager at the Ravensholt
+  Record Office. We photograph, transcribe and catalogue paper records for
+  depositors across the county, and the unit is part-way through one large
+  series for the Thurlmere Sessions Trust.
+
+  144,000 images of the Thurlmere series are still to be signed off as of
+  today. Every image passes all five stations: preparation, imaging, text
+  capture, cataloguing and quality control. All five are at work on the
+  series at once, each on a different part of it, so no station waits on
+  another. Weatherall Instrument Services runs every station for us; the
+  finish date is set by whichever station has the least weekly capacity
+  left once the standing commitments booked against it are taken off, and
+  by nothing else. The weekly figures below are what each station can put
+  through in total, and the commitments below are booked against those
+  figures for the whole of this series.
+
+  Also on file:
+
+  - The preparation bench took on two conservators on 2026-02-09 and puts
+    13,000 images a week through it.
+  - The cataloguing desk carries a standing commitment of 6,000 images a
+    week to the Hallowfen parish registers, agreed on 2026-03-05 and
+    running to 2029-03-05.
+  - The imaging room re-rigged its copy stands on 2026-05-11 and puts
+    9,000 images a week through them.
+  - The text capture station carries a standing commitment of 3,000 images
+    a week to the Aldreth Hospital records, agreed on 2026-01-13 and
+    running to 2029-01-13.
+  - The preparation bench carries a standing commitment of 3,000 images a
+    week to the Corveley Borough deposit, agreed on 2026-04-21 and running
+    to 2029-04-21.
+  - The quality control room took a second reading bay on 2026-06-02 and
+    puts 14,000 images a week through it.
+  - The text capture station replaced its recognition engine on 2026-07-07
+    and puts 12,000 images a week through it.
+  - The quality control room carries a standing commitment of 6,000 images
+    a week to the Ravensholt tithe maps, agreed on 2026-07-30 and running
+    to 2029-07-30.
+  - The cataloguing desk took on three assistant archivists on 2026-08-04
+    and puts 12,000 images a week through it.
+  - The imaging room carries a standing commitment of 1,000 images a week
+    to the Brayfield Estate plans, agreed on 2026-08-12 and running to
+    2029-08-12.
+  - Weatherall Instrument Services commissioned a second overhead book
+    scanner at Ravensholt on 2026-08-21, and from 2026-08-25 it adds
+    3,000 images a week to the imaging room's capacity.
+
+  Question: how many weeks from today until the last image of the
+  Thurlmere series is signed off? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    Weatherall Instrument Services runs every station for us; the finish date is
+    set by whichever station has the least weekly capacity left once the
+    standing commitments booked against it are taken off, and by nothing else.
+  rule_actor: Weatherall Instrument Services
+  insert_skeleton: >-
+    Weatherall Instrument Services commissioned <MACHINE> at Ravensholt on
+    2026-08-21, and from 2026-08-25 it adds 3,000 images a week to <STATION>'s
+    capacity.
+  delta_kind: inserted_bullet
+  fact: >-
+    Weatherall Instrument Services commissioned a second overhead book scanner at
+    Ravensholt on 2026-08-21, and from 2026-08-25 it adds 3,000 images a week
+    to the imaging room's capacity.
+  governs: false
+  expected_direction: none
+  expected_value: 24
+  arithmetic: >-
+    The imaging room's weekly capacity in the base is 9,000, from the third
+    bullet. The insert adds 3,000 a week from 2026-08-25, so the room runs
+    12,000. Its standing commitment is unchanged at 1,000, from the tenth
+    bullet, so its capacity left is 12,000 less 1,000 = 11,000. The other four
+    are unchanged: preparation 13,000 less 3,000 = 10,000, text capture 12,000
+    less 3,000 = 9,000, cataloguing 12,000 less 6,000 = 6,000, quality control
+    14,000 less 6,000 = 8,000. The least is still 6,000 a week, at the
+    cataloguing desk. 144,000 / 6,000 = 24. Twenty-four weeks, exactly the base
+    value. Movement 0.
+  rounding: >-
+    Whole weeks, rounded up if the division is not exact. Exact here: 144,000
+    is 24 x 6,000 with no remainder. Tolerance 0.
+  mirror_one_sentence: >-
+    The base sets the finish date by whichever station has the least weekly
+    capacity left once its standing commitments are taken off, and that station
+    is the cataloguing desk at 6,000 a week, so 3,000 more at the imaging room
+    lands on a station that already had 8,000 a week free and leaves the
+    twenty-four weeks exactly where they were.
+  neutraliser_location: >-
+    The rule sentence itself, in the second paragraph, ten bullets and a
+    paragraph break above the insert: "the finish date is set by whichever
+    station has the least weekly capacity left once the standing commitments
+    booked against it are taken off, and by nothing else." It identifies the
+    governed station by a property and never by name, and it is the second half
+    of that property, the netting, that puts the imaging room out of the
+    running. The insert does not refer to it and it does not refer to the
+    insert. Reaching it takes two hops: from the insert to the imaging room's
+    commitment bullet, then to the rule sentence that says the minimum is taken
+    after commitments.
+  correction_if_it_governed: >-
+    Disqualifier 11, computed rather than asserted. Under the stated rule the
+    matched correction is exactly zero, 24 to 24, because the only channel from
+    a station's figures to the answer is the minimum and the imaging room is
+    not it. Under the single-input misreading in which weekly capacity is read
+    without commitments, the base gives 144,000 / 9,000 = 16 and this arm gives
+    144,000 / 12,000 = 12, which is 6 weeks away from where the governing fact
+    lands the answer (18). There is no reading on which the matched correction
+    sits near the governing one.
+  preconditions_enumerated:
+    - >-
+      The insert's own commencement, 2026-08-25. That is the stated today, so
+      the second scanner is running from week one and nothing is deferred.
+      Identical to the governing insert's commencement, so neither arm buys
+      anything from a delay.
+    - >-
+      The commissioning date 2026-08-21, four days before today. Already past,
+      gates nothing, and it is the same date in both inserts.
+    - >-
+      The imaging room's own standing commitment, 1,000 images a week to the
+      Brayfield Estate plans, agreed 2026-08-12 and running to 2029-08-12. This
+      is the precondition to check hardest, because it is the one the insert
+      interacts with. It runs to 2029, well past the last week of the horizon
+      (2027-02-09), so it does not lapse inside the window and the imaging
+      room's netted figure does not change again part-way through. It reduces
+      the imaging room to 11,000, still far above the binding 6,000.
+    - >-
+      The other four standing commitments, agreed 2026-01-13, 2026-03-05,
+      2026-04-21 and 2026-07-30, every one running to a 2029 date. None expires
+      inside the horizon, so no station's netted figure rises part-way through
+      and the minimum cannot move off the cataloguing desk later.
+    - >-
+      The five station-history dates: 2026-02-09 preparation, 2026-05-11
+      imaging, 2026-06-02 quality control, 2026-07-07 text capture, 2026-08-04
+      cataloguing. Every one is past and every one is reported as completed
+      work already reflected in the weekly figure beside it. None schedules a
+      future outage or a future uplift, so no capacity changes inside the
+      horizon.
+    - >-
+      Starvation of the cataloguing desk. Checked because it is the one
+      mechanism by which another station could bind through this one. The base
+      says all five work the series at once, each on a different part of it,
+      with no station waiting on another, so there is no upstream feed to
+      starve and a second scanner cannot relieve a starvation that does not
+      exist.
+    - >-
+      Drain after the binding station. Checked because the cataloguing desk is
+      the fourth station named of five, and a pipeline reading would leave
+      quality control finishing after it. The same sentence forecloses it: the
+      five run side by side rather than in sequence, so no drain term is
+      available to either insert. It is foreclosed identically in both arms.
+    - >-
+      A ceiling on the imaging room. Checked because a second scanner
+      plausibly needs floor space or an operator. The base states no ceiling,
+      no floor area and no staffing condition on any station, so there is no
+      clause for the extra scanner to breach and none for the extra terminal to
+      breach either.
+    - >-
+      Conclusion: none of the eight delays or advances the moment the matched
+      fact would start to bite, because the matched fact has no moment at which
+      it bites. It raises a station that is not the minimum and does not become
+      the minimum.
+  salience_match: >-
+    Dimension 1, same object class: both inserts are a second piece of capture
+    or cataloguing kit commissioned by the same contractor at the same site,
+    adding weekly capacity to one of the five stations already on file. Closed.
+    Dimension 2, same surface form: identical apparatus, both naming Weatherall
+    Imaging Systems, both carrying a commissioning date and a commencement date
+    in YYYY-MM-DD, both carrying an images-a-week figure, both attributing the
+    uplift to a named station. Closed.
+    Dimension 3, same order of magnitude: the added capacity is 3,000 images a
+    week in both, identically, and both dates are identical in both. Closed.
+    Dimension 4, same alarm: read on its own, the sentence a reasonable
+    non-expert says is "another machine went in last week and it adds three
+    thousand a week, so the series will be done sooner" both times. Closed at
+    the insert level. NOT closed once the insert is read against the capacity
+    column; see below.
+    Dimension 5, same length: prompt-length delta from base is 196 characters
+    for the governing insert and 190 for the matched, so |a - b| / max(a, b) =
+    6 / 196 = 3.1%, inside the 10% bound. Both are three-line bullets breaking
+    at the same two points.
+    Dimension 6, same position: both are the eleventh and final bullet of "Also
+    on file", immediately before the blank line and the question. Closed.
+    Dimension 7, same deontic register: neither names a consequence, a penalty,
+    a status, a restriction or a procedural requirement. Both are flat
+    commissioning records in the indicative. Stripped of their machine names
+    and their station names the two skeletons are the same string. Closed.
+    Dimension 8, same relation to the causal-rule sentence: both name
+    Weatherall Instrument Services, the actor that sentence names, and both carry
+    the term "capacity" from it, symmetrically. Neither carries "standing
+    commitments", the sentence's second input, so neither insert sits closer to
+    the rule than the other. The companion rule holds: no sentence of the base
+    excludes the imaging room by name or by any other means, and the imaging
+    room appears as two of ten symmetric dated records indistinguishable in
+    form from the other eight. Closed.
+    NOT fully closed, dimension 4, and recorded rather than repaired. The two
+    alarms are interchangeable read alone but not read against the capacity
+    column, where the imaging room carries the lowest headline figure of the
+    five and the cataloguing desk does not. So the matched insert is the louder
+    of the two to a reader who has scanned capacities and not netted them. The
+    asymmetry runs against the answer rather than with it: it makes the
+    non-governing fact look more important, not less, so it cannot be used to
+    separate the arms correctly. It is a trap and not a leak. Repairing it
+    would mean giving the cataloguing desk the lowest headline capacity too,
+    which is the same as deleting the two-input rule. Seven of eight closed,
+    and this is the eighth.
+meta:
+  personas_invented: true
+  real_personal_data: false

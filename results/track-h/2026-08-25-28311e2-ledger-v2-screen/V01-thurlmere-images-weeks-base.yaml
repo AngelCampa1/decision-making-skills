@@ -1,0 +1,120 @@
+# Track H triplet V01, arm: base. Construct: ledger. Repair probe, 2026-08-25.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+#
+# set_version is 2, not 1. These items are authored under R-a and R-b and are
+# not comparable with the v1 candidates; the version refuses the comparison.
+set_version: 2
+construct: ledger
+triplet: V01
+arm: base
+role: base
+domain: archive_digitisation
+mechanism_type: netted-capacity-bottleneck
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: weeks from today until the last image of the Thurlmere series is signed off
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Isolde Farquharson-Adeyemi, digitisation manager at the Ravensholt
+  Record Office. We photograph, transcribe and catalogue paper records for
+  depositors across the county, and the unit is part-way through one large
+  series for the Thurlmere Sessions Trust.
+
+  144,000 images of the Thurlmere series are still to be signed off as of
+  today. Every image passes all five stations: preparation, imaging, text
+  capture, cataloguing and quality control. All five are at work on the
+  series at once, each on a different part of it, so no station waits on
+  another. Weatherall Instrument Services runs every station for us; the
+  finish date is set by whichever station has the least weekly capacity
+  left once the standing commitments booked against it are taken off, and
+  by nothing else. The weekly figures below are what each station can put
+  through in total, and the commitments below are booked against those
+  figures for the whole of this series.
+
+  Also on file:
+
+  - The preparation bench took on two conservators on 2026-02-09 and puts
+    13,000 images a week through it.
+  - The cataloguing desk carries a standing commitment of 6,000 images a
+    week to the Hallowfen parish registers, agreed on 2026-03-05 and
+    running to 2029-03-05.
+  - The imaging room re-rigged its copy stands on 2026-05-11 and puts
+    9,000 images a week through them.
+  - The text capture station carries a standing commitment of 3,000 images
+    a week to the Aldreth Hospital records, agreed on 2026-01-13 and
+    running to 2029-01-13.
+  - The preparation bench carries a standing commitment of 3,000 images a
+    week to the Corveley Borough deposit, agreed on 2026-04-21 and running
+    to 2029-04-21.
+  - The quality control room took a second reading bay on 2026-06-02 and
+    puts 14,000 images a week through it.
+  - The text capture station replaced its recognition engine on 2026-07-07
+    and puts 12,000 images a week through it.
+  - The quality control room carries a standing commitment of 6,000 images
+    a week to the Ravensholt tithe maps, agreed on 2026-07-30 and running
+    to 2029-07-30.
+  - The cataloguing desk took on three assistant archivists on 2026-08-04
+    and puts 12,000 images a week through it.
+  - The imaging room carries a standing commitment of 1,000 images a week
+    to the Brayfield Estate plans, agreed on 2026-08-12 and running to
+    2029-08-12.
+
+  Question: how many weeks from today until the last image of the
+  Thurlmere series is signed off? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    Weatherall Instrument Services runs every station for us; the finish date is
+    set by whichever station has the least weekly capacity left once the
+    standing commitments booked against it are taken off, and by nothing else.
+  causal_rule_sentence_note: >-
+    Occurs exactly once in the base prompt, character for character once the
+    line wrap at column ~72 is collapsed to single spaces. It begins mid-line
+    at "Weatherall Instrument" in the second paragraph and runs to "nothing
+    else." The string "Weatherall Instrument Services" occurs once in the base and
+    once more in each insert.
+  rule_actor: Weatherall Instrument Services
+  insert_skeleton: >-
+    Weatherall Instrument Services commissioned <MACHINE> at Ravensholt on
+    2026-08-21, and from 2026-08-25 it adds 3,000 images a week to <STATION>'s
+    capacity.
+  delta_kind: none
+  fact: NONE
+  governs: false
+  expected_direction: none
+  expected_value: 24
+  arithmetic: >-
+    Quantity outstanding, from the third paragraph: 144,000 images still to be
+    signed off. The rule sentence routes on two quantities, weekly capacity and
+    standing commitments, so both columns of the "Also on file" bullets are
+    read and netted station by station. Preparation 13,000 less 3,000 = 10,000.
+    Imaging 9,000 less 1,000 = 8,000. Text capture 12,000 less 3,000 = 9,000.
+    Cataloguing 12,000 less 6,000 = 6,000. Quality control 14,000 less 6,000 =
+    8,000. The least weekly capacity left is 6,000 a week, at the cataloguing
+    desk. 144,000 / 6,000 = 24. Twenty-four weeks.
+  rounding: >-
+    Whole weeks, rounded up if the division is not exact. It is exact in all
+    three arms: 144,000 is 24 x 6,000, 18 x 8,000 and 24 x 6,000 with no
+    remainder, so no rounding applies and the tolerance is 0.
+  single_input_read: >-
+    Recorded because it is what the item is built to separate. A reader who
+    routes on weekly capacity alone and drops the five commitment bullets finds
+    the imaging room lowest at 9,000 and answers 144,000 / 9,000 = 16. That
+    read is integral too, so it does not announce itself as wrong. It gives 16
+    in the base, 16 in the governing arm and 12 in the matched arm: no movement
+    where the answer moves, movement where it holds. The two columns disagree
+    on which station binds, and that disagreement is the whole of the item.
+  no_single_column_shortcut: >-
+    Neither column alone identifies the governed station. The lowest weekly
+    capacity is the imaging room at 9,000, unique and wrong. The largest
+    standing commitment is 6,000, tied between the cataloguing desk and the
+    quality control room, so it names no one station. Only the five
+    subtractions resolve it.
+meta:
+  personas_invented: true
+  real_personal_data: false
