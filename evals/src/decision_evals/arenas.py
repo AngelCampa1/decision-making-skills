@@ -20,6 +20,13 @@ the arena check fires only where a caller asks for it. What the registry decides
 is which runs may become *evidence*, and it keys that on the model **and the
 backend it is reached through**, because those are two different facts and only
 the pair identifies a venue. See :class:`ModelEntry`.
+
+**This file is a governed path, and a change to it needs an entry in
+``docs/DECISIONS.md``.** Added 2026-08-24. It is the one governed path that is
+source rather than data, because moving a row between arenas promotes or demotes
+a whole venue's results and shows up in no checkpoint, no label and no diff of
+the answer key. ``de check``'s decision register step refuses a commit here that
+nothing explains.
 """
 
 from __future__ import annotations

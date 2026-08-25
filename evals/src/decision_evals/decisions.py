@@ -33,6 +33,15 @@ something, or carries the same shape of risk:
   --bless``, diff reviewed) and ``datasets/library/`` carries no labels — see
   ``docs/DECISIONS.md``.
 - ``skills/`` — the product. What ships is what the claims are about.
+- ``evals/src/decision_evals/arenas.py`` — added 2026-08-24, and it is the one
+  governed path that is source rather than data. :data:`~decision_evals.arenas.MODELS`
+  decides which runs may become *evidence*: moving one row from ``screen`` to
+  ``confirm`` promotes a whole venue's results, and moving one the other way
+  demotes every number already published from it. Neither shows up in a
+  checkpoint, a label or a diff of the answer key, which is the same
+  invisibility the trigger labels had. Scoped to the file rather than to
+  ``evals/``, because the rest of the harness computes numbers and this one
+  decides which numbers count.
 
 Roughly one commit in ten touches these, which is a volume a person can
 actually sustain.
@@ -50,7 +59,12 @@ from pathlib import Path
 from typing import Final
 
 #: Changes here oblige an entry. Prefixes, matched against repo-relative paths.
-GOVERNED: Final[tuple[str, ...]] = ("datasets/triggers/", "datasets/tailoring/", "skills/")
+GOVERNED: Final[tuple[str, ...]] = (
+    "datasets/triggers/",
+    "datasets/tailoring/",
+    "skills/",
+    "evals/src/decision_evals/arenas.py",
+)
 
 REGISTER_PATH: Final = "docs/DECISIONS.md"
 

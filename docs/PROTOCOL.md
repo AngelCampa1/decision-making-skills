@@ -125,34 +125,60 @@ which predates the convention. This read *one* until 2026-08-19, while the file
 it points at named two. See
 [`results/provenance-baseline.txt`](../results/provenance-baseline.txt).
 
-### 3b. For `confirm` runs: built, tested, and never yet used
+### 3b. For `confirm` runs: the locks, and what they now stop
 
-A confirmation run would commit `preregistration/<skill>-v<n>.yaml` before it
-started, carrying hypothesis, primary metric, item count, minimum detectable
-effect, alpha, guards, stopping rule, plus `skill_sha256` and
-`analysis_script_sha256`.
+A confirmation run commits `preregistration/<skill>-v<n>.yaml` before it starts,
+carrying hypothesis, primary metric, item count, minimum detectable effect,
+alpha, guards, stopping rule, plus `skill_sha256` and `analysis_script_sha256`.
+The first one is on disk:
+[`preregistration/decision-making-v1.yaml`](../preregistration/decision-making-v1.yaml),
+with every number in it derived in a comment above the fields.
 
-A confirmation run **will refuse** to start unless:
+`de confirm` refuses to start unless:
 
 1. the pre-registration file is committed and not dirty;
-2. its commit is an ancestor of `HEAD` and predates everything in
+2. its commit is an ancestor of `HEAD` and predates every confirmation run in
    `results/<skill>/`;
 3. `skill_sha256` matches the skill body on disk;
 4. `analysis_script_sha256` matches the analysis code;
-5. the recorded baseline accuracy falls inside the difficulty band;
+5. the supplied baseline accuracy falls inside the difficulty band;
 6. the projected cost is within budget.
 
-The future tense is load-bearing. `decision_evals.prereg` implements all six
-refusals and carries a 100% line-and-branch coverage floor, and no caller
-reaches it. No `preregistration/` file exists, because nobody has made a
-confirmation run: every call on record is a `screen`-tier trigger measurement.
-The module is declared under `[tool.decision-evals.unwired]` in `pyproject.toml`
-with the condition that would wire it, and `de check`'s integrity wiring step
-fails if that declaration is ever removed while the module stays unreachable, or
-if it stays after the module becomes reachable.
+**Five of the six bite today, and the run still stops.** `decision_evals.prereg`
+implements the refusals and `de confirm` is the caller that reaches them, which
+is what changed on 2026-08-24. The module carried a 100% line-and-branch
+coverage floor with nothing importing it, and this section described the
+refusals in the present indicative while every one of them was inert. The
+`[tool.decision-evals.unwired]` declaration that held that gap open is gone, and
+`de check`'s integrity wiring step refuses the module the moment it stops being
+reachable again.
 
-Editing one word of a skill after pre-registration **will abort** the run with
-a diff. Proceeding would require writing `-v2.yaml`, which is a new, dated,
+What stops the run is the split. The `confirm` arena reads the private holdout,
+`datasets/holdout/` is regenerated from a passphrase-derived seed and stays out
+of the tree until a verdict publishes, and no confirmation runner reads it yet.
+`de confirm` checks the locks, says which piece is missing, and exits without
+making a call. Every number on record remains a `screen`-tier trigger
+measurement.
+
+**Point 2 is the sixth, and it is the one that does not bite yet.** It is scoped
+to confirmation runs rather than to every run in `results/<skill>/`, because
+screening precedes a pre-registration by design: screening runs the public
+split, its items are disjoint from the holdout's, and its result never enters
+the final p-value. Counting a screening run as a postdiction would refuse every
+skill this repository has ever measured, and a gate no known-good case can pass
+is a gate somebody turns off. `cli.confirmation_runs` reads the
+`**Pre-registration:**` line a confirmation run's README carries, which is the
+only thing in a run directory that separates the two.
+
+**Nothing writes that line and no gate requires it, so today the check passes
+over an empty set.** `de confirm` prints the count it checked against for that
+reason. Two things would close it: the confirmation runner writing the line, and
+a run-provenance rule refusing a run in the `confirm` arena that carries no
+pre-registration. Both belong with the runner. Until then point 2 **will
+refuse** a postdiction, and has never had one to refuse.
+
+Editing one word of a skill after pre-registration aborts the run and names the
+next version. Proceeding requires writing `-v2.yaml`, which is a new, dated,
 visible commit, so prompt tuning becomes an auditable event. Locking the
 analysis script matters just as much: a pre-registered metric means nothing if
 the code computing it can be rewritten after seeing the data.

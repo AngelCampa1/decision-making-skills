@@ -200,9 +200,11 @@ and how a run flows through them. `README.md` carries the component table and
   `datasets/triggers/adjudication-baseline.txt`; that list may only shrink.
 - **A published run updates [`docs/STATUS.md`](docs/STATUS.md) in the same
   change.** Corrections there are appended, never rewritten.
-- **A change to `datasets/triggers/`, `datasets/tailoring/` or `skills/` needs
-  an entry in [`docs/DECISIONS.md`](docs/DECISIONS.md).** Commit bodies are not
-  the store.
+- **A change to `datasets/triggers/`, `datasets/tailoring/`, `skills/` or
+  `evals/src/decision_evals/arenas.py` needs an entry in
+  [`docs/DECISIONS.md`](docs/DECISIONS.md).** Commit bodies are not the store.
+  The first three are the answer keys and the product; the fourth is the model
+  registry, which decides which runs may become evidence.
 - **Every third published run, sweep `README.md` and `docs/` for drift** and
   land the sweep as a dated `notebook/` entry. Count runs from
   [`docs/RUN_INDEX.md`](docs/RUN_INDEX.md), which is generated and cannot

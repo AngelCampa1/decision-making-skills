@@ -298,12 +298,18 @@ subscription stated. Writing "we spent $250" would be false.
   `de <cmd>` naming a command that does not exist, a markdown link or repository
   path that does not exist, and a README component table that disagrees with the
   directory listing. It was added on 2026-08-13 after the README was found
-  telling readers to run `de screen` and `de confirm` — neither a command — and
-  advertising a `preregistration/` directory that has never existed, while
-  omitting `paper/` and `scripts/`; `SCORECARD.md` had already corrected a
-  fourth of the same shape, `de report`. Four instances, one file each, none
-  caught by anything, because documentation was the last obligation here checked
-  by reading it.
+  telling readers to run `de screen` and `de confirm`, neither of which was a
+  command on the day it was read, and advertising a `preregistration/` directory
+  that did not exist either, while omitting `paper/` and `scripts/`;
+  `SCORECARD.md` had already corrected a fourth of the same shape, `de report`.
+  Four instances, one file each, none caught by anything, because documentation
+  was the last obligation here checked by reading it.
+
+  **Three of the four have since been built rather than corrected.** `de screen`
+  and `de confirm` became real commands on 2026-08-24, and
+  `preregistration/decision-making-v1.yaml` is on disk, so the register that
+  held the corrections up now carries `de report` alone. The audit was right
+  about all four; what changed is which way each was closed.
 
 ### What the gate cannot see
 
@@ -317,13 +323,18 @@ subscription stated. Writing "we spent $250" would be false.
 ### Why the corrections-in-place are not enforced
 
   - **Delete a correction-in-place, and do not expect a gate to stop you.** The
-    corrections that name `de screen`, `de confirm` and `de report` are held up by
+    correction that names `de report` is held up by
     `[tool.decision-evals.docs-absent-commands]`, which refuses a declared command
     named nowhere in the scanned documentation. That register is **already
-    satisfied by this file**, which names all three in the bullet above. Cutting
-    the `README.md` and `SCORECARD.md` corrections therefore passes `de check`
+    satisfied by this file**, which names it in the bullet above. Cutting the
+    `README.md` and `SCORECARD.md` corrections therefore passes `de check`
     green, and the reason to keep them is that they are the record, not that
     anything enforces them.
+
+    `de screen` and `de confirm` were in that register until 2026-08-24 and are
+    commands now, which is the register's other refusal doing its job: an entry
+    that becomes real is an error, so building the command forced the line out
+    in the same change.
 
 ### Why skills/ is excluded from the writing pass
 
