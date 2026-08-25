@@ -1,0 +1,125 @@
+# Pre-registration: decision-making, version 3.
+#
+# The contract a confirmation run is bound to. `de confirm` loads this file,
+# checks it against the repository, and refuses the run if any lock fails. The
+# six refusals live in `decision_evals.prereg` and their reasoning is in
+# `docs/PROTOCOL.md` section 3b.
+#
+# WHY THIS SUPERSEDES VERSION 2, and why the reason matters more than the bump.
+# Version 2 pinned `scripts/run_triggers.py` at the content it had on
+# 2026-08-25. One commit moved it the same day: `ask` stopped carrying its own
+# isolation setup and became a caller of `run_isolated`, so that the trigger
+# runner, the adjudicator and the new elicitation module share one
+# implementation instead of three. `_assert_hash` refused, which is what it is
+# for, and its own remedy is a new version rather than an edited hash.
+#
+# **No run was ever bound to version 2 either.** The `confirm` arena has never
+# run and `de confirm` still refuses for want of a holdout. That is still the
+# only condition under which a bump is bookkeeping instead of a finding.
+#
+# **This is the second firing in two days and neither was about analysis.**
+# Version 2's header called that a design tension and said the fix needed a
+# schema change. Two firings on pure refactoring is the tension behaving as a
+# defect, and the header's own warning names the failure mode it produces: a
+# lock that goes stale on unrelated work trains its reader to bump it without
+# looking. This bump is the reader looking, once, and writing down that the
+# narrowing is now the blocking item rather than an improvement someone might
+# make. Until the hash covers only the functions that compute the registered
+# metric, every ordinary harness commit will keep asking for a version, and the
+# third such request should be refused until the schema is fixed.
+#
+# The lesson underneath it is a design tension rather than a defect: pinning a
+# whole runner file means every ordinary harness commit invalidates the lock,
+# and a lock that goes stale on unrelated work trains its reader to bump it
+# without looking. Narrowing the hash to the functions that compute the
+# registered metric would fix that, and it needs a schema change.
+#
+# Every number below is derived, and the derivation is here so a reader can
+# recompute it rather than take it. `notebook/2026-08-24-the-confirm-pathway-has-a-caller.md`
+# records the one figure that is a choice rather than a measurement.
+#
+#   n_items                    330. The version 6 public corpus is 330 turns
+#                              across four length bands (90 + 90 + 81 + 69,
+#                              counted off datasets/triggers/decision-making/).
+#                              The holdout is built to the same size and the
+#                              same construction, so the run is sized to it.
+#
+#                              Version 1 called this "the version 4 public
+#                              corpus" and that was wrong: v4 held 258 turns in
+#                              86 triples. The count was right and the version
+#                              naming it was not, which is the failure the
+#                              answer-key version exists to make impossible and
+#                              which prose beside a number can still commit.
+#
+#   minimum_detectable_effect  0.086, from
+#                              decision_evals.stats.minimum_detectable_effect(
+#                                  330, 0.20, alpha=0.05, power=0.80,
+#                                  design_effect=2.0) = 0.0860. The design
+#                              effect of 2.0 is docs/PROTOCOL.md section 4.
+#                              p_discordant = 0.20 is a choice, not a
+#                              measurement: nothing on disk measures it, and
+#                              what would is a screening run of these two arms
+#                              against each other. `de power` prints the whole
+#                              sweep so a reader can price another column.
+#
+#   budget_usd                 7.43, from
+#                              decision_evals.budget.project_cost(n_items=330,
+#                                  n_arms=2, repeats=2,
+#                                  usd_per_item=0.00562375) = 7.42335. The rate
+#                              is estimate_cost_usd() over the longest prompt
+#                              this instrument sends: the 635-character shipped
+#                              description plus the 8,363-character longest turn
+#                              in the corpus. That estimator over-counts by
+#                              design, so the projection is a ceiling. The
+#                              longest turn was re-measured on v6 and has not
+#                              moved: the three asks the v6 bump rewrote are in
+#                              bands m and l.
+#
+# The two hashes are sha256 over the file with line endings normalised, which is
+# decision_evals.prereg.sha256_text. `skill_sha256` is over
+# skills/decision-making/SKILL.md and `analysis_script_sha256` is over
+# scripts/run_triggers.py. The skill hash is unchanged from version 1, because
+# the measured artefact has not moved and only the runner around it has.
+#
+# `Preregistration` has no field for either path, and forbids extras, so the
+# paths live here in prose and in `de confirm`'s --analysis argument. That is a
+# real gap: the hash proves the file was not edited and cannot say which file it
+# was. Closing it means a schema change. Recompute both with:
+#
+#   python -c "import sys; sys.path.insert(0, 'evals/src'); \
+#              from pathlib import Path; \
+#              from decision_evals.prereg import sha256_text; \
+#              print(sha256_text(Path('skills/decision-making/SKILL.md').read_text(encoding='utf-8')))"
+
+skill: decision-making
+version: 3
+
+hypothesis: >-
+  On the private holdout, the shipped description fires on decision turns more
+  often than the same description with its trigger-phrase opener removed, by at
+  least the minimum detectable effect below.
+
+primary_metric: trigger_recall
+
+n_items: 330
+minimum_detectable_effect: 0.086
+alpha: 0.05
+
+guards:
+  - no_harm_clean
+  - format_integrity
+  - cost
+
+stopping_rule: >-
+  Fixed N, no interim analysis. Every one of the 330 items runs at 2 repeats in
+  both arms before any figure is computed, and no arm is added after the first
+  call.
+
+difficulty_band:
+  - 0.35
+  - 0.75
+
+budget_usd: 7.43
+
+skill_sha256: c9f2f2a8768b4571e9e21fceece6dd54c15e45b8b1f8da162c460c4c0e5a304c
+analysis_script_sha256: da2b78c8419481f579e35a1c51db3fcf04d9e5eeb53a3e47c2296b99b38e6ba8
