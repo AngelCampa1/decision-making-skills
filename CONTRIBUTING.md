@@ -39,7 +39,7 @@ disagreed in four places.
 | If you | `de check` says |
 | --- | --- |
 | commit under an address other than the GitHub noreply one | the history *is* the pre-registration evidence, and a misattributed commit cannot be rewritten later without destroying the timestamps the method relies on |
-| change `datasets/triggers/`, `datasets/tailoring/` or `skills/` without an entry in [`docs/DECISIONS.md`](docs/DECISIONS.md) | a label move is invisible in a checkpoint and shifts every number already computed from it |
+| change `datasets/triggers/`, `datasets/tailoring/`, `skills/` or `evals/src/decision_evals/arenas.py` without an entry in [`docs/DECISIONS.md`](docs/DECISIONS.md) | a label move is invisible in a checkpoint and shifts every number already computed from it, and the arena registry decides which runs may become evidence |
 | publish a run without an answer-key version, or with a prediction that cannot be shown to predate its data | a prediction that cannot be shown to predate its data is not evidence |
 | give a module a coverage floor that no entry point reaches | a tested refusal with no caller is inert, and the gate reports green either way |
 | name a `de` command, path, or component that does not exist | documentation was the last obligation here checked by reading it, and the README was found naming two commands that never existed |

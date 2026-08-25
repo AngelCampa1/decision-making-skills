@@ -160,9 +160,10 @@ iteration cannot leak into a verdict-bearing run.
 
 `wiring.py` refuses a module that carries a coverage floor and no path from an
 entry point, because a tested refusal with no caller reports green either way.
-It currently catches one. `prereg.py` is built and tested, scoped to an arena
-that has never run, and declared in `[tool.decision-evals.unwired]` with the
-condition that would close it.
+It catches nothing today. `prereg.py` was the one declared gap: built and
+tested, scoped to an arena that has never run, and reachable by nothing.
+`de confirm` now imports it from the console script, so the entry left
+`[tool.decision-evals.unwired]` in the same change and the register is empty.
 
 ---
 

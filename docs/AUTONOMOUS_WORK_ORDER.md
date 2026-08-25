@@ -103,7 +103,6 @@ judgement about an answer key.
 
 | Work | Done when |
 |---|---|
-| **Track K5 backlog.** Two identifiers are outstanding, `2412.06593` and `2505.02151`, added by the K3/K4 pass on 2026-08-14 with their quotes recorded in `docs/DECISION_FRAMEWORKS.md` because another session held `refs.bib` at the time. Move each into `paper/refs.bib` with its `quote` and delete the line | `de check` green with an empty baseline. **`docs/RESEARCH_PROGRAMME.md` said "K5 is closed" for four days while this backlog was non-empty**, because a may-only-shrink list can still be added to |
 | ~~**Track 0.5**, `telemetry.span_attributes()` tested to 100% while nothing in `evals/src` called it~~ **done** on 2026-08-18: wired into `orchestrator.py`, the multi-node run its own docstring says the vocabulary was written for. Every `NodeRecord` now carries `attributes`, with a safe `{}` default so `results/track-0/tree_smoke.jsonl` still loads. `tests/unit/test_orchestrator.py`'s `TestNodeRecordCarriesTelemetryAttributes` asserts on the mapping directly | done |
 | ~~**Track 0.6**, `assert_isolated()` raising on `tools` and on `skills` and never inspecting `memory_paths`~~ **done** on 2026-08-18, decided **no**: checked live against claude-code 2.1.159 that `--setting-sources ""` stops a planted `CLAUDE.md` reaching `memory_paths` at all, confirming for the receipt what [`notebook/2026-08-10-isolation-canary.md`](../notebook/2026-08-10-isolation-canary.md) already found for the response, so no value of that field separates a clean isolated call from a compromised one and gating on it would refuse every run. `InitReceipt`'s docstring now says the gate covers `tools` **and** `skills`, which the code already did and the prose did not, and explains why `memory_paths` is recorded rather than gated. `memory_paths` was separately unreadable in production, since the real event is a mapping, `{"auto": path}`, and the old `isinstance(value, list)` check read it as `()` on every call this harness has ever made; fixed in `_memory_paths()`. See `notebook/2026-08-18-memory-paths-is-not-a-gate.md` | done |
 | **Fold the `stream-json` transport** into `providers/claude_code.py` beside the single-shot path | the multi-turn canary reproduces: `input_tokens` climbs *and* turn-*n* recalls turn-1 content |
@@ -122,6 +121,14 @@ them was briefed to break the claim that the table was stale, and it found the
 opposite in two places: Track 0.6 is *less* done than the programme says, and
 the vendored-corpus row names an artefact that was never built because the work
 took a different route.
+
+The Track K5 backlog row went the same way on 2026-08-25. Its two identifiers
+reached `paper/refs.bib` on 2026-08-18 as `lou2024anchoring` and
+`sun2025overconfident`, each with a verbatim `quote`, and
+`paper/citations-baseline.txt` has carried no entries since, which was the
+row's own done-when condition. Keep what the row recorded:
+`docs/RESEARCH_PROGRAMME.md` said "K5 is closed" for four days while that
+backlog was still open, because a may-only-shrink list can still be added to.
 
 ---
 
