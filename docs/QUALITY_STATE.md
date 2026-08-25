@@ -61,6 +61,7 @@ order are registered in
 | W0 | Register the tau rule, the consensus rule, the multiplicity family and W2's acceptance tests | **done** — the notebook entry above |
 | W1 | Tau v2 in `stats/track_h.py`, plus `cluster_bootstrap_statistic` in `stats/cluster.py`. v1 stays callable. | **done** — 140 tests, `stats` at 100% line and branch |
 | W3 | `_run_loop` extraction from `runner.py`, `run_isolated` in `providers/claude_code.py`, new `elicit.py`, backpressure fault-injection test | **done** — 95 tests; landed in `7f175a7` |
+| W3b | `elicit.py` generalised off scalars: `ScalarAsk`/`MembershipAsk`/`CallAsk` behind a closed union, `condition_label` split from `arm`, `common_item_set`, `exclusion_counts` by arm | **done** — branch `elicit-generic` at `d5d02b7`, full gate green, 82 tests. Not merged; lands at the phase boundary. |
 | 0G | This file | **done** |
 | W2 | Quantity layer in `scripts/size_track_h_phase0.py` and the two two-branch gates. Re-derives `smallest_usable_n`. | unblocked, not started |
 | W4 | Blind scalar extractor, `consensus_quantity`, and the `fal-z` and `fal-u` falsifier cases | unblocked, not started |
@@ -135,6 +136,28 @@ independence the three-family split was built for.
    three items. At or above 0.70 closes that family on the ceiling kill already
    on record, and `council` — which has no answer key and no base arm at all —
    is then the last instrument standing.
+
+**What W3b bought, and one thing it found.** Families B and C could not reach
+[`SCORECARD.md`](../SCORECARD.md) at all before this: every call on the quality
+track has gone through sub-agents, so nothing carries a checkpoint, a cost ledger
+or an isolation receipt. `elicit.py` was blind by construction and hard-coded to
+scalars, which Family A no longer needs and Families B and C cannot use. It now
+serves all three, and `unit` lives only on `ScalarAsk`, so a `council` item has no
+field to leave null rather than an optional one to fill in wrongly.
+
+Two of its findings matter beyond the module. `common_item_set` exists because a
+long item can overflow the window in `on`, `in_situ` and `placebo` while fitting
+in `off`, which scores the arms on **different item sets** and, if length tracks
+difficulty, pushes the document-carrying arms up — the same direction as all three
+Family B and C defects. The union of items that overflow in any arm is dropped
+from every arm, and it is reported whether or not it is empty.
+
+And an `infrastructure` row occupies its own resume key in `elicit.py`, so a
+resumed run never re-issues it, while the docstring said retrying was the right
+answer. **Audited: no published number is affected.** No record under `results/`
+carries `call_status` at all, and the shared `_run_loop` writes no row on failure —
+it continues and re-raises — so a resumed `run_arm` re-issues the call and its key
+stays free. The defect is specific to `elicit.py`, which has produced no records.
 
 3. **W2 and W4**, unblocked and unchanged, below. They serve Family A's scalar
    pipeline, which is now closed, so they drop to the bottom of the order: what
