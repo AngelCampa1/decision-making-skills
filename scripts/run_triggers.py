@@ -66,7 +66,7 @@ import argparse
 import json
 import sys
 from collections.abc import Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Final
 
@@ -101,10 +101,14 @@ from decision_evals.trigger_arms import (  # noqa: E402
     format_rate,
     format_routing,
     item_analysis,
+    label_versions_comparable,
     load_arm,
+    models_comparable,
     routing_by_procedure,
+    skill_versions_comparable,
     summarise,
     summarise_by_band,
+    venue_comparable,
 )
 from decision_evals.triggers import (  # noqa: E402
     TRIGGERS_DIR,
@@ -266,6 +270,45 @@ def agy_response_schema(system: str, allowed: tuple[str, ...]) -> str:
     return json.dumps({"type": "object", "properties": properties, "required": ["fire", key]})
 
 
+@dataclass(frozen=True)
+class Reply:
+    """What one returned call is worth keeping: the verdict, the text it arrived
+
+    in, the backend's own word on how it ended, and how many turns it took.
+
+    A named record, because ``raw`` and ``status`` are both ``str``. In a
+    positional ``(verdict, raw, status, num_turns)`` each of those two has an
+    unlabelled slot that accepts the other's value in silence, and a status
+    written into the ``raw`` column reads downstream as a model reply. Names
+    make that a ``TypeError`` where it is written.
+
+    **Every field is required.** The argument above buys nothing if a call site
+    can leave one out: a default would let a caller holding a real ``status``
+    drop it and get ``""``, which is a value with a meaning, and mypy would say
+    nothing. The one site with genuinely nothing to report passes ``""`` and
+    ``0`` in the open, where a reader can see the claim being made.
+
+    ``status`` and ``num_turns`` are copied off :class:`CliResult` and reach the
+    row unchanged. The Claude backend reports neither, so its rows carry that
+    class's own defaults, which is a fact about the venue.
+    """
+
+    verdict: Verdict
+    raw: str
+    #: How the backend said the call ended, verbatim. On ``agy`` an ``ERROR``
+    #: here can sit beside a well-formed verdict: measured 2026-08-21, an agent
+    #: answered, then reached outside its sandbox and was terminated by the
+    #: CLI's own protection boundary. Both cases reached the checkpoint as
+    #: identical rows until this field did, so a pre-registration could state a
+    #: rule about ERROR-status calls and no analysis could apply it. Whether such
+    #: a verdict may be scored stays an analysis decision, which is the whole
+    #: reason the record has to carry the distinction.
+    status: str
+    #: Turns the backend took. Above one means the agent used tools before it
+    #: answered, which on an agentic venue is a covariate worth having.
+    num_turns: int
+
+
 def ask_agy(
     prompt: str,
     model: str,
@@ -273,7 +316,7 @@ def ask_agy(
     allowed: tuple[str, ...],
     *,
     contract: str = "schema",
-) -> tuple[Verdict, str]:
+) -> Reply:
     """One call against the Antigravity CLI.
 
     There is no ``in_situ`` switch here and its absence is the point: this
@@ -300,7 +343,12 @@ def ask_agy(
     with isolated_cwd("de-trigger-") as cwd:
         receipt, result = antigravity.run(prompt, model=model, cwd=cwd, json_schema=schema)
         receipt.assert_isolated(model=model, cwd=cwd)
-    return decision(result.text, allowed), result.text
+    return Reply(
+        verdict=decision(result.text, allowed),
+        raw=result.text,
+        status=result.status,
+        num_turns=result.num_turns,
+    )
 
 
 def ask(
@@ -313,13 +361,19 @@ def ask(
     in_situ: bool = False,
     backend: str = "claude",
     contract: str = "schema",
-) -> tuple[Verdict, str]:
-    """The verdict **and the raw reply**.
+) -> Reply:
+    """The verdict, **the raw reply, and how the call ended**.
 
     The raw text is returned so it can be stored, because on 2026-08-12 a parser
     whitelist discarded every answer in a 365-call run and the records kept
     nothing to recover from — the run had to be repeated. ``ShardedRecord`` had
     already learned this and says so in its own docstring; this runner had not.
+
+    ``status`` and ``num_turns`` ride along for the same reason, one venue over.
+    The provider has recorded both since 2026-08-21 and this function threw them
+    away, so a checkpoint said an ``agy`` call carrying an ERROR status beside a
+    valid verdict was an ordinary row. :class:`Reply` holds the shape and the
+    argument for it.
 
     ``allowed`` defaults to ``None``, which :func:`~decision_evals.triggers.decision`
     resolves to :func:`~decision_evals.triggers.default_procedures` itself --
@@ -350,7 +404,15 @@ def ask(
     ):
         result = chat.send(prompt)
         chat.receipt.assert_isolated()
-    return decision(result.text, allowed), result.text
+    # No branch on the backend. ``claude -p`` reports neither field, so what
+    # this carries is whatever its ``CliResult`` holds: the class defaults
+    # today, and whatever the CLI starts reporting without an edit here.
+    return Reply(
+        verdict=decision(result.text, allowed),
+        raw=result.text,
+        status=result.status,
+        num_turns=result.num_turns,
+    )
 
 
 CHECKPOINT = REPO_ROOT / "results" / "triggers" / "verdicts.jsonl"
@@ -477,7 +539,7 @@ def collect(
                     continue
                 allowed = tuple(entry_names) if entry_names else default_procedures()
                 try:
-                    (fired, procedure, p_fire), raw = ask(
+                    reply = ask(
                         description,
                         case,
                         model,
@@ -490,8 +552,18 @@ def collect(
                 except IsolationError:
                     raise
                 except CliError as error:
-                    fired, procedure, p_fire, raw = None, None, None, str(error)
+                    # A call that raised has no result to read a status off,
+                    # so the empty pair is written here in the open: it is a
+                    # claim that nothing was reported, and it is the only place
+                    # in this file where those two values are chosen rather
+                    # than copied. `fired is None` is what marks the row as a
+                    # failure; a fabricated status would read as something the
+                    # backend said.
+                    reply = Reply(
+                        verdict=(None, None, None), raw=str(error), status="", num_turns=0
+                    )
                     print(f"  r{repeat} {case.id}: call failed -- {error}")
+                fired, procedure, p_fire = reply.verdict
                 # ``covers`` is the routing outcome that survives a changing
                 # entry count: at n=2 the model names ``ledger-fit`` and the
                 # label is ``ledger``, so equality is the wrong test. Computed
@@ -620,7 +692,34 @@ def collect(
                     "stakes": case.stakes,
                     "ask": case.ask,
                     "kind": case.kind,
-                    "raw": raw,
+                    # How the backend said the call ended, and how many turns it
+                    # took. The provider has carried both since 2026-08-21 and
+                    # this runner dropped them on the floor, which left the one
+                    # distinction that decision was made to preserve absent from
+                    # every row: an `agy` call that answered and then died
+                    # reaching outside its sandbox looked exactly like a clean
+                    # one. An arm can now pre-register a rule about ERROR-status
+                    # calls and the analysis can apply it.
+                    #
+                    # Empty and zero mean the backend reported nothing: every
+                    # `claude` row, every failed call, and an `agy` event whose
+                    # result carries no `status` key, which
+                    # `antigravity.parse_events` also resolves to `""`. The
+                    # values come off `CliResult`, so a backend that starts
+                    # reporting needs no edit here.
+                    #
+                    # **A row with no `status` key at all is a different thing**
+                    # and means only that it predates this line. Resuming an
+                    # `agy` checkpoint written before 2026-08-24 leaves one file
+                    # holding both shapes, and reading an absent key as "nothing
+                    # was reported" would put the 90 rows of
+                    # `canary-band-s-agy-gemini-3.7-flash-low-v6.jsonl` back in
+                    # the pool this field exists to separate. Absent is unknown,
+                    # the way `models_comparable` already reads an absent
+                    # `model`.
+                    "status": reply.status,
+                    "num_turns": reply.num_turns,
+                    "raw": reply.raw,
                 }
                 handle.write(json.dumps(row) + "\n")
                 handle.flush()
@@ -1081,6 +1180,53 @@ def report_calibration(done: dict[tuple[str, int], dict[str, object]]) -> None:
         print("  *** carrying information about these labels.")
 
 
+def unlicensed_comparisons(
+    baseline: Sequence[Record],
+    *,
+    set_version: int,
+    model: str,
+    in_situ: bool,
+    skill_version: str | None,
+) -> list[str]:
+    """Every refusal the four guards raise against this run, before it makes a call.
+
+    A registered band names a number an earlier arm produced, and until now
+    nothing checked that the two arms may be compared at all. On 2026-08-24
+    Track N10 registered two bands straight across a key bump and a skill
+    revision, spent 3,960 calls, and learned at analysis time that
+    ``label_versions_comparable`` and ``skill_versions_comparable`` both refuse
+    the pair. Neither band could be scored, and the refusals were nobody's
+    discovery until the data was in.
+
+    The probe carries the four stamps :func:`collect` is about to write and
+    nothing else, because those four are what the guards read. Asking them about
+    a row that does not exist yet is the point: the same refusal is worth a great
+    deal more before the calls than after them.
+
+    ``in_situ`` is the value ``collect`` will write rather than the flag, which
+    are two different things on the ``agy`` backend.
+    """
+    probe: list[Record] = [
+        {
+            "set_version": set_version,
+            "model": model,
+            "in_situ": in_situ,
+            "skill_version": skill_version,
+        }
+    ]
+    refusals = []
+    for guard in (
+        label_versions_comparable,
+        models_comparable,
+        venue_comparable,
+        skill_versions_comparable,
+    ):
+        reason = guard(baseline, probe)
+        if reason is not None:
+            refusals.append(reason)
+    return refusals
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="haiku")
@@ -1183,6 +1329,16 @@ def main() -> int:
         choices=DESCRIPTION_VARIANTS,
         default="full",
         help="L5: which part of the shipped description to delete. Own checkpoint",
+    )
+    parser.add_argument(
+        "--baseline",
+        type=Path,
+        help=(
+            "the checkpoint a registered band was computed from. The four "
+            "comparability guards run against it before the first call and the run "
+            "refuses if any of them refuse, so a band that could never have been "
+            "scored costs nothing instead of a whole run"
+        ),
     )
     args = parser.parse_args()
 
@@ -1325,8 +1481,22 @@ def main() -> int:
         # registered arm rather than a formatting preference: pooling a
         # schema-enforced verdict with a prose one is the thing that experiment
         # exists to make impossible.
+        #
+        # So is the model, and this backend is the one that cannot do without
+        # it. One binary serves Gemini, GPT-OSS and Claude, so a vendor sweep
+        # would otherwise write three arms to one path: the second run would
+        # resume over the first's rows, skip every case id it found and report
+        # itself complete on nothing. `models_comparable` refuses to pool those
+        # records, and the checkpoint keys on the same stamp so the refusal
+        # never has to fire.
+        #
+        # The `claude` side carries the same hazard and does not address it.
+        # Every run on record there was made at one tier, which is the only
+        # reason it has not bitten, and renaming those files now would orphan
+        # every checkpoint on disk.
+        model_slug = args.model.split("/")[-1]
         checkpoint = checkpoint.with_name(
-            f"{checkpoint.stem}-{args.backend}-{args.contract}{checkpoint.suffix}"
+            f"{checkpoint.stem}-{args.backend}-{args.contract}-{model_slug}{checkpoint.suffix}"
         )
     if set_path != default_set:
         # A different corpus is a different answer key, so it cannot share a
@@ -1356,6 +1526,30 @@ def main() -> int:
     entry = resolve_model(args.model)
     assert_model_allowed(entry.arena, args.model, backend=_BACKEND_MODULES[args.backend])
     print(f"model: {args.model} ({entry.vendor}, {entry.backend}, arena {entry.arena})")
+
+    if args.baseline is not None:
+        # Before the preflight below, because this one costs no call at all and
+        # a run that cannot be compared with the arm its band came from should
+        # not reach a credential check, let alone a corpus.
+        try:
+            baseline_rows = load_arm(args.baseline)
+        except (OSError, ValueError) as error:
+            print(f"cannot read the baseline {args.baseline}: {error}")
+            return 1
+        refusals = unlicensed_comparisons(
+            baseline_rows,
+            set_version=trigger_set.version,
+            model=args.model,
+            in_situ=args.in_situ or args.backend == "agy",
+            skill_version=skill_version,
+        )
+        if refusals:
+            print(f"\n*** {args.baseline.name} cannot be compared with this run:")
+            for reason in refusals:
+                print(f"***   {reason}")
+            print("*** A band registered against it could not have been scored. Stopping.")
+            return 1
+        print(f"baseline: {args.baseline.name}, comparable on all four guards")
 
     if args.backend == "agy":
         # One throwaway call. The credential here is interactive-only, so a
