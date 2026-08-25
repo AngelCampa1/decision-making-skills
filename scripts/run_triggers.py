@@ -101,10 +101,14 @@ from decision_evals.trigger_arms import (  # noqa: E402
     format_rate,
     format_routing,
     item_analysis,
+    label_versions_comparable,
     load_arm,
+    models_comparable,
     routing_by_procedure,
+    skill_versions_comparable,
     summarise,
     summarise_by_band,
+    venue_comparable,
 )
 from decision_evals.triggers import (  # noqa: E402
     TRIGGERS_DIR,
@@ -1176,6 +1180,53 @@ def report_calibration(done: dict[tuple[str, int], dict[str, object]]) -> None:
         print("  *** carrying information about these labels.")
 
 
+def unlicensed_comparisons(
+    baseline: Sequence[Record],
+    *,
+    set_version: int,
+    model: str,
+    in_situ: bool,
+    skill_version: str | None,
+) -> list[str]:
+    """Every refusal the four guards raise against this run, before it makes a call.
+
+    A registered band names a number an earlier arm produced, and until now
+    nothing checked that the two arms may be compared at all. On 2026-08-24
+    Track N10 registered two bands straight across a key bump and a skill
+    revision, spent 3,960 calls, and learned at analysis time that
+    ``label_versions_comparable`` and ``skill_versions_comparable`` both refuse
+    the pair. Neither band could be scored, and the refusals were nobody's
+    discovery until the data was in.
+
+    The probe carries the four stamps :func:`collect` is about to write and
+    nothing else, because those four are what the guards read. Asking them about
+    a row that does not exist yet is the point: the same refusal is worth a great
+    deal more before the calls than after them.
+
+    ``in_situ`` is the value ``collect`` will write rather than the flag, which
+    are two different things on the ``agy`` backend.
+    """
+    probe: list[Record] = [
+        {
+            "set_version": set_version,
+            "model": model,
+            "in_situ": in_situ,
+            "skill_version": skill_version,
+        }
+    ]
+    refusals = []
+    for guard in (
+        label_versions_comparable,
+        models_comparable,
+        venue_comparable,
+        skill_versions_comparable,
+    ):
+        reason = guard(baseline, probe)
+        if reason is not None:
+            refusals.append(reason)
+    return refusals
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="haiku")
@@ -1278,6 +1329,16 @@ def main() -> int:
         choices=DESCRIPTION_VARIANTS,
         default="full",
         help="L5: which part of the shipped description to delete. Own checkpoint",
+    )
+    parser.add_argument(
+        "--baseline",
+        type=Path,
+        help=(
+            "the checkpoint a registered band was computed from. The four "
+            "comparability guards run against it before the first call and the run "
+            "refuses if any of them refuse, so a band that could never have been "
+            "scored costs nothing instead of a whole run"
+        ),
     )
     args = parser.parse_args()
 
@@ -1465,6 +1526,30 @@ def main() -> int:
     entry = resolve_model(args.model)
     assert_model_allowed(entry.arena, args.model, backend=_BACKEND_MODULES[args.backend])
     print(f"model: {args.model} ({entry.vendor}, {entry.backend}, arena {entry.arena})")
+
+    if args.baseline is not None:
+        # Before the preflight below, because this one costs no call at all and
+        # a run that cannot be compared with the arm its band came from should
+        # not reach a credential check, let alone a corpus.
+        try:
+            baseline_rows = load_arm(args.baseline)
+        except (OSError, ValueError) as error:
+            print(f"cannot read the baseline {args.baseline}: {error}")
+            return 1
+        refusals = unlicensed_comparisons(
+            baseline_rows,
+            set_version=trigger_set.version,
+            model=args.model,
+            in_situ=args.in_situ or args.backend == "agy",
+            skill_version=skill_version,
+        )
+        if refusals:
+            print(f"\n*** {args.baseline.name} cannot be compared with this run:")
+            for reason in refusals:
+                print(f"***   {reason}")
+            print("*** A band registered against it could not have been scored. Stopping.")
+            return 1
+        print(f"baseline: {args.baseline.name}, comparable on all four guards")
 
     if args.backend == "agy":
         # One throwaway call. The credential here is interactive-only, so a

@@ -1203,3 +1203,100 @@ class TestAgyCheckpointsCarryTheModel:
         monkeypatch.setattr(sys, "argv", ["run_triggers.py"])
         assert runner.main() == 0
         assert captured["checkpoint"] == runner.CHECKPOINT
+
+
+class TestBaselineComparabilityIsCheckedBeforeTheRun:
+    """Track N10 registered two bands across a boundary the guards refuse.
+
+    It cost 3,960 calls to discover, because nothing asked the guards until the
+    data was in and a band was being scored against it. These tests are that
+    question, asked before the first call.
+    """
+
+    def _baseline(self) -> list[dict[str, object]]:
+        """The N6 `full` arm as it sits on disk: key v4, haiku, no skill stamp."""
+        path = (
+            Path(__file__).resolve().parents[2]
+            / "results"
+            / "decision-making"
+            / "2026-08-18-e632659-n6-confirmatory"
+            / "verdicts-full.jsonl"
+        )
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
+
+    def test_a_matching_baseline_raises_nothing(self) -> None:
+        """The known-good case, without which a refusal proves nothing."""
+        refusals = runner.unlicensed_comparisons(
+            self._baseline(),
+            set_version=4,
+            model="haiku",
+            in_situ=False,
+            skill_version=None,
+        )
+        assert refusals == []
+
+    @pytest.mark.parametrize(
+        ("axis", "stamps"),
+        [
+            ("label revision", {"set_version": 6}),
+            ("model", {"model": "sonnet"}),
+            ("venue", {"in_situ": True}),
+            ("skill revision", {"skill_version": "0.3.0"}),
+        ],
+    )
+    def test_each_guard_fires_on_its_own_axis(self, axis: str, stamps: dict[str, Any]) -> None:
+        base: dict[str, Any] = {
+            "set_version": 4,
+            "model": "haiku",
+            "in_situ": False,
+            "skill_version": None,
+        }
+        refusals = runner.unlicensed_comparisons(self._baseline(), **{**base, **stamps})
+        assert len(refusals) == 1, axis
+
+    def test_n10s_own_defect_is_caught(self) -> None:
+        """The real pair, as N10 actually registered it: v6 at 0.3.0 against v4
+
+        unstamped. Two guards refuse, and neither band it carried could have been
+        scored.
+        """
+        refusals = runner.unlicensed_comparisons(
+            self._baseline(),
+            set_version=6,
+            model="haiku",
+            in_situ=False,
+            skill_version="0.3.0",
+        )
+        assert len(refusals) == 2
+
+    def test_the_run_stops_before_it_calls_anything(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """Exit 1 from `main()` with `collect` never reached.
+
+        The value of the check is entirely in its position: the same refusal
+        after the calls is the situation it exists to prevent.
+        """
+
+        def never(*args: Any, **kwargs: Any) -> dict[tuple[str, int], dict[str, object]]:
+            raise AssertionError("collect() was reached; the baseline check did not stop the run")
+
+        monkeypatch.setattr(runner, "collect", never)
+        baseline = tmp_path / "baseline.jsonl"
+        baseline.write_text(
+            json.dumps({"case": "p1", "repeat": 0, "fired": True, "should_fire": True}) + "\n",
+            encoding="utf-8",
+        )
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                "run_triggers.py",
+                "--set",
+                str(CORPUS),
+                "--baseline",
+                str(baseline),
+            ],
+        )
+        assert runner.main() == 1
+        assert "cannot be compared with this run" in capsys.readouterr().out
