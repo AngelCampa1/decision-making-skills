@@ -18,9 +18,40 @@ import pytest
 
 from decision_evals.providers import claude_code as cc
 
+#: The id the fixtures answer with, and the one the CLI's own side-call spends.
+#: Two entries is the shape of a real isolated payload, not an edge case.
+_ANSWERER = "claude-haiku-4-5-20251001"
+_SIDE_CALL = "claude-sonnet-4-6"
+
+_DEFAULT_USAGE: dict[str, Any] = {"input_tokens": 183, "output_tokens": 63}
+
+
+def _model_usage(usage: dict[str, Any] | None, **extra: Any) -> dict[str, Any]:
+    """The ``modelUsage`` entry a real payload carries for the answering model.
+
+    The CLI reports the answer's four token counts twice, camelCase here and
+    snake_case in the top-level ``usage``. A fixture that lets the two disagree
+    is not shaped like a real payload, and it was the old fixture's disagreement
+    that let ``parse_result`` look correct while it read the wrong key.
+    """
+    usage = usage or {}
+    return {
+        "inputTokens": usage.get("input_tokens", 0),
+        "outputTokens": usage.get("output_tokens", 0),
+        "cacheCreationInputTokens": usage.get("cache_creation_input_tokens", 0),
+        "cacheReadInputTokens": usage.get("cache_read_input_tokens", 0),
+        **extra,
+    }
+
 
 def _payload(**overrides: Any) -> dict[str, Any]:
-    """A successful CLI payload, shaped like a real one."""
+    """A successful CLI payload, shaped like a real one.
+
+    ``modelUsage`` tracks whatever ``usage`` the caller asked for, so overriding
+    one keeps the pair consistent. Override ``modelUsage`` directly to break the
+    pair on purpose.
+    """
+    usage = overrides.get("usage", _DEFAULT_USAGE)
     base: dict[str, Any] = {
         "type": "result",
         "subtype": "success",
@@ -30,8 +61,8 @@ def _payload(**overrides: Any) -> dict[str, Any]:
         "duration_ms": 2582,
         "session_id": "bcb39659",
         "total_cost_usd": 0.001014,
-        "usage": {"input_tokens": 183, "output_tokens": 63},
-        "modelUsage": {"claude-haiku-4-5-20251001": {"inputTokens": 634}},
+        "usage": usage,
+        "modelUsage": {_ANSWERER: _model_usage(usage)},
     }
     base.update(overrides)
     return base
@@ -190,10 +221,11 @@ def test_a_repeat_served_from_cache_still_reports_the_whole_prompt() -> None:
 
 
 def test_context_window_is_recorded_and_yields_a_fraction() -> None:
+    usage = {"input_tokens": 100_000, "output_tokens": 0}
     result = cc.parse_result(
         _payload(
-            usage={"input_tokens": 100_000, "output_tokens": 0},
-            modelUsage={"claude-haiku-4-5-20251001": {"contextWindow": 200_000}},
+            usage=usage,
+            modelUsage={_ANSWERER: _model_usage(usage, contextWindow=200_000)},
         )
     )
     assert result.context_window == 200_000
@@ -258,6 +290,77 @@ def test_an_error_with_no_message_still_raises() -> None:
 def test_a_non_string_result_is_rejected(bad: object) -> None:
     with pytest.raises(cc.CliError, match="no string `result` field"):
         cc.parse_result(_payload(result=bad))
+
+
+#: The `modelUsage` and `usage` blocks of a real isolated call, transcribed from
+#: a payload captured on 2026-08-25 against claude-code 2.1.159: `claude -p
+#: --model sonnet` plus `ISOLATION_FLAGS`, one turn, four-token answer. The
+#: same prompt without those flags returned one key. Nothing here is invented,
+#: because the whole question is what the CLI actually sends.
+_ISOLATED_USAGE: dict[str, Any] = {
+    "input_tokens": 3,
+    "cache_creation_input_tokens": 3971,
+    "cache_read_input_tokens": 2131,
+    "output_tokens": 4,
+}
+_ISOLATED_MODEL_USAGE: dict[str, Any] = {
+    "claude-haiku-4-5-20251001": {
+        "inputTokens": 443,
+        "outputTokens": 11,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "contextWindow": 200_000,
+    },
+    "claude-sonnet-4-6": {
+        "inputTokens": 3,
+        "outputTokens": 4,
+        "cacheReadInputTokens": 2131,
+        "cacheCreationInputTokens": 3971,
+        "contextWindow": 200_000,
+    },
+}
+
+
+def test_the_clis_own_side_call_does_not_become_the_recorded_model() -> None:
+    """A measured defect, not a hypothetical one.
+
+    Under `ISOLATION_FLAGS` the CLI spends an internal `haiku` call beside the
+    answering model, so `modelUsage` has two keys and the old rule -- the sole
+    key -- refused every call the runner made. The answering model is the entry
+    whose token counts are the ones `usage` reports.
+    """
+    result = cc.parse_result(_payload(usage=_ISOLATED_USAGE, modelUsage=_ISOLATED_MODEL_USAGE))
+    assert result.model == "claude-sonnet-4-6"
+    assert result.input_tokens == 3 + 3971 + 2131
+    assert result.output_tokens == 4
+
+
+def test_a_model_usage_block_matching_nothing_is_refused() -> None:
+    """Guessing beats refusing only until the guess lands in a published record.
+
+    Counts that match no entry mean the payload is not the shape this reads, and
+    picking the first key would put an unfalsifiable model id in the record.
+    """
+    with pytest.raises(cc.CliError, match="exactly one resolved model"):
+        cc.parse_result(
+            _payload(
+                usage=_ISOLATED_USAGE,
+                modelUsage={_ANSWERER: _model_usage({"input_tokens": 9, "output_tokens": 9})},
+            )
+        )
+
+
+def test_two_entries_matching_equally_well_are_refused() -> None:
+    """Ties are the case where a heuristic would quietly pick wrong."""
+    with pytest.raises(cc.CliError, match="exactly one resolved model"):
+        cc.parse_result(
+            _payload(
+                modelUsage={
+                    _ANSWERER: _model_usage(_DEFAULT_USAGE),
+                    _SIDE_CALL: _model_usage(_DEFAULT_USAGE),
+                }
+            )
+        )
 
 
 @pytest.mark.parametrize("usage", [{}, None, {"a": {}, "b": {}}])

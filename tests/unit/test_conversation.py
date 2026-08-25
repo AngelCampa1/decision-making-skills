@@ -34,10 +34,21 @@ from decision_evals.providers.claude_code import (
 
 
 def _result_event(text: str, *, input_tokens: int = 100) -> dict[str, Any]:
+    # `modelUsage` repeats the answer's token counts in camelCase, and the two
+    # blocks agreeing is what tells the answering model apart from the side-call
+    # the CLI spends alongside it.
     return {
         "type": "result",
         "result": text,
-        "modelUsage": {"claude-haiku-4-5-20251001": {"contextWindow": 200000}},
+        "modelUsage": {
+            "claude-haiku-4-5-20251001": {
+                "inputTokens": input_tokens,
+                "outputTokens": 12,
+                "cacheCreationInputTokens": 0,
+                "cacheReadInputTokens": 0,
+                "contextWindow": 200000,
+            }
+        },
         "usage": {
             "input_tokens": input_tokens,
             "output_tokens": 12,

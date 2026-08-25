@@ -450,6 +450,59 @@ def _retry_after(payload: dict[str, Any]) -> float | None:
     return float(value) if value > 0 else None
 
 
+#: The four token counts the CLI reports twice, under two naming conventions:
+#: top-level ``usage`` uses snake_case, a ``modelUsage`` entry camelCase. Pairing
+#: them is what lets :func:`_answering_model` match one against the other.
+_USAGE_KEY_PAIRS: Final[tuple[tuple[str, str], ...]] = (
+    ("input_tokens", "inputTokens"),
+    ("output_tokens", "outputTokens"),
+    ("cache_creation_input_tokens", "cacheCreationInputTokens"),
+    ("cache_read_input_tokens", "cacheReadInputTokens"),
+)
+
+
+def _answering_model(model_usage: Any, usage: dict[str, Any]) -> str:
+    """The id of the model that produced the answer, identified by its tokens.
+
+    ``modelUsage`` is not a single-entry mapping, whatever a single-turn call
+    suggests. Under :data:`ISOLATION_FLAGS` the CLI spends an internal ``haiku``
+    call of its own beside the answering model, so a healthy payload carries two
+    entries. Reproduced on claude-code 2.1.159 on 2026-08-25, same prompt both
+    times: without those flags ``modelUsage`` had one key, with them it had
+    ``claude-haiku-4-5-20251001`` alongside ``claude-sonnet-4-6``. Every call
+    this harness makes goes through those flags, so reading "the sole key"
+    refused every real run rather than the malformed ones.
+
+    The top-level ``usage`` block belongs to the answering model alone, and the
+    same four counts reappear under that model's ``modelUsage`` entry. Matching
+    on them names the answer by construction rather than by guessing at ids, and
+    it keeps the original point of this field: the record carries the resolved
+    id rather than the requested alias, because ``haiku`` is not a version.
+
+    Raises:
+        CliError: Nothing matched, or more than one entry did. Neither says
+            which model answered, and a wrong id sitting quietly in a published
+            record costs more than a call that stops.
+    """
+    entries: dict[str, Any] = model_usage if isinstance(model_usage, dict) else {}
+    wanted = tuple(_number(usage.get(key)) for key, _ in _USAGE_KEY_PAIRS)
+    matches = [
+        str(name)
+        for name, counts in entries.items()
+        if tuple(
+            _number((counts if isinstance(counts, dict) else {}).get(alias))
+            for _, alias in _USAGE_KEY_PAIRS
+        )
+        == wanted
+    ]
+    if len(matches) != 1:
+        raise CliError(
+            "expected exactly one resolved model whose token counts match `usage`, "
+            f"got {sorted(matches)} out of {sorted(entries)}"
+        )
+    return matches[0]
+
+
 def parse_result(payload: dict[str, Any]) -> CliResult:
     """Turn a ``--output-format json`` payload into a :class:`CliResult`.
 
@@ -477,17 +530,16 @@ def parse_result(payload: dict[str, Any]) -> CliResult:
     if not isinstance(text, str):
         raise CliError(f"payload has no string `result` field: {payload!r}")
 
-    # The resolved model id is the sole key of `modelUsage` for a single-turn
-    # call. Recording the resolved id rather than the requested alias is what
-    # makes the run record reproducible -- `haiku` is not a version.
-    model_usage = payload.get("modelUsage") or {}
-    if len(model_usage) != 1:
-        raise CliError(f"expected exactly one resolved model, got {sorted(model_usage)}")
-    model = next(iter(model_usage))
-
     usage = payload.get("usage") or {}
     cache_creation = int(_number(usage.get("cache_creation_input_tokens")))
     cache_read = int(_number(usage.get("cache_read_input_tokens")))
+
+    # `modelUsage` carries the CLI's own side-call as well as the answer, so the
+    # answering model is the entry whose tokens are the ones `usage` reports.
+    # See `_answering_model` for what that side-call is and why the key count
+    # cannot be assumed.
+    model_usage = payload.get("modelUsage") or {}
+    model = _answering_model(model_usage, usage)
 
     # `usage.input_tokens` is the *uncached remainder*, not the prompt. On a
     # 380 KB casefile it reads 10 while `cache_creation_input_tokens` carries the
