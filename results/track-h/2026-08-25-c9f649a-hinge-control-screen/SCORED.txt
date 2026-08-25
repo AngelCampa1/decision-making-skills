@@ -1,0 +1,87 @@
+==============================================================================
+HINGE H01 CONTROL SCREEN -- unaided, blind, two arms, 20 readings each
+==============================================================================
+  readings on disk        40
+  answering model(s)      {'claude-sonnet-4-6': 40}
+  set_version / item_ver  [3] / [6]
+  notional cost           $4.0639  (subscription; never an expense)
+  failed calls recorded   0
+  U+FFFD in stored text   0 reading(s)  (records are verbatim)
+  pound signs preserved   609
+  by arm                  {'pivotal': 20, 'matched': 20}
+
+------------------------------------------------------------------------------
+STEP 1 -- dropout and off-list, per arm, BEFORE the primary
+------------------------------------------------------------------------------
+  arm          N  NO_BLOCK  OFF_LIST  readable
+  pivotal     20         0         3        20
+  matched     20         0         0        20
+
+  d  = |readable(pivotal) - readable(matched)| = |20 - 20| = 0
+  N  = pooled denominator, every reply, nothing excluded = 40
+  d/N = 0/40 = 0.000          <- the dropout bound
+
+------------------------------------------------------------------------------
+STEP 2 -- the primary
+------------------------------------------------------------------------------
+  hits   (named this arm's forking candidate)    35
+    pivotal -> F_A    16 of 20
+    matched -> F_E    19 of 20
+  swaps  (named the OTHER arm's)                  1
+    pivotal -> F_E     1
+    matched -> F_A     0
+  denominator (every reply, nothing excluded)    40
+
+  crossed primary = (35 - 1) / 40 = +0.850
+  bootstrap 95% percentile interval             [+0.725, +0.975]
+  [diagnostic] v4's denominator, NO_BLOCK excluded: +0.850  (confirms nothing)
+
+------------------------------------------------------------------------------
+STEP 3 -- read against BOTH bounds together, or neither is read
+------------------------------------------------------------------------------
+  dropout bound   |crossed| <= d/N          = 0.000
+  coverage bound  |crossed| <= |rA-rE|/2    = 0.059   (rA=0.29, rE=0.41 on 34 held-out descriptions, soft at n=34)
+  the two together, added                   = 0.059
+
+  observed |crossed| = 0.850
+  -> OUTSIDE both bounds, and outside their sum. Neither artefact,
+     nor both together, accounts for 0.850.
+
+  inert-instrument kill    crossed <= 0.10 with interval covering 0  -> does not fire
+  ceiling kill (registered) crossed >= 0.70                     -> FIRES
+
+------------------------------------------------------------------------------
+STEP 4 -- every secondary, with raw counts
+------------------------------------------------------------------------------
+  label                      pivotal   matched    pooled
+  F_A                             16         0        16
+  F_E                              1        19        20
+  OFF_LIST                         3         0         3
+  ADJUDICATE_NO_CLAUSE             0         1         1
+  TOTAL                           20        20        40
+
+  named secondaries:
+    P(F_E | matched)      19/20 readable = 0.950
+    P(F_A | pivotal)      16/20 readable = 0.800
+    off-list  | pivotal   3/20 = 0.150
+    no-block  | pivotal   0/20 = 0.000
+    off-list  | matched   0/20 = 0.000
+    no-block  | matched   0/20 = 0.000
+
+    adjudicated fraction  1/40 = 0.025   against a kill of 0.25  -> does not fire
+      split by cause: ADJUDICATE_MULTI 0, ADJUDICATE_NO_CLAUSE 1
+      pivotal  MULTI  0  NO_CLAUSE  0
+      matched  MULTI  0  NO_CLAUSE  1
+
+    dead-decoy check, per decoy, never pooled:
+      F_B  {'pivotal': 0, 'matched': 0}  total 0  -> DEAD (kill fires)
+      F_D  {'pivotal': 0, 'matched': 0}  total 0  -> DEAD (kill fires)
+
+    F_C_SETTLED (misread, the prompt settles it)  0
+    NONE                                         0
+
+  [context] the RECOMMENDATION block, which the primary does not read:
+    pivotal  {'SIGN': 20}
+    matched  {'DECLINE': 10, 'SIGN': 10}
+
+==============================================================================

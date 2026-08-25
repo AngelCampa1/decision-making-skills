@@ -1,0 +1,387 @@
+# Track H item H01, version 6, arm: matched. Hinge construct, Family B.
+#
+# ONLY `prompt` and `contract` are model-visible, and `contract` is byte-identical
+# across every arm. Everything under `key` and `meta` is answer key. The prompt is
+# rendered from one template in build_prompt.py by token substitution, and the
+# battery asserts that no answer-key vocabulary survives into the rendered text.
+#
+# Every figure under `key` is COMPUTED by emit_items.py from the same functions
+# the battery checks. At v4 they were typed, and the pivotal key priced tonnes
+# THROUGH THE STONE at a per-tonne-of-FLOUR rate while stating a shortfall
+# computed on flour in the same block. The two could not both be right.
+#
+# What changed at version 5, all of it from an adversarial review of v4:
+#   - The low-flow count gets a STATED ceiling of eighty days. At v4 the matched
+#     arm's decoy was dominated only because seventy was assumed to be a ceiling,
+#     which the prompt never said; the threshold is 96 and the answer flipped at
+#     97. The pivotal arm's decoy had a stated range and the matched arm's did
+#     not, so the two arms rested on different strengths of evidence.
+#   - The fee bullet is rewritten to the brief's median register and split in
+#     two. At v4 it was 465 characters and 25 numeral characters, rank 1 of 14 on
+#     both against medians of 196 and 3, and carried two bare closure sentences
+#     unlike anything else in the brief. Length parity between the arms said
+#     nothing about that, because the tell is against the brief.
+#   - NONE is correct in no arm, and no band is registered on any per-arm share.
+#
+# What changed at version 6, from an adversarial review of v5 and from a second
+# author's review while building H02 and H03:
+#   - The scorer holds no key. The accept tables and the arm map moved onto the
+#     item; scorer.label() takes an ItemKey as a required positional argument.
+#     Until v6 a second item scored against H01's module globals came back with
+#     plausible labels and no error anywhere.
+#   - The fee bullet states its range in WORDS. v5 recorded its numeral rank as
+#     irreducible; the water bullet refutes that inside this brief by stating a
+#     two-ended range in zero numerals. The two candidates the crossed primary
+#     contrasts now carry the same notation. It costs two characters of prompt
+#     length in the scan arm and none between pivotal and matched.
+#   - `swing`, "same answer either way", the LEVERAGE slot's own phrasing and the
+#     perfect aspect join the dismissal rule. None is invented: the first two are
+#     the skill's own words, and the scorer could not read the output the skill
+#     specifies.
+#   - `settle`, `decide`, `govern` and `determine` have two senses. A WHEN-tail
+#     tips them to the obtainability reading, which is Step 3's finding rather
+#     than a dismissal.
+#   - The dropout bound is derived, and a coverage bound joins it.
+#   - The scan arm's diagnostic is P(NONE | scan).
+set_version: 3
+construct: hinge
+family: B
+item: H01
+arm: matched
+role: matched
+domain: watermill_supply_contract
+mechanism_type: capacity-threshold
+absent_facts: 4
+forking_candidate: F_E
+elicited:
+  question: which single unsettled candidate would put the recommendation on the other course
+  kind: named-set-membership
+  slot: LEVERAGE
+  candidates: [F_A, F_B, F_D, F_E, NONE]
+
+contract:
+  framing: >-
+    You are advising a small business on a choice it must make by a fixed date.
+    You will be given a brief and two named courses of action. Recommend one of
+    the two.
+  format: |
+    Reason as much as you find useful, then end your reply with exactly these
+    four blocks in this order and nothing after them:
+
+    RECOMMENDATION
+      one word: SIGN or DECLINE
+    BASIS
+      free text -- the reasoning that gets you there
+    LEVERAGE
+      one sentence naming the single unsettled detail, whether it is raised
+      above or not, that would most likely put you on the other course of
+      action if you knew it -- or NONE if no such detail exists
+    CONFIDENCE
+      one word: low, moderate, or high
+
+prompt: |
+  Today is 2026-08-25.
+
+  Tobin Ellery runs Nettlefold Mill at Ardenshaw, one stone driven off a leat
+  taken from the Cowler Brook. The Ashgrove Bakers' Group has offered him a
+  twelve-month supply contract running 2026-10-01 to 2027-09-30 and wants an
+  answer by 2026-09-04. Ashgrove will not split the order between two mills, so
+  it is the whole order or none of it.
+
+  The contract:
+
+  - Ashgrove wants 22 tonnes of flour across the year, a quarter of it sifted
+    white and the rest wholemeal. Sifted white is bolted after milling and the
+    bolter takes off a fifth as bran, which Ashgrove will not take, so each
+    tonne of sifted white needs 1.25 tonnes through the stone.
+  - Ashgrove buys its own grain and delivers it to the mill. Nettlefold is paid
+    £310 a tonne of flour delivered, clear of what the extra milling days cost
+    it. Ashgrove has traded thirty years and pays on delivery.
+  - Ashgrove takes delivery monthly to a schedule Tobin sets, and flour milled
+    ahead into the mill's bins counts against it. The bins hold six months of
+    the order.
+  - Ashgrove's bakers would have to re-source for the rest of the year if the
+    mill came up short, so the contract sets a single agreed sum of £14,000,
+    payable if Nettlefold delivers less than the full tonnage and whatever the
+    size of the shortfall.
+  - Ashgrove takes flour only from a mill on the Bakers' Group assurance scheme,
+    so joining for the contract year is a condition of signing. The certificate
+    lapses each September.
+  - The scheme charges one fee for the year whatever tonnage passes the stone,
+    and fixes it at its October meeting. It will not quote before then. It has
+    charged between four and nine thousand pounds every year since it
+    began, and says the contract year will fall in that range.
+  - Twelve months, and either side may walk at the end of it with no penalty.
+    Ashgrove has not said whether it expects to come back for a second year.
+
+  The mill:
+
+  - The stone mills 0.36 tonnes on a full milling day.
+  - Tobin stands the Saturday market himself, so Saturdays are not milling days.
+    He reckons on 250 working days in the contract year, after the Christmas
+    fortnight and after stone dressing and repair.
+  - The Saturday market, Dunsmere Bakehouse and Vale End Stores take 32 tonnes
+    through the stone across the year, all of it wholemeal. Tobin keeps all
+    three under either course, at that volume, whatever grain does, and none of
+    the three asks for a certificate.
+  - Before the weir went in, the leat dropped below milling flow on about
+    seventy working days a year and the stone stood idle on each of them. The
+    brook's record goes back thirty years and no year in it has passed eighty
+    low days.
+  - The weir and its gauge were finished in March 2026. The gauge has recorded
+    three low days since, in a June that was the wettest in a decade, and it has
+    not yet seen a dry September.
+  - Nothing new is bought for this contract. The stone and the bolter are in
+    place, and Tobin has ruled out buying plant or putting work out to another
+    mill.
+  - Merrin Ellery has agreed to work the extra milling days at the day rate she
+    is already on, with no notice owed either way.
+  - Nettlefold has no borrowing and about £40,000 put by, so the agreed sum
+    would be a bad year rather than the end of one.
+  - Nettlefold buys its own grain for the market and shop trade and reprices
+    that flour each January on what the grain cost. The 2026 harvest is being
+    cut this week and the price is not yet set.
+
+  The two courses are SIGN and DECLINE.
+
+key:
+  capacity_model: >-
+    Stone tonnage required = 32 (existing trade, stated as tonnes through the
+    stone) + 23.375 for the order = 55.375 tonnes. Milling days required =
+    ceil(55.375 / 0.36) = 154. Milling days available = 250 minus the
+    working days the leat is below milling flow, so full delivery needs
+    250 - L >= 154, which is L <= 96.
+  revenue_model: >-
+    Signing displaces nothing: the 32-tonne trade is kept under either course at
+    that volume, no plant is bought, and the extra labour is inside the £310.
+    310 is paid per tonne of FLOUR DELIVERED, not per tonne through the stone.
+    Delivered in full the order is worth 22 x £310 = £6,820, against
+    which the only charge is the assurance fee, £4,000 to £9,000. DECLINE is
+    £0 and no fee, because the market and shop trade needs no certificate.
+  stated_ceiling_on_low_days: 80
+  threshold_low_days: 96
+  correct_leverage: F_E
+
+  F_A:
+    fact: the number of working days a year the leat drops below milling flow
+    role: decoy
+    why_absent: >-
+      The weir and gauge date from March 2026, so there are five months of
+      readings across one unusually wet June and no reading at all from a dry
+      September. The contract must be answered on 2026-09-04, before the gauge
+      can have seen a dry late summer, so the figure is not obtainable in time.
+    stated_range: 0 to 80 low days -- "no year in it has passed eighty low days"
+    forks: false
+    at_low_water_L_15:
+      milling_days_available: 235
+      milling_days_required: 154
+      flour_delivered_tonnes: 22
+      shortfall_tonnes: 0
+      gross_at_310_per_tonne_of_FLOUR: £6,820
+      agreed_sum_falls_due: false
+      net_before_fee: £6,820
+      net_at_fee_4000: £2,820
+      net_at_fee_9000: £-2,180
+      recommendation: FORKS ON THE FEE
+    at_high_water_L_80:
+      milling_days_available: 170
+      milling_days_required: 154
+      flour_delivered_tonnes: 22
+      shortfall_tonnes: 0
+      gross_at_310_per_tonne_of_FLOUR: £6,820
+      agreed_sum_falls_due: false
+      net_before_fee: £6,820
+      net_at_fee_4000: £2,820
+      net_at_fee_9000: £-2,180
+      recommendation: FORKS ON THE FEE
+    cliff_sweep: >-
+      Swept over every integer L in 0..80, the stated range. Delivery is a
+      cliff, not a ramp: at L <= 96 the order goes out whole, and at L = 97
+      the agreed sum falls due. The threshold at 96 sits ABOVE the stated ceiling of 80, so no value the prompt admits changes the answer.
+
+  F_E:
+    fact: what the Bakers' Group assurance scheme will charge for the contract year
+    role: forking
+    why_absent: >-
+      The scheme fixes its fee at an October meeting and will not quote before
+      then, so the figure cannot be had by 2026-09-04. Disqualifier 17 inverted,
+      and it holds in every arm rather than one.
+    stated_range: £4,000 to £9,000, and the prompt says the contract year falls inside it
+    is_not_common_mode: >-
+      None of the three existing customers asks for a certificate, so the fee is
+      paid under SIGN and not under DECLINE and does not cancel.
+    forks: true
+    cliff_sweep: >-
+      Swept against every integer L in 0..80. The fee range straddles zero across that whole range, so this arm has its hinge here.
+
+  F_B:
+    fact: the price of grain from the 2026 harvest
+    role: decoy
+    decoy_type: common-mode
+    why_it_does_not_fork: >-
+      Ashgrove buys and delivers its own grain, so the order carries no grain
+      cost at all. The 32-tonne trade, the only grain Nettlefold buys, is kept
+      under SIGN and under DECLINE alike, so the price moves both courses by the
+      same amount and cancels from the comparison.
+    forks: false
+
+  F_C:
+    fact: how much of the order is sifted white rather than wholemeal
+    role: settled-in-the-prompt
+    at_v5: >-
+      Settled at a quarter. Its accept list stays under scoring and a reply
+      naming it is labelled F_C_SETTLED: a diagnostic that the model treated a
+      stated figure as open, never a hit and never a swap.
+
+  F_D:
+    fact: whether Ashgrove will want a second year
+    role: decoy
+    decoy_type: downstream-of-a-closed-gate
+    why_it_does_not_fork: >-
+      Nothing is sunk into year one that a year two would have to recover. No
+      plant is bought, the market and shop trade is kept under either course,
+      Merrin is owed no notice, either side may walk with no penalty, and the
+      certificate lapses each September rather than carrying into a second year.
+    forks: false
+
+scoring:
+  block: LEVERAGE
+  primary: >-
+    Crossed, over the pivotal and matched arms pooled. P(names this arm's forking
+    candidate) minus P(names the other arm's). Denominator = EVERY reply in both
+    arms. Nothing is excluded: NO_BLOCK, OFF_LIST, ADJUDICATE_MULTI and
+    ADJUDICATE_NO_CLAUSE all stay in and score zero. v4 excluded NO_BLOCK and
+    then read +1.000 on a run where the matched arm produced nothing readable.
+  denominator_audit: >-
+    For every rule that changes what a record contributes: what makes a record
+    leave, whether that is correlated with doing the task well, and which
+    direction it pushes. NO_BLOCK's DIRECTION answer is "removal inflates", and
+    that alone settles it, so the exclusion does not ship. Its CORRELATION
+    answer is UNFALSIFIED rather than established: v5 asserted that format
+    compliance tracks competence, and the only records in this venue are 12 of
+    12 compliant, which measures no correlation at all.
+  secondaries_all_descriptive: >-
+    P(F_E | matched), P(F_A | pivotal), the per-arm four-cell table, off-list and
+    no-block rate by arm, and the adjudicated fraction split by cause. NONE of
+    these carries a band or a kill. A pure salience policy naming the fee in both
+    arms scores crossed = 0.000 and P(F_E | matched) = 0.450 at the same time, so
+    a band on a per-arm share confirms the artefact the primary cancels.
+  registered_bands: none
+  why_no_band: >-
+    The v4 band of 0.30 to 0.60 was anchored on 4 of 9 from the casefile probe.
+    That denominator is replies that named ANY unknown, and five of the nine come
+    from cases where the author's key was NONE and matching was impossible by
+    construction. The same-object anchor -- replies naming a planted key in an
+    arm that has one -- is 4 of 4, under menu scaffolding, at n = 4. Neither 0.44
+    nor 1.00 is a band. No band is derivable from the records that exist, so the
+    first run is a calibration run and reads nothing as confirmation.
+  kills:
+    inert_instrument: >-
+      Crossed primary at or below 0.10 with a bootstrap interval covering zero,
+      at 20 replies per arm. Read against the dropout bound below.
+    dropout_bound: >-
+      |crossed| <= d / N, with d the difference in NO_BLOCK counts between the
+      arms and N the pooled denominator. Derived, not read off a population: an
+      arm-invariant policy naming one candidate with probability a in both arms
+      scores (2a - 1) * d / N, maximised at a = 0 or a = 1. v5 registered 0.027,
+      which is that curve at a = 0.6 on v4's denominator, and understates it by
+      a factor of 2.8 at d = 3. At d = 5 the band is 0.125, above the kill
+      threshold itself, so the per-arm NO_BLOCK counts are read BEFORE the
+      primary rather than consulted when it lands near a line. Branch three-b.
+    coverage_bound: >-
+      |crossed| <= |r_A - r_E| / 2, with r the accept-list recall for each
+      contrasted candidate. Measured on 34 held-out definite descriptions:
+      r_A = 0.29, r_E = 0.41, so the bound is 0.059, which is 59 per cent of the
+      kill threshold and soft at n = 34. A SHARED miss rate only shrinks the
+      primary; the DIFFERENCE is what can set a sign. Read together with the
+      dropout bound or neither is read. Branch two-b.
+    adjudicated_fraction: 0.25, reported split by cause
+    dead_decoy: P(F_B) or P(F_D) at zero across both arms, reported per decoy, never pooled
+    coverage: >-
+      WITHDRAWN as a kill. v4 moved it to 0.50 on an anchor of 5 of 9 whose
+      numerator is entirely trials where the key was NONE. No arm of this item
+      has a NONE key, so the analogue in the records is 0 of 4. Off-list plus
+      F_C_SETTLED plus NONE is reported per arm and killed on nothing.
+  scan_arm_diagnostic: >-
+    P(NONE | scan). Nothing forks in that arm, so only a reply that ran Step 2
+    has a reason to say so, and it is the one statistic that separates Step 2
+    from BOTH ways of scanning a margin. Rendered as counts in branch five:
+    0.450 for Step 2 against 0.000 for either scanner.
+  scan_arm_descriptive: >-
+    P(F_A | scan) minus P(F_A | matched), and P(F_E | scan). Each collapses
+    against one of the two scanners and neither may be read alone. Under
+    commensuration A, widths of each quantity's stated range, the fee sits 5.32
+    range-widths from its boundary in the scan arm against 0.70 for the low-flow
+    count, so an A-scanner names F_A. Under commensuration B, the money each
+    quantity moves across its stated range, which invents no midpoint and is
+    what the LEVERAGE slot's own "most likely put you on the other course" asks
+    for, the water moves nothing and the fee moves 1,000, so a B-scanner names
+    F_E. Both score +1.000 on the pivotal and matched pair, so the crossed
+    primary separates neither.
+  scan_arm_withdrawn_claim: >-
+    v5 registered P(F_A | scan) on the claim that range widths were "the only
+    commensuration under which a margin scan is even well defined". WITHDRAWN:
+    commensuration B is well defined, derivable entirely from the prompt, and
+    names the opposite candidate in that arm. The v5 statistic would have
+    returned "no confound" whenever B was the real policy, which is the
+    identical failure P(F_E | scan) was withdrawn for at v4.
+  scan_arm_confound_is_coupled_to_the_v5_repair: >-
+    Commensuration A divides by the stated ceiling on low days. Before v5 stated
+    that ceiling the low-day range had no width and the range-width scan was not
+    computable at all. The sentence that closes cliff sweep 2 is the same
+    sentence that makes this confound available to the model and measurable
+    here, so the prior on scanning is HIGHER after the repair than before it,
+    and branch five's figures are conditional on the repair.
+
+validity_checks:
+  fork_is_real: >-
+    RECOMMENDATION must split in the pivotal and matched arms alike. Band: the
+    minority course at or above 0.15 of control-arm replies. New at v5 for the
+    matched arm, whose recommendation was determinate at v3.
+  decoys_are_live: >-
+    Across both arms, each of F_B and F_D must be named at least once. F_D's bare
+    forms were restored at v5 for this reason: v4 qualified "renew" away to stop
+    the certificate leaking into F_D and then scored a plain "whether Ashgrove
+    renews" off-list, which would have read as a dead decoy.
+  accept_lists_partition: >-
+    The four candidate lists and the F_C diagnostic partition pairwise, and no
+    bare form of one candidate reaches into another's list. Checked by
+    hinge_primary_v6.py before the item ships.
+  accept_lists_cover: >-
+    Reported, never killed on. The partition check sees collisions and cannot
+    see GAPS: a definite description with zero token overlap and total
+    referential overlap resolves to a candidate and scores OFF_LIST. 34 held-out
+    namings, pooled recall 0.35. Not patched, because a list grown to cover the
+    phrasings its author thought of next is a phrase list written before the
+    data. What it costs the primary is registered as coverage_bound.
+  no_arm_carries_two_correct_answers: >-
+    Swept over both candidates, every arm and every stated value: no arm has
+    both candidates forking at once. The two fork on different parameters here.
+    The fee straddles zero only where the order goes out whole, and the low-flow
+    count decides only where it does not. Clearance from the stated ceiling of
+    80 low days: pivotal threshold 43, minus 37 days; matched and scan threshold
+    96, plus 16 days. A later edit to a tonnage or a ceiling is checked against
+    those two figures. Branch four-b.
+  no_key_reaches_a_generation_call: >-
+    The rendered prompt carries no answer-key vocabulary in any arm. Checked by
+    hinge_primary_v6.py.
+  the_scorer_holds_no_key: >-
+    scorer.label() takes an ItemKey as a REQUIRED POSITIONAL argument and this
+    item's tables live in key_h01.py. It is not optional with an H01 default: an
+    item that forgets to pass a key fails at the call rather than returning
+    labels quietly drawn from H01's vocabulary.
+
+meta:
+  personas_invented: true
+  real_personal_data: false
+  today: 2026-08-25
+  authored: 2026-08-25
+  item_version: 6
+  set_version: 3
+  key_module: key_h01.py
+  prompt_chars: 3520
+  prompt_delta_pivotal_to_matched_chars: 0
+  prompt_delta_to_scan_chars: 2
+  register_fee_vs_water_numeral_chars: 0 vs 0, was 10 vs 0 at v5
+  register_fee_vs_water_length_chars: 274 vs 227, RESIDUAL and unclosed
+  blind_tested: false

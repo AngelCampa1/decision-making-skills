@@ -36,9 +36,20 @@ repos:
         exclude: ^\.playwright-mcp/
       - id: check-toml
       - id: check-json
+      # `results/` holds published run records: the prompts as each reader
+      # received them, the replies verbatim, and the scored output. A prompt
+      # sent without a trailing newline is stored without one, because the
+      # bytes on disk are the evidence that the prompt was what the README says
+      # it was. Landing the `hinge` control screen on 2026-08-25 this hook
+      # appended a newline to 82 of them in one pass, silently, and a reader
+      # re-running from `plan/` would have sent a prompt the run never sent.
+      #
+      # Same reasoning as the `.playwright-mcp/` scoping above: the hook was
+      # written to tidy source files, and a transcript is not one.
       - id: end-of-file-fixer
+        exclude: ^results/
       - id: trailing-whitespace
-        exclude: ^\.playwright-mcp/
+        exclude: ^(\.playwright-mcp/|results/)
       - id: check-merge-conflict
       - id: check-added-large-files
         args: [--maxkb=2048]

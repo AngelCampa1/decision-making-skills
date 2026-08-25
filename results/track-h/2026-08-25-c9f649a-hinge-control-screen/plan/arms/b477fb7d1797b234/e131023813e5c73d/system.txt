@@ -1,0 +1,15 @@
+You are advising a small business on a choice it must make by a fixed date. You will be given a brief and two named courses of action. Recommend one of the two.
+
+Reason as much as you find useful, then end your reply with exactly these
+four blocks in this order and nothing after them:
+
+RECOMMENDATION
+  one word: SIGN or DECLINE
+BASIS
+  free text -- the reasoning that gets you there
+LEVERAGE
+  one sentence naming the single unsettled detail, whether it is raised
+  above or not, that would most likely put you on the other course of
+  action if you knew it -- or NONE if no such detail exists
+CONFIDENCE
+  one word: low, moderate, or high

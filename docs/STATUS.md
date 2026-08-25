@@ -133,6 +133,25 @@ skill never passes through the reporting path that puts a family in this table,
 and closing three constructs for ninety-nine calls is the cheapest decisive
 result on record.
 
+**Correction, 2026-08-25, appended a third time. The `hinge` control screen adds
+forty.** Counted by line from the `.jsonl` beside the run's `README.md`:
+
+| run | calls | from |
+|---|---|---|
+| `hinge` H01 control screen | 40 | `2026-08-25-c9f649a-hinge-control-screen/readings.jsonl` |
+| **new total** | **~12,613** | 12,573 + 40 |
+
+Dispatched directly rather than through `scripts/run_triggers.py`, so no
+checkpoint, and the $4.0639 it reports is notional cost on a subscription.
+
+**The one-line version's count was checked against the table under it this time
+and has not drifted.** It reads "eleven results" with a correction below saying
+the count is twelve, and *Results in hand* still holds twelve rows: M4, L5, M5,
+M6 + M6b, Track I, Track K, L7, N5, N6, N7, N9, N10. The `hinge` screen does not
+add a row there. It is a venue disposition and it sits in *Venues built* with the
+two `ledger` runs, which is where the previous two Track H entries went and why
+they were easy to miss.
+
 ---
 
 ## Venues built, and what happened to each
@@ -148,6 +167,7 @@ result on record.
 | `tailoring` triplets (Track H) | **building — blocked** | 2 usable of 8 authored across two passes; causal-rule overlap AUC 0.740 against a [0.40, 0.60] band |
 | `ledger` triplets (Track H, volume dial) | **closed — ceiling** | unaided J = 1.000 over 45 blind readings; both registered kills fired, yield at 2 of 5 |
 | **Family A entire** (scalar triplet: `ledger`, `timing`, `fit`) | **closed — ceiling** | 18 arms, 99 blind readings, every arm unanimous and equal to key, across six domains and three difficulty dials |
+| `hinge` H01 (Track H, set-membership) | **closed — ceiling** | crossed primary **+0.850** [+0.725, +0.975] over 40 unaided blind readings, **+0.950** [+0.850, +1.000] hand-adjudicated, against a registered kill of 0.70 |
 
 **2026-08-25, `ledger`.** The sixth venue and the first closed before its corpus
 was built. Five triplets were authored in parallel to test whether difficulty
@@ -218,6 +238,51 @@ where the failures these procedures describe mostly live. Record:
 Not a published run — the calls were dispatched as sub-agents rather than
 through `scripts/run_triggers.py`, so there is no checkpoint and no notional
 cost, and nothing from it belongs in [`SCORECARD.md`](../SCORECARD.md).
+
+**2026-08-25, `hinge`.** The seventh venue, and the first that tests whether
+Family A's closure was about the venue or about the answer shape. `hinge` sits in
+a different family, runs a different primary, and elicits set membership instead
+of a number: name the single unsettled detail that would put you on the other
+course. 40 unaided blind readings of H01, 20 on each of the pivotal and matched
+arms, `sonnet`, zero failed calls, isolation receipt asserted on all 40, notional
+cost $4.0639.
+
+Crossed primary **+0.850**, 95% bootstrap [+0.725, +0.975]. A blind adjudicator
+shown the 40 `LEVERAGE` blocks with arms stripped agreed 36 of 40 and puts it at
+**+0.950**, [+0.850, +1.000]. All four disagreements are the scorer losing a hit
+and none manufactured a swap. The registered ceiling kill at 0.70 fires on both
+numbers. **Two of three families are now at ceiling on single-call scale**, which
+is the generalisation Family A's closure could not carry on its own.
+
+Three things go in the ledger beside that number, because they change what may be
+said about the instrument.
+
+**The `d/N` dropout bound is vacuous here rather than passed.** Both arms
+returned 20 readable of 20, so `d` = 0 and the rule measured nothing. The run is
+no evidence either way about whether that bound works.
+
+**Two registered validity checks failed.** `decoys_are_live` requires F_B and F_D
+each to be named at least once across both arms, and neither was named once in 40
+readings. `fork_is_real` puts the minority course at or above 0.15 of control-arm
+replies, and the pivotal arm came back 20 of 20 `SIGN`, minority share 0.000.
+Neither touches the crossed primary, which reads a different block and
+discriminated cleanly by arm. What they cost is that **H01 can no longer say
+anything about decoy resistance, and its pivotal arm is not sitting near the
+recommendation threshold the design assumed.**
+
+**The registered prediction was right in direction and low on the point
+estimate.** It named crossed 0.75 and expected the kill to fire. 0.75 sits at the
+bottom edge of the machine interval and outside the hand-adjudicated one. The
+registration's "would not be surprised by 0.9" was the better half of the bet.
+
+Cost: **40 calls.** Record:
+[`results/track-h/2026-08-25-c9f649a-hinge-control-screen/`](../results/track-h/2026-08-25-c9f649a-hinge-control-screen/README.md),
+write-up
+[`2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md`](../notebook/2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md).
+
+Not a published run, on the same footing as the two above: the calls were
+dispatched directly rather than through `scripts/run_triggers.py`, so there is no
+checkpoint and nothing from it belongs in [`SCORECARD.md`](../SCORECARD.md).
 
 ---
 

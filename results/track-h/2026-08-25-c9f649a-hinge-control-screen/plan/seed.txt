@@ -1,0 +1,3 @@
+seed=20260825
+arms=pivotal,matched
+readings_per_arm=20

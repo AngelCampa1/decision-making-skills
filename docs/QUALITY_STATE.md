@@ -66,6 +66,7 @@ order are registered in
 | W2 | Quantity layer in `scripts/size_track_h_phase0.py` and the two two-branch gates. Re-derives `smallest_usable_n`. | unblocked, not started |
 | W4 | Blind scalar extractor, `consensus_quantity`, and the `fal-z` and `fal-u` falsifier cases | unblocked, not started |
 | P1 | The `ledger` yield probe and its control arm, 90 calls | **done** — both kills fired; `results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/` |
+| P3b-`hinge` | The `hinge` H01 control screen, 40 unaided blind readings | **done** — ceiling kill fired at crossed +0.850 machine, +0.950 hand-adjudicated; `results/track-h/2026-08-25-c9f649a-hinge-control-screen/` |
 
 ## The next three units
 
@@ -78,64 +79,97 @@ did.
 
 **P2 fired and Family A is closed.** The v2 screen ran one triplet under both
 repairs the L04 review named. All three arms unanimous, all three equal to key,
-unaided J = 1.000 — and the item was harder by every measure anyone proposed,
+unaided J = 1.000, on an item that was harder by every measure anyone proposed,
 with sibling width at 10 of 10 in every arm. `ledger`, `timing` and `fit` all
 close together, because what failed is the thing they share: the scalar
 elicitation form. Record:
 [`../results/track-h/2026-08-25-28311e2-ledger-v2-screen/`](../results/track-h/2026-08-25-28311e2-ledger-v2-screen/README.md).
-Families B and C never used that form. They carry the track, which is the
-independence the three-family split was built for.
 
-1. **P3a, repair the repairs.** Three adversarial reviews ran against the three
-   repaired instruments and **all three came back unfit to fail anything**, before
-   a measurement call was spent on any of them. The batteries were green and the
-   batteries were not the test. Written up in
-   [`../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md`](../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md).
+**P3b fired on `hinge`, and that closes it too.** 40 unaided blind readings of
+H01, 20 per arm, crossed primary **+0.850** [+0.725, +0.975] against a registered
+kill of 0.70. A blind adjudicator agreeing 36 of 40 puts it at **+0.950**
+[+0.850, +1.000], and all four disagreements are the scorer losing a hit rather
+than manufacturing a swap. Record:
+[`../results/track-h/2026-08-25-c9f649a-hinge-control-screen/`](../results/track-h/2026-08-25-c9f649a-hinge-control-screen/README.md),
+write-up
+[`../notebook/2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md`](../notebook/2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md).
 
-   One defect, three mechanisms. `cascade`'s attention gate resolves to
-   `J_gated = sens - FAR_ungated/attention_rate`, so verbosity alone moves the
-   primary +0.300 with the error rate unchanged. `hinge` keeps `OFF_LIST` in the
-   denominator and lets `NO_BLOCK` leave it. `council`'s estimator is clean and
-   the commit rate returns through the reporting gate, where `low = rho*c` makes
-   reporting require `c > 0.5/rho`. **Each is an exclusion correlated with
-   competence, and all three read high on the treatment arm.**
+**Two of three families are now at ceiling on single-call scale, and `hinge` is
+what tests the generalisation.** Family A elicits a scalar. `hinge` is a
+different family with a different primary and a different answer-key shape, set
+membership rather than a number, and it lands in the same place. What that
+licences is a claim about the venue: a scenario compact enough to fit one prompt
+is not, for a current model, hard, whatever shape the answer takes. What it does
+not licence is anything about volume, long context, delegation, or work carried
+across a conversation, which is where the failures the six procedures describe
+mostly live.
 
-   The rule that comes out of it, and it binds every instrument from here: for
-   every rule that removes a record from a denominator, say what makes a record
-   leave, whether that is correlated with doing the task well, and which
-   direction it pushes. **A rule that cannot answer all three does not ship**, and
-   every exclusion class is printed by arm. None of the three did that, which is
-   why the attrition would have been invisible in the published output.
+Three things the `hinge` run leaves behind for whoever runs the next screen.
 
-   Item defects found alongside, each re-derived from the raw files before being
-   acted on: `hinge`'s key applies a per-tonne-of-flour price to a through-stone
-   tonnage (£10,160 against £9,570) and its matched-arm decoy forks at L = 97,
-   so the cliff check had been run on one arm and not the other; `council`'s K03
-   fails disqualifier 17, its valuation lapsing eleven days before the earliest
-   date the course it defends can be taken; `cascade`'s two "recorded blind
-   responses" are author-written reconstructions and no transcript exists.
-   *Acceptance:* each repaired primary answers the three denominator questions
-   for every exclusion rule it keeps, prints every exclusion class by arm, and
-   scores a battery in which **every mutant is caught by a case only it fails** —
-   four of `council`'s six were not. Then one commit per family with its
-   [`DECISIONS.md`](DECISIONS.md) entry. A key that moved bumps `set_version`.
+- **The `d/N` dropout bound is vacuous rather than passed.** `d` came in at 0, so
+  the rule measured nothing on this run. It is not a validated guard and must not
+  be recorded as one.
+- **Two registered validity checks failed, and neither touches the primary.**
+  `decoys_are_live` (F_B and F_D named zero times in 40 readings) and
+  `fork_is_real` (pivotal 20 of 20 `SIGN`, minority share 0.000 against a floor
+  of 0.15). H01 can no longer say anything about decoy resistance, and its
+  pivotal arm is not sitting near its recommendation threshold.
+- **The dismissal-parsing block is scoped correctly.** The control arm's
+  adjudicated fraction is 1 of 40 = 0.025 against a 0.25 kill, where the v6 note
+  measured 15 of 21 on procedure-following phrasings. The skill-arm block stays
+  where that note put it.
 
-   **`council` carries one more, and it outranks the rest: there is no `arm`
-   dimension anywhere in its scorer**, while its kill condition requires an arm
-   comparison. Every number it can currently produce is a one-arm description,
-   and `on` against `off` is the question this project exists to answer. Field
-   names come from `solvers/arms.py`, shared with the `elicit-generic` work.
+**The denominator rule from P3a binds every instrument from here.** For every
+rule that removes a record from a denominator, say what makes a record leave,
+whether that is correlated with doing the task well, and which direction it
+pushes. **A rule that cannot answer all three does not ship**, and every
+exclusion class is printed by arm. All three instruments failed that before
+review, which is why the attrition would have been invisible in the published
+output. Full account:
+[`../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md`](../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md).
 
-2. **P3b, the Family B and C control screens.** The Family A lesson, applied
-   before anything is authored at scale: read the unaided arm of each repaired
-   instrument first. `hinge` and `cascade` are set-membership, so the ceiling
-   argument that closed Family A does not transfer — a model at ceiling on
-   arithmetic can still fail to name what it cannot do — but that is a
-   hypothesis, and it is cheap to test.
-   *Acceptance:* per family, an unaided J below 0.70 on a screen of at least
-   three items. At or above 0.70 closes that family on the ceiling kill already
-   on record, and `council` — which has no answer key and no base arm at all —
-   is then the last instrument standing.
+1. **`cascade`, blocked on judges rather than on another repair round.** Two
+   adversarial reviews took the instrument apart, the first killing version 2's
+   estimator and the second killing version 3's scorer. Version 4 answers them:
+   a primary that divides by nothing the model controls, a survival rule reading
+   an observation instead of an idiom list, a scorer whose container precedence
+   cannot change between two runs of the same code, and a battery of forty-four
+   replies and eleven mutants each with a sole witness. Four further findings are
+   recorded as limits rather than repaired, and the repair round itself is
+   finished. Do not open another one.
+
+   What stops the screen is the primary's own definition. **Every scored positive
+   is queued for three-judge blind adjudication, and the adjudicated rate is what
+   enters J.** The screen therefore costs its readings plus three judges over
+   every positive those readings produce, and no shortcut around that exists
+   without changing what the primary means.
+   *Acceptance:* the adjudication runs blind with three judges, the adjudicated
+   rate enters J, and the unaided arm is read against the 0.70 ceiling kill
+   already on record. Below 0.70 the family stays open. At or above it, `cascade`
+   closes and `council` is the last instrument standing.
+
+2. **`council`, screen in flight.** Four draws per item under one pre-registered
+   ordering, AB only. Unanimity admits, the run stops early on the first
+   disagreement, and `BALANCED` counts as a call. Unaided, `sonnet`, blind, every
+   reply recorded verbatim, the isolation receipt read off a smoke call before
+   any screen draw was issued. Screen draws are discarded from the primary and
+   may never be reused as data.
+
+   `council` has no answer key and no base arm, so its ceiling analogue is the
+   opposite failure: a second-position rate indistinguishable from 0.5 means no
+   order effect exists and there is nothing for a procedure to fix. The
+   registered point predictions are a true second-position rate of 0.60 and a
+   commit rate of 0.70, at which the reporting gate refuses the run.
+
+   **One defect outranks the screen and is not closed by it. There is no `arm`
+   dimension anywhere in `council`'s scorer**, while its kill condition requires
+   an arm comparison. Every number it can currently produce is a one-arm
+   description, and `on` against `off` is the question this project exists to
+   answer. Field names come from `solvers/arms.py`, shared with the
+   `elicit-generic` work.
+   *Acceptance:* the screen reports its second-position rate with the reporting
+   gate's verdict stated either way, and the scorer carries `arm` before a
+   measurement call is spent on the primary.
 
 **What W3b bought, and one thing it found.** Families B and C could not reach
 [`SCORECARD.md`](../SCORECARD.md) at all before this: every call on the quality
@@ -173,29 +207,37 @@ stays free. The defect is specific to `elicit.py`, which has produced no records
 | Unaided J at or above 0.70 on a stratum | **FIRED on all of Family A, J = 1.000.** 90 unaided readings on `ledger` v1, then 9 more on a v2 item built under both named repairs: 18 arms, 99 readings, every arm unanimous and every arm equal to key, over six domains and three difficulty dials. | executed: `ledger`, `timing` and `fit` all closed. Families B and C, which never used the scalar triplet, carry the track. |
 | Discriminator outside its permutation-derived band | not yet measured | discard the block, rebuild the design rule |
 | Three constructs cannot express a scalar elicitation | **answered, and the other way round.** All three express it fine; the form is what ceilings. | moot — Family A is closed on the ceiling, not on expressibility |
-| Unaided J at or above 0.70 on `hinge` or `cascade` | not yet measured; P3b is the screen | that family closes and `council`, which has no answer key and no base arm, is the last instrument standing |
+| Unaided J at or above 0.70 on `hinge` | **FIRED, crossed +0.850.** 40 unaided blind readings of H01, 20 per arm, at `c9f649a`. Machine +0.850 [+0.725, +0.975]; a blind adjudicator agreeing 36 of 40 puts it at +0.950 [+0.850, +1.000]. Two registered validity checks failed alongside it, `decoys_are_live` and `fork_is_real`, and neither touches the primary. | executed: `hinge` closes on set-membership elicitation at single-call scale. `cascade` and `council` carry the track. |
+| Unaided J at or above 0.70 on `cascade` | not yet measured; the screen is blocked behind the three-judge adjudication the v4 primary requires | that family closes and `council`, which has no answer key and no base arm, is the last instrument standing |
 
 ## Resume key
 
 Landed: `7f175a7` (registration, tau v2, runner), `63ea7c3` (pre-registration
 v3), `f578604` (site), `e7a1e22` (the ledger run and its 90 readings), `28311e2`
-(the Family A closure in [`STATUS.md`](STATUS.md)), and this change (the v2 screen
-and its 9). Worktrees `quality-track` and `quality-corpus`, the second
+(the Family A closure in [`STATUS.md`](STATUS.md)), `cf7a3f8` (the prediction
+covering all three P3b screens), and this change (the `hinge` screen and its 40
+readings). Worktrees `quality-track` and `quality-corpus`, the second
 fast-forwarded onto the first so the registration is a genuine ancestor of the
 run rather than a claim.
 
-No checkpoint exists, because all 99 calls were dispatched as sub-agents rather
+No checkpoint exists, because all 139 calls were dispatched as sub-agents rather
 than through `scripts/run_triggers.py`. Nothing here belongs in
 [`SCORECARD.md`](../SCORECARD.md) and none of these READMEs claims it does. The
-first unit that runs through the real runner creates the checkpoint, and P3b is
-the first candidate.
+first unit that runs through the real runner creates the checkpoint, and the
+`cascade` screen is the first candidate.
 
-The three Family B and C instruments sit in a scratchpad, out for a second
-repair after all three failed adversarial review. They are not in the repository
-and a session resuming from a cold start does not have them. If the scratchpad is
-gone, nothing of value is lost that the review findings under P3a do not already
-carry: the batteries were green and the batteries were not the test, so a rebuild
-briefed on the three denominator questions is worth more than the artefacts were.
+**The `hinge` instrument is in the repository now.** Its three arms, its answer
+key as data, its version 6 note and all 40 readings are under
+[`../results/track-h/2026-08-25-c9f649a-hinge-control-screen/`](../results/track-h/2026-08-25-c9f649a-hinge-control-screen/README.md),
+so a cold start has it. The scoring code is not: it fails `ruff check` and
+`ruff format`, and reformatting it to land it would leave a scorer here that is
+not the scorer that ran. `key-h01-v3.json` carries the vocabulary those modules
+hold, which is what a reader needs to check a label by hand.
+
+`cascade` and `council` still sit in a scratchpad and a cold start does not have
+them. If the scratchpad is gone, what survives is the review findings above: the
+batteries were green and the batteries were not the test, so a rebuild briefed on
+the three denominator questions is worth more than the artefacts were.
 
 **The lesson is one step further along than Family A's.** There, reading the blind
 arms as a control arm before authoring the corpus saved ninety calls. Here, a
