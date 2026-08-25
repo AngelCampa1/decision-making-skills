@@ -24,11 +24,11 @@ import json
 import random
 import threading
 import time
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Final
+from typing import Final, Protocol, TextIO
 
 from decision_evals.budget import BudgetLedger, estimate_cost_usd
 from decision_evals.generators.generate import Item
@@ -36,6 +36,7 @@ from decision_evals.providers.claude_code import (
     AuthenticationError,
     CliError,
     CliResult,
+    IsolationError,
     RateLimitedError,
 )
 from decision_evals.providers.claude_code import preflight as cli_preflight
@@ -328,8 +329,16 @@ def local_call(model: str, endpoint: Endpoint | None = None) -> CallFn:
     return call
 
 
-def completed_keys(checkpoint: Path) -> set[tuple[str, str]]:
-    """Read ``(item_id, arm)`` pairs already recorded.
+def completed_keys(
+    checkpoint: Path, fields: Sequence[str] = ("item_id", "arm")
+) -> set[tuple[str, ...]]:
+    """Read the resume keys already recorded, one tuple per line.
+
+    ``fields`` defaults to ``("item_id", "arm")``, which is what
+    :func:`run_arm` resumes on and what every checkpoint on disk carries. It is
+    a parameter so that a second run loop writing a different record can resume
+    on the columns that identify *its* calls, rather than growing a second copy
+    of this function to do it.
 
     Malformed trailing lines are ignored rather than fatal: a run killed
     mid-write leaves a partial final line, and refusing to resume because of it
@@ -337,14 +346,126 @@ def completed_keys(checkpoint: Path) -> set[tuple[str, str]]:
     """
     if not checkpoint.exists():
         return set()
-    done: set[tuple[str, str]] = set()
+    done: set[tuple[str, ...]] = set()
     for line in checkpoint.read_text(encoding="utf-8").splitlines():
         try:
             record = json.loads(line)
-            done.add((record["item_id"], record["arm"]))
+            done.add(tuple(str(record[field]) for field in fields))
         except (json.JSONDecodeError, KeyError, TypeError):
             continue
     return done
+
+
+class Identified(Protocol):
+    """Anything the run loop can name in a refusal and resume on.
+
+    Read-only, so a frozen record satisfies it. The loop reads this field to
+    say which item it stopped before and never writes one.
+    """
+
+    @property
+    def item_id(self) -> str: ...
+
+
+def _run_loop[T: Identified, R](
+    pending: Sequence[T],
+    *,
+    cost_of: Callable[[T], tuple[str, float]],
+    dispatch: Callable[[T, str, Backpressure], R],
+    ledger: BudgetLedger,
+    handle: TextIO,
+    to_row: Callable[[R], Mapping[str, object]],
+    cost_of_record: Callable[[R], float],
+    concurrency: int,
+    backoff: Backoff | None,
+) -> list[R]:
+    """Dispatch ``pending`` through a bounded pool, writing records as they land.
+
+    Everything specific to a kind of run is a callable: ``cost_of`` renders the
+    prompt and prices it, ``dispatch`` makes the call, ``to_row`` and
+    ``cost_of_record`` read the record it produced. What stays here is the part
+    that took twelve trials to get right.
+
+    **Three behaviours are the reason this is one function rather than two.**
+    The budget is *reserved* at dispatch and released when the record arrives,
+    so a window cannot authorise more than the limit allows; charging only on
+    completion meant every call in one window read the same balance, and six
+    items at $0.02 against a $0.021 limit ran all six while the serial path
+    stopped after one. The batch containing a failure is *drained* before the
+    failure is re-raised, so calls that already succeeded and were already paid
+    for are kept; returning on the first failing future discarded whichever
+    successes sorted after it, and the same inputs produced three different
+    checkpoints across twelve trials. And the pause after a rate limit is
+    *shared*: one :class:`Backpressure` is built here and handed to every
+    ``dispatch``, because a per-worker backoff sends the same burst back at the
+    same wall.
+
+    Records are written in completion order rather than in ``pending`` order.
+    Nothing downstream reads a checkpoint positionally, and resume is keyed on
+    the record's own columns.
+
+    Raises:
+        RunError: The budget was reached before a call, or ``dispatch`` raised
+            one. Either way the batch is drained first and the checkpoint holds
+            everything that landed.
+        IsolationError: ``dispatch`` reported a venue the run may not measure.
+            Drained the same way, and propagated rather than recorded: the call
+            would have succeeded, and what is wrong is what it was measuring.
+    """
+    produced: list[R] = []
+
+    # What has been authorised and not yet paid for. Without it the ledger
+    # cannot refuse anything inside one window: `assert_can_afford` reads
+    # `spent_usd`, which only advances when a record comes *back*, so every
+    # call dispatched together sees the same balance.
+    reserved = 0.0
+
+    def authorise(item: T) -> tuple[str, float]:
+        """Reserve the cost of one item and return its prompt and that cost."""
+        nonlocal reserved
+        prompt, amount = cost_of(item)
+        try:
+            ledger.assert_can_afford(amount + reserved)
+        except Exception as exc:
+            raise RunError(f"stopping before {item.item_id}: {exc}") from exc
+        reserved += amount
+        return prompt, amount
+
+    # One instance for the whole run. A pause served by any worker is a pause
+    # every worker observes.
+    backpressure = Backpressure(backoff)
+
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        submitted = 0
+        in_flight: dict[Future[R], float] = {}
+
+        while submitted < len(pending) or in_flight:
+            while len(in_flight) < concurrency and submitted < len(pending):
+                item = pending[submitted]
+                prompt, amount = authorise(item)
+                in_flight[pool.submit(dispatch, item, prompt, backpressure)] = amount
+                submitted += 1
+
+            finished, _ = wait(set(in_flight), return_when=FIRST_COMPLETED)
+
+            failure: RunError | IsolationError | None = None
+            for future in finished:
+                reserved -= in_flight.pop(future)
+                try:
+                    record = future.result()
+                except (RunError, IsolationError) as exc:
+                    failure = failure or exc
+                    continue
+                # One writer, on this thread. Appending to one handle from
+                # several threads interleaves partial lines, and a corrupt
+                # interior line is the one thing the loaders refuse.
+                ledger = ledger.record(cost_of_record(record))
+                handle.write(json.dumps(to_row(record), ensure_ascii=False) + "\n")
+                handle.flush()
+                produced.append(record)
+            if failure is not None:
+                raise failure
+    return produced
 
 
 def run_arm(
@@ -455,19 +576,9 @@ def run_arm(
     checkpoint.parent.mkdir(parents=True, exist_ok=True)
     done = completed_keys(checkpoint)
     pending = [item for item in items if (item.item_id, arm.arm) not in done]
-    produced: list[RunRecord] = []
 
-    # What has been authorised and not yet paid for. Without it the ledger
-    # cannot refuse anything inside one window: `assert_can_afford` reads
-    # `spent_usd`, which only advances when a record comes *back*, so every
-    # call dispatched together sees the same balance. Measured before the fix:
-    # six items at $0.02 against a $0.021 limit ran all six, burning 5.7x the
-    # limit and raising nothing, while the serial path stopped after one.
-    reserved = 0.0
-
-    def authorise(item: Item) -> tuple[str, float]:
-        """Reserve the cost of one item and return its prompt and that cost."""
-        nonlocal reserved
+    def cost_of(item: Item) -> tuple[str, float]:
+        """The prompt to send and what to authorise for it."""
         # Rendered once. The string that was measured is the string that is
         # sent, because measuring one and sending another is how a length
         # experiment stops being about length.
@@ -477,70 +588,31 @@ def run_arm(
             if expected_cost_usd is not None
             else estimate_cost_usd(prompt_chars=len(prompt) + len(arm.system_prompt))
         )
-        try:
-            ledger.assert_can_afford(amount + reserved)
-        except Exception as exc:
-            raise RunError(f"stopping before {item.item_id}: {exc}") from exc
-        reserved += amount
         return prompt, amount
 
-    # One instance for the whole run. A pause served by any worker is a pause
-    # every worker observes; a per-worker backoff would send the same burst back
-    # at the same wall.
-    backpressure = Backpressure(backoff)
+    def dispatch(item: Item, prompt: str, backpressure: Backpressure) -> RunRecord:
+        return _run_one(
+            item,
+            arm,
+            model=model,
+            call=call,
+            prompt=prompt,
+            identity=identity,
+            backpressure=backpressure,
+        )
 
-    with (
-        checkpoint.open("a", encoding="utf-8") as handle,
-        ThreadPoolExecutor(max_workers=concurrency) as pool,
-    ):
-        submitted = 0
-        in_flight: dict[Future[RunRecord], float] = {}
-
-        while submitted < len(pending) or in_flight:
-            while len(in_flight) < concurrency and submitted < len(pending):
-                item = pending[submitted]
-                prompt, amount = authorise(item)
-                in_flight[
-                    pool.submit(
-                        _run_one,
-                        item,
-                        arm,
-                        model=model,
-                        call=call,
-                        prompt=prompt,
-                        identity=identity,
-                        backpressure=backpressure,
-                    )
-                ] = amount
-                submitted += 1
-
-            finished, _ = wait(set(in_flight), return_when=FIRST_COMPLETED)
-
-            # Drain the whole batch before re-raising. Returning early on the
-            # first failure discarded calls that had already *succeeded* in the
-            # same batch, and which ones survived depended on set iteration
-            # order -- the same inputs produced three different checkpoints
-            # across twelve trials. Those calls were paid for, so throwing them
-            # away makes the ledger under-read the real burn by up to
-            # `concurrency - 1` calls on every abort.
-            failure: RunError | None = None
-            for future in finished:
-                reserved -= in_flight.pop(future)
-                try:
-                    record = future.result()
-                except RunError as exc:
-                    failure = failure or exc
-                    continue
-                # One writer, on this thread. Appending to one handle from
-                # several threads interleaves partial lines, and a corrupt
-                # interior line is the one thing `load_records` refuses.
-                ledger = ledger.record(record.cost_usd)
-                handle.write(json.dumps(asdict(record), ensure_ascii=False) + "\n")
-                handle.flush()
-                produced.append(record)
-            if failure is not None:
-                raise failure
-    return produced
+    with checkpoint.open("a", encoding="utf-8") as handle:
+        return _run_loop(
+            pending,
+            cost_of=cost_of,
+            dispatch=dispatch,
+            ledger=ledger,
+            handle=handle,
+            to_row=asdict,
+            cost_of_record=lambda record: record.cost_usd,
+            concurrency=concurrency,
+            backoff=backoff,
+        )
 
 
 def _run_one(
@@ -599,14 +671,19 @@ def _run_one(
     )
 
 
-def _call_with_backoff(
+def _call_with_backoff[C](
     arm: ArmPrompt,
     *,
-    call: CallFn,
+    call: Callable[[str, str, bool], C],
     prompt: str,
     backpressure: Backpressure,
-) -> CliResult:
+) -> C:
     """Issue the call, waiting out rate limits until the attempts run out.
+
+    Generic in what the call returns, so a backend handing back an isolation
+    receipt alongside its result uses this schedule rather than a second copy
+    of it. The arm supplies the system prompt and the in-situ flag and nothing
+    else, which is why one function serves both.
 
     The final attempt is made outside the loop so its refusal propagates
     untouched: a call that never got through is recorded as the infrastructure

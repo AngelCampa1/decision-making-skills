@@ -80,9 +80,9 @@ from decision_evals.corpus import BANDS  # noqa: E402
 from decision_evals.providers import antigravity  # noqa: E402
 from decision_evals.providers.claude_code import (  # noqa: E402
     CliError,
-    Conversation,
     IsolationError,
     isolated_cwd,
+    run_isolated,
 )
 from decision_evals.skills import parse_skill  # noqa: E402
 from decision_evals.trigger_arms import (  # noqa: E402
@@ -379,8 +379,9 @@ def ask(
     resolves to :func:`~decision_evals.triggers.default_procedures` itself --
     the shipped skill's own procedures, not a list copied here.
 
-    ``in_situ`` is Track N9's venue switch. ``Conversation`` already threads it
-    to ``build_command``, which sends ``--append-system-prompt`` instead of
+    ``in_situ`` is Track N9's venue switch. ``run_isolated`` threads it through
+    ``Conversation`` to ``build_command``, which sends
+    ``--append-system-prompt`` instead of
     ``--system-prompt`` -- the description joins the CLI's own system prompt
     rather than replacing it, which is the position every deployed call
     actually uses. Conversation length is untouched: still one turn, still a
@@ -398,12 +399,9 @@ def ask(
     prompt = f"## {header}\n\n{description}\n\n## User message\n\n{case.turn}"
     if backend == "agy":
         return ask_agy(prompt, model, system, allowed or default_procedures(), contract=contract)
-    with (
-        isolated_cwd("de-trigger-") as cwd,
-        Conversation(system_prompt=system, model=model, cwd=cwd, in_situ=in_situ) as chat,
-    ):
-        result = chat.send(prompt)
-        chat.receipt.assert_isolated()
+    result = run_isolated(
+        prompt, system_prompt=system, model=model, in_situ=in_situ, prefix="de-trigger-"
+    ).result
     # No branch on the backend. ``claude -p`` reports neither field, so what
     # this carries is whatever its ``CliResult`` holds: the class defaults
     # today, and whatever the CLI starts reporting without an edit here.

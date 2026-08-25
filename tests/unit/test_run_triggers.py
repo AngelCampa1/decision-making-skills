@@ -20,6 +20,7 @@ from typing import Any
 
 import pytest
 
+from decision_evals.providers import claude_code
 from decision_evals.triggers import TriggerCase, TriggerSet, load_trigger_set
 
 
@@ -167,11 +168,11 @@ class _FakeConversationFactory:
 
 
 class TestAskThreadsInSitu:
-    """`ask()` is the single place `Conversation` is constructed for this file."""
+    """`ask()` reaches `Conversation` through `run_isolated`, and nowhere else."""
 
     def test_in_situ_true_reaches_conversation(self, monkeypatch: pytest.MonkeyPatch) -> None:
         fake = _FakeConversationFactory()
-        monkeypatch.setattr(runner, "Conversation", fake)
+        monkeypatch.setattr(claude_code, "Conversation", fake)
         runner.ask("a description", _case(), "haiku", runner.SYSTEM, in_situ=True)
         assert len(fake.calls) == 1
         assert fake.calls[0]["in_situ"] is True
@@ -179,14 +180,14 @@ class TestAskThreadsInSitu:
     def test_in_situ_defaults_to_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """The known-good case: nothing about the existing arms changes."""
         fake = _FakeConversationFactory()
-        monkeypatch.setattr(runner, "Conversation", fake)
+        monkeypatch.setattr(claude_code, "Conversation", fake)
         runner.ask("a description", _case(), "haiku", runner.SYSTEM)
         assert fake.calls[0]["in_situ"] is False
 
     def test_the_verdict_still_parses_normally(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Venue changes where the description sits, not how the reply is read."""
         fake = _FakeConversationFactory('{"fire": true, "procedure": "ledger"}')
-        monkeypatch.setattr(runner, "Conversation", fake)
+        monkeypatch.setattr(claude_code, "Conversation", fake)
         reply = runner.ask("d", _case(), "haiku", runner.SYSTEM, in_situ=True)
         fired, procedure, p_fire = reply.verdict
         assert fired is True
@@ -1084,7 +1085,7 @@ class TestTheRowCarriesHowTheCallEnded:
         backend that says nothing is a fact about the venue, and a runner that
         filled the column with `"SUCCESS"` would assert something no CLI said.
         """
-        monkeypatch.setattr(runner, "Conversation", _FakeConversationFactory())
+        monkeypatch.setattr(claude_code, "Conversation", _FakeConversationFactory())
         row = self._one_row(tmp_path / "v.jsonl", "haiku", backend="claude")
         assert row["status"] == ""
         assert row["num_turns"] == 0
@@ -1102,7 +1103,7 @@ class TestTheRowCarriesHowTheCallEnded:
         rather than asserted.
         """
         monkeypatch.setattr(
-            runner,
+            claude_code,
             "Conversation",
             _FakeConversationFactory(status="A-STATUS-CLAUDE-HAS-NEVER-SENT", num_turns=7),
         )

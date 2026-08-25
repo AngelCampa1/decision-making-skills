@@ -15,6 +15,7 @@ from decision_evals.stats import (
     benjamini_hochberg,
     brier_score,
     cluster_bootstrap_diff,
+    cluster_bootstrap_statistic,
     design_effect,
     effective_sample_size,
     expected_calibration_error,
@@ -103,6 +104,44 @@ class TestPermutationValidation:
         a = paired_permutation_test([0.0, 1.0, 2.0], [3.0, 4.0, 5.0], **kwargs)
         b = paired_permutation_test([0.0, 1.0, 2.0], [3.0, 4.0, 5.0], **kwargs)
         assert a.p_value == b.p_value
+
+
+class TestClusterBootstrapStatisticValidation:
+    """The generic resampler's own refusals.
+
+    ``cluster_bootstrap_diff`` validates before delegating, so these branches
+    are reachable only by calling the generic form directly. A caller passing
+    its own statistic gets the same refusals as one passing two arrays.
+    """
+
+    @staticmethod
+    def _mean(picked):
+        return float(np.asarray([1.0, 2.0])[picked].mean())
+
+    def test_rejects_zero_resamples(self) -> None:
+        with pytest.raises(ValueError, match="n_resamples must be >= 1"):
+            cluster_bootstrap_statistic([0, 1], self._mean, n_resamples=0)
+
+    @pytest.mark.parametrize("confidence", [0.0, 1.0, -0.1, 1.5])
+    def test_rejects_confidence_outside_unit_interval(self, confidence: float) -> None:
+        with pytest.raises(ValueError, match="confidence must be in"):
+            cluster_bootstrap_statistic([0, 1], self._mean, confidence=confidence)
+
+    def test_matches_cluster_bootstrap_diff_on_the_same_draws(self) -> None:
+        """Same seed, same clusters, same statistic: the two must agree bit for
+        bit. That is what makes re-expressing the paired form in terms of the
+        generic one inert.
+        """
+        control = np.array([0.0, 1.0, 0.0, 1.0])
+        treatment = np.array([1.0, 1.0, 0.0, 2.0])
+        clusters = ["a", "a", "b", "b"]
+        diffs = treatment - control
+
+        direct = cluster_bootstrap_diff(control, treatment, clusters, n_resamples=300, seed=5)
+        generic = cluster_bootstrap_statistic(
+            clusters, lambda picked: float(diffs[picked].mean()), n_resamples=300, seed=5
+        )
+        assert direct == generic
 
 
 class TestClusterBootstrapValidation:

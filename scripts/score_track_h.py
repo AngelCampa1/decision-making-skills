@@ -56,10 +56,13 @@ from decision_evals.stats.track_h import (  # noqa: E402
     BaseRepeatPair,
     FalsifierBatteryFailedError,
     FalsifierCase,
+    MovementThreshold,
     TripletEvent,
     compute_phase0_result,
     derive_movement_threshold,
+    derive_movement_threshold_pooled,
     run_falsifier_battery,
+    specificity_ceiling,
 )
 
 
@@ -115,6 +118,36 @@ def load_falsifier_cases(path: Path) -> list[FalsifierCase]:
     ]
 
 
+def _derive(
+    base_pairs: list[BaseRepeatPair],
+    rule: str,
+    k: float | None,
+    parser: argparse.ArgumentParser,
+) -> MovementThreshold:
+    """Derive the threshold the requested rule asks for, or exit with the usage."""
+    if rule == "max_relative_v1":
+        return derive_movement_threshold(base_pairs)
+    if k is None:
+        parser.error("--k is required under pooled_log_noise_v2: no value for it is derived")
+    return derive_movement_threshold_pooled(base_pairs, k=k)
+
+
+def _describe(threshold: MovementThreshold) -> str:
+    """One line naming the threshold, the rule behind it, and what it costs."""
+    if threshold.rule == "max_relative_v1":
+        return (
+            f"movement threshold: {threshold.value:.4f} relative, max_relative_v1 "
+            f"(from {threshold.n_base_pairs} base pairs, bound set by {threshold.max_triplet_id}); "
+            f"specificity cannot exceed {specificity_ceiling(threshold):.3f}"
+        )
+    return (
+        f"movement threshold: {threshold.value:.4f} log, pooled_log_noise_v2 "
+        f"(k={threshold.k} x sigma_hat={threshold.sigma_hat:.4f} over "
+        f"{threshold.n_base_pairs} base pairs); "
+        f"specificity cannot exceed {specificity_ceiling(threshold):.3f}"
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -129,13 +162,24 @@ def main(argv: list[str] | None = None) -> int:
         "--falsifier", type=Path, required=True, help="JSONL of planted falsifier cases"
     )
     parser.add_argument("--seed", type=int, default=None, help="Bootstrap seed")
+    parser.add_argument(
+        "--rule",
+        choices=["max_relative_v1", "pooled_log_noise_v2"],
+        default="pooled_log_noise_v2",
+        help="Which movement threshold derivation to score under",
+    )
+    parser.add_argument(
+        "--k",
+        type=float,
+        default=None,
+        help="Multiple of the fitted noise scale. Required by pooled_log_noise_v2, "
+        "which declares it rather than deriving it",
+    )
     args = parser.parse_args(argv)
 
-    threshold = derive_movement_threshold(load_base_pairs(args.base_repeats))
-    print(
-        f"movement threshold: {threshold.value:.4f} relative "
-        f"(from {threshold.n_base_pairs} base pairs, bound set by {threshold.max_triplet_id})"
-    )
+    base_pairs = load_base_pairs(args.base_repeats)
+    threshold = _derive(base_pairs, args.rule, args.k, parser)
+    print(_describe(threshold))
 
     battery = run_falsifier_battery(load_falsifier_cases(args.falsifier), threshold)
     print(
@@ -144,7 +188,14 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     try:
-        result = compute_phase0_result(load_events(args.events), threshold, battery, seed=args.seed)
+        result = compute_phase0_result(
+            load_events(args.events),
+            threshold,
+            battery,
+            base_pairs=base_pairs,
+            recompute_threshold=args.rule == "pooled_log_noise_v2",
+            seed=args.seed,
+        )
     except FalsifierBatteryFailedError as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)
         return 1

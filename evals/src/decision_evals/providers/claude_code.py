@@ -740,6 +740,63 @@ def _spawn(command: list[str], cwd: str) -> Any:
     )
 
 
+@dataclass(frozen=True)
+class Elicited:
+    """One isolated call: what came back, and the receipt that licenses it.
+
+    The two travel together because a result without its receipt cannot be
+    told apart from a result produced in a venue the experiment does not
+    permit, and that difference is invisible in a response body.
+    """
+
+    result: CliResult
+    receipt: InitReceipt
+
+
+def run_isolated(
+    prompt: str,
+    *,
+    system_prompt: str,
+    model: str,
+    in_situ: bool = False,
+    timeout: float = 900.0,
+    prefix: str = "de-elicit-",
+) -> Elicited:
+    """One turn, in a throwaway directory, with isolation asserted before it counts.
+
+    Six lines that two scripts had each written for themselves. Every element
+    of them is load-bearing and each was learned separately: a fresh working
+    directory per call because the CLI's auto-memory path is keyed on cwd, the
+    streaming transport because the ``system``/``init`` event only arrives
+    under ``--verbose``, and :meth:`InitReceipt.assert_isolated` because a
+    contaminated call answers exactly like a clean one.
+
+    Args:
+        prefix: What the throwaway directory is named after. Windows sometimes
+            refuses to remove one the CLI subprocess still holds, so a leaked
+            directory under the system temp folder says which run leaked it.
+
+    Raises:
+        IsolationError: The CLI declared tools or skills. The call succeeded;
+            what is wrong is the venue it succeeded in.
+        AuthenticationError: Via :func:`parse_result`.
+        CliError: The stream ended without a result, or the CLI reported one.
+    """
+    with (
+        isolated_cwd(prefix) as cwd,
+        Conversation(
+            system_prompt=system_prompt,
+            model=model,
+            cwd=cwd,
+            in_situ=in_situ,
+            timeout=timeout,
+        ) as chat,
+    ):
+        result = chat.send(prompt)
+        chat.receipt.assert_isolated()
+        return Elicited(result=result, receipt=chat.receipt)
+
+
 def preflight(*, model: str, cwd: str) -> CliResult:
     """Make one throwaway call so a bad credential aborts before item 1.
 

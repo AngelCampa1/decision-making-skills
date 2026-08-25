@@ -12,6 +12,7 @@ This is the concrete form of Miller's clustered-standard-error point
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
@@ -136,6 +137,81 @@ def _grouped_indices(
     return np.arange(n_groups, dtype=np.intp), members
 
 
+def cluster_bootstrap_statistic(
+    clusters: npt.ArrayLike,
+    statistic: Callable[[npt.NDArray[np.intp]], float],
+    *,
+    confidence: float = 0.95,
+    n_resamples: int = 10_000,
+    seed: int | None = None,
+) -> ClusterBootstrapResult:
+    """Percentile bootstrap CI for an arbitrary statistic, resampling clusters.
+
+    Whole clusters are drawn with replacement, all their items come along, and
+    ``statistic`` is handed the item indices that survived the draw. Everything
+    the statistic reads is therefore recomputed inside the replicate, which is
+    what a plug-in nuisance parameter needs: a threshold estimated from the data
+    and then held fixed across replicates makes the interval a statement about a
+    random quantity treated as known, and it under-covers by however much that
+    quantity varies.
+
+    :func:`cluster_bootstrap_diff` is this function with a fixed paired-mean
+    statistic, so there is one resampling implementation here rather than two.
+
+    Args:
+        clusters: Per-item cluster label. Any hashable dtype. Its length is the
+            item count, and the indices handed to ``statistic`` index into it.
+        statistic: Called once per replicate with the picked item indices, and
+            once with ``arange(n_items)`` for the point estimate. Must be a
+            smooth (Hadamard-differentiable) functional of the sample: the
+            bootstrap of a maximum is inconsistent, so a statistic that takes a
+            max over the picked items gets an interval with no coverage
+            guarantee at any sample size.
+        confidence: Nominal coverage. Must lie strictly between 0 and 1.
+        n_resamples: Bootstrap replicates.
+        seed: Seed for reproducibility.
+
+    Returns:
+        A :class:`ClusterBootstrapResult`. ``point_estimate`` is the statistic
+        at the full sample, so it is the plug-in value the interval is centred
+        on rather than the mean of the replicates.
+
+    Raises:
+        ValueError: On empty ``clusters``, ``n_resamples < 1``, or a
+            ``confidence`` outside ``(0, 1)``.
+    """
+    if n_resamples < 1:
+        raise ValueError(f"n_resamples must be >= 1, got {n_resamples}")
+    if not 0.0 < confidence < 1.0:
+        raise ValueError(f"confidence must be in (0, 1), got {confidence}")
+
+    _, members = _grouped_indices(clusters)
+    n_clusters = len(members)
+    n_items = int(np.asarray(clusters).size)
+
+    rng = np.random.default_rng(seed)
+    draws = rng.integers(0, n_clusters, size=(n_resamples, n_clusters))
+
+    replicates = np.empty(n_resamples, dtype=np.float64)
+    for r in range(n_resamples):
+        picked = np.concatenate([members[g] for g in draws[r]])
+        replicates[r] = statistic(picked)
+
+    tail = (1.0 - confidence) / 2.0
+    ci_low, ci_high = np.quantile(replicates, (tail, 1.0 - tail))
+
+    return ClusterBootstrapResult(
+        point_estimate=float(statistic(np.arange(n_items, dtype=np.intp))),
+        ci_low=float(ci_low),
+        ci_high=float(ci_high),
+        standard_error=float(replicates.std(ddof=1)) if n_resamples > 1 else 0.0,
+        confidence=confidence,
+        n_clusters=n_clusters,
+        n_items=n_items,
+        n_resamples=n_resamples,
+    )
+
+
 def cluster_bootstrap_diff(
     control: npt.ArrayLike,
     treatment: npt.ArrayLike,
@@ -150,6 +226,9 @@ def cluster_bootstrap_diff(
     Whole clusters are drawn with replacement and all their items come along.
     This propagates within-cluster correlation into the interval, which is
     exactly what an item-level bootstrap fails to do.
+
+    The resampling itself is :func:`cluster_bootstrap_statistic`; this is that
+    function with the paired mean difference as its statistic.
 
     Args:
         control: Per-item control values.
@@ -183,29 +262,12 @@ def cluster_bootstrap_diff(
         raise ValueError("control, treatment and clusters must all be the same length")
 
     diffs = treat - ctrl
-    _, members = _grouped_indices(clusters)
-    n_clusters = len(members)
-
-    rng = np.random.default_rng(seed)
-    draws = rng.integers(0, n_clusters, size=(n_resamples, n_clusters))
-
-    replicates = np.empty(n_resamples, dtype=np.float64)
-    for r in range(n_resamples):
-        picked = np.concatenate([members[g] for g in draws[r]])
-        replicates[r] = diffs[picked].mean()
-
-    tail = (1.0 - confidence) / 2.0
-    ci_low, ci_high = np.quantile(replicates, (tail, 1.0 - tail))
-
-    return ClusterBootstrapResult(
-        point_estimate=float(diffs.mean()),
-        ci_low=float(ci_low),
-        ci_high=float(ci_high),
-        standard_error=float(replicates.std(ddof=1)) if n_resamples > 1 else 0.0,
+    return cluster_bootstrap_statistic(
+        clusters,
+        lambda picked: float(diffs[picked].mean()),
         confidence=confidence,
-        n_clusters=n_clusters,
-        n_items=int(diffs.size),
         n_resamples=n_resamples,
+        seed=seed,
     )
 
 

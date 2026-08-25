@@ -10,6 +10,7 @@ Every document here, and the question each one answers.
 | --- | --- |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | What the pieces are and how a run flows through them: the skill, the harness, the datastore, the gate, the site. Read it before the programme. |
 | [`STATUS.md`](STATUS.md) | Where the work actually is. Every run on record, what it showed, which measurements turned out to be broken, which tracks are untouched. The ledger. |
+| [`QUALITY_STATE.md`](QUALITY_STATE.md) | Where the decision-quality track is, and what the next three units are. The resumption point: read it first, rewrite it before you finish. |
 | [`../SCORECARD.md`](../SCORECARD.md) | What may be publicly claimed about a skill. Empty on purpose, plus the verdict vocabulary and the retirement rule. |
 | [`RESEARCH_PROGRAMME.md`](RESEARCH_PROGRAMME.md) | What the tracks are. The goal, what the literature already settles, and the map to sixteen tracks in eight parts. Read this before proposing experiment work. |
 | [`programme/`](programme/part-1-what-is-already-known.md) | The eight parts themselves, one file each, from [what is already known](programme/part-1-what-is-already-known.md) through [the product](programme/part-2-the-product.md), [the instrument](programme/part-3-the-instrument.md), [does the failure exist](programme/part-4-does-the-failure-exist.md), [where a skill helps](programme/part-5-where-a-skill-helps.md), [confirmation](programme/part-6-confirmation.md), [cross-cutting](programme/part-7-cross-cutting.md) and [output](programme/part-8-output.md). |

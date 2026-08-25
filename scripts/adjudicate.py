@@ -51,9 +51,8 @@ from decision_evals.adjudication import (  # noqa: E402
 )
 from decision_evals.providers.claude_code import (  # noqa: E402
     CliError,
-    Conversation,
     IsolationError,
-    isolated_cwd,
+    run_isolated,
 )
 from decision_evals.skills import parse_skill  # noqa: E402
 from decision_evals.stats.agreement import (  # noqa: E402
@@ -119,12 +118,7 @@ def abort_clauses(skill_path: Path) -> str:
 def ask(case: TriggerCase, model: str, system: str) -> tuple[bool | None, str]:
     """One adjudicator's verdict on one turn, plus the raw reply."""
     prompt = f"## Message\n\n{case.turn}"
-    with (
-        isolated_cwd("de-adjudicate-") as cwd,
-        Conversation(system_prompt=system, model=model, cwd=cwd) as chat,
-    ):
-        result = chat.send(prompt)
-        chat.receipt.assert_isolated()
+    result = run_isolated(prompt, system_prompt=system, model=model, prefix="de-adjudicate-").result
     return parse(result.text), result.text
 
 
