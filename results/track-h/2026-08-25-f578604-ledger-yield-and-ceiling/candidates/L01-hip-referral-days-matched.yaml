@@ -1,0 +1,197 @@
+# Track H triplet L01, arm: matched. Ledger construct, yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L01
+arm: matched
+role: control
+domain: veterinary_referral_scheduling
+mechanism_type: date-chain
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until Bramble's hip operation takes place
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Wilhelmina Ostrowski-Baye. My collie Bramble is nine and needs a hip
+  operation that only Kestrelmoor Veterinary Referrals does anywhere in
+  Calderwyn. Several practices have had a hand in her care this summer, so
+  here is the file.
+
+  Kestrelmoor allocates the operating date for the thirtieth day after the day
+  it receives signed paperwork from her own practice, and Bramble is operated
+  on that day. Their admissions office explained that her own practice's
+  paperwork is the only document the count runs from, and that the rest of the
+  file is read during those thirty days or filed after the operation, without
+  changing the date.
+
+  Also on file:
+
+  - Thurloe Out-of-Hours saw Bramble after a fall on 2026-07-11 and started
+    her on pain relief.
+  - Marchmont Veterinary Group, where Bramble has been registered since 2019,
+    took her care back from the out-of-hours service on 2026-07-13.
+  - Ryelands Imaging took the hip radiographs on 2026-08-03 at Marchmont
+    Veterinary Group's request.
+  - Fennimore Pet Cover opened a claim reference against my policy on
+    2026-08-14.
+  - Halverstock Laboratory reported her routine blood panel as normal on
+    2026-08-20.
+  - My own signed consent form is due to reach Kestrelmoor on 2026-08-28.
+  - The signed transfer-of-care summary from Thurloe Out-of-Hours is due to
+    reach Kestrelmoor on 2026-09-01.
+  - The signed orthopaedic referral from Marchmont Veterinary Group is due to
+    reach Kestrelmoor on 2026-09-02.
+  - The signed rehabilitation plan from Ottershaw Canine Rehabilitation is due
+    to reach Kestrelmoor on 2026-10-13.
+  - Fennimore Pet Cover is due to confirm the claim reference in writing to
+    Kestrelmoor on 2026-11-30.
+  - Thurloe Out-of-Hours wrote to me on 2026-08-24 to say that their signed
+    transfer-of-care summary will not now reach Kestrelmoor until
+    2026-10-07, because their records office is shut for a systems change
+    until then.
+
+  Question: how many days from today until Bramble's hip operation takes
+  place? Answer with a single number of days.
+key:
+  causal_rule_sentence: >-
+    Kestrelmoor allocates the operating date for the thirtieth day after the
+    day it receives signed paperwork from her own practice, and Bramble is
+    operated on that day.
+  rule_actor: Kestrelmoor Veterinary Referrals
+  insert_skeleton: >-
+    <body> wrote to me on 2026-08-24 to say that their signed <document> will
+    not now reach Kestrelmoor until 2026-10-07, because their records office is
+    shut for a systems change until then.
+  delta_kind: inserted_bullet
+  fact: >-
+    Thurloe Out-of-Hours wrote to me on 2026-08-24 to say that their signed
+    transfer-of-care summary will not now reach Kestrelmoor until 2026-10-07,
+    because their records office is shut for a systems change until then.
+  governs: false
+  expected_direction: none
+  expected_value: 38
+  arithmetic: >-
+    Unchanged from base. Thurloe Out-of-Hours is the out-of-hours service, not
+    her own practice: the second bullet says Bramble has been registered with
+    Marchmont Veterinary Group since 2019 and that Marchmont took her care back
+    from the out-of-hours service. The rule sentence counts from her own
+    practice's signed paperwork, which is Marchmont's signed orthopaedic
+    referral, still due 2026-09-02. Thirty days after that is 2026-10-02, which
+    is 38 days from 2026-08-25. Relative movement 0.000.
+  rounding: >-
+    None needed; every interval is a whole number of days. Convention: the
+    difference in calendar days between 2026-08-25 and the operating date,
+    counting the operating date and not today. Tolerance 0 on the movement.
+    Tolerance 1 day on the absolute value.
+  mirror_one_sentence: >-
+    The count runs from her own practice's signed paperwork and Marchmont is
+    her own practice, so a slip in the out-of-hours service's summary leaves
+    the 2026-09-02 referral date and the 2026-10-02 operating date exactly
+    where they were.
+  why_it_does_not_move: >-
+    The matched fact has no arithmetic channel to the elicited quantity. The
+    chain has one input and this is not it. There is no margin for a
+    precondition to eat, so the correction is exactly zero rather than small.
+  neutraliser_location: >-
+    Two sentences, both several paragraphs above the insert, which is the final
+    bullet. (a) The causal rule sentence: "it receives signed paperwork from
+    her own practice". (b) The second bullet: "Marchmont Veterinary Group,
+    where Bramble has been registered since 2019, took her care back from the
+    out-of-hours service on 2026-07-13." Neither refers to the other and the
+    insert refers to neither. Neither names Thurloe: (b) identifies it by the
+    property "the out-of-hours service", which is the companion rule to
+    salience dimension 8. The insert is NOT self-neutralising; it states only
+    that a signed document going to the operating hospital is five weeks late.
+  preconditions_enumerated:
+    - >-
+      Does the operating date wait on anything but her own practice's signed
+      paperwork? No. The rule sentence names one input, and the admissions
+      sentence says her own practice's paperwork is the only document the count
+      runs from.
+    - >-
+      Is Thurloe her own practice? No. Bramble has been registered with
+      Marchmont since 2019 and Marchmont took her care back from the
+      out-of-hours service on 2026-07-13. Thurloe saw her once, after a fall.
+    - >-
+      Does the new date, 2026-10-07, fall after the base operating date of
+      2026-10-02, so that the summary is missing on the day? Yes, and the base
+      already settles what that means: the admissions sentence says the rest of
+      the file is read during the thirty days or filed after the operation
+      without changing the date, and the base file already has two signed
+      Kestrelmoor-bound documents due after 2026-10-02, the Ottershaw plan on
+      2026-10-13 and the Fennimore confirmation on 2026-11-30. A reader who
+      accepts the base answer of 38 has already accepted that a signed document
+      arriving after the operating date does not move it. This is the sharpest
+      objection to the item and the base answers it, not the insert.
+    - >-
+      Is the admissions sentence an unmotivated tell, the h01 grant-drawdown
+      defect? No. Two of the ten sibling facts in the base fall after the base
+      operating date, so the clause is doing work in the base with no insert
+      present.
+    - >-
+      Could the delay be read as clinical rather than administrative, so that
+      Kestrelmoor lacks the history it needs to anaesthetise her? The stated
+      cause is a records office shut for a systems change. The clinical inputs
+      in the file, the radiographs of 2026-08-03 and the blood panel reported
+      normal on 2026-08-20, are already taken and are not the delayed document.
+      The summary is an administrative handover from one out-of-hours visit
+      whose content the first bullet already states.
+    - >-
+      Could Thurloe's summary be read as an alternative referral that starts
+      the count earlier or later? No. The rule sentence is specific to her own
+      practice, and the file contains exactly one signed document from her own
+      practice.
+    - >-
+      Does consent gate the date? My own signed consent form is due 2026-08-28,
+      before every operating date in every arm, and the insert does not touch
+      it.
+    - >-
+      Does the insurer gate the date? Fennimore's confirmation is due
+      2026-11-30 in the base, after the operating date in every arm, and the
+      base answer is 38 regardless. The insert does not touch it.
+    - >-
+      Does a shut records office at Thurloe block Marchmont? No. They are
+      separate bodies and the insert names only Thurloe's office.
+    - >-
+      Direction check. Every reading under which this fact bites pushes the
+      answer up, the same direction the governing arm moves, so a wrong label
+      here collapses the contrast rather than manufacturing one. Recorded
+      rather than hidden.
+  salience_match: >-
+    Object class. Both inserts are a rescheduling notice from a veterinary body
+    about a signed document about Bramble bound for Kestrelmoor.
+    Surface form. The same skeleton with the body and the document substituted
+    and nothing else; both carry two dates in YYYY-MM-DD and the same stated
+    cause, word for word.
+    Magnitude. The same new date, 2026-10-07, and slips of 35 and 36 days from
+    originals one day apart.
+    Alarm. "A signed document for my dog is five weeks late and now lands after
+    her operation" is the same sentence for both.
+    Length. Prompt-length delta from base is 226 characters for the governing
+    insert and 224 for the matched, 0.9% against max, inside the 10% rule.
+    Position. Both are the final bullet of the file list, immediately before
+    the question, in both files.
+    Deontic register. Neither insert names a penalty, a status change or a
+    consequence, and neither is procedural in the pass-one sense; both are a
+    third party reporting a slipped date, and the tails are identical strings.
+    Relation to the causal rule sentence. Both inserts name Kestrelmoor, the
+    actor the rule sentence names, and neither uses the phrase "her own
+    practice" that the rule sentence keys on, so R1 holds in the "both"
+    direction.
+    NOT fully closed, dimension 8's content-word overlap, the pass-two leak at
+    AUC 0.740. Both inserts share {signed, Kestrelmoor, date} with the rule
+    sentence and the counts are equal, which is why the rule sentence says
+    "signed paperwork" rather than "signed referral". But "orthopaedic
+    referral" is a nearer neighbour of the rule sentence's subject matter than
+    "transfer-of-care summary" is, so an embedding-based rather than
+    token-based overlap measure would probably still separate the two. That
+    residue is real and is not claimed closed.
+meta:
+  personas_invented: true
+  real_personal_data: false

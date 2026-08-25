@@ -1,0 +1,117 @@
+# Track H order-effect item K01, stratum: tie, ordering: AB.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 1
+construct: council
+family: C
+item: K01
+stratum: tie
+ordering: AB
+first_course: TARNSIDE
+second_course: VELLACOTT
+pair: K01-brindlemere-refit-tie-ba.yaml
+domain: coastal_ferry_fleet_renewal
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [TARNSIDE, VELLACOTT, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ingrid Talhouarn-Bex and I run operations at Cormorant Sound Ferries. We
+  are seven people and we hold the year-round licence between Kettlebay and
+  Ardvraich, carrying foot passengers and vehicles, eleven crossings a day from
+  May to September and five a day the rest of the year. One vessel does all of
+  it.
+
+  That vessel is MV Brindlemere, built in 1995. Her hull was surveyed on
+  2026-03-12 and passed with no steelwork required. Both main engines and the
+  gearbox are original, and the surveyor gave them until the end of the 2027
+  summer season.
+
+  The figures I have been given:
+
+  - Re-engining the Brindlemere: GBP 1,420,000 in yard costs, quoted by
+    Hebridean & Vaile, who have maintained her since 2004. Twelve weeks in the
+    yard from 2027-01-05.
+  - Chartering a relief vessel for those twelve weeks: GBP 310,000, agreed in
+    principle with Sorrelbank Marine.
+  - MV Suilvenaig, built in 2017, is on the market at GBP 3,050,000, handover
+    available from 2026-11-20. Same passenger and vehicle capacity as the
+    Brindlemere.
+  - Modifying the Ardvraich linkspan to take the Suilvenaig's ramp:
+    GBP 240,000.
+  - The Suilvenaig burns less fuel on our route than a re-engined Brindlemere
+    would, worth about GBP 190,000 a year at this year's prices.
+  - The Suilvenaig needs a master's endorsement none of our nine masters holds.
+    It is a six-week course. Two of the nine have told me they will retire
+    rather than sit it.
+  - A re-engined Brindlemere keeps the insurance terms we have now. Our broker
+    has not yet quoted on the Suilvenaig.
+  - Nobody has yet valued the Brindlemere as a sale.
+
+  Two courses are on the table.
+
+  Course TARNSIDE. Re-engine the Brindlemere in January and keep her. All in,
+  GBP 1,730,000. We hold a hull we know, a yard that knows her, all nine
+  masters, and the insurance terms we have. We spend nothing at Ardvraich. We
+  carry a fuel bill GBP 190,000 a year worse than the alternative for as long as
+  we run her, and she is a 1995 hull whatever we put in her.
+
+  Course VELLACOTT. Buy the Suilvenaig in November and sell the Brindlemere. All
+  in, GBP 3,290,000 before whatever the Brindlemere fetches. We get a hull
+  twenty-two years younger, GBP 190,000 a year off the fuel bill, and no yard
+  period at all. We spend six weeks putting masters through a course, we expect
+  to lose two of them, and we have no insurance quote yet.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the name of the course you
+    recommend, written exactly as it is written above, or the single word
+    BALANCED. Name one of the two courses as described, or BALANCED. BALANCED
+    means you judge the two genuinely even. It is a real answer here and it is
+    read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  why_neither_is_defeated: >-
+    No stated figure settles it. VELLACOTT costs GBP 1,560,000 more before the
+    Brindlemere's resale, against a fuel saving of GBP 190,000 a year: about
+    eight years to pay back, and nobody has valued the Brindlemere, so the true
+    payback is shorter by an unstated amount. TARNSIDE puts new engines in a
+    1995 hull the surveyor passed this March. Each course also carries one open
+    question of its own, and they are of a size: the Suilvenaig has no
+    insurance quote, the Brindlemere has no sale valuation. A reader who
+    weights fleet age lands on VELLACOTT, a reader who weights crew continuity
+    and capital lands on TARNSIDE, and both readings use every figure given.
+  admissible_calls: [TARNSIDE, VELLACOTT, BALANCED]
+  defect: >-
+    A call in the AB ordering that differs from the call in the BA ordering.
+    Any one of the three calls, held in both orderings, is not a defect.
+  pilot_2026_08_25: >-
+    Twelve smoke-test calls, not a run on record. Four draws on the shipped
+    contract returned BALANCED and TARNSIDE under AB, VELLACOTT and TARNSIDE
+    under BA. Both orderings disagreed with themselves, so the same-order flip
+    rate is 1.0 and no cross-order rate computed over this item can be read.
+  admission_status: >-
+    Fails the same-order screen in FAMILY_C_COUNCIL_NOTE.md. The item is even
+    enough that the model coin-flips within one ordering, which contributes
+    variance and no signal. Held here as the authored artefact and the evidence
+    for the screen. The repair is to name the Brindlemere's resale valuation so
+    one course carries a defended total rather than a range.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

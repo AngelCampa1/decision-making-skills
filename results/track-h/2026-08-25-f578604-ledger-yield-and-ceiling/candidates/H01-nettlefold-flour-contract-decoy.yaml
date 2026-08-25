@@ -1,0 +1,363 @@
+# Track H item H01, arm: decoy. Hinge construct, Family B pilot.
+#
+# ONLY `prompt` and `contract` are model-visible, and `contract` is byte-identical
+# across both arms. Everything under `key` and `meta` is answer key and must never
+# reach a generation or extraction call.
+#
+# This arm is the matched arm. It differs from H01-nettlefold-flour-contract-
+# pivotal.yaml by exactly one token: the order size, "22" here and "40" there.
+# That figure occurs once in the prompt. The scored candidate F_A keeps its
+# wording, its length, its bullet position and its mechanism, and stops forking
+# only because the threshold it is compared against moved.
+set_version: 1
+construct: hinge
+family: B
+item: H01
+arm: decoy
+role: matched
+domain: watermill_supply_contract
+mechanism_type: capacity-threshold
+absent_facts: 3
+scored_candidate: F_A
+elicited:
+  question: which single candidate not given in the brief would put the recommendation on the other course
+  kind: named-set-membership
+  slot: LEVERAGE
+  candidates: [F_A, F_B, F_D, NONE]
+  # F_C, the sifted share, was a candidate at v1 and v2 and is settled in the
+  # prompt at v3. Its accept list stays under scoring as an off-list tracker.
+
+prompt: |
+  Today is 2026-08-25.
+
+  Tobin Ellery runs Nettlefold Mill at Ardenshaw, one stone driven off a leat
+  taken from the Cowler Brook. The Ashgrove Bakers' Group has offered him a
+  twelve-month supply contract running 2026-10-01 to 2027-09-30 and wants an
+  answer by 2026-09-04. Ashgrove will not split the order between two mills, so
+  it is the whole order or none of it.
+
+  The contract:
+
+  - Ashgrove wants 22 tonnes of flour across the year, a quarter of it sifted
+    white and the rest wholemeal. Sifted white is bolted after milling and the
+    bolter takes off a fifth as bran, which Ashgrove will not take, so each
+    tonne of sifted white needs 1.25 tonnes through the stone.
+  - Ashgrove buys its own grain and delivers it to the mill. Nettlefold is paid
+    £310 a tonne of flour delivered, clear of what the extra milling days cost
+    it. Ashgrove has traded thirty years and pays on delivery.
+  - Ashgrove takes delivery monthly to a schedule Tobin sets, and flour milled
+    ahead into the mill's bins counts against it. The bins hold six months of
+    the order.
+  - Ashgrove's bakers would have to re-source for the rest of the year if the
+    mill came up short, so the contract sets a single agreed sum of £14,000,
+    payable if Nettlefold delivers less than the full tonnage and whatever the
+    size of the shortfall.
+  - Twelve months, and either side may walk at the end of it with no penalty.
+    Ashgrove has not said whether it expects to come back for a second year.
+
+  The mill:
+
+  - The stone mills 0.36 tonnes on a full milling day.
+  - Tobin stands the Saturday market himself, so Saturdays are not milling days.
+    He reckons on 250 working days in the contract year, after the Christmas
+    fortnight and after stone dressing and repair.
+  - The Saturday market, Dunsmere Bakehouse and Vale End Stores take 32 tonnes
+    through the stone across the year, all of it wholemeal. Tobin keeps all
+    three under either course, at that volume, whatever grain does.
+  - Before the weir went in, the leat dropped below milling flow on about
+    seventy working days a year and the stone stood idle on each of them. The
+    weir and its gauge were finished in March 2026. The gauge has recorded three
+    low days since, in a June that was the wettest in a decade, and it has not
+    yet seen a dry September.
+  - Nothing new is bought for this contract. The stone and the bolter are in
+    place, and Tobin has ruled out buying plant or putting work out to another
+    mill.
+  - Merrin Ellery has agreed to work the extra milling days at the day rate she
+    is already on, with no notice owed either way.
+  - Nettlefold has no borrowing and about £40,000 put by, so the agreed sum
+    would be a bad year rather than the end of one.
+  - Nettlefold buys its own grain for the market and shop trade and reprices
+    that flour each January on what the grain cost. The 2026 harvest is being
+    cut this week and the price is not yet set.
+
+  The two courses are SIGN and DECLINE.
+
+# Byte-identical in both arms. Block names, and the wording of the LEVERAGE
+# criterion, avoid hinge.md's own vocabulary: UNKNOWNS, HINGE TEST, THEREFORE,
+# hinge, missing, absent, unknown, plausible values, swing, ask, decide, twice.
+# See FAMILY_B_HINGE_NOTE.md for what that exclusion covers and what it does not.
+contract:
+  framing: >-
+    You are advising a small business on a choice it must make by a fixed date.
+    You will be given a brief and two named courses of action. Recommend one of
+    the two.
+  format: |
+    Reason as much as you find useful, then end your reply with exactly these
+    four blocks in this order and nothing after them:
+
+    RECOMMENDATION
+      one word: SIGN or DECLINE
+    BASIS
+      free text -- the reasoning that gets you there
+    LEVERAGE
+      one sentence naming the single unsettled detail, whether it is raised
+      above or not, that would most likely put you on the other course of
+      action if you knew it -- or NONE if no such detail exists
+    CONFIDENCE
+      one word: low, moderate, or high
+
+key:
+  capacity_model: >-
+    Stone tonnage required = 32 + 16.5 wholemeal + 5.5 sifted at 1.25 = 55.375
+    tonnes, so 154 milling days. SIGN needs 250 - L >= 154, which is L <= 96.
+    The pre-weir worst on record is 70, so both values of F_A clear it and the
+    £14,000 agreed sum never becomes payable. The contract adds
+    22 x £310 = £6,820 clear.
+  threshold_low_days: 96
+  recommendation: SIGN
+  recommendation_is_undetermined_in_this_arm: false
+  correct_leverage: NONE
+  why_none: >-
+    Every one of the four candidates comes out the same under both of its
+    values, so on hinge's own Step 2 the answer is available now and the right
+    reply names no candidate. The worst combination on the table -- 70 low days
+    and the full quarter of the order sifted -- still leaves 180 milling days
+    against 154 required.
+
+  F_A:
+    role: decoy
+    decoy_type: dominated-range
+    fact: the number of working days a year the leat drops below milling flow
+    why_tempting: >-
+      Identical wording, length and position to the pivotal arm, where it is the
+      whole decision. It carries the largest stated range in the brief, seventy
+      days against three, and it is the only candidate the brief gives a
+      historical record for.
+    why_it_does_not_fork: >-
+      The order fell to 22 tonnes, so the requirement fell to 150 milling days,
+      154 at the sifting cap. Both plausible values clear it. Seeing that takes
+      the same two-value computation the pivotal arm rewards, run against a
+      threshold that has moved.
+    values:
+      - value: about 15 low days a year
+        milling_days_available: 235
+        milling_days_required: 154
+        recommendation: SIGN
+      - value: about 70 low days a year
+        milling_days_available: 180
+        milling_days_required: 154
+        recommendation: SIGN
+    forks: false
+
+  F_B:
+    role: decoy
+    decoy_type: common-mode
+    fact: the price of grain from the 2026 harvest
+    why_tempting: >-
+      It is the largest unsettled number in the brief, it is being fixed this
+      week, and it plainly governs the mill's year.
+    why_it_does_not_fork: >-
+      It moves both courses by the same amount and cancels from the comparison.
+      Ashgrove buys and delivers its own grain, so the order carries no grain
+      cost for Nettlefold at all. The 32-tonne trade, which is the only grain
+      Nettlefold buys, is kept under SIGN and under DECLINE alike.
+    values:
+      - value: £195 a tonne
+        recommendation: SIGN
+      - value: £265 a tonne
+        recommendation: SIGN
+    forks: false
+
+  F_C:
+    role: settled-at-v3
+    settled_because: >-
+      At v1 and v2 the sifted share was a candidate. It forks the pivotal
+      arm over L in [44, 50], because the requirement is 200 milling days
+      with none sifted and 207 with the full quarter, so a reader whose
+      point estimate lands in that band gets SIGN one way and DECLINE the
+      other. No tonnage makes the two thresholds coincide, so the share
+      is settled in the prompt instead. That closes an answer-key defect
+      and costs the item a decoy.
+    former_decoy_type: dominated-range
+    fact: how much of Ashgrove's order is sifted white rather than wholemeal
+    at_v3: >-
+      Settled in the prompt at a quarter of the order, so it is no longer a
+      candidate and no longer scored. Its accept list stays under scoring, and
+      a response naming it now counts as naming something the prompt gives,
+      which is a distinct diagnostic from naming an unsettled decoy.
+    forks: not applicable, settled
+
+  F_D:
+    role: decoy
+    decoy_type: downstream-of-a-closed-gate
+    fact: whether Ashgrove will want a second year
+    why_tempting: >-
+      It is the standard prudent question about a one-year commitment, and the
+      brief says outright that Ashgrove has not answered it.
+    why_it_does_not_fork: >-
+      Nothing is sunk into year one that a year two would have to recover. No
+      plant is bought, the market and shop trade is kept under either course so
+      there is no customer to win back, Merrin is owed no notice, and either
+      side may walk with no penalty.
+    values:
+      - value: Ashgrove comes back for a second year
+        recommendation: SIGN
+      - value: Ashgrove does not come back
+        recommendation: SIGN
+    forks: false
+
+scoring:
+  block: LEVERAGE
+  primary: P(F_A named | pivotal) - P(F_A named | decoy)
+  match: casefold_substring
+  arbitration:
+    one_sentence_only: true
+    max_chars: 320
+    over_length_or_multi_sentence: hand-adjudicate blind, count reported
+    no_accept_fires: hand-adjudicate blind, count reported
+    two_accepts_fire_from_different_candidates: hand-adjudicate blind, count reported
+  none_rule: >-
+    The block, stripped of leading whitespace and punctuation, begins with NONE.
+    NONE is EXCLUSIVE and is tested first: where it holds, no phrase match may
+    fire. A model running the procedure correctly names the candidates it
+    dropped, so "NONE; not even the low-flow count, since 22 tonnes fits"
+    is a correct answer that every plausible F_A phrase list matches. Without
+    this precedence the scorer runs against the skill it is measuring.
+  # Accepts are byte-identical to the pivotal arm's. The same strings must score
+  # the same candidate in both arms or the difference is not a difference.
+  accepts:
+    F_A:
+      - "low flow"
+      - "low-flow"
+      - "milling flow"
+      - "days of low"
+      - "low days"
+      - "flow in the leat"
+      - "leat flow"
+      - "flow in the brook"
+      - "the leat drops"
+      - "the leat falls"
+      - "leat runs low"
+      - "days the leat"
+      - "days the stone cannot"
+      - "days the stone will not"
+      - "days the mill cannot"
+      - "days lost to water"
+      - "days lost to flow"
+      - "water available"
+      - "available water"
+      - "flow at the weir"
+      - "whether the weir"
+      - "how well the weir"
+      - "the weir holds"
+      - "the weir performs"
+      - "gauge readings"
+      - "the gauge record"
+      - "a full year of gauge"
+      - "milling days lost"
+      - "usable milling days"
+      - "available milling days"
+      - "number of milling days"
+      - "days the wheel"
+      - "head of water"
+      - "summer flow"
+      - "dry september"
+      - "a dry summer"
+    F_B:
+      - "grain price"
+      - "price of grain"
+      - "grain cost"
+      - "cost of grain"
+      - "what grain costs"
+      - "harvest price"
+      - "price of the harvest"
+      - "wheat price"
+      - "price of wheat"
+      - "grain this harvest"
+      - "2026 harvest"
+    F_C:
+      - "sifted"
+      - "wholemeal"
+      - "white flour"
+      - "bolted"
+      - "the bolter"
+      - "proportion of white"
+      - "how much of the order"
+      - "the split between"
+      - "product mix"
+      - "grist mix"
+    F_D:
+      - "second year"
+      - "a further year"
+      - "renew"
+      - "renewal"
+      - "year two"
+      - "beyond the first year"
+      - "after the twelve months"
+      - "come back"
+      - "long term"
+      - "long-term"
+      - "continue after"
+  rejects:
+    - "not the low flow"
+    - "not the flow"
+    - "besides the low flow"
+    - "other than the low flow"
+    - "aside from the flow"
+    - "even if the flow"
+    - "regardless of the flow"
+    - "setting aside the flow"
+
+validity_checks:
+  arithmetic_holds: >-
+    RECOMMENDATION in this arm is determinate. Control-arm responses should be
+    SIGN at a high rate; a DECLINE means the model got the capacity sum wrong.
+  specificity_is_conditioned: >-
+    The specificity term is reported twice: over all decoy-arm responses, and
+    over decoy-arm responses whose RECOMMENDATION is SIGN. A response that
+    wrongly says DECLINE and then names low flow as what would move it to SIGN
+    has named F_A for a reason the key does not describe, and pooling it into
+    the headline inflates the difference. Both numbers go in the write-up.
+  decoys_are_live: >-
+    Across both arms, each of F_B, F_C and F_D must be named in the LEVERAGE
+    block at least once.
+
+meta:
+  personas_invented: true
+  real_personal_data: false
+  dates_checked: all in YYYY-MM-DD or D Month YYYY
+  today: 2026-08-25
+  prompt_delta_from_pivotal_arm_chars: 0
+  authored: 2026-08-25
+  item_version: 3
+  revisions:
+    - version: 1
+      note: >-
+        As authored. Blind re-derivation ran on this version, one instance per
+        arm, and returned F_A in the pivotal arm and an off-list candidate in
+        the decoy arm. Both instances found forking details the key did not
+        plant.
+    - version: 2
+      note: >-
+        Four silences closed, none of which touches the tonnage arithmetic: the
+        delivery schedule and the right to mill ahead into stock, the agreed sum
+        payable on a shortfall, stone dressing and repair folded into the 250
+        working days, and the £310 fixed to tonnes of flour delivered. The
+        shortfall clause is what keeps the pivotal arm forking: without it,
+        signing and under-delivering beats declining at every value of F_A and
+        the fork dies. Untested. The blind pass above ran on version 1.
+    - version: 3
+      note: >-
+        An adversarial review briefed to break the item returned CUT on version
+        1, and three of its fatal findings were already closed at version 2.
+        Version 3 closes the rest. The sifted share is settled in the prompt,
+        because it genuinely forks the pivotal arm over 44 to 50 low days and
+        no tonnage makes the two thresholds coincide. LEVERAGE now asks for the
+        single unsettled detail whether or not it is raised above, because the
+        earlier wording, "not given above", excluded all of the item's own
+        candidates on a literal reading. NONE takes precedence over every
+        phrase match, because a model running the procedure correctly names the
+        candidates it dropped. Saturdays, Ashgrove's standing, the units on the
+        32 tonnes, the stability of that volume, and the derivable working-day
+        count are each closed in one clause. Untested: the blind pass on record
+        ran on versions 1 and 2.

@@ -1,0 +1,94 @@
+# Track H triplet L02, arm: base. Construct: ledger. Yield probe, 2026-08-25.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L02
+arm: base
+role: base
+domain: textile_finishing_capacity
+mechanism_type: capacity-rate
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: weeks from today until the last metre of the Kestrel order comes off the line
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottilie Vansittart-Mbeki, production planner at Thelwall Finishing
+  Works in Calderwyn. We piece-dye and finish woven cotton for the trade,
+  and the floor is part-way through one large order for Kestrel Mills.
+
+  288,000 metres of the Kestrel order are still to finish as of today.
+  The line is on nothing but that order until it is done. Every metre
+  goes through all six stages in order: singeing, scouring, mercerising,
+  dyeing, coating, then the stenters. Halloway Plant Engineering
+  maintains every stage of the line for us; the finish date is set by the
+  slowest stage's output in metres a week and by nothing else. The weekly
+  figures below are what each stage actually puts out, maintenance and
+  shutdowns included.
+
+  Also on file:
+
+  - Our effluent consent was renewed on 2026-01-27 and runs to 2029-01-27.
+  - The coating line took a new head on 2026-07-20 and runs 38,000 metres
+    a week.
+  - Kestrel Mills signed the order on 2026-06-15 and paid the first
+    instalment on 2026-08-10.
+  - The mercerising range was relined on 2026-05-12 and runs 45,000 metres
+    a week.
+  - The works took on eleven agency operatives on 2026-07-27, on contracts
+    to 2027-07-27.
+  - Stenter frames 1 and 2 were re-clad on 2026-03-09 and heat-set 16,000
+    metres a week between them.
+  - The singeing range was re-gassed on 2026-02-17 and runs 52,000 metres
+    a week.
+  - Halloway Plant Engineering signed a new maintenance contract with us
+    on 2026-06-22, running to 2028-06-22.
+  - The dye house rebuilt jet 5 on 2026-04-14 and puts 33,000 metres a
+    week through its five jets.
+  - The scouring range took a new drive on 2026-06-08 and runs 41,000
+    metres a week.
+
+  Question: how many weeks from today until the last metre of the Kestrel
+  order comes off the line? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    Halloway Plant Engineering maintains every stage of the line for us; the
+    finish date is set by the slowest stage's output in metres a week and by
+    nothing else.
+  causal_rule_sentence_note: >-
+    Occurs exactly once in the base prompt, character for character once the
+    line wrap at column ~72 is collapsed to single spaces. It begins mid-line
+    at "Halloway Plant" in the second paragraph and runs to "nothing else."
+    The string "Halloway Plant Engineering" occurs twice in the base, but the
+    sentence as a whole occurs once.
+  rule_actor: Halloway Plant Engineering
+  insert_skeleton: >-
+    Halloway Plant Engineering signed off <MACHINE> at Thelwall on 2026-08-21,
+    and it runs from 2026-08-25 at 8,000 metres a week.
+  delta_kind: none
+  fact: NONE
+  governs: false
+  expected_direction: none
+  expected_value: 18
+  arithmetic: >-
+    Quantity outstanding, from the second paragraph: 288,000 metres still to
+    finish as of today. The six stage outputs, all from the "Also on file"
+    bullets: singeing 52,000, scouring 41,000, mercerising 45,000, dyeing
+    33,000, coating 38,000, stenters 16,000 metres a week. The rule sentence
+    says the finish date is set by the slowest stage's output and by nothing
+    else, so the binding rate is min(52,000, 41,000, 45,000, 33,000, 38,000,
+    16,000) = 16,000 metres a week, the stenter stage. 288,000 / 16,000 = 18.
+    Eighteen weeks.
+  rounding: >-
+    Whole weeks, rounded up if the division is not exact. It is exact here:
+    288,000 is 18 x 16,000 with no remainder, so no rounding applies and the
+    tolerance is 0. The same holds in the governing arm (12 x 24,000) and the
+    matched arm (18 x 16,000).
+meta:
+  personas_invented: true
+  real_personal_data: false

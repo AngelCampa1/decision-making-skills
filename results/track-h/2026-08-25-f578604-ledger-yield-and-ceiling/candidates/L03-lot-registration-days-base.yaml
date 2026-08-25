@@ -1,0 +1,116 @@
+# Track H triplet L03, arm: base. Construct: ledger, yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L03
+arm: base
+role: base
+domain: conveyancing_land_registration
+mechanism_type: precedence-constraint
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until the purchase of Lot 14 is registered
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Odalys Ferrement-Nkwaya. I am buying Lot 14 Wrayburn Fields, in the
+  Meridian district of Calloway Reach, from the Sablewood Estate. Lot 14 has
+  no title of its own yet: it is being cut out of the parcel in folio
+  71/2204 by a deposited plan of subdivision.
+
+  Three rules of the Meridian system apply, and I have them from the
+  Registry's own practice note:
+
+  The Survey Office seals a deposited plan exactly 35 days after the day it
+  accepts that plan for lodgement.
+
+  A transfer of a lot may not be lodged until the Survey Office has sealed
+  the plan that creates that lot; it may be lodged on the day of sealing.
+
+  The Land Registry issues the new folio exactly 21 days after a transfer is
+  lodged, and the purchase is registered on the day the folio issues.
+
+  Also on file:
+
+  - Plan of subdivision SP-4417, which creates Lot 14 out of folio 71/2204,
+    was accepted for lodgement by the Survey Office on 2026-08-11.
+  - Plan of subdivision SP-6082, which creates four lots out of the Estate's
+    holding at Callowmere Bank in folio 88/1310, eleven kilometres south,
+    was accepted for lodgement by the Survey Office on 2026-08-13.
+  - The contract of sale was signed on 2026-07-02 at $412,000, went
+    unconditional on 2026-07-16, and completes on registration.
+  - The transfer, Form LR-7, was executed by both parties on 2026-08-04 and
+    my conveyancer holds it ready to lodge.
+  - The Estate's mortgage over folio 71/2204 to Trellick Building Society
+    was discharged on 2026-07-28.
+  - Harrowgate Mutual issued my loan approval on 2026-08-06 and it stands
+    until 2026-12-31.
+  - The Meridian Revenue Office issued a land tax clearance on 2026-08-18.
+    It runs 90 days and must be current on the day the transfer is lodged.
+  - A caveat lodged over folio 71/2204 by a former option holder on
+    2025-11-04 was withdrawn on 2026-06-19.
+  - A drainage easement in favour of the Calloway Reach Water Board was
+    granted by deed on 2026-05-22 and is drawn on plan SP-4417.
+  - A structural report on the cottage on Lot 14, dated 2026-07-09, found no
+    defect the Estate is obliged to remedy.
+
+  Question: how many days from today until my purchase of Lot 14 is
+  registered? Answer with a single number of days.
+key:
+  causal_rule_sentence: |-
+    A transfer of a lot may not be lodged until the Survey Office has sealed
+    the plan that creates that lot; it may be lodged on the day of sealing.
+  rule_actor: the Survey Office
+  insert_skeleton: >-
+    The Survey Office has rejected plan of subdivision <PLAN> over a boundary
+    dimension and has set <DATE> as the day it will accept that plan for
+    lodgement.
+  expected_value: 42
+  arithmetic: >-
+    The first ledger item puts SP-4417's acceptance for lodgement at
+    2026-08-11. The sealing rule adds exactly 35 days: 2026-08-11 + 35 =
+    2026-09-15 (20 days to 2026-08-31, then 15). The transfer rule allows
+    lodgement on the day of sealing, so the transfer is lodged 2026-09-15.
+    The folio rule adds exactly 21 days: 2026-09-15 + 21 = 2026-10-06 (15
+    days to 2026-09-30, then 6), and the purchase is registered the day the
+    folio issues. From 2026-08-25 to 2026-10-06 is 6 days of August + 30 of
+    September + 6 of October = 42 days. The two other dated conditions clear
+    with room: the land tax clearance issued 2026-08-18 runs 90 days to
+    2026-11-16 and must be current at lodgement on 2026-09-15; the loan
+    approval stands to 2026-12-31.
+  rounding: >-
+    None required for rounding: the unit is days and every interval in this
+    triplet is a whole number of them. Tolerance 0 on the movement, which is
+    the primary. Tolerance 2 on the absolute value, because "exactly 35 days
+    after the day it accepts" and "exactly 21 days after a transfer is
+    lodged" admit an inclusive count that takes a day off each leg, and
+    "from today" admits counting today as day 1. A blind reader flagged both
+    conventions and both shift all three arms by the same amount, so the
+    contrast is untouched: 42/78/42 exclusive, 40/76/40 inclusive.
+  critical_path: >-
+    Acceptance of SP-4417 (2026-08-11) -> sealing 35 days later
+    (2026-09-15) -> lodgement of the Form LR-7 transfer, permitted the same
+    day -> folio issue 21 days later (2026-10-06) = registration. Every
+    other item on file is either already discharged or dated clear of the
+    step it touches, so nothing else sits on the path.
+  base_tells_checked: >-
+    Disqualifier 14. The base carries no "on the face of it", no "nothing in
+    it requires more" and no "it is not urgent". The clause that neutralises
+    the matched arm, "the plan that creates that lot", is the chain rule
+    itself and is load-bearing in all three arms, so it is not an h01-style
+    unmotivated phrase that earns its keep on one arm only. The second
+    subdivision plan is unneeded for the base answer, but so are the other
+    eight ledger items; ten plausible facts of which one matters is the
+    construct, not a signal that a catch is coming. Two ledger items are
+    live near-misses a reader has to check and clear rather than ignore: the
+    land tax clearance expires 2026-11-16 against a governing-arm lodgement
+    of 2026-10-21, and SP-6082's own 2026-08-13 acceptance seals 2026-09-17,
+    two days after the plan that actually gates.
+meta:
+  personas_invented: true
+  real_personal_data: false

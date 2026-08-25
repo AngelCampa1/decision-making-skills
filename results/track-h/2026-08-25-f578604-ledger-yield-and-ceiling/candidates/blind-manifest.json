@@ -1,0 +1,122 @@
+{
+  "b00": {
+    "file": "L03-lot-registration-days-governing.yaml",
+    "triplet": "L03",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "days",
+    "expected": 78
+  },
+  "b01": {
+    "file": "L05-cask-cellar-days-matched.yaml",
+    "triplet": "L05",
+    "arm": "matched",
+    "role": "control",
+    "unit": "days",
+    "expected": 14
+  },
+  "b02": {
+    "file": "L04-seed-certification-weeks-matched.yaml",
+    "triplet": "L04",
+    "arm": "matched",
+    "role": "control",
+    "unit": "weeks",
+    "expected": 19
+  },
+  "b03": {
+    "file": "L01-hip-referral-days-matched.yaml",
+    "triplet": "L01",
+    "arm": "matched",
+    "role": "control",
+    "unit": "days",
+    "expected": 38
+  },
+  "b04": {
+    "file": "L05-cask-cellar-days-governing.yaml",
+    "triplet": "L05",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "days",
+    "expected": 26
+  },
+  "b05": {
+    "file": "L04-seed-certification-weeks-governing.yaml",
+    "triplet": "L04",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "weeks",
+    "expected": 7
+  },
+  "b06": {
+    "file": "L04-seed-certification-weeks-base.yaml",
+    "triplet": "L04",
+    "arm": "base",
+    "role": "base",
+    "unit": "weeks",
+    "expected": 19
+  },
+  "b07": {
+    "file": "L02-stenter-weeks-base.yaml",
+    "triplet": "L02",
+    "arm": "base",
+    "role": "base",
+    "unit": "weeks",
+    "expected": 18
+  },
+  "b08": {
+    "file": "L03-lot-registration-days-base.yaml",
+    "triplet": "L03",
+    "arm": "base",
+    "role": "base",
+    "unit": "days",
+    "expected": 42
+  },
+  "b09": {
+    "file": "L01-hip-referral-days-governing.yaml",
+    "triplet": "L01",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "days",
+    "expected": 73
+  },
+  "b10": {
+    "file": "L05-cask-cellar-days-base.yaml",
+    "triplet": "L05",
+    "arm": "base",
+    "role": "base",
+    "unit": "days",
+    "expected": 14
+  },
+  "b11": {
+    "file": "L02-stenter-weeks-matched.yaml",
+    "triplet": "L02",
+    "arm": "matched",
+    "role": "control",
+    "unit": "weeks",
+    "expected": 18
+  },
+  "b12": {
+    "file": "L02-stenter-weeks-governing.yaml",
+    "triplet": "L02",
+    "arm": "governing",
+    "role": "treatment",
+    "unit": "weeks",
+    "expected": 12
+  },
+  "b13": {
+    "file": "L01-hip-referral-days-base.yaml",
+    "triplet": "L01",
+    "arm": "base",
+    "role": "base",
+    "unit": "days",
+    "expected": 38
+  },
+  "b14": {
+    "file": "L03-lot-registration-days-matched.yaml",
+    "triplet": "L03",
+    "arm": "matched",
+    "role": "control",
+    "unit": "days",
+    "expected": 42
+  }
+}

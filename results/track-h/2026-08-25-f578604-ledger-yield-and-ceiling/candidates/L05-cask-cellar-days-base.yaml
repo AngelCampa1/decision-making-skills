@@ -1,0 +1,135 @@
+# Track H triplet L05, arm: base. Ledger yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L05
+arm: base
+role: base
+domain: cask_beer_stock_and_cellar_rotation
+mechanism_type: stock-and-flow
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until the tied pump comes off the bar
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottoline Vasse-Adeyinka and I keep the cellar at the Ravelstone Arms,
+  a nine-pump pub in Corravale. I count the stock every morning before
+  we open, cold room and yard container together, and a cask has to stand
+  for 7 days after delivery before it can go on.
+
+  The tied pump comes off the bar on the first morning 12 casks of the tied
+  beer are left in stock, and that pump gets through 3 casks a day, every
+  day of the week.
+
+  Also on file:
+
+  - 2019-04-01 — the Wrenfell tie was signed. It fixes Wrenfell Copper Ale
+    on the number one pump for the life of the agreement and allows no
+    other beer on that pump.
+  - 2025-03-10 — the yard container was fitted with its own cooling. It
+    takes the overflow when the cold room is full and is counted with it.
+  - 2026-06-02 — Wrenfell Brown Mild went on the number seven pump and has
+    held it since.
+  - 2026-07-30 — the number four pump changed over to Kestrelmoor Pale on
+    the night Vaunt Bitter finished.
+  - 2026-08-04 — Marle Row Porter came off the number six pump and has
+    not been replaced.
+  - 2026-08-06 — the line-cleaning contract with Sanderling Hygiene was
+    renewed. Every line is cleaned on a Tuesday morning before we open.
+  - 2026-08-11 — Wrenfell's last delivery before the rebuild. Nothing now
+    in stock was delivered later than that day.
+  - 2026-08-14 — Wrenfell's brewhouse came down for its rebuild. Wrenfell
+    have said nothing will ship from them before 2026-12-01.
+  - 2026-08-18 — the cellar standing instruction was reissued: a pump
+    comes off while it still has 12 casks of its own beer behind it, so
+    that a changeover is never made in the middle of service.
+  - 2026-08-25 — this morning's count: 21 casks of Kestrelmoor Pale,
+    which are in the yard container, 30 casks of Wrenfell Brown Mild,
+    and 54 casks of Wrenfell Copper Ale.
+
+  Question: how many days from today until the tied pump comes off the bar?
+  Answer with a single number of days.
+key:
+  causal_rule_sentence: >-
+    The tied pump comes off the bar on the first morning 12 casks of the tied
+    beer are left in stock, and that pump gets through 3 casks a day, every
+    day of the week.
+  causal_rule_sentence_note: >-
+    It occurs once in the base prompt and once only, as its own paragraph
+    between the opening paragraph and the ledger. It is wrapped across three
+    lines at the file's line width; the string above is that sentence
+    single-spaced.
+  rule_actor: NONE
+  insert_skeleton: >-
+    2026-08-25 — a further <count> casks of Wrenfell <beer>, delivered on
+    2026-08-11 and standing in the yard container since, were missed off this
+    morning's count.
+  delta_kind: none
+  governs: false
+  expected_direction: none
+  expected_value: 14
+  arithmetic: >-
+    Which beer is the tied beer: the 2019-04-01 entry fixes Wrenfell Copper
+    Ale on the number one pump and allows no other beer on it, so the tied
+    beer is Copper Ale. Opening stock: the last ledger entry, 2026-08-25,
+    counts 54 casks of it. Rate: the rule sentence gives 3 casks a day, every
+    day of the week. Level: the rule sentence puts the pump off the bar on
+    the first morning 12 casks are left, which the 2026-08-18 standing
+    instruction restates. Morning stock on day d is 54 - 3d. Set 54 - 3d = 12,
+    so 3d = 42 and d = 14. 2026-08-25 plus 14 days is 2026-09-08. Answer 14.
+  rounding: >-
+    None required and none available to hide behind. 54 - 12 = 42 and 42 is
+    divisible by 3, so the level is crossed exactly on a day boundary rather
+    than part-way through a day. Tolerance 0.
+  fork_check: >-
+    A reader who ignores the 12-cask level and runs the stock to nothing gets
+    54 / 3 = 18 in this arm and 90 / 3 = 30 in the governing arm, both whole
+    days and both still a movement, so the contrast survives that misreading
+    rather than being destroyed by it. The level is stated twice - in the rule
+    sentence and in the 2026-08-18 entry - so 18 is a misreading and not a
+    second defensible answer.
+  off_by_one_check: >-
+    The 2026-08-18 entry originally read "no pump is run below 12 casks of its
+    own beer". Paired with a rule sentence that fires when 12 are left, that
+    licensed a strict-below reading and a second answer of 15 - the pump coming
+    off on the first morning stock is under 12, which is 9 on day 15. It was
+    reworded to "a pump comes off while it still has 12 casks of its own beer
+    behind it", which agrees with the rule sentence exactly and leaves 12 as
+    the last morning the beer is on. The word "below" now appears nowhere in
+    any arm. The reading would have moved all three arms together, so it never
+    threatened the contrast, but it threatened integrality and it cost nothing
+    to remove.
+  review_repairs: >-
+    An independent adversarial reviewer, briefed to prove the matched fact
+    governs, could not: every route it tried is closed by a quoted base
+    sentence, and its strongest attack - that the 12-cask floor protects the
+    Wrenfell tie generally, so casks of Wrenfell mild satisfy it - dies on "12
+    casks of the tied beer" and "12 casks of its own beer". It found two
+    surface artefacts instead, both repaired here. First, the pub was "a
+    fourteen-pump pub", which printed the string 14 in the second line of every
+    arm, and 14 is the answer in exactly the two arms where it is correct; a
+    model with a bias toward salient prompt numbers scored base and matched for
+    free. It is now a nine-pump pub. Second, the two same-date count entries
+    were split so that the governing insert landed directly beneath its own
+    beer's count line while the matched insert did not, which separates the
+    arms by adjacency alone with no domain reasoning - the pass-one failure
+    mode in new clothes. The counts are now one entry naming all three beers,
+    and a 2026-08-04 entry restores K to 10.
+  accepted_artefact: >-
+    Three base elements do no work in the base arm and are load-bearing only in
+    a variant: the 7-day stand, the yard container being counted with the cold
+    room, and nothing in stock being delivered later than 2026-08-11. Together
+    they telegraph the shape of the insert - extra casks, in the yard, dated
+    2026-08-11 - which is disqualifier 14 in a weak form. They do not leak
+    which beer, so the contrast between the arms is untouched. Recorded rather
+    than repaired, because removing them would leave the governing arm's casks
+    of uncertain age and provenance and reopen disqualifier 15, which is worse.
+meta:
+  personas_invented: true
+  real_personal_data: false

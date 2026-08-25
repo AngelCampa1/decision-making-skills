@@ -1,0 +1,38 @@
+Today is 2026-08-25.
+
+I am Wilhelmina Ostrowski-Baye. My collie Bramble is nine and needs a hip
+operation that only Kestrelmoor Veterinary Referrals does anywhere in
+Calderwyn. Several practices have had a hand in her care this summer, so
+here is the file.
+
+Kestrelmoor allocates the operating date for the thirtieth day after the day
+it receives signed paperwork from her own practice, and Bramble is operated
+on that day. Their admissions office explained that her own practice's
+paperwork is the only document the count runs from, and that the rest of the
+file is read during those thirty days or filed after the operation, without
+changing the date.
+
+Also on file:
+
+- Thurloe Out-of-Hours saw Bramble after a fall on 2026-07-11 and started
+  her on pain relief.
+- Marchmont Veterinary Group, where Bramble has been registered since 2019,
+  took her care back from the out-of-hours service on 2026-07-13.
+- Ryelands Imaging took the hip radiographs on 2026-08-03 at Marchmont
+  Veterinary Group's request.
+- Fennimore Pet Cover opened a claim reference against my policy on
+  2026-08-14.
+- Halverstock Laboratory reported her routine blood panel as normal on
+  2026-08-20.
+- My own signed consent form is due to reach Kestrelmoor on 2026-08-28.
+- The signed transfer-of-care summary from Thurloe Out-of-Hours is due to
+  reach Kestrelmoor on 2026-09-01.
+- The signed orthopaedic referral from Marchmont Veterinary Group is due to
+  reach Kestrelmoor on 2026-09-02.
+- The signed rehabilitation plan from Ottershaw Canine Rehabilitation is due
+  to reach Kestrelmoor on 2026-10-13.
+- Fennimore Pet Cover is due to confirm the claim reference in writing to
+  Kestrelmoor on 2026-11-30.
+
+Question: how many days from today until Bramble's hip operation takes
+place? Answer with a single number of days.

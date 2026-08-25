@@ -1,0 +1,40 @@
+Today is 2026-08-25.
+
+I am Ottoline Vasse-Adeyinka and I keep the cellar at the Ravelstone Arms,
+a fourteen-pump pub in Corravale. I count the stock every morning before
+we open, cold room and yard container together, and a cask has to stand
+for 7 days after delivery before it can go on.
+
+The tied pump comes off the bar on the first morning 12 casks of the tied
+beer are left in stock, and that pump gets through 3 casks a day, every
+day of the week.
+
+Also on file:
+
+- 2019-04-01 — the Wrenfell tie was signed. It fixes Wrenfell Copper Ale
+  on the number one pump for the life of the agreement and allows no
+  other beer on that pump.
+- 2025-03-10 — the yard container was fitted with its own cooling. It
+  takes the overflow when the cold room is full and is counted with it.
+- 2026-06-02 — Wrenfell Brown Mild went on the number seven pump and has
+  held it since.
+- 2026-07-30 — the number four pump changed over to Kestrelmoor Pale on
+  the night Vaunt Bitter finished.
+- 2026-08-06 — the line-cleaning contract with Sanderling Hygiene was
+  renewed. Every line is cleaned on a Tuesday morning before we open.
+- 2026-08-11 — Wrenfell's last delivery before the rebuild. Nothing now
+  in stock was delivered later than that day.
+- 2026-08-14 — Wrenfell's brewhouse came down for its rebuild. Wrenfell
+  have said nothing will ship from them before 2026-12-01.
+- 2026-08-18 — the cellar standing instruction was reissued: no pump is
+  run below 12 casks of its own beer, so that a changeover is never made
+  in the middle of service.
+- 2026-08-25 — this morning's count: 21 casks of Kestrelmoor Pale, which
+  are in the yard container, and 30 casks of Wrenfell Brown Mild.
+- 2026-08-25 — this morning's count: 54 casks of Wrenfell Copper Ale.
+- 2026-08-25 — a further 33 casks of Wrenfell Brown Mild, delivered on
+  2026-08-11 and standing in the yard container since, were missed off
+  this morning's count.
+
+Question: how many days from today until the tied pump comes off the bar?
+Answer with a single number of days.

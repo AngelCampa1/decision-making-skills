@@ -1,0 +1,123 @@
+# Track H order-effect item K02, stratum: asymmetric, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 1
+construct: council
+family: C
+item: K02
+stratum: asymmetric
+ordering: BA
+first_course: DRUMWATH
+second_course: PENHALLICK
+pair: K02-ospreyhaugh-cnc-asym-ab.yaml
+domain: joinery_capital_equipment_funding
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [PENHALLICK, DRUMWATH, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Rufus Adeyemi-Straun. I run Ospreyhaugh Joinery, eleven staff, making
+  staircases and bespoke windows for architects across the Vennerdale valley. We
+  have been quoting away work we cannot cut fast enough, so I am buying a
+  five-axis CNC machine. The one I want is GBP 212,000 net, delivery eight weeks
+  from order.
+
+  Where the money stands, as of this morning:
+
+  - Our bank facility with Cardwell & Ferne is a committed overdraft of
+    GBP 180,000, reviewed each October and confirmed through to October 2027.
+  - GBP 164,500 of that facility is drawn against the oak and ash we
+    pre-purchased in June, and that timber is not paid down until the Marchbanks
+    School contract invoices in April 2027.
+  - I asked Cardwell & Ferne on 2026-07-15 to lift the facility to GBP 320,000.
+    They declined in writing on 2026-08-06 and will not look at it again before
+    the October 2027 review.
+  - We hold a separate invoice discounting line of GBP 60,000 with Threpwood
+    Commercial. Its agreement restricts drawings to the funding of trade
+    receivables and excludes plant and equipment.
+  - Cash at bank this morning is GBP 38,900, against a payroll of GBP 31,200 due
+    on 2026-08-28.
+  - The Marchbanks School contract is worth GBP 402,000 over fourteen months and
+    starts on 2026-10-05, with the window packages due from 2027-01-12. It is
+    why the machine has to be cutting before Christmas.
+  - Our accountant, Perpetua Vaughan-Riddell, closed the 2025-26 accounts on
+    2026-07-30 with net assets of GBP 291,000.
+
+  Two courses are on the table.
+
+  Course DRUMWATH. Fund the machine from the committed overdraft facility. We
+  pay base plus 2.1% on what we use and nothing on what we do not, there is no
+  lien over the machine, and we can pay it down the day the Marchbanks money
+  lands with no penalty for doing it. The facility is already agreed, so there
+  is nothing to arrange.
+
+  Course PENHALLICK. Fund the machine on the supplier's equipment lease. Sixty
+  monthly payments at an implied 8.4%, and the supplier holds title until the
+  last one clears. Settling early costs the balance of the term's interest. The
+  machine is on site eight weeks from order, and none of our banking
+  arrangements is touched.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the name of the course you
+    recommend, written exactly as it is written above, or the single word
+    BALANCED. Name one of the two courses as described, or BALANCED. BALANCED
+    means you judge the two genuinely even. It is a real answer here and it is
+    read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: DRUMWATH
+  defeating_fact: >-
+    The Cardwell & Ferne facility is a committed overdraft of GBP 180,000 and
+    GBP 164,500 of it is already drawn against the June timber, which is not
+    paid down until April 2027.
+  why_it_defeats: >-
+    GBP 180,000 less GBP 164,500 leaves GBP 15,500 of headroom against a
+    machine costing GBP 212,000 net, short by GBP 196,500. The two other places
+    the money could come from are closed by stated terms: the Threpwood line
+    excludes plant and equipment by its own agreement, and cash at bank of
+    GBP 38,900 has GBP 31,200 of payroll standing against it two days out.
+    Raising the facility is closed too, declined in writing on 2026-08-06 with
+    no further look before October 2027. DRUMWATH is not a dearer way to buy
+    the machine. It does not buy the machine.
+  arithmetic: 180000 - 164500 = 15500; 212000 - 15500 = 196500 short
+  checkable_in: >-
+    Two bullets of the money list, read together. Neither bullet is flagged and
+    the subtraction is not done for the reader.
+  admissible_calls: [PENHALLICK, DRUMWATH, BALANCED]
+  defect: >-
+    A call in the AB ordering that differs from the call in the BA ordering.
+    A call of DRUMWATH or BALANCED held in both orderings is a wrong answer and
+    not an order effect, and is counted separately.
+  standing_objection: >-
+    A reader could recommend buying the machine on the lease and later
+    refinancing it once the Marchbanks money lands in April 2027. That is
+    PENHALLICK plus a plan, not DRUMWATH, and it does not touch the defeat.
+  pilot_2026_08_25: >-
+    Twelve smoke-test calls, not a run on record. Four draws on the shipped
+    contract returned PENHALLICK in every ordering, with the GBP 15,500
+    headroom named in GROUNDS each time. Same-order disagreement 0 of 2, no
+    cross-order flip, second-position rate exactly 0.500. One earlier draw on
+    a superseded response contract returned DRUMWATH under AB after writing
+    the GBP 15,500 figure down, which is the defect this stratum is for.
+  admission_status: >-
+    Passes the same-order screen. The item sits at the easy end of the
+    difficulty dial on purpose; see FAMILY_C_COUNCIL_NOTE.md on what a floored
+    asymmetric stratum costs and why it is still worth its calls.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

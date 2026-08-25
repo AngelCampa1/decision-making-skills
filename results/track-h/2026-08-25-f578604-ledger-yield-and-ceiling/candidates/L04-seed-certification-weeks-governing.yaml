@@ -1,0 +1,141 @@
+# Track H triplet L04, arm: governing. Ledger yield probe, spec variant A.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L04
+arm: governing
+role: treatment
+domain: seed_crop_certification
+mechanism_type: threshold-eligibility
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: how many weeks from today until the Board issues the certificate for lot CS-6053
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ivo Rennstrom-Achebe and I grow seed barley at Sallowmede Farm in
+  Calverstane, under the Calverstane Seed Board's certified seed scheme. The
+  lot I am asking about is CS-6053.
+
+  How the scheme works:
+
+  - A lot's route is set by the off-type count in the final field inspection
+    report for the field it was grown in: at or below 1 plant per 10,000 the
+    Board certifies from the report and cancels any grow-out entry the lot
+    holds, and above 1 the lot goes to the Marbury grow-out.
+  - On the report route the Board issues the certificate four weeks after the
+    lot is sealed.
+  - The Marbury grow-out is sown on 2026-10-27, and the Board issues
+    certificates for every lot in it on 2027-01-05. A lot must be sealed
+    before it is sown.
+  - CS-6053 is the whole of the Field 4 crop. The Cawmill plant seals it on
+    2026-09-15, and its grow-out entry was lodged on 2026-08-18.
+
+  Also on file:
+
+  - The final inspection report for Field 4, dated 2026-07-14, records an
+    off-type count of 3 plants per 10,000.
+  - The final inspection report for Field 9, dated 2026-07-09, records an
+    off-type count of 3 plants per 10,000.
+  - The final inspection report for Field 2, dated 2026-07-07, records an
+    off-type count of 0 plants per 10,000.
+  - Field 2's crop was lifted as lot CS-6086, whose grow-out entry was lodged
+    on 2026-06-16 and cancelled on 2026-07-07; it was sealed on 2026-07-14
+    and the Board issued its certificate on 2026-08-11.
+  - Field 9's crop was lifted as lot CS-6280, whose grow-out entry was lodged
+    on 2026-08-18; the Cawmill plant seals it on 2026-09-08.
+  - The isolation-distance check on Field 4, dated 2026-06-23, records 402 m
+    against the scheme minimum of 300 m.
+  - The germination test on the CS-6053 sample, reported on 2026-08-18,
+    records 94% against the scheme minimum of 85%.
+  - The Grennock basic seed all three fields were drilled from was certified
+    on 2025-11-18, and that certificate runs to 2027-11-18.
+  - The field-history declaration for Field 4, lodged on 2026-04-14, records
+    no seed crop of this species in the two preceding harvest years.
+  - The Cawmill cleaning plant's approval was renewed on 2026-03-10 and runs
+    to 2028-03-10.
+  - The Board re-issued the final inspection report for Field 4 on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+
+  Question: how many weeks from today until the Board issues the certificate
+  for lot CS-6053? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    A lot's route is set by the off-type count in the final field inspection
+    report for the field it was grown in: at or below 1 plant per 10,000 the
+    Board certifies from the report and cancels any grow-out entry the lot
+    holds, and above 1 the lot goes to the Marbury grow-out.
+  rule_actor: the Calverstane Seed Board, called "the Board" throughout
+  insert_skeleton: >-
+    The Board re-issued the final inspection report for Field <N> on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+  delta_kind: inserted_bullet
+  fact: >-
+    The Board re-issued the final inspection report for Field 4 on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+  governs: true
+  expected_direction: down
+  expected_value: 7
+  arithmetic: >-
+    CS-6053 is the whole of the Field 4 crop (core bullet 4), so the rule
+    sentence reads the Field 4 report. The insert puts that report at 0 plants
+    per 10,000, under the threshold of 1 on any reading of it, so the Board
+    certifies from the report and cancels the grow-out entry lodged on
+    2026-08-18. On the report
+    route the certificate is issued four weeks after the lot is sealed;
+    CS-6053 is sealed on 2026-09-15, and 2026-09-15 + 28 days = 2026-10-13.
+    The same interval is on file worked through: CS-6086 was sealed
+    2026-07-14 and certified 2026-08-11, which is 28 days. From 2026-08-25 to
+    2026-10-13 is 49 days: 31 (to 2026-09-25) + 18. 49 / 7 = 7. Base is 19,
+    so the answer moves down by 12 weeks; on a log scale
+    |ln(7/19)| = 0.998.
+  rounding: >-
+    None required. 2026-09-15 is +21 days from 2026-08-25 and 2026-10-13 is
+    +49, both exact multiples of 7. Tolerance 0.
+  professional_one_sentence: >-
+    The re-issued Field 4 report puts CS-6053's off-type count at 0 plants
+    per 10,000 rather than above the Board's threshold, so the Board certifies
+    it from the report four weeks after its 2026-09-15 seal - 2026-10-13,
+    seven weeks, not the nineteen the Marbury grow-out would have taken.
+  single_reading_check: >-
+    Four readings were pressed and each closes on stated text.
+    (a) "Is the corrected count inside the threshold?" An earlier draft
+    corrected to exactly 1 and an adversarial reviewer flagged it: a solver
+    reading "at or below 1" as strict returns 19, which is indistinguishable
+    from a solver who never noticed the insert, and that confound biases
+    P(change | governing) toward zero. The correction is now 0 plants per
+    10,000, below the threshold on every reading, and the base carries Field 2
+    at 0 going the report route as a worked instance.
+    (b) "Is a re-issued report the final report?" The insert re-issues "the
+    final inspection report for Field 4", the same document the rule sentence
+    names, so the pedantic reading that the superseded 2026-07-14 version
+    still governs has no text to stand on.
+    (c) "The lot is already entered in the grow-out, so does it still wait?"
+    The rule sentence says the Board "cancels any grow-out entry the lot
+    holds", and the base carries a worked instance of exactly that in
+    CS-6086, whose entry was lodged 2026-06-16 and cancelled 2026-07-07.
+    (d) "Does the correction need processing time before it bites?" The
+    report-route clock runs from the seal date, not from the report, so the
+    2026-08-21 re-issue date - already in the past on 2026-08-25 - cannot
+    delay anything.
+    (e) "Is the report-route certificate a different certificate?" No; the
+    question asks for the Board's certificate for lot CS-6053, and the base
+    shows CS-6086 receiving that certificate on the report route.
+  feasibility_check: >-
+    Disqualifier 17. The governing answer, 2026-10-13, is after every date
+    the decision needs: the correction was issued 2026-08-21, the seal is
+    2026-09-15, and nothing in the base arrives later than that on this path.
+    No commit-blind reading exists in either arm.
+  advice_expressibility_check: >-
+    Disqualifier 12. Asked what to advise in this arm, the answer is "your
+    certificate lands 2026-10-13" and nothing else; the prompt offers no
+    faster route, no election between routes, and no reason to prefer the
+    grow-out. That advice is a single number of weeks, 7.
+meta:
+  personas_invented: true
+  real_personal_data: false

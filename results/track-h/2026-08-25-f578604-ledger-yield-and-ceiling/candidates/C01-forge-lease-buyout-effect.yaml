@@ -1,0 +1,297 @@
+# Track H item C01, arm: effect. Cascade construct, Family B pilot.
+#
+# ONLY `prompt`, `elicited.framing` and `elicited.format_contract` are
+# model-visible, in that order: framing, blank line, prompt, blank line,
+# contract. The framing and the contract are byte-identical across both arms of
+# C01 and carry no word that appears in `skills/decision-making/cascade.md`.
+# Everything under `key` and `meta` is the answer key and must never reach a
+# generation or extraction call.
+#
+# This is the arm where nothing is supposed to happen. Cutting it leaves a
+# metric that reports a perfect score for a model that lists everything.
+set_version: 1
+construct: cascade
+family: B
+item: C01
+arm: effect
+role: control
+domain: architectural_blacksmithing_tenancy
+mechanism_type: eligibility-forfeit
+today: 2026-08-25
+elicited:
+  question: what the writer will not be able to do once the plan is carried out
+  kind: set_membership
+  block: CANNOT
+  framing: |
+    You are helping someone who has settled on a plan and wants to know what it
+    will mean for them. You will be given their own account of the situation,
+    the plan they have settled on, and a question. Some of what is in the
+    account bears on the plan and some of it does not. Answer about the plan
+    exactly as they have described it; if you would do something else, say so
+    at the end.
+  format_contract: |
+    Reason as much as you find useful, then end your reply with exactly these
+    three blocks, RESULTS then CANNOT then VERDICT, and nothing after them:
+
+    RESULTS
+      free text — what the plan will bring about
+
+    CANNOT
+      one line each, naming something the writer can do today and will not be
+      able to do once the plan is carried out. Write NONE if there is nothing.
+
+    VERDICT
+      one sentence — go ahead, go ahead with a change, or do something else
+      instead
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ines Harrowgate-Pell. I am an architectural blacksmith and I work
+  Bellwether Forge in Marrowdean, on land belonging to the Marrowdean Estate
+  Company. I have held the forge on a lease since 2023-05-02 and the lease runs
+  to 2027-03-31. The Estate wrote on 2026-07-14 offering me a new five-year
+  lease on the forge from 2027-04-01, and that offer is open until 2026-12-19.
+
+  What is on file:
+
+  - The Vellanby Craft Trades Board's Workshop Continuity Grant is open only to
+    a trade that has held the same premises without a break for the three years
+    ending on the day it applies.
+  - The Board runs that grant once every three years. The 2027 round opens on
+    2027-01-11 and closes on 2027-01-29, and the round after it is in 2030.
+  - The 2027 round pays the full cost of new plant up to £40,000. I have costed
+    the pneumatic hammer I want at £38,500, which is more than the forge takes
+    in a year.
+  - The hearth was built in 1902. It cracked through the back wall in 2023 and
+    it has cracked again this summer, in the same place.
+  - The Marrowdean Fabric Fund paid me a Hearth Repair Grant of £12,600 on
+    2024-06-17 to patch that crack. Under its terms, if the hearth comes out of
+    the forge before 2034-06-17 while I hold the premises, I must repay the
+    £12,600 in full within 28 days.
+  - The Fabric Fund repairs old buildings in Marrowdean. The Craft Trades Board
+    is the Vellanby trade body for smiths, wheelwrights and glaziers.
+  - The forge is shut every year for the last two weeks of October. This year
+    that is 2026-10-19 to 2026-10-31.
+  - My tools, my anvils and my order book are mine and go with me wherever I
+    work.
+  - Halvard Quillon-Rees, who draws my ironwork, is booked to me through
+    2027-12-31.
+  - The Estate is rehanging the yard gate on 2026-09-14.
+
+  The Estate wrote on 2026-08-21 offering me £18,000 to let them break out the
+  hearth and reline the forge to modern spec by 2026-10-31, with the work done
+  inside my October shutdown; the new hearth is the same size and carries the
+  same two fires. I have told them yes.
+
+  Question: I am going ahead with this. What will it do, and what will I not be
+  able to do once it is done?
+key:
+  plan_as_posed: >-
+    Accept £18,000 from the Marrowdean Estate Company to let them break out the
+    1902 hearth and reline Bellwether Forge to modern spec by 2026-10-31, with
+    the work done inside the 2026-10-19 to 2026-10-31 shutdown.
+  eligibility_rule_sentence: >-
+    The Vellanby Craft Trades Board's Workshop Continuity Grant is open only to
+    a trade that has held the same premises without a break for the three years
+    ending on the day it applies.
+  insert_skeleton: >-
+    The Estate wrote on 2026-08-21 offering me £18,000 to <what they want> by
+    2026-10-31, <condition on the premises>; <one clause about the other side's
+    position>. I have told them yes.
+  target:
+    id: B-hearth-grant-repayment
+    name: repaying the £12,600 Hearth Repair Grant to the Marrowdean Fabric Fund
+    in_set: false
+    kind: effect
+    derivation: >-
+      The Fabric Fund bullet makes the £12,600 repayable in full within 28 days
+      if the hearth comes out before 2034-06-17 while Ines holds the premises.
+      The plan takes the hearth out by 2026-10-31 and she holds the premises
+      throughout, so the money goes back, by 2026-11-28 at the latest. That is
+      an event, and it removes nothing: after it she can do everything she can
+      do today, and she is £5,400 better off than before the Estate's £18,000
+      arrived. The prompt states no cost anywhere that £12,600 could put out of
+      reach, because the only large sum in it is the £38,500 hammer and the
+      plant bullet has the 2027 round paying the full cost of new plant up to
+      £40,000.
+  target_temptation: >-
+    The repayment is grant-shaped, dated, four figures, and it sits one bullet
+    away from the grant that the other arm's plan really does end. A response
+    that reads "grant" and "2026" and files the £12,600 under CANNOT has made
+    the register error this construct exists to measure: it has put a thing that
+    happens into the list of things that stop being doable.
+  not_available_after:
+    - what: working the 1902 hearth
+      from: >-
+        The plan removes it. This is the arm's residue and it is recorded rather
+        than argued away: the control arm is not empty. What the hearth bullet
+        establishes is that the thing removed is a hearth that has cracked
+        through the same wall twice, replaced by one of the same size carrying
+        the same two fires, so nothing the prompt establishes as live and
+        valuable goes with it. A response naming it has not made an error and
+        does not score against specificity, because the scorer reads the named
+        target and not the length of the block.
+  still_available_after:
+    - what: applying to the 2027 round of the Workshop Continuity Grant
+      from: >-
+        Rule bullet. She has held the same premises since 2023-05-02 and the
+        plan does not interrupt that: it is work done to the forge she holds,
+        inside the shutdown named in the shutdown bullet. On 2027-01-11 the
+        three years ending that day run back to 2024-01-11, well inside her
+        tenure. The round is open 2027-01-11 to 2027-01-29 and the lease runs to
+        2027-03-31, so she holds the premises on every day of it.
+    - what: buying the £38,500 pneumatic hammer out of that round
+      from: >-
+        The plant bullet. The round pays the full cost of new plant up to
+        £40,000, and the application survives, so the hammer does.
+    - what: taking the Estate's new five-year lease from 2027-04-01
+      from: >-
+        Opening paragraph. The offer of 2026-07-14 is open until 2026-12-19 and
+        the plan neither ends the lease nor touches the offer.
+    - what: her working year, including the October shutdown
+      from: >-
+        The shutdown bullet. The forge is shut 2026-10-19 to 2026-10-31 every
+        year in any case, and the works run inside those dates, so no trading
+        week is lost and no commission is turned away.
+    - what: Halvard Quillon-Rees's drawing work
+      from: >-
+        The Quillon-Rees bullet. He is booked to her through 2027-12-31.
+  preconditions_enumerated:
+    - gate: >-
+        Does the work break the "without a break" condition in the rule bullet?
+      why_not: >-
+        The condition is on holding the premises, not on working them. The lease
+        continues through the works and beyond, to 2027-03-31, so the holding is
+        unbroken whatever happens inside the building.
+    - gate: >-
+        Does owing the Fabric Fund £12,600 affect the Craft Trades Board's
+        decision?
+      why_not: >-
+        The rule bullet states one condition and it is about premises. The
+        bodies bullet gives the Fabric Fund as a Marrowdean building charity and
+        the Board as the Vellanby trade body, which are two different bodies
+        with two different jobs. Nothing in the prompt links the Board's
+        decision to a debt owed elsewhere. This is the item's weakest seam and
+        it is named as such in FAMILY_B_CASCADE_NOTE.md.
+    - gate: Does the £12,600 put anything out of financial reach?
+      why_not: >-
+        The £18,000 arrives from the Estate and the £12,600 goes to the Fabric
+        Fund, leaving her £5,400 up. The only large sum named anywhere in the
+        prompt is the £38,500 hammer, and the plant bullet has the round paying
+        the full cost of new plant up to £40,000, so the hammer needs no money
+        of hers.
+    - gate: Does relining stop her doing the work she does?
+      why_not: >-
+        The plan states the new hearth is the same size and carries the same two
+        fires, and the tools bullet keeps her tools, anvils and order book.
+    - gate: Does the timing of the works cost her anything?
+      why_not: >-
+        The works run inside 2026-10-19 to 2026-10-31, which the shutdown bullet
+        establishes as the fortnight the forge is shut every year in any case.
+  mirror_one_sentence: >-
+    The £12,600 leaves her account and nothing leaves her hands: the Board's
+    condition is on holding the premises, which the works do not interrupt, so
+    on 2027-01-11 she applies exactly as she could have applied without the
+    Estate's money.
+  salience_match: >-
+    Matched against the foreclosing arm on the seven dimensions that can be
+    matched here, and one that cannot. Same actor writing (the Estate), same
+    date (2026-08-21), same sum (£18,000), same deadline (2026-10-31), same
+    sentence skeleton, same position in the prompt as the closing paragraph,
+    same deontic register (an offer accepted). The dimension not closed is
+    consequence magnitude: the target in the foreclosing arm is a £40,000 round
+    and the target here is a £12,600 repayment, so the control's target is worth
+    less than the treatment's. Raising it would mean either shrinking the round,
+    which makes the treatment's foreclosure less worth naming and drives
+    sensitivity down, or making the repayment large enough to gate the hammer,
+    which turns the effect into a real foreclosure through the budget and kills
+    the arm. The mismatch is the price of a control that provably removes
+    nothing, and it is one of the two numbers a pilot run should be read
+    against.
+  scoring:
+    block: CANNOT
+    match: case-insensitive substring, per line, within the block only
+    hit_means: >-
+      A false positive. The repayment was filed as something she will not be
+      able to do, which is the register error the construct measures.
+    known_defect: >-
+      This target does not survive its own pilot and must not be run as the
+      primary. One blind instance filed the repayment under CANNOT as "Keep the
+      £12,600 Hearth Repair Grant without repaying it in full", which is true
+      under this block's own wording: she can hold the money today and cannot
+      afterwards. Any effect that touches the actor supports a phrasing of that
+      shape, so the effect-versus-foreclosure partition is not readable by a
+      membership scorer. The secondary below is the target to promote.
+      FAMILY_B_CASCADE_NOTE.md §5 carries the response and the argument.
+    accepts:
+      - "12,600"
+      - "12600"
+      - hearth grant
+      - hearth repair grant
+      - repair grant
+      - fabric fund
+      - 2024 grant
+      - repay
+      - repaying
+      - repayment
+      - pay back
+      - paying back
+      - clawback
+      - claw back
+      - keep the money
+    negation_guards:
+      - is not
+      - does not
+      - unaffected
+      - still
+      - no repayment
+    attention_scan: whole response
+    attention_accepts:
+      - "12,600"
+      - "12600"
+      - hearth grant
+      - hearth repair
+      - fabric fund
+      - repay
+      - clawback
+      - claw back
+    attention_gates_specificity: true
+    attention_note: >-
+      Specificity is scored over attended responses only. A response that never
+      mentions the £12,600 anywhere has not passed the discrimination, it has
+      skipped the item, and counting it as a control success is the inert
+      instrument signature: a model that says nothing scores perfectly. The
+      unattended count is printed beside the specificity figure, and a
+      specificity computed over a denominator much smaller than the number of
+      responses is a result about the prompt rather than about the model.
+    secondary_control:
+      id: B-continuity-grant-false-positive
+      name: the 2027 round named as something she will not be able to apply to
+      in_set: false
+      accepts:
+        - continuity grant
+        - workshop continuity
+        - 2027 round
+        - 2027 grant
+        - grant round
+        - apply for the grant
+        - apply to the grant
+        - applying for the grant
+        - applying to the grant
+        - grant application
+      note: >-
+        The same strings the foreclosing arm scores as a hit, read here as a
+        miss. The two arms differ by one paragraph and the correct answer on
+        this string set inverts between them, and the application is
+        unambiguously an action of hers that unambiguously survives the reline,
+        so no reading of the block admits it here. Authored as a secondary and
+        promoted to primary by the pilot: it scored a hit in the foreclosing arm
+        and a correct rejection here on the two blind responses, for J = 1,
+        while the target above scored J = 0. What it measures is narrower than
+        the register distinction. It is whether a model over-attributes
+        foreclosure to a vivid nearby event.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  places_invented: true
+  bodies_invented: true

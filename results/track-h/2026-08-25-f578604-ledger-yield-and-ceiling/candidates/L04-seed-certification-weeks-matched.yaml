@@ -1,0 +1,201 @@
+# Track H triplet L04, arm: matched. Ledger yield probe, spec variant A.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L04
+arm: matched
+role: control
+domain: seed_crop_certification
+mechanism_type: threshold-eligibility
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: how many weeks from today until the Board issues the certificate for lot CS-6053
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ivo Rennstrom-Achebe and I grow seed barley at Sallowmede Farm in
+  Calverstane, under the Calverstane Seed Board's certified seed scheme. The
+  lot I am asking about is CS-6053.
+
+  How the scheme works:
+
+  - A lot's route is set by the off-type count in the final field inspection
+    report for the field it was grown in: at or below 1 plant per 10,000 the
+    Board certifies from the report and cancels any grow-out entry the lot
+    holds, and above 1 the lot goes to the Marbury grow-out.
+  - On the report route the Board issues the certificate four weeks after the
+    lot is sealed.
+  - The Marbury grow-out is sown on 2026-10-27, and the Board issues
+    certificates for every lot in it on 2027-01-05. A lot must be sealed
+    before it is sown.
+  - CS-6053 is the whole of the Field 4 crop. The Cawmill plant seals it on
+    2026-09-15, and its grow-out entry was lodged on 2026-08-18.
+
+  Also on file:
+
+  - The final inspection report for Field 4, dated 2026-07-14, records an
+    off-type count of 3 plants per 10,000.
+  - The final inspection report for Field 9, dated 2026-07-09, records an
+    off-type count of 3 plants per 10,000.
+  - The final inspection report for Field 2, dated 2026-07-07, records an
+    off-type count of 0 plants per 10,000.
+  - Field 2's crop was lifted as lot CS-6086, whose grow-out entry was lodged
+    on 2026-06-16 and cancelled on 2026-07-07; it was sealed on 2026-07-14
+    and the Board issued its certificate on 2026-08-11.
+  - Field 9's crop was lifted as lot CS-6280, whose grow-out entry was lodged
+    on 2026-08-18; the Cawmill plant seals it on 2026-09-08.
+  - The isolation-distance check on Field 4, dated 2026-06-23, records 402 m
+    against the scheme minimum of 300 m.
+  - The germination test on the CS-6053 sample, reported on 2026-08-18,
+    records 94% against the scheme minimum of 85%.
+  - The Grennock basic seed all three fields were drilled from was certified
+    on 2025-11-18, and that certificate runs to 2027-11-18.
+  - The field-history declaration for Field 4, lodged on 2026-04-14, records
+    no seed crop of this species in the two preceding harvest years.
+  - The Cawmill cleaning plant's approval was renewed on 2026-03-10 and runs
+    to 2028-03-10.
+  - The Board re-issued the final inspection report for Field 9 on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+
+  Question: how many weeks from today until the Board issues the certificate
+  for lot CS-6053? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    A lot's route is set by the off-type count in the final field inspection
+    report for the field it was grown in: at or below 1 plant per 10,000 the
+    Board certifies from the report and cancels any grow-out entry the lot
+    holds, and above 1 the lot goes to the Marbury grow-out.
+  rule_actor: the Calverstane Seed Board, called "the Board" throughout
+  insert_skeleton: >-
+    The Board re-issued the final inspection report for Field <N> on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+  delta_kind: inserted_bullet
+  fact: >-
+    The Board re-issued the final inspection report for Field 9 on
+    2026-08-21, correcting the off-type count to 0 plants per 10,000.
+  governs: false
+  expected_direction: none
+  expected_value: 19
+  arithmetic: >-
+    Unchanged from base. The rule sentence reads the report for the field the
+    lot was grown in; CS-6053 is the whole of the Field 4 crop, and the Field
+    4 report still records 3 plants per 10,000, which is above 1. CS-6053
+    therefore stays in the Marbury grow-out, is sealed 2026-09-15 and so
+    makes the 2026-10-27 sowing, and the Board issues certificates for every
+    lot in that grow-out on 2027-01-05. From 2026-08-25 to 2027-01-05 is 133
+    days, and 133 / 7 = 19. Log-scale movement 0.000. The insert does move
+    lot CS-6280, which was grown in Field 9, onto the report route - its
+    certificate would fall four weeks after its 2026-09-08 seal, on
+    2026-10-06 - but CS-6280 is not the lot the question asks about.
+  rounding: >-
+    None required. 2027-01-05 is +133 days from 2026-08-25, an exact multiple
+    of 7. Tolerance 0.
+  mirror_one_sentence: >-
+    The base sets a lot's route from the report for the field that lot was
+    grown in, and CS-6053 is the whole of the Field 4 crop, so correcting the
+    Field 9 report leaves CS-6053's own report at 3 plants per 10,000, leaves
+    it in the Marbury grow-out, and leaves its certificate on 2027-01-05.
+  preconditions_enumerated:
+    - "2026-08-18, CS-6053's grow-out entry. The rule sentence cancels a
+       grow-out entry only when the report for the field that lot was grown
+       in is at or below 1. In this arm the Field 4 report is untouched at 3,
+       so the entry stands."
+    - "2026-09-15, CS-6053's seal. This date is an input only on the report
+       route, which this arm does not reach, and nothing about a Field 9
+       report can move a Cawmill sealing date."
+    - "2026-10-27, the Marbury sowing. Stated unconditionally as a date, not
+       as a function of how many lots are entered. CS-6053 is sealed
+       2026-09-15, comfortably before it, in every arm."
+    - "2027-01-05, the grow-out certificates. Stated as 'certificates for
+       every lot in it on 2027-01-05'. This is the strongest objection
+       available - the insert takes CS-6280 out of the same grow-out, so a
+       reviewer will ask whether a freed plot lets the Board sow or read
+       earlier. It cannot: both the sowing date and the certificate date are
+       stated as fixed dates and neither is conditioned on the number of lots
+       entered."
+    - "2026-09-08, CS-6280's seal. It is an input to CS-6280's report-route
+       certificate and to nothing else; CS-6053's certificate date is not a
+       function of any other lot's dates in either route."
+    - "2026-08-21, the re-issue date. It is before today, 2026-08-25, so
+       there is no waiting period, no commencement and no processing gap that
+       could make this fact bite later rather than not at all."
+    - "2027-11-18, the Grennock basic seed certificate expiry. It is after
+       2027-01-05, so the basic seed is still in date on the grow-out
+       certificate day, and nothing here shortens it."
+    - "2028-03-10, the Cawmill plant approval expiry. After every date in
+       every arm, so no route is closed by it."
+    - "2026-08-18, the CS-6053 germination test, 94% against a minimum of
+       85%. Passed, and the base makes it a scheme minimum rather than a
+       route selector, so it cannot switch route in either direction."
+    - "2026-06-23, the Field 4 isolation-distance check, 402 m against a
+       minimum of 300 m. Passed, and it is a Field 4 record that the Field 9
+       insert does not touch."
+    - "2026-04-14, the Field 4 field-history declaration. Lodged, satisfied,
+       and again a Field 4 record."
+    - "The four-week report-route interval. Reachable only if CS-6053's own
+       field report is at or below 1, which in this arm it is not."
+    - "Residual, and recorded rather than hidden: a reader may argue that the
+       Board correcting one report downward is evidence the Field 4 report is
+       also wrong, and advise asking for a re-inspection. That is speculation
+       about a record that does not exist, it yields no different number on
+       the facts stated, and the governing arm carries the identical
+       suggestion in reverse, so it does not separate the arms."
+  salience_match: >-
+    Seven of eight closed, and the eighth is closed by construction rather
+    than by judgement.
+    (1) Object class: both inserts are a re-issued Calverstane Seed Board
+    final field inspection report for a Sallowmede seed-barley field, with a
+    corrected off-type count.
+    (2) Surface form: identical - same apparatus, same two dates implied by
+    the same report series, same unit, same numeral.
+    (3) Magnitude: identical - both correct 3 plants per 10,000 to 0 plants
+    per 10,000, and the two reports they correct are dated five days apart,
+    2026-07-14 and 2026-07-09.
+    (4) Alarm: the sentence a reasonable non-expert says is the same in both
+    - "the Board has just moved a Sallowmede field under the threshold, so
+    maybe my lot skips the grow-out."
+    (5) Length: the two inserted spans are character-for-character identical
+    apart from the digit 4 against the digit 9, so the prompt-length delta
+    from base is equal and |a - b| / max(a, b) = 0.00.
+    (6) Position: both are the final bullet of "Also on file:", immediately
+    before the question, in both files.
+    (7) Deontic register: identical - both are flat corrections of a record,
+    neither names a penalty, a status change, a procedural step or a
+    consequence. Stripped of the field number the two sentences are the same
+    string.
+    (8) Relation to the causal-rule sentence: both inserts name the Board,
+    which the rule sentence names, and both name a field report, which the
+    rule sentence reads. The rule sentence identifies the field that matters
+    by a property, "the field it was grown in", and never by number, so the
+    decoy cannot be found from the base alone. The one thing I did NOT fully
+    close is content-word overlap with the rule sentence as pass two measured
+    it: the two inserts share their entire content vocabulary with each other
+    but not equally with the rule sentence's phrase "the field it was grown
+    in", which resolves to Field 4 only through the core bullet naming
+    CS-6053 as the Field 4 crop. The overlap between insert and rule sentence
+    is identical for both arms at the string level; whether an extractor that
+    resolves the referent first would score them differently is a question
+    for the battery, not one I can settle by authoring.
+  dimension_not_closed: >-
+    The reviewer's second-ranked objection, kept rather than repaired, and
+    the item should be read with it in view. The matched arm is answerable by
+    one entity match - compare the field number in the insert against "CS-6053
+    is the whole of the Field 4 crop" - with no scheme knowledge, no dates and
+    no arithmetic. So the matched arm on its own measures entity tracking
+    under volume rather than domain reasoning. That is not a defect to repair,
+    it is the ledger hypothesis stated plainly: difficulty is bought from ten
+    dated siblings and from nothing else, and any repair that makes the
+    matched fact non-obvious is the fit mechanism, whose measured yield is one
+    in five. The reviewer's proposed hardening - re-issuing the Field 4
+    isolation-distance check instead - was declined for that reason and
+    because it breaks the shared insert skeleton that rule R2 exists to
+    enforce. The governing arm is not answerable this way: it still needs the
+    route rule, the threshold and seal + 28 days.
+meta:
+  personas_invented: true
+  real_personal_data: false

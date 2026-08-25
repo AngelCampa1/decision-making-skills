@@ -1,0 +1,110 @@
+# Track H triplet L01, arm: governing. Ledger construct, yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L01
+arm: governing
+role: treatment
+domain: veterinary_referral_scheduling
+mechanism_type: date-chain
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until Bramble's hip operation takes place
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Wilhelmina Ostrowski-Baye. My collie Bramble is nine and needs a hip
+  operation that only Kestrelmoor Veterinary Referrals does anywhere in
+  Calderwyn. Several practices have had a hand in her care this summer, so
+  here is the file.
+
+  Kestrelmoor allocates the operating date for the thirtieth day after the day
+  it receives signed paperwork from her own practice, and Bramble is operated
+  on that day. Their admissions office explained that her own practice's
+  paperwork is the only document the count runs from, and that the rest of the
+  file is read during those thirty days or filed after the operation, without
+  changing the date.
+
+  Also on file:
+
+  - Thurloe Out-of-Hours saw Bramble after a fall on 2026-07-11 and started
+    her on pain relief.
+  - Marchmont Veterinary Group, where Bramble has been registered since 2019,
+    took her care back from the out-of-hours service on 2026-07-13.
+  - Ryelands Imaging took the hip radiographs on 2026-08-03 at Marchmont
+    Veterinary Group's request.
+  - Fennimore Pet Cover opened a claim reference against my policy on
+    2026-08-14.
+  - Halverstock Laboratory reported her routine blood panel as normal on
+    2026-08-20.
+  - My own signed consent form is due to reach Kestrelmoor on 2026-08-28.
+  - The signed transfer-of-care summary from Thurloe Out-of-Hours is due to
+    reach Kestrelmoor on 2026-09-01.
+  - The signed orthopaedic referral from Marchmont Veterinary Group is due to
+    reach Kestrelmoor on 2026-09-02.
+  - The signed rehabilitation plan from Ottershaw Canine Rehabilitation is due
+    to reach Kestrelmoor on 2026-10-13.
+  - Fennimore Pet Cover is due to confirm the claim reference in writing to
+    Kestrelmoor on 2026-11-30.
+  - Marchmont Veterinary Group wrote to me on 2026-08-24 to say that their
+    signed orthopaedic referral will not now reach Kestrelmoor until
+    2026-10-07, because their records office is shut for a systems change
+    until then.
+
+  Question: how many days from today until Bramble's hip operation takes
+  place? Answer with a single number of days.
+key:
+  causal_rule_sentence: >-
+    Kestrelmoor allocates the operating date for the thirtieth day after the
+    day it receives signed paperwork from her own practice, and Bramble is
+    operated on that day.
+  rule_actor: Kestrelmoor Veterinary Referrals
+  insert_skeleton: >-
+    <body> wrote to me on 2026-08-24 to say that their signed <document> will
+    not now reach Kestrelmoor until 2026-10-07, because their records office is
+    shut for a systems change until then.
+  delta_kind: inserted_bullet
+  fact: >-
+    Marchmont Veterinary Group wrote to me on 2026-08-24 to say that their
+    signed orthopaedic referral will not now reach Kestrelmoor until
+    2026-10-07, because their records office is shut for a systems change
+    until then.
+  governs: true
+  expected_direction: up
+  expected_value: 73
+  arithmetic: >-
+    Marchmont Veterinary Group is her own practice (second bullet: registered
+    since 2019, took her care back from the out-of-hours service), so the
+    signed orthopaedic referral is the signed paperwork the rule sentence
+    counts from. The insert replaces its 2026-09-02 arrival with 2026-10-07.
+    The thirtieth day after 2026-10-07 is 2026-11-06. From 2026-08-25 to
+    2026-11-06 is 73 days: 6 days left in August, 30 in September, 31 in
+    October, 6 in November. Relative movement (73 - 38) / 38 = 0.921, upward.
+  rounding: >-
+    None needed; every interval is a whole number of days. Convention: the
+    difference in calendar days between 2026-08-25 and the operating date,
+    counting the operating date and not today. Tolerance 0 on the movement.
+    Tolerance 1 day on the absolute value.
+  professional_one_sentence: >-
+    Kestrelmoor counts thirty days from the day your own practice's signed
+    paperwork lands, so a referral that now arrives on 2026-10-07 instead of
+    2026-09-02 puts Bramble on the table on 2026-11-06, seventy-three days out
+    rather than thirty-eight.
+  why_it_moves: >-
+    The referral is the sole input to the chain and the insert re-dates it by
+    35 days. Nothing in the base caps or absorbs the slip: there is no
+    alternative referrer, no queue, and no deadline the later date would breach.
+  one_reading_check: >-
+    The insert is a statement of when the document will arrive, not an offer or
+    an option, which is where t05 died. The cause is given and is outside the
+    owner's control, so "ask them to hurry" is not a reading the prompt
+    supports. No other body in the file can supply her own practice's
+    paperwork, so there is no second route to an earlier date.
+meta:
+  personas_invented: true
+  real_personal_data: false

@@ -1,0 +1,105 @@
+# Track H triplet L02, arm: governing. Construct: ledger. Yield probe, 2026-08-25.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L02
+arm: governing
+role: treatment
+domain: textile_finishing_capacity
+mechanism_type: capacity-rate
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: weeks from today until the last metre of the Kestrel order comes off the line
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottilie Vansittart-Mbeki, production planner at Thelwall Finishing
+  Works in Calderwyn. We piece-dye and finish woven cotton for the trade,
+  and the floor is part-way through one large order for Kestrel Mills.
+
+  288,000 metres of the Kestrel order are still to finish as of today.
+  The line is on nothing but that order until it is done. Every metre
+  goes through all six stages in order: singeing, scouring, mercerising,
+  dyeing, coating, then the stenters. Halloway Plant Engineering
+  maintains every stage of the line for us; the finish date is set by the
+  slowest stage's output in metres a week and by nothing else. The weekly
+  figures below are what each stage actually puts out, maintenance and
+  shutdowns included.
+
+  Also on file:
+
+  - Our effluent consent was renewed on 2026-01-27 and runs to 2029-01-27.
+  - The coating line took a new head on 2026-07-20 and runs 38,000 metres
+    a week.
+  - Kestrel Mills signed the order on 2026-06-15 and paid the first
+    instalment on 2026-08-10.
+  - The mercerising range was relined on 2026-05-12 and runs 45,000 metres
+    a week.
+  - The works took on eleven agency operatives on 2026-07-27, on contracts
+    to 2027-07-27.
+  - Stenter frames 1 and 2 were re-clad on 2026-03-09 and heat-set 16,000
+    metres a week between them.
+  - The singeing range was re-gassed on 2026-02-17 and runs 52,000 metres
+    a week.
+  - Halloway Plant Engineering signed a new maintenance contract with us
+    on 2026-06-22, running to 2028-06-22.
+  - The dye house rebuilt jet 5 on 2026-04-14 and puts 33,000 metres a
+    week through its five jets.
+  - The scouring range took a new drive on 2026-06-08 and runs 41,000
+    metres a week.
+  - Halloway Plant Engineering signed off stenter frame 3 at Thelwall on
+    2026-08-21, and it runs from 2026-08-25 at 8,000 metres a week.
+
+  Question: how many weeks from today until the last metre of the Kestrel
+  order comes off the line? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    Halloway Plant Engineering maintains every stage of the line for us; the
+    finish date is set by the slowest stage's output in metres a week and by
+    nothing else.
+  rule_actor: Halloway Plant Engineering
+  insert_skeleton: >-
+    Halloway Plant Engineering signed off <MACHINE> at Thelwall on 2026-08-21,
+    and it runs from 2026-08-25 at 8,000 metres a week.
+  delta_kind: inserted_bullet
+  fact: >-
+    Halloway Plant Engineering signed off stenter frame 3 at Thelwall on
+    2026-08-21, and it runs from 2026-08-25 at 8,000 metres a week.
+  governs: true
+  expected_direction: down
+  expected_value: 12
+  arithmetic: >-
+    The stenter bullet in the base gives frames 1 and 2 at 16,000 metres a week
+    between them, which is the smallest of the six stage outputs and therefore
+    the binding rate in the base. The insert adds frame 3 at 8,000 metres a
+    week running from 2026-08-25, which is today, so the stenter stage runs
+    16,000 + 8,000 = 24,000 metres a week from today. 24,000 is still the
+    smallest of the six: the next lowest is the dye house at 33,000, then
+    coating 38,000, scouring 41,000, mercerising 45,000, singeing 52,000. So
+    the stenters stay binding and no new bottleneck appears. 288,000 / 24,000
+    = 12. Twelve weeks, down from 18. Log movement ln(18/12) = 0.405.
+  rounding: >-
+    Whole weeks, rounded up if the division is not exact. Exact here: 288,000
+    is 12 x 24,000 with no remainder. Tolerance 0.
+  professional_one_sentence: >-
+    A third stenter frame from today takes the heat-setting stage from 16,000
+    to 24,000 metres a week, and since that stage is still the slowest in the
+    line the 288,000 metres outstanding now clear in twelve weeks rather than
+    eighteen.
+  single_reading_check: >-
+    Checked against disqualifier 15. Frame 3 is additional, not a replacement:
+    the base names frames 1 and 2 and states 16,000 "between them", so 8,000
+    is per frame and the third frame is a third. It runs from 2026-08-25, the
+    stated today, so there is no commencement gap and no ramp. It does not
+    displace the bottleneck, so there is no second reading in which the answer
+    is set by another stage. The stenters are the last stage, so no drain time
+    sits after them, and the rule sentence closes the calculation to the
+    slowest stage's output in any case. One reading: 12.
+meta:
+  personas_invented: true
+  real_personal_data: false

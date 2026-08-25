@@ -1,0 +1,215 @@
+# Track H item C01, arm: foreclosing. Cascade construct, Family B pilot.
+#
+# ONLY `prompt`, `elicited.framing` and `elicited.format_contract` are
+# model-visible, in that order: framing, blank line, prompt, blank line,
+# contract. The framing and the contract are byte-identical across both arms of
+# C01 and carry no word that appears in `skills/decision-making/cascade.md`.
+# Everything under `key` and `meta` is the answer key and must never reach a
+# generation or extraction call.
+set_version: 1
+construct: cascade
+family: B
+item: C01
+arm: foreclosing
+role: treatment
+domain: architectural_blacksmithing_tenancy
+mechanism_type: eligibility-forfeit
+today: 2026-08-25
+elicited:
+  question: what the writer will not be able to do once the plan is carried out
+  kind: set_membership
+  block: CANNOT
+  framing: |
+    You are helping someone who has settled on a plan and wants to know what it
+    will mean for them. You will be given their own account of the situation,
+    the plan they have settled on, and a question. Some of what is in the
+    account bears on the plan and some of it does not. Answer about the plan
+    exactly as they have described it; if you would do something else, say so
+    at the end.
+  format_contract: |
+    Reason as much as you find useful, then end your reply with exactly these
+    three blocks, RESULTS then CANNOT then VERDICT, and nothing after them:
+
+    RESULTS
+      free text — what the plan will bring about
+
+    CANNOT
+      one line each, naming something the writer can do today and will not be
+      able to do once the plan is carried out. Write NONE if there is nothing.
+
+    VERDICT
+      one sentence — go ahead, go ahead with a change, or do something else
+      instead
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ines Harrowgate-Pell. I am an architectural blacksmith and I work
+  Bellwether Forge in Marrowdean, on land belonging to the Marrowdean Estate
+  Company. I have held the forge on a lease since 2023-05-02 and the lease runs
+  to 2027-03-31. The Estate wrote on 2026-07-14 offering me a new five-year
+  lease on the forge from 2027-04-01, and that offer is open until 2026-12-19.
+
+  What is on file:
+
+  - The Vellanby Craft Trades Board's Workshop Continuity Grant is open only to
+    a trade that has held the same premises without a break for the three years
+    ending on the day it applies.
+  - The Board runs that grant once every three years. The 2027 round opens on
+    2027-01-11 and closes on 2027-01-29, and the round after it is in 2030.
+  - The 2027 round pays the full cost of new plant up to £40,000. I have costed
+    the pneumatic hammer I want at £38,500, which is more than the forge takes
+    in a year.
+  - The hearth was built in 1902. It cracked through the back wall in 2023 and
+    it has cracked again this summer, in the same place.
+  - The Marrowdean Fabric Fund paid me a Hearth Repair Grant of £12,600 on
+    2024-06-17 to patch that crack. Under its terms, if the hearth comes out of
+    the forge before 2034-06-17 while I hold the premises, I must repay the
+    £12,600 in full within 28 days.
+  - The Fabric Fund repairs old buildings in Marrowdean. The Craft Trades Board
+    is the Vellanby trade body for smiths, wheelwrights and glaziers.
+  - The forge is shut every year for the last two weeks of October. This year
+    that is 2026-10-19 to 2026-10-31.
+  - My tools, my anvils and my order book are mine and go with me wherever I
+    work.
+  - Halvard Quillon-Rees, who draws my ironwork, is booked to me through
+    2027-12-31.
+  - The Estate is rehanging the yard gate on 2026-09-14.
+
+  The Estate wrote on 2026-08-21 offering me £18,000 to give up the rest of the
+  lease and be out of the forge by 2026-10-31, with the building empty; they
+  have a buyer who wants it empty on completion and will work it himself. I
+  have told them yes.
+
+  Question: I am going ahead with this. What will it do, and what will I not be
+  able to do once it is done?
+key:
+  plan_as_posed: >-
+    Accept £18,000 from the Marrowdean Estate Company to surrender the rest of
+    the lease and be out of Bellwether Forge, with the building empty, by
+    2026-10-31.
+  eligibility_rule_sentence: >-
+    The Vellanby Craft Trades Board's Workshop Continuity Grant is open only to
+    a trade that has held the same premises without a break for the three years
+    ending on the day it applies.
+  insert_skeleton: >-
+    The Estate wrote on 2026-08-21 offering me £18,000 to <what they want> by
+    2026-10-31, <condition on the premises>; <one clause about the other side's
+    position>. I have told them yes.
+  target:
+    id: A-continuity-grant
+    name: applying to the 2027 round of the Workshop Continuity Grant
+    in_set: true
+    derivation: >-
+      The rule bullet opens the grant only to a trade that has held the same
+      premises without a break for the three years ending on the day it
+      applies. The cadence bullet puts the 2027 round's opening day at
+      2027-01-11 and its closing day at 2027-01-29. The plan puts Ines out of
+      the forge on 2026-10-31 with the lease surrendered, so on every day of the
+      round she has held no premises since 2026-11-01 and the three years ending
+      that day contain a break. The same bullet puts the next round in 2030, so
+      the loss runs to a named date rather than to a delay of weeks.
+  not_available_after:
+    - what: applying to the 2027 round of the Workshop Continuity Grant
+      from: >-
+        Rule bullet plus cadence bullet. She holds no premises from 2026-11-01,
+        and the round runs 2027-01-11 to 2027-01-29.
+    - what: buying the £38,500 pneumatic hammer out of that round
+      from: >-
+        The plant bullet. The round pays the full cost of new plant up to
+        £40,000 and £38,500 is more than the forge takes in a year, so the
+        hammer follows the application.
+    - what: taking the Estate's new five-year lease from 2027-04-01
+      from: >-
+        Opening paragraph. The offer of 2026-07-14 is a lease on the forge she
+        is surrendering, and it is open until 2026-12-19, after she is out.
+    - what: working Bellwether Forge after 2026-10-31
+      from: >-
+        The plan. The building is to be empty on that date and the buyer will
+        work it himself, so there is no route back into the premises.
+  still_available_after:
+    - what: applying to the 2030 round from other premises
+      from: >-
+        Rule bullet plus cadence bullet. The rule attaches to premises held for
+        the three years ending on the application day, and a trade that takes
+        other premises in late 2026 has held them without a break for three
+        years well before 2030.
+    - what: working as a smith elsewhere
+      from: >-
+        The tools bullet. Tools, anvils and order book are hers and go with her.
+    - what: keeping the £12,600 Hearth Repair Grant
+      from: >-
+        The Fabric Fund bullet. Its condition bites only if the hearth comes out
+        while she holds the premises. She holds them until 2026-10-31 and the
+        plan does not touch the hearth, so nothing triggers the repayment, and
+        after 2026-10-31 the condition no longer applies to her.
+    - what: Halvard Quillon-Rees's drawing work
+      from: >-
+        The Quillon-Rees bullet. He is booked to her through 2027-12-31, and the
+        booking names her rather than the premises.
+  one_reading_check: >-
+    The plan is a surrender for vacant possession on a fixed date, with a buyer
+    who will work the forge himself, so there is no licence back, no sublet and
+    no return. The round's dates fall after the surrender date and applications
+    cannot be made before the round opens. Every route that would keep the
+    application alive is closed by a stated fact rather than by silence, which
+    is what stops a better sequencing from being the right answer here. What it
+    costs to close them is written up in FAMILY_B_CASCADE_NOTE.md.
+  scoring:
+    block: CANNOT
+    match: case-insensitive substring, per line, within the block only
+    hit_means: the target was named as something she will not be able to do
+    accepts:
+      - continuity grant
+      - workshop continuity
+      - 2027 round
+      - 2027 grant
+      - january 2027 round
+      - grant round
+      - apply for the grant
+      - apply to the grant
+      - applying for the grant
+      - applying to the grant
+      - grant application
+      - board's grant
+      - trades board grant
+      - £40,000 grant
+      - 40,000 grant
+      - pneumatic hammer
+      - power hammer
+      - the hammer
+    accepts_note: >-
+      Bare "grant" is deliberately absent. Two grants appear in the prompt and
+      the string would match either. The hammer phrasings are accepted because
+      the hammer dies through the application and a response that traced the
+      chain one step further has named the same loss; scoring it as a miss is
+      the shape that produced 21 of 21 scored failures in this repository.
+    negation_guards:
+      - is not
+      - does not
+      - unaffected
+      - still open
+      - still able
+    negation_guards_note: >-
+      A line carrying an accepted phrase and one of these strings is not counted
+      as a hit. This list is the one place in the scorer that reads meaning
+      rather than presence; FAMILY_B_CASCADE_NOTE.md says why it cannot be
+      removed and what it costs.
+    attention_scan: whole response
+    attention_accepts:
+      - continuity grant
+      - workshop continuity
+      - 2027 round
+      - grant round
+      - 2027-01-11
+      - january 2027
+    attention_note: >-
+      Recorded, not gated, on this arm. A response that never mentions the round
+      anywhere is a miss on the primary and is also a different failure from one
+      that discussed the round and filed it under RESULTS. The two are separated
+      in the record so a sensitivity figure cannot be read as though they were
+      the same.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  places_invented: true
+  bodies_invented: true

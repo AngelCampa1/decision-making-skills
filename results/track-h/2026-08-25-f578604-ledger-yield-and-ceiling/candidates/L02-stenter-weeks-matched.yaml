@@ -1,0 +1,229 @@
+# Track H triplet L02, arm: matched. Construct: ledger. Yield probe, 2026-08-25.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L02
+arm: matched
+role: control
+domain: textile_finishing_capacity
+mechanism_type: capacity-rate
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: weeks from today until the last metre of the Kestrel order comes off the line
+  unit: weeks
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottilie Vansittart-Mbeki, production planner at Thelwall Finishing
+  Works in Calderwyn. We piece-dye and finish woven cotton for the trade,
+  and the floor is part-way through one large order for Kestrel Mills.
+
+  288,000 metres of the Kestrel order are still to finish as of today.
+  The line is on nothing but that order until it is done. Every metre
+  goes through all six stages in order: singeing, scouring, mercerising,
+  dyeing, coating, then the stenters. Halloway Plant Engineering
+  maintains every stage of the line for us; the finish date is set by the
+  slowest stage's output in metres a week and by nothing else. The weekly
+  figures below are what each stage actually puts out, maintenance and
+  shutdowns included.
+
+  Also on file:
+
+  - Our effluent consent was renewed on 2026-01-27 and runs to 2029-01-27.
+  - The coating line took a new head on 2026-07-20 and runs 38,000 metres
+    a week.
+  - Kestrel Mills signed the order on 2026-06-15 and paid the first
+    instalment on 2026-08-10.
+  - The mercerising range was relined on 2026-05-12 and runs 45,000 metres
+    a week.
+  - The works took on eleven agency operatives on 2026-07-27, on contracts
+    to 2027-07-27.
+  - Stenter frames 1 and 2 were re-clad on 2026-03-09 and heat-set 16,000
+    metres a week between them.
+  - The singeing range was re-gassed on 2026-02-17 and runs 52,000 metres
+    a week.
+  - Halloway Plant Engineering signed a new maintenance contract with us
+    on 2026-06-22, running to 2028-06-22.
+  - The dye house rebuilt jet 5 on 2026-04-14 and puts 33,000 metres a
+    week through its five jets.
+  - The scouring range took a new drive on 2026-06-08 and runs 41,000
+    metres a week.
+  - Halloway Plant Engineering signed off dye jet 6 at Thelwall on
+    2026-08-21, and it runs from 2026-08-25 at 8,000 metres a week.
+
+  Question: how many weeks from today until the last metre of the Kestrel
+  order comes off the line? Answer with a single number of weeks.
+key:
+  causal_rule_sentence: >-
+    Halloway Plant Engineering maintains every stage of the line for us; the
+    finish date is set by the slowest stage's output in metres a week and by
+    nothing else.
+  rule_actor: Halloway Plant Engineering
+  insert_skeleton: >-
+    Halloway Plant Engineering signed off <MACHINE> at Thelwall on 2026-08-21,
+    and it runs from 2026-08-25 at 8,000 metres a week.
+  delta_kind: inserted_bullet
+  fact: >-
+    Halloway Plant Engineering signed off dye jet 6 at Thelwall on 2026-08-21,
+    and it runs from 2026-08-25 at 8,000 metres a week.
+  governs: false
+  expected_direction: none
+  expected_value: 18
+  arithmetic: >-
+    The dye house bullet in the base gives 33,000 metres a week through five
+    jets. The insert adds a sixth jet at 8,000 metres a week from 2026-08-25,
+    so the dyeing stage runs 33,000 + 8,000 = 41,000 metres a week. The six
+    stage outputs are then singeing 52,000, scouring 41,000, mercerising
+    45,000, dyeing 41,000, coating 38,000, stenters 16,000. The smallest is
+    unchanged at 16,000, the stenter stage, so the binding rate is unchanged.
+    288,000 / 16,000 = 18. Eighteen weeks, exactly the base value. Movement 0.
+  rounding: >-
+    Whole weeks, rounded up if the division is not exact. Exact here: 288,000
+    is 18 x 16,000 with no remainder. Tolerance 0.
+  mirror_one_sentence: >-
+    The base says the finish date is set by the slowest stage's output and by
+    nothing else, and the slowest stage is the stenters at 16,000 metres a
+    week, so a sixth dye jet lifting the dye house from 33,000 to 41,000 adds
+    capacity where there was already spare and leaves the eighteen weeks
+    exactly where they were.
+  correction_if_it_governed: >-
+    Disqualifier 11, computed rather than asserted. The only arithmetic channel
+    from a stage output to the answer is the minimum, so the matched insert's
+    correction under the stated rule is exactly zero: 18 to 18. If a reader
+    wrongly treated the dye house as binding, the base would give
+    288,000 / 33,000 = 8.7 weeks and the matched arm 288,000 / 41,000 = 7.0
+    weeks, so even that mistaken reading lands 5 weeks away from where the
+    governing fact lands the answer (12). There is no reading on which the
+    matched correction sits near the governing one.
+  preconditions_enumerated:
+    - >-
+      The insert's own commencement, 2026-08-25. That is the stated today, so
+      the sixth jet is running from day one and nothing about the answer is
+      deferred. Identical to the governing insert's commencement, so neither
+      arm buys anything from a delay.
+    - >-
+      The sign-off date 2026-08-21, four days before today. Already past. It
+      gates nothing, and it is the same date in both inserts.
+    - >-
+      The effluent consent, renewed 2026-01-27 and running to 2029-01-27. It
+      expires long after the last week of the 18-week horizon (2026-12-29), so
+      it cannot stop dyeing or anything else inside the window. This is the
+      precondition most likely to be pressed, because a new dye jet plausibly
+      raises effluent load; the base states the consent as a dated permission
+      with no volume condition attached, so there is no clause for the extra
+      jet to breach.
+    - >-
+      The eleven agency operatives taken on 2026-07-27, on contracts to
+      2027-07-27. Those contracts run past 2026-12-29, so no labour cliff falls
+      inside the horizon and the sixth jet cannot be blocked for want of
+      staffing that the base says is contracted.
+    - >-
+      Halloway's maintenance contract, signed 2026-06-22 and running to
+      2028-06-22. It covers every stage and runs past the horizon, so the new
+      jet is maintained for the whole window and there is no lapse date that
+      would strand it.
+    - >-
+      Kestrel Mills' first instalment, paid 2026-08-10. Paid, past, and the
+      base attaches no condition of any kind to it. No later instalment is
+      stated, deliberately, so there is no payment gate that could stop work.
+    - >-
+      The six machine-history dates: 2026-02-17 singeing, 2026-03-09 stenters,
+      2026-04-14 jet 5, 2026-05-12 mercerising, 2026-06-08 scouring, 2026-07-20
+      coating. Every one is in the past and every one is reported as completed
+      work already reflected in the stage output beside it. None schedules a
+      future outage, so no stage output changes inside the horizon and the
+      minimum cannot move to the dye house later.
+    - >-
+      Starvation of the stenters. Checked because it is the one mechanism by
+      which an upstream stage could bind. Upstream of the stenters the slowest
+      stage is dyeing at 33,000, which already exceeds the stenter stage's
+      16,000, so the stenters are fed and the sixth jet cannot relieve a
+      starvation that does not exist. In the governing arm the stenter stage
+      rises only to 24,000, still under 33,000, so it stays fed there too.
+    - >-
+      Pipeline drain after the bottleneck. The stenters are the last of the six
+      stages, stated in the second paragraph, so no stage sits downstream of
+      the binding one in either arm and no drain term is available to either
+      insert.
+    - >-
+      Downtime already netted. The base states the weekly figures are what each
+      stage actually puts out, maintenance and shutdowns included, so neither
+      insert can bite through an unstated availability factor.
+    - >-
+      Conclusion: none of the ten delays or advances the moment the matched
+      fact would start to bite, because the matched fact has no moment at which
+      it bites. It raises a stage output that is not the minimum and does not
+      become the minimum.
+  salience_match: >-
+    Dimension 1, same object class: both inserts are a single production machine
+    commissioned at Thelwall on the same finishing line, adding weekly output to
+    one of the six stages already listed on file. Closed.
+    Dimension 2, same surface form: identical apparatus, both naming Halloway
+    Plant Engineering, both carrying a sign-off date and a commencement date in
+    YYYY-MM-DD, both carrying a metres-a-week figure. Closed.
+    Dimension 3, same order of magnitude: the added capacity is 8,000 metres a
+    week in both, identically, and both dates are identical in both. Closed.
+    Dimension 4, same alarm: the sentence a reasonable non-expert says on
+    reading each is "a new machine came on stream today and it adds eight
+    thousand metres a week, so the order will be done sooner" both times.
+    Closed on the alarm itself; see the note below on a residual asymmetry.
+    Dimension 5, same length: prompt-length delta from base is 137 characters
+    for the governing insert and 131 for the matched, so |a - b| / max(a, b) =
+    6 / 137 = 4.4%, inside the 10% bound. Both are three-word machine names on
+    an otherwise identical two-line bullet. Closed.
+    Dimension 6, same position: both are the eleventh and final bullet of "Also
+    on file", immediately before the blank line and the question. Closed.
+    Dimension 7, same deontic register: neither names a consequence, a penalty,
+    a status, a restriction or a procedural requirement. Both are flat
+    commissioning records in the indicative. Stripped of their machine names the
+    two skeletons are the same string. Closed.
+    Dimension 8, same relation to the causal-rule sentence: both name Halloway
+    Plant Engineering, the actor that sentence names, and neither names any
+    other term from it. The discriminating difference is carried by the object,
+    which is the shape the spec says t01 and t02 achieved naturally. The
+    companion rule holds too: no sentence of the base excludes the dye house by
+    name or by any other means. The dye house appears as one of ten symmetric
+    dated records, indistinguishable in form from the other nine, so the decoy
+    cannot be found from the base alone. That is the whole of what the volume
+    dial buys here. Closed.
+    NOT fully closed, dimension 4: both inserts raise the same alarm, but the
+    governing one is easier to price once the reading is done, because the base
+    states the stenter stage as 16,000 metres a week "between them", a phrasing
+    that sits closer to the addition the governing insert asks for than "through
+    its five jets" does. Recorded rather than repaired: repairing it means
+    making the governing fact less self-sufficient, which trades a salience
+    defect for a validity defect. Seven of eight closed, and this is the eighth.
+  neutraliser_location: >-
+    Distributed, and deliberately not a single excluding sentence. (a) The rule
+    sentence in the second paragraph: "the finish date is set by the slowest
+    stage's output in metres a week and by nothing else." (b) The stenter bullet
+    in the middle of the ledger: "Stenter frames 1 and 2 were re-clad on
+    2026-03-09 and heat-set 16,000 metres a week between them." (c) The dye
+    house bullet, three bullets after the stenter one: "The dye house rebuilt
+    jet 5 on 2026-04-14 and puts 33,000 metres a week through its five jets."
+    The reader must hold (b) against (c) under (a). None of the three refers to
+    the insert, none is adjacent to it, and the insert is not self-neutralising:
+    it states only that a machine is running and what it adds.
+  residual_objections: >-
+    Three attacks were run against this label and each is recorded with the
+    reason it fails. (a) A sixth dye jet raises effluent load, and the works
+    holds a consent. The base states the consent as a dated permission with no
+    volume figure attached, so the objection has no arithmetic behind it: it
+    can produce "I cannot tell", never a different number of weeks. (b) A
+    reader who takes line throughput to be the sum of the six stage outputs
+    gets 225,000 in the base and 233,000 in both variants, so under that
+    reading the matched arm moves - but so does the governing arm, and to the
+    same place. That is a wrong-model failure symmetric across the two
+    variants rather than a defect that biases the primary, and the rule
+    sentence forecloses it. (c) A shared line: if the six stages also ran other
+    work, the outputs available to this order would be lower. The base closes
+    this with "The line is on nothing but that order until it is done." That
+    sentence was added after the first draft, on this objection, and it is
+    identical in all three arms.
+meta:
+  personas_invented: true
+  real_personal_data: false

@@ -1,0 +1,202 @@
+# Track H triplet L05, arm: matched. Ledger yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L05
+arm: matched
+role: control
+domain: cask_beer_stock_and_cellar_rotation
+mechanism_type: stock-and-flow
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until the tied pump comes off the bar
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottoline Vasse-Adeyinka and I keep the cellar at the Ravelstone Arms,
+  a nine-pump pub in Corravale. I count the stock every morning before
+  we open, cold room and yard container together, and a cask has to stand
+  for 7 days after delivery before it can go on.
+
+  The tied pump comes off the bar on the first morning 12 casks of the tied
+  beer are left in stock, and that pump gets through 3 casks a day, every
+  day of the week.
+
+  Also on file:
+
+  - 2019-04-01 — the Wrenfell tie was signed. It fixes Wrenfell Copper Ale
+    on the number one pump for the life of the agreement and allows no
+    other beer on that pump.
+  - 2025-03-10 — the yard container was fitted with its own cooling. It
+    takes the overflow when the cold room is full and is counted with it.
+  - 2026-06-02 — Wrenfell Brown Mild went on the number seven pump and has
+    held it since.
+  - 2026-07-30 — the number four pump changed over to Kestrelmoor Pale on
+    the night Vaunt Bitter finished.
+  - 2026-08-04 — Marle Row Porter came off the number six pump and has
+    not been replaced.
+  - 2026-08-06 — the line-cleaning contract with Sanderling Hygiene was
+    renewed. Every line is cleaned on a Tuesday morning before we open.
+  - 2026-08-11 — Wrenfell's last delivery before the rebuild. Nothing now
+    in stock was delivered later than that day.
+  - 2026-08-14 — Wrenfell's brewhouse came down for its rebuild. Wrenfell
+    have said nothing will ship from them before 2026-12-01.
+  - 2026-08-18 — the cellar standing instruction was reissued: a pump
+    comes off while it still has 12 casks of its own beer behind it, so
+    that a changeover is never made in the middle of service.
+  - 2026-08-25 — this morning's count: 21 casks of Kestrelmoor Pale,
+    which are in the yard container, 30 casks of Wrenfell Brown Mild,
+    and 54 casks of Wrenfell Copper Ale.
+  - 2026-08-25 — a further 33 casks of Wrenfell Brown Mild, delivered on
+    2026-08-11 and standing in the yard container since, were missed off
+    this morning's count.
+
+  Question: how many days from today until the tied pump comes off the bar?
+  Answer with a single number of days.
+key:
+  causal_rule_sentence: >-
+    The tied pump comes off the bar on the first morning 12 casks of the tied
+    beer are left in stock, and that pump gets through 3 casks a day, every
+    day of the week.
+  rule_actor: NONE
+  insert_skeleton: >-
+    2026-08-25 — a further <count> casks of Wrenfell <beer>, delivered on
+    2026-08-11 and standing in the yard container since, were missed off this
+    morning's count.
+  delta_kind: inserted_bullet
+  fact: >-
+    2026-08-25 — a further 33 casks of Wrenfell Brown Mild, delivered on
+    2026-08-11 and standing in the yard container since, were missed off this
+    morning's count.
+  governs: false
+  expected_direction: none
+  expected_value: 14
+  arithmetic: >-
+    Unchanged from base. The tied beer is Wrenfell Copper Ale and its stock is
+    still the counted 54 casks; the insert corrects the count of a different
+    beer, which is on a different pump. Morning stock of the tied beer on day d
+    is 54 - 3d. Set 54 - 3d = 12, so 3d = 42 and d = 14. 2026-08-25 plus 14
+    days is 2026-09-08. Answer 14. Relative movement 0.000.
+  rounding: >-
+    None required. 54 - 12 = 42 and 42 is divisible by 3. Tolerance 0.
+  why_it_does_not_move: >-
+    Wrenfell Brown Mild is not the tied beer. The 2019-04-01 entry fixes
+    Wrenfell Copper Ale on the number one pump for the life of the agreement
+    and allows no other beer on that pump, and the 2026-06-02 entry has the
+    mild on the number seven pump. The rule sentence keys the terminal event to
+    the tied beer alone, so a correction to the mild's stock changes neither
+    the opening stock, the rate, nor the level of the chain.
+  mirror_one_sentence: >-
+    The tie fixes Copper Ale on the number one pump and allows no other beer on
+    it, so 33 more casks of mild are stock for a different pump and the tied
+    pump still comes off on 2026-09-08.
+  neutraliser_location: >-
+    base prompt, the first ledger entry, at the top of the ten-entry ledger
+    and furthest of all of them from the insert point:
+    "It fixes Wrenfell Copper Ale on the number one pump for the life of the
+    agreement and allows no other beer on that pump." Supported by the
+    2026-06-02 entry, which puts the mild on the number seven pump, and by the
+    2026-08-18 standing instruction, whose floor is "12 casks of its own beer"
+    per pump rather than a pooled reserve. That first entry identifies the
+    matched beer by a property - "no other beer" - and never by its name. The
+    insert is NOT self-neutralising: it states only that a stack of Wrenfell
+    casks was left off the count.
+  matched_counterfactual: >-
+    If the 33 casks were folded into the tied beer's stock, the answer would be
+    (54 + 33 - 12) / 3 = 25 days, against the governing arm's 26 and the base's
+    14. So a reader who moves on this fact lands 1 day short of the governing
+    value and 11 days above base. Recorded rather than hidden; see the report
+    on disqualifier 11.
+  preconditions_enumerated:
+    - >-
+      The 7-day stand after delivery, opening paragraph. The mild was delivered
+      2026-08-11 and 2026-08-11 plus 7 days is 2026-08-18, so it is servable
+      now. That makes the mild ready sooner, not the tied beer, and readiness
+      of the mild has no route to the number one pump.
+    - >-
+      The tie, 2019-04-01. This is the gate that would have to open for the
+      mild to matter and it is shut for the life of the agreement: no other
+      beer on that pump. There is no commencement date on it in the future; it
+      has run since 2019.
+    - >-
+      The standing instruction, 2026-08-18. Its floor is "12 casks of its own
+      beer", per pump, so a fuller number seven pump cannot release stock into
+      the number one pump's floor. Had the floor been a pooled cellar reserve,
+      or a reserve owed to a third party in casks of any beer, the mild would
+      have satisfied it and this fact would have governed. It is not, and that
+      is the wording that closes the substitution route.
+    - >-
+      Wrenfell's brewhouse, 2026-08-14, shipping nothing before 2026-12-01.
+      This applies to both beers alike and is past both answers in every arm,
+      so it neither delays nor advances the moment the mild would bite.
+    - >-
+      Wrenfell's last delivery, 2026-08-11, with nothing now in stock delivered
+      later. The insert dates the mild to that same day, so it is consistent
+      with the entry and does not reopen the supply line.
+    - >-
+      The yard container's cooling, 2025-03-10. The container is already
+      counted with the cold room and already holds 21 casks of Kestrelmoor Pale
+      in the base, so the insert introduces no new storage condition and no new
+      capacity question for the tied beer.
+    - >-
+      The line-cleaning contract, 2026-08-06, cleaning every line on a Tuesday
+      morning before opening. It takes no selling time out of any day, and the
+      rule sentence fixes the rate at 3 casks a day every day of the week in
+      all three arms.
+    - >-
+      The number four pump changeover, 2026-07-30, and the Kestrelmoor count.
+      Neither names the mild or the tied beer and neither carries a future
+      date.
+    - >-
+      The rate itself. The mild is already on the number seven pump with 30
+      casks counted, so finding more of it in the yard changes nothing a
+      drinker can see and cannot plausibly slow the tied pump. The rate is
+      stated flatly in the rule sentence in any case.
+    - >-
+      The one objection I could not fully dismiss, recorded rather than hidden:
+      a reader may take a miscount of 33 casks as evidence that the morning
+      count is unreliable in general, and so doubt the 54. That produces no
+      determinate number, and it applies identically to the governing arm, so
+      it cannot separate the two.
+  salience_match: >-
+    Dimension 1, object class: identical. Both inserts are a stack of Wrenfell
+    cask beer, delivered on the same day, standing in the same yard container,
+    left off the same morning's count.
+    Dimension 2, surface form: identical. Same skeleton, same two dates in the
+    same positions, same single count, same clerical register, same numeral
+    pattern of three numeric tokens each.
+    Dimension 3, magnitude: 36 casks against 33, 8.3% apart against max, inside
+    the 10% rule; the two dates are the same date in both.
+    Dimension 4, alarm: "there is a stack of casks in the yard I never counted"
+    in both. See below for where this one is not fully closed.
+    Dimension 5, length: the two inserted spans are character-for-character the
+    same length, because "36" and "33" are both two characters and "Copper Ale"
+    and "Brown Mild" are both ten. Prompt-length delta from base is identical,
+    so the rule |a - b| / max(a, b) <= 0.10 evaluates at 0.
+    Dimension 6, position: identical. Final ledger entry, immediately before
+    the question, in both.
+    Dimension 7, deontic register: neither insert names a consequence, a
+    penalty, a status or a procedure. Both are flat corrections to a count.
+    Stripped of nouns the two skeletons are the same string.
+    Dimension 8, relation to the rule sentence: the rule sentence names no
+    actor, and neither insert names one. Neither beer name occurs in the rule
+    sentence, so content-word overlap with it is identical for the two inserts
+    and the pass-two leak has no purchase here. The neutralising sentence
+    identifies the matched beer by a property and never by its name.
+    NOT FULLY CLOSED - dimension 4. For a reader who has already found the
+    2019-04-01 entry, the governing insert alarms harder, because Copper Ale is
+    the beer the whole arrangement is named after. That is the one-hop the
+    governing arm is entitled to under section 4.1, but it is an asymmetry in
+    felt force and it is not honest to score dimension 4 as fully closed. What
+    is closed is the base-alone view: three beers carry a stock count in the
+    ledger - Copper Ale, Brown Mild and Kestrelmoor Pale - so a reader of the
+    base cannot pick the decoy before the insert arrives. Seven of eight
+    closed, one honestly short.
+meta:
+  personas_invented: true
+  real_personal_data: false

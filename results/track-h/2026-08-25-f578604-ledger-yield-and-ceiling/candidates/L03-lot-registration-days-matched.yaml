@@ -1,0 +1,209 @@
+# Track H triplet L03, arm: matched. Construct: ledger, yield probe.
+#
+# ONLY the `prompt` block is model-visible. Everything under `key` and `meta` is
+# the answer key and must never reach a generation or extraction call.
+set_version: 1
+construct: ledger
+triplet: L03
+arm: matched
+role: control
+domain: conveyancing_land_registration
+mechanism_type: precedence-constraint
+k_siblings: 10
+spec_variant: A
+elicited:
+  question: days from today until the purchase of Lot 14 is registered
+  unit: days
+  kind: scalar
+prompt: |
+  Today is 2026-08-25.
+
+  I am Odalys Ferrement-Nkwaya. I am buying Lot 14 Wrayburn Fields, in the
+  Meridian district of Calloway Reach, from the Sablewood Estate. Lot 14 has
+  no title of its own yet: it is being cut out of the parcel in folio
+  71/2204 by a deposited plan of subdivision.
+
+  Three rules of the Meridian system apply, and I have them from the
+  Registry's own practice note:
+
+  The Survey Office seals a deposited plan exactly 35 days after the day it
+  accepts that plan for lodgement.
+
+  A transfer of a lot may not be lodged until the Survey Office has sealed
+  the plan that creates that lot; it may be lodged on the day of sealing.
+
+  The Land Registry issues the new folio exactly 21 days after a transfer is
+  lodged, and the purchase is registered on the day the folio issues.
+
+  Also on file:
+
+  - Plan of subdivision SP-4417, which creates Lot 14 out of folio 71/2204,
+    was accepted for lodgement by the Survey Office on 2026-08-11.
+  - Plan of subdivision SP-6082, which creates four lots out of the Estate's
+    holding at Callowmere Bank in folio 88/1310, eleven kilometres south,
+    was accepted for lodgement by the Survey Office on 2026-08-13.
+  - The contract of sale was signed on 2026-07-02 at $412,000, went
+    unconditional on 2026-07-16, and completes on registration.
+  - The transfer, Form LR-7, was executed by both parties on 2026-08-04 and
+    my conveyancer holds it ready to lodge.
+  - The Estate's mortgage over folio 71/2204 to Trellick Building Society
+    was discharged on 2026-07-28.
+  - Harrowgate Mutual issued my loan approval on 2026-08-06 and it stands
+    until 2026-12-31.
+  - The Meridian Revenue Office issued a land tax clearance on 2026-08-18.
+    It runs 90 days and must be current on the day the transfer is lodged.
+  - A caveat lodged over folio 71/2204 by a former option holder on
+    2025-11-04 was withdrawn on 2026-06-19.
+  - A drainage easement in favour of the Calloway Reach Water Board was
+    granted by deed on 2026-05-22 and is drawn on plan SP-4417.
+  - A structural report on the cottage on Lot 14, dated 2026-07-09, found no
+    defect the Estate is obliged to remedy.
+  - The Survey Office has rejected plan of subdivision SP-6082 over a
+    boundary dimension and has set 2026-09-27 as the day it will accept
+    that plan for lodgement.
+
+  Question: how many days from today until my purchase of Lot 14 is
+  registered? Answer with a single number of days.
+key:
+  causal_rule_sentence: |-
+    A transfer of a lot may not be lodged until the Survey Office has sealed
+    the plan that creates that lot; it may be lodged on the day of sealing.
+  rule_actor: the Survey Office
+  insert_skeleton: >-
+    The Survey Office has rejected plan of subdivision <PLAN> over a boundary
+    dimension and has set <DATE> as the day it will accept that plan for
+    lodgement.
+  delta_kind: inserted_bullet
+  fact: >-
+    The Survey Office has rejected plan of subdivision SP-6082 over a
+    boundary dimension and has set 2026-09-27 as the day it will accept that
+    plan for lodgement.
+  governs: false
+  expected_direction: none
+  expected_value: 42
+  arithmetic: >-
+    Unchanged from base. SP-6082 is the plan the second ledger item names as
+    creating four lots out of folio 88/1310 at Callowmere Bank; the lot being
+    bought is created by SP-4417 out of folio 71/2204. The transfer rule
+    waits on the plan that creates that lot, so SP-4417's acceptance of
+    2026-08-11 stands, sealing is 2026-09-15, lodgement the same day, and the
+    folio issues 21 days later on 2026-10-06. From 2026-08-25 that is 6 + 30
+    + 6 = 42 days. Relative movement 0.000.
+  rounding: >-
+    None required for rounding: the unit is days and every interval in this
+    triplet is a whole number of them. Tolerance 0 on the movement, which is
+    the primary. Tolerance 2 on the absolute value, because "exactly 35 days
+    after the day it accepts" and "exactly 21 days after a transfer is
+    lodged" admit an inclusive count that takes a day off each leg, and
+    "from today" admits counting today as day 1. A blind reader flagged both
+    conventions and both shift all three arms by the same amount, so the
+    contrast is untouched: 42/78/42 exclusive, 40/76/40 inclusive.
+  mirror_one_sentence: >-
+    The transfer waits only on the sealing of the plan that creates the lot
+    being bought, and the ledger names that plan as SP-4417 over folio
+    71/2204, so a rejection of SP-6082 over a different folio leaves the
+    2026-08-11 acceptance, the 2026-09-15 sealing and the 2026-10-06
+    registration exactly where they were.
+  neutraliser_location: >-
+    base prompt, the second of the three rule paragraphs, well above the
+    ledger and eleven bullets above the insert point: "A transfer of a lot
+    may not be lodged until the Survey Office has sealed the plan that
+    creates that lot". It identifies the plan that matters by a property,
+    the lot it creates, and never by a plan number, so the decoy cannot be
+    found from the base alone. Resolving which plan that is takes the second
+    hop, into the first two ledger items. The insert is NOT
+    self-neutralising: it states only that the Survey Office has knocked a
+    plan back and fixed a later acceptance date.
+  preconditions_enumerated:
+    - >-
+      The transfer rule. Gated on "the plan that creates that lot". The
+      ledger's first item names SP-4417 as creating Lot 14; SP-6082 creates
+      four lots at Callowmere Bank. No bite.
+    - >-
+      The sealing rule and Survey Office queueing. The rule is "exactly 35
+      days after the day it accepts that plan for lodgement", keyed per plan
+      with no capacity or queue term, so a second plan going back for
+      correction cannot slow SP-4417's clock, which has been running since
+      2026-08-11. No bite.
+    - >-
+      The folio rule. Keyed to the day the transfer is lodged, which is
+      keyed to the sealing of SP-4417. No bite.
+    - >-
+      Shared parent title. SP-4417 subdivides folio 71/2204; SP-6082
+      subdivides folio 88/1310, eleven kilometres south. There is no common
+      parcel, so a boundary dimension corrected on one cannot be a boundary
+      of the other. No bite.
+    - >-
+      Vendor capacity. The Estate has already executed the transfer, on
+      2026-08-04, and the buyer's conveyancer holds it, so the Estate being
+      occupied with another plan cannot delay execution or lodgement. No
+      bite.
+    - >-
+      The mortgage. Discharged 2026-07-28 and over folio 71/2204 only, so
+      nothing about folio 88/1310 revives it. No bite.
+    - >-
+      The caveat. Withdrawn 2026-06-19, and it was over folio 71/2204. No
+      bite.
+    - >-
+      The land tax clearance. Issued 2026-08-18, runs 90 days to 2026-11-16,
+      required current at lodgement. Lodgement in this arm is 2026-09-15, 62
+      days inside it. No bite.
+    - >-
+      The loan approval. Stands to 2026-12-31; the folio issues 2026-10-06.
+      No bite.
+    - >-
+      The drainage easement. Granted by deed 2026-05-22 and drawn on
+      SP-4417, not on SP-6082, and the deed is already made. No bite.
+    - >-
+      The structural report. Dated 2026-07-09, with no remedial obligation
+      and no date gate attached. No bite.
+    - >-
+      The contract. Unconditional since 2026-07-16 and completing on
+      registration, so it imposes no earlier or later lodgement date that
+      SP-6082 could disturb. No bite.
+    - >-
+      Commencement dates. There are none. Every rule in this base is stated
+      as in force now and no instrument in the ledger has a start date in
+      the future, so there is no h03-style commencement that could delay the
+      moment the matched fact begins to bite.
+  salience_match: >-
+    Dimension 1, same object class: both inserts act on a plan of subdivision
+    accepted for lodgement by the same Survey Office two days apart. Not
+    fully closed on scale, since SP-4417 creates one lot out of the parcel
+    being sold and SP-6082 creates four out of another holding, and that
+    difference is legible only after the lookup rather than from the insert.
+    Dimension 2, same surface form: identical apparatus, a plan number and a
+    date in each. Dimension 3, same magnitude: the two acceptance dates are
+    2026-09-16 and 2026-09-27, eleven days apart, inside the fortnight the
+    spec allows. Dimension 4, same alarm: from the insert alone the sentence
+    a reasonable buyer says is the same one both times, "the Survey Office
+    has knocked a plan back and it will not be lodged again for weeks". This
+    is the dimension NOT fully closed, and it is the construct rather than a
+    defect: after the reader resolves the plan number against the ledger the
+    two alarms come apart, which is exactly what the item asks the reader to
+    do. Dimension 5, same length: the two inserted spans are identical in
+    structure and in character count, differing only in a seven-character
+    plan number and a ten-character date, so the prompt-length delta is the
+    same to the character and |a - b| / max(a, b) = 0.000. Dimension 6, same
+    position: both are the final bullet of "Also on file:", immediately
+    before the question. Dimension 7, same deontic register: neither names a
+    penalty, a forfeiture or a consequence attached to a status, and both
+    are the same procedural report of an office action and a date. Dimension
+    8, same relation to the causal rule sentence: both name the Survey
+    Office, which is the actor that sentence names, and the discriminating
+    difference is carried by the object that actor acts on. Seven of eight
+    closed; dimension 4 is closed at the insert and open after the lookup,
+    and dimension 1 is closed on class and open on scale.
+  disqualifier_11_note: >-
+    Checked, and it does not fire. The labelled values are 42 and 78, so the
+    contrast is 36 days wide. A reader who wrongly ran the chain off SP-6082
+    would reach 2026-09-27 + 35 + 21 = 2026-11-22, which is 89 days, eleven
+    from the governing arm's 78 and forty-seven from base, a large movement
+    that scores as the specificity failure it is. Disqualifier 11 is about a
+    matched fact whose professionally standard treatment lands near the
+    governing correction, as h01's restricted cash did at 8.29 against 7.71.
+    No standard treatment of a plan over a different folio moves this answer
+    at all, so the two labels have no near-miss between them.
+meta:
+  personas_invented: true
+  real_personal_data: false
