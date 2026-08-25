@@ -94,15 +94,29 @@ than manufacturing a swap. Record:
 write-up
 [`../notebook/2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md`](../notebook/2026-08-25-the-hinge-screen-ceilings-and-two-validity-checks-fail.md).
 
-**Two of three families are now at ceiling on single-call scale, and `hinge` is
-what tests the generalisation.** Family A elicits a scalar. `hinge` is a
-different family with a different primary and a different answer-key shape, set
-membership rather than a number, and it lands in the same place. What that
-licences is a claim about the venue: a scenario compact enough to fit one prompt
-is not, for a current model, hard, whatever shape the answer takes. What it does
-not licence is anything about volume, long context, delegation, or work carried
-across a conversation, which is where the failures the six procedures describe
-mostly live.
+**P3b fired on `cascade` too, at J = +1.000**, [+0.772, +1.000], over 40 blind
+readings, format-violation gap 0.000, adjudication coverage 1.000 with zero
+movement. That run lands from another lane and its record is not in the
+repository yet, so this file names the number and links nothing.
+
+**All three families are now at ceiling on single-call scale.** Family A at
+unaided J = 1.000 over 99 readings, `hinge` at +0.950 hand-adjudicated,
+`cascade` at +1.000. Three independent constructs, six domains, three answer-key
+shapes. What that licences is a claim about the venue: a scenario compact enough
+to fit one prompt is not, for a current model, hard, whatever shape the answer
+takes. What it does not licence is anything about volume, long context,
+delegation, or work carried across a conversation, which is where the failures
+the six procedures describe mostly live. **`council` is the last instrument
+standing, and it has no answer key and no base arm.**
+
+**One thing the `cascade` run found that bears on every adjudicated number
+here.** Its three blind judges had mean pairwise rationale similarity of 0.806
+and wrote identical opening text on 17 of 40 cases, which is what three samples
+of one model at default sampling look like. A separate lane is measuring whether
+`scripts/adjudicate.py` behaves the same way. It does not reach `hinge`'s 36 of
+40, which was **one blind pass** compared against the machine scorer rather than
+judges compared against each other, and stating that difference is cheaper than
+having to reconstruct it later.
 
 Three things the `hinge` run leaves behind for whoever runs the next screen.
 
@@ -128,32 +142,12 @@ review, which is why the attrition would have been invisible in the published
 output. Full account:
 [`../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md`](../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md).
 
-1. **`cascade`, blocked on judges rather than on another repair round.** Two
-   adversarial reviews took the instrument apart, the first killing version 2's
-   estimator and the second killing version 3's scorer. Version 4 answers them:
-   a primary that divides by nothing the model controls, a survival rule reading
-   an observation instead of an idiom list, a scorer whose container precedence
-   cannot change between two runs of the same code, and a battery of forty-four
-   replies and eleven mutants each with a sole witness. Four further findings are
-   recorded as limits rather than repaired, and the repair round itself is
-   finished. Do not open another one.
-
-   What stops the screen is the primary's own definition. **Every scored positive
-   is queued for three-judge blind adjudication, and the adjudicated rate is what
-   enters J.** The screen therefore costs its readings plus three judges over
-   every positive those readings produce, and no shortcut around that exists
-   without changing what the primary means.
-   *Acceptance:* the adjudication runs blind with three judges, the adjudicated
-   rate enters J, and the unaided arm is read against the 0.70 ceiling kill
-   already on record. Below 0.70 the family stays open. At or above it, `cascade`
-   closes and `council` is the last instrument standing.
-
-2. **`council`, screen in flight.** Four draws per item under one pre-registered
-   ordering, AB only. Unanimity admits, the run stops early on the first
-   disagreement, and `BALANCED` counts as a call. Unaided, `sonnet`, blind, every
-   reply recorded verbatim, the isolation receipt read off a smoke call before
-   any screen draw was issued. Screen draws are discarded from the primary and
-   may never be reused as data.
+1. **`council`, screen in flight, and the last instrument standing.** Four draws
+   per item under one pre-registered ordering, AB only. Unanimity admits, the run
+   stops early on the first disagreement, and `BALANCED` counts as a call.
+   Unaided, `sonnet`, blind, every reply recorded verbatim, the isolation receipt
+   read off a smoke call before any screen draw was issued. Screen draws are
+   discarded from the primary and may never be reused as data.
 
    `council` has no answer key and no base arm, so its ceiling analogue is the
    opposite failure: a second-position rate indistinguishable from 0.5 means no
@@ -170,6 +164,24 @@ output. Full account:
    *Acceptance:* the screen reports its second-position rate with the reporting
    gate's verdict stated either way, and the scorer carries `arm` before a
    measurement call is spent on the primary.
+
+2. **The successor venue, and it is not a fourth instrument.** Three constructs,
+   six domains and three answer-key shapes have now ceilinged, and the
+   registration named this outcome before any of them ran: if the remaining
+   families also ceiling, "the reading available is not that three constructs
+   failed but that **single-call scale is the wrong scale**, and the successor is
+   the volume and delegation venue rather than a fourth instrument". Authoring a
+   fourth construct at this scale spends calls on a question three screens have
+   answered.
+
+   What the venue has to carry is the thing none of the three touched: work at
+   volume, over long context, under delegation, or across a conversation. That is
+   where the failures the six procedures describe live, and no measurement in
+   this repository has reached it.
+   *Acceptance:* a registered design, a pre-registered kill, and a control-arm
+   probe read **before** anything is authored at scale. That order is what closed
+   `ledger` for 90 calls and Family A for 9, and it is the rule this track has
+   paid for twice.
 
 **What W3b bought, and one thing it found.** Families B and C could not reach
 [`SCORECARD.md`](../SCORECARD.md) at all before this: every call on the quality
@@ -208,7 +220,7 @@ stays free. The defect is specific to `elicit.py`, which has produced no records
 | Discriminator outside its permutation-derived band | not yet measured | discard the block, rebuild the design rule |
 | Three constructs cannot express a scalar elicitation | **answered, and the other way round.** All three express it fine; the form is what ceilings. | moot — Family A is closed on the ceiling, not on expressibility |
 | Unaided J at or above 0.70 on `hinge` | **FIRED, crossed +0.850.** 40 unaided blind readings of H01, 20 per arm, at `c9f649a`. Machine +0.850 [+0.725, +0.975]; a blind adjudicator agreeing 36 of 40 puts it at +0.950 [+0.850, +1.000]. Two registered validity checks failed alongside it, `decoys_are_live` and `fork_is_real`, and neither touches the primary. | executed: `hinge` closes on set-membership elicitation at single-call scale. `cascade` and `council` carry the track. |
-| Unaided J at or above 0.70 on `cascade` | not yet measured; the screen is blocked behind the three-judge adjudication the v4 primary requires | that family closes and `council`, which has no answer key and no base arm, is the last instrument standing |
+| Unaided J at or above 0.70 on `cascade` | **FIRED, J = +1.000**, [+0.772, +1.000], over 40 blind readings, format-violation gap 0.000, adjudication coverage 1.000 with zero movement. Landing from another lane; the record is not in the repository yet. | executed: `cascade` closes, and `council` is the last instrument standing |
 
 ## Resume key
 
@@ -224,7 +236,9 @@ No checkpoint exists, because all 139 calls were dispatched as sub-agents rather
 than through `scripts/run_triggers.py`. Nothing here belongs in
 [`SCORECARD.md`](../SCORECARD.md) and none of these READMEs claims it does. The
 first unit that runs through the real runner creates the checkpoint, and the
-`cascade` screen is the first candidate.
+successor venue is now the first candidate. `cascade`'s 40 readings are not in
+that 139: they land with their own record from another lane, and its call ledger
+entry is that lane's to add.
 
 **The `hinge` instrument is in the repository now.** Its three arms, its answer
 key as data, its version 6 note and all 40 readings are under
@@ -234,10 +248,11 @@ so a cold start has it. The scoring code is not: it fails `ruff check` and
 not the scorer that ran. `key-h01-v3.json` carries the vocabulary those modules
 hold, which is what a reader needs to check a label by hand.
 
-`cascade` and `council` still sit in a scratchpad and a cold start does not have
-them. If the scratchpad is gone, what survives is the review findings above: the
-batteries were green and the batteries were not the test, so a rebuild briefed on
-the three denominator questions is worth more than the artefacts were.
+`council` still sits in a scratchpad and a cold start does not have it, and
+`cascade` lands with its own record from another lane. If the scratchpad is gone,
+what survives is the review findings above: the batteries were green and the
+batteries were not the test, so a rebuild briefed on the three denominator
+questions is worth more than the artefacts were.
 
 **The lesson is one step further along than Family A's.** There, reading the blind
 arms as a control arm before authoring the corpus saved ninety calls. Here, a

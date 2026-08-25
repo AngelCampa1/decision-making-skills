@@ -216,3 +216,29 @@ The scoring code that produced `SCORED.txt` is not in this directory. It fails
 leave a scorer here that is not the scorer that ran. `key-h01-v3.json` carries
 the vocabulary those modules hold, so the labels can be checked by hand from
 `blind_leverage.json` without them.
+
+## Added after this record was written, 2026-08-25
+
+**`cascade` came in at J = +1.000**, [+0.772, +1.000], over 40 blind readings,
+with a format-violation gap of 0.000 and adjudication coverage 1.000 at zero
+movement. Its record lands from another lane and is not linked here yet.
+
+That makes it **three of three families at ceiling on single-call scale**, not
+two: Family A at unaided J = 1.000 over 99 readings, `hinge` at +0.950
+hand-adjudicated here, `cascade` at +1.000. The generalisation is carried by
+three independent constructs across six domains, and what it does not licence is
+unchanged: nothing in any of them tests volume, long context, delegation, or work
+carried across a conversation.
+
+**What the hand adjudication here was, stated exactly.** One blind pass over the
+40 arm-stripped `LEVERAGE` blocks, producing `adjudicated.txt`, compared against
+the machine scorer. It is a scorer-versus-adjudicator comparison and carries no
+independence claim, because there was one adjudicator and no between-judge
+statistic to compute.
+
+The `cascade` run makes that distinction worth drawing. Its three blind judges
+had mean pairwise rationale similarity of 0.806 and wrote identical opening text
+on 17 of 40 cases, which is what three samples of one model at default sampling
+look like. That dependence does not reach the 36 of 40 above, which compares one
+pass against a scorer rather than judges against each other. Whether
+`scripts/adjudicate.py` has the same property is being measured separately.

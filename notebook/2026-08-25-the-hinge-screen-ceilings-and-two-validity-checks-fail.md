@@ -127,3 +127,30 @@ The 40 calls were dispatched directly rather than through
 [`SCORECARD.md`](../SCORECARD.md). It is a screen that decides where the next
 calls point, and it decides that clearly: `council` is now carrying the track
 alongside a `cascade` adjudication that needs judges.
+
+## Appended later the same day: `cascade` closes too, and it is three of three
+
+The section above says two of three families are at ceiling. **It is three.**
+`cascade` came in at **J = +1.000**, [+0.772, +1.000], over 40 blind readings,
+format-violation gap 0.000, adjudication coverage 1.000 with zero movement. That
+run lands from another lane and its record is not in the repository yet.
+
+Family A at unaided J = 1.000 over 99 readings, `hinge` at +0.950
+hand-adjudicated, `cascade` at +1.000. Three independent constructs, six domains,
+three answer-key shapes, all at ceiling on single-call scale. The limit stated
+above is unchanged and now applies to all three: nothing here tests volume, long
+context, delegation, or work carried across a conversation.
+
+**And a correction to how the adjudication above should be read.** `cascade`'s
+three blind judges had mean pairwise rationale similarity of 0.806 and wrote
+identical opening text on 17 of 40 cases, which is what three samples of one
+model at default sampling look like. A separate lane is now measuring whether
+`scripts/adjudicate.py` behaves the same way.
+
+That does not reach the 36 of 40 above, and the reason is worth stating rather
+than assuming. This run's adjudication was **one blind pass** over the 40
+arm-stripped `LEVERAGE` blocks, compared against the machine scorer. It is a
+scorer-versus-adjudicator comparison, not a between-judge agreement statistic,
+so there was never an independence assumption in it to violate. The +0.950 stands
+as what it was: one careful re-read of the same 40 blocks, agreeing with the
+scorer on 36 and finding four hits the scorer had dropped.

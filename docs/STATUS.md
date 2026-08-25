@@ -284,6 +284,30 @@ Not a published run, on the same footing as the two above: the calls were
 dispatched directly rather than through `scripts/run_triggers.py`, so there is no
 checkpoint and nothing from it belongs in [`SCORECARD.md`](../SCORECARD.md).
 
+**Correction, 2026-08-25, appended. The paragraph above says two of three
+families. It is three.** `cascade` came in at **J = +1.000**, [+0.772, +1.000],
+over 40 blind readings, format-violation gap 0.000, adjudication coverage 1.000
+with zero movement. That run is landing from another lane and its record is not
+in the repository yet, so the venue table above does not carry a row for it and
+the call ledger above does not count its calls. Both are its lane's to add.
+
+Family A at unaided J = 1.000 over 99 readings, `hinge` at +0.950
+hand-adjudicated, `cascade` at +1.000. **Three independent constructs, six
+domains, three answer-key shapes, all at ceiling on single-call scale.** The
+limit is unchanged and now applies to all three: nothing measured tests volume,
+long context, delegation, or work carried across a conversation.
+
+**And how the `hinge` adjudication should be read, corrected in the same
+breath.** The `cascade` run's three blind judges had mean pairwise rationale
+similarity of 0.806 and wrote identical opening text on 17 of 40 cases, which is
+what three samples of one model at default sampling look like; whether
+`scripts/adjudicate.py` behaves the same way is being measured separately. That
+dependence does not reach the 36 of 40 quoted above, and the reason belongs in
+the record rather than being assumed: `hinge`'s adjudication was **one blind
+pass** over the 40 arm-stripped `LEVERAGE` blocks, compared against the machine
+scorer. It is a scorer-versus-adjudicator comparison and never was a
+between-judge agreement statistic.
+
 ---
 
 ## Results in hand
