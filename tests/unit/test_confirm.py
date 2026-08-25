@@ -445,19 +445,45 @@ class TestScreen:
 # ===========================================================================
 
 
+def _current_preregistration() -> Path:
+    """The highest-numbered pre-registration on disk.
+
+    Resolved rather than named, because a superseded version stays where it is.
+    `_assert_hash`'s remedy for a lock that no longer matches is a new file, so
+    the directory accumulates, and a test naming one version would have to be
+    edited by whoever bumps it. A test that has to be edited to stay green is a
+    test that gets edited to stay green.
+    """
+    versions = sorted(
+        (int(path.stem.rsplit("-v", 1)[1]), path)
+        for path in (cli.REPO_ROOT / "preregistration").glob("decision-making-v*.yaml")
+    )
+    return versions[-1][1]
+
+
 class TestTheShippedPreregistration:
     """No monkeypatching anywhere below: the real file against the real model."""
 
     def test_it_validates_against_the_model(self) -> None:
-        prereg = cli.load_preregistration(
-            cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"
-        )
-        assert (prereg.skill, prereg.version) == ("decision-making", 1)
+        prereg = cli.load_preregistration(_current_preregistration())
+        assert prereg.skill == "decision-making"
+
+    def test_a_superseded_version_is_left_where_it_is(self) -> None:
+        """Version 1 pinned a runner that moved three times on 2026-08-24.
+
+        It stays on disk with the hash it was written with, because a
+        pre-registration that can be edited in place is not one. It no longer
+        matches, and that is the record rather than a defect.
+        """
+        superseded = cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"
+        if not superseded.is_file():
+            pytest.skip("nothing has been superseded yet")
+        prereg = cli.load_preregistration(superseded)
+        source = (cli.REPO_ROOT / cli.TRIGGER_RUNNER).read_text(encoding="utf-8")
+        assert prereg.analysis_script_sha256 != sha256_text(source)
 
     def test_the_skill_lock_hashes_the_skill_it_names(self) -> None:
-        prereg = cli.load_preregistration(
-            cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"
-        )
+        prereg = cli.load_preregistration(_current_preregistration())
         body = (cli.REPO_ROOT / "skills" / prereg.skill / "SKILL.md").read_text(encoding="utf-8")
         assert prereg.skill_sha256 == sha256_text(body)
 
@@ -474,7 +500,7 @@ class TestTheShippedPreregistration:
             app,
             [
                 "confirm",
-                str(cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"),
+                str(_current_preregistration()),
                 "--baseline-accuracy",
                 "0.55",
                 "--projected-cost",
@@ -486,9 +512,7 @@ class TestTheShippedPreregistration:
         assert "there is none on disk" in result.output
 
     def test_the_analysis_lock_hashes_the_runner(self) -> None:
-        prereg = cli.load_preregistration(
-            cli.REPO_ROOT / "preregistration" / "decision-making-v1.yaml"
-        )
+        prereg = cli.load_preregistration(_current_preregistration())
         source = (cli.REPO_ROOT / cli.TRIGGER_RUNNER).read_text(encoding="utf-8")
         assert prereg.analysis_script_sha256 == sha256_text(source)
 
