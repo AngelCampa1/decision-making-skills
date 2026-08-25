@@ -773,6 +773,64 @@ def exclusion_counts(records: Sequence[ElicitationRecord]) -> list[ExclusionRow]
     ]
 
 
+def format_exclusion_counts(records: Sequence[ElicitationRecord]) -> list[str]:
+    """Render :func:`exclusion_counts` as a table an arm cannot hide behind.
+
+    ``exclusion_counts`` itself refuses to invent a row for a cell nobody
+    dispatched, because it cannot tell that apart from a cell that ran and
+    produced nothing. This function draws the line one step later: for every
+    ``(arm, construct, condition_label)`` cell that *did* run -- it has at
+    least one row -- every ``call_status`` seen anywhere in ``records`` is
+    printed for it, zero included. A status that fires in one arm and is
+    silent in another is exactly the shape the three reviews of 2026-08-25
+    found, and a report that only prints non-empty rows hides it in precisely
+    the arm where its absence is the finding.
+
+    Every rate printed carries its raw count and its denominator beside it,
+    never alone: ``n`` is the ``ok`` count plus every exclusion in the cell,
+    counted here rather than assumed, so a reader never has to trust a
+    percentage against a total they cannot see.
+
+    Returns:
+        One header line per cell naming the arm, the construct, the
+        condition and ``n``, followed by one line per ``call_status`` in a
+        deterministic order. Empty only when ``records`` is empty.
+    """
+    rows = exclusion_counts(records)
+    if not rows:
+        return ["exclusion_counts: no records"]
+
+    cells = sorted({(row.arm, row.construct, row.condition_label) for row in rows})
+    statuses = sorted({row.call_status for row in rows})
+    counted = {
+        (row.arm, row.construct, row.condition_label, row.call_status): row.count for row in rows
+    }
+
+    lines: list[str] = []
+    for arm, construct, label in cells:
+        total = sum(counted.get((arm, construct, label, status), 0) for status in statuses)
+        lines.append(f"{arm} / {construct} / {label}  (n={total})")
+        for status in statuses:
+            count = counted.get((arm, construct, label, status), 0)
+            rate = count / total if total else 0.0
+            lines.append(f"  {status:<16} {count:>6} / {total}  ({rate:.1%})")
+    return lines
+
+
+def print_exclusion_report(records: Sequence[ElicitationRecord]) -> None:
+    """Print :func:`format_exclusion_counts`, one line per call to :func:`print`.
+
+    ``exclusion_counts`` computing the right numbers did not stop three
+    instruments from publishing an aggregate with no arm broken out; the
+    number existed and nothing printed it. This function is the call site:
+    it is what turns the computed rows into something a run's summary
+    actually shows, so the breakdown a reader sees is not conditioned on
+    someone remembering to ask ``exclusion_counts`` for it separately.
+    """
+    for line in format_exclusion_counts(records):
+        print(line)
+
+
 @dataclass(frozen=True, slots=True)
 class CommonItemSet:
     """The items every arm can be scored on, and what restoring that cost.

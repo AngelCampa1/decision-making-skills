@@ -51,7 +51,9 @@ from decision_evals.elicit import (
     ScalarAsk,
     common_item_set,
     exclusion_counts,
+    format_exclusion_counts,
     load_elicitation,
+    print_exclusion_report,
     run_elicitation,
 )
 from decision_evals.providers.claude_code import (
@@ -409,6 +411,17 @@ class TestTheAskCannotBeBuiltIncomplete:
                 block="CALL",
                 unit="days",
             )
+
+    def test_a_membership_item_has_nowhere_to_put_a_unit(self) -> None:
+        """The same property, on the other member the union closed against.
+
+        A scalar quantity and a named candidate are not the same kind of
+        answer, and `unit` widened onto `MembershipAsk` would let an
+        extractor read a number out of a family that never asked for one.
+        """
+        assert "unit" not in {field.name for field in fields(MembershipAsk)}
+        with pytest.raises(TypeError, match="unit"):
+            MembershipAsk(role="treatment", block="MISSING", unit="days")  # type: ignore[call-arg]
 
 
 # --------------------------------------------------------------------------- #
@@ -913,6 +926,71 @@ class TestExclusionCounts:
     def test_counting_reads_no_response(self, tmp_path: Path) -> None:
         """Counting what dropped is not scoring what survived."""
         assert "response" not in {field.name for field in fields(ExclusionRow)}
+
+
+class TestExclusionReport:
+    """`exclusion_counts` computing the right numbers did not stop three
+    instruments from publishing an aggregate with no arm breakdown -- the
+    number existed and nothing printed it. These test the print, not the
+    return value."""
+
+    def _cot_and_off(self, tmp_path: Path) -> list[ElicitationRecord]:
+        """`cot` overflows on one item and `off` fits everything: the case
+        where `prompt_too_long` fires in one arm and is silent in the
+        other, reused from `TestExclusionCounts`."""
+        checkpoint = tmp_path / "e.jsonl"
+        items = _items(2)
+        doomed = items[0].prompt
+
+        _run(items, _Backend(), checkpoint)
+        run_elicitation(
+            items,
+            build_arm("cot"),
+            model="haiku",
+            backend="claude",
+            arena="dev",
+            checkpoint=checkpoint,
+            call=_Backend(
+                lambda prompt, attempt: (
+                    PromptTooLongError("Prompt is too long") if prompt == doomed else None
+                )
+            ),
+            ledger=BudgetLedger(limit_usd=10.0),
+            run_id="run-2",
+            backoff=NO_WAIT,
+        )
+        return load_elicitation(checkpoint)
+
+    def test_a_status_silent_in_one_arm_still_prints_there(self, tmp_path: Path) -> None:
+        """`off` never overflowed, so `exclusion_counts` has no row for it --
+        the exact cell whose absence would hide the asymmetry between arms."""
+        lines = format_exclusion_counts(self._cot_and_off(tmp_path))
+        joined = "\n".join(lines)
+        assert "off / ledger / unaided  (n=2)" in joined
+        off_section = joined.split("off / ledger / unaided")[1]
+        assert "prompt_too_long       0 / 2  (0.0%)" in off_section
+
+    def test_every_rate_carries_its_raw_count(self, tmp_path: Path) -> None:
+        """Never a rate alone: the count and the denominator sit beside it."""
+        joined = "\n".join(format_exclusion_counts(self._cot_and_off(tmp_path)))
+        assert "ok                    1 / 2  (50.0%)" in joined
+        assert "prompt_too_long       1 / 2  (50.0%)" in joined
+        assert "ok                    2 / 2  (100.0%)" in joined
+        assert "prompt_too_long       0 / 2  (0.0%)" in joined
+
+    def test_no_records_is_reported_rather_than_a_blank_table(self) -> None:
+        assert format_exclusion_counts([]) == ["exclusion_counts: no records"]
+
+    def test_print_exclusion_report_actually_prints(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """Reading the return value is not the same as proving something
+        prints it: this reads real stdout, captured by pytest."""
+        records = self._cot_and_off(tmp_path)
+        print_exclusion_report(records)
+        captured = capsys.readouterr().out
+        assert captured == "\n".join(format_exclusion_counts(records)) + "\n"
+        assert "prompt_too_long       0 / 2  (0.0%)" in captured
 
 
 # --------------------------------------------------------------------------- #
