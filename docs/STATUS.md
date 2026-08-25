@@ -98,6 +98,21 @@ casefile probes at 12 each, which are already inside the `casefile probe` row's
 44 alongside the 8 canary rows, so it was double-counted. Recounting from
 `results/` gives 8,514, and the site now quotes that.
 
+**Correction, 2026-08-25, appended. N10 is the twelfth result and the largest
+run on record.** Counted the same way, by line from the `.jsonl` files beside
+the run's `README.md`, so the arithmetic can be checked without trusting this
+paragraph:
+
+| run | calls | from |
+|---|---|---|
+| N10 six description arms on v6 | 3,960 | `2026-08-25-5ed5d38-n10-six-arms-v6/` (6 arms x 660) |
+| **new total** | **~12,474** | 8,514 + 3,960 |
+
+The one-line version above still reads "eleven results" and is left as written.
+It has drifted twice already and been corrected in place both times, and a third
+in-place correction would bury the thing worth knowing: the summary line is
+hand-maintained while the table under it is counted. The count is twelve.
+
 ---
 
 ## Venues built, and what happened to each
@@ -129,6 +144,7 @@ casefile probes at 12 each, which are already inside the `casefile probe` row's
 | **N6** | do the description findings survive the rebuilt corpus? | **Three of four bands met, Q4 falsified.** Q1 +0.0976 [0.0459, 0.1493]; `ledger` worst-routed in all three arms; `settled` is at the **bottom** of the routing table, not the top as registered. `opener-only`'s pooled FPR 0.250 is one band coming apart (`l` 0.524). Triple ICC **0.00–0.06** against the 0.315 the power arithmetic assumed, so that planning figure may not be reused. |
 | **N7** | which description arm is best, all six on one corpus? | **One of five predictions met cleanly, and the top three arms are indistinguishable** — `no-opener` 0.9496, `stakes-shown` 0.9477, `full` 0.9360, p = 0.86 and p = 0.35. L7's precision/recall frontier is **intact after ten arms**. A pre-registration defect is recorded against this run. |
 | **N9** | does the venue move firing? | **Void — no answer.** 516 calls made and refused on parse rate, no prediction scored. Reported here so the row is not mistaken for unrun. What broke is described in [the run record](../results/decision-making/2026-08-19-505b236-n9-in-situ-void/README.md) and is exploratory. |
+| **N10** | do the description findings survive answer key v6? | **The pre-registered confirm hypothesis points the wrong way.** `full` recall 0.9909 against `no-opener` 0.9955, and `no-opener` reaches it at FPR 0.0818 against 0.1432 — the opener costs 0.0614 of false-positive rate and returns nothing measurable. Of four licensed predictions, one held (5, by 0.0091, with an unregistered bootstrap putting only 63% of resamples past the threshold), two failed (2 and 6 — the 24 new positives fire at 1.0000 in all six arms), one split (4 — `ledger` weakest held, misrouting onto `cascade` failed at 27.1% against `council`'s 44.1%). Predictions 1 and 3 were unlicensed and are not scored. Routing is competition between procedures: `ledger` has the **highest** precision of six at 0.9574 and is chosen 47 times, while `timing` is chosen 324 times at 0.4475. |
 
 **The through-line:** five independent manipulations of a skill description —
 structure, content, count, composition twice — and **not one moved how well it
