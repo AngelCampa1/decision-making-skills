@@ -60,54 +60,93 @@ order are registered in
 |---|---|---|
 | W0 | Register the tau rule, the consensus rule, the multiplicity family and W2's acceptance tests | **done** — the notebook entry above |
 | W1 | Tau v2 in `stats/track_h.py`, plus `cluster_bootstrap_statistic` in `stats/cluster.py`. v1 stays callable. | **done** — 140 tests, `stats` at 100% line and branch |
-| W3 | `_run_loop` extraction from `runner.py`, `run_isolated` in `providers/claude_code.py`, new `elicit.py`, backpressure fault-injection test | in flight |
+| W3 | `_run_loop` extraction from `runner.py`, `run_isolated` in `providers/claude_code.py`, new `elicit.py`, backpressure fault-injection test | **done** — 95 tests; landed in `7f175a7` |
 | 0G | This file | **done** |
-| W2 | Quantity layer in `scripts/size_track_h_phase0.py` and the two two-branch gates. Re-derives `smallest_usable_n`. | blocked on W1 |
-| W4 | Blind scalar extractor, `consensus_quantity`, and the `fal-z` and `fal-u` falsifier cases | blocked on W3 |
+| W2 | Quantity layer in `scripts/size_track_h_phase0.py` and the two two-branch gates. Re-derives `smallest_usable_n`. | unblocked, not started |
+| W4 | Blind scalar extractor, `consensus_quantity`, and the `fal-z` and `fal-u` falsifier cases | unblocked, not started |
+| P1 | The `ledger` yield probe and its control arm, 90 calls | **done** — both kills fired; `results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/` |
 
 ## The next three units
 
-1. **W2, after W1 lands.** Add a quantity layer upstream of
-   `draw_event_indicators` that draws log-normal elicitation noise and calls the
-   real `derive_movement_threshold` and `classify_movement`. Wire the drift and
-   coverage gates into `check_known_answers`.
-   *Acceptance:* drift below 0.02 under the pooled rule **and above 0.10 under
-   the maximum rule**; coverage 0.95 within Monte Carlo error recomputed **and
-   inside 0.61 to 0.85 held fixed**. Both branches of both gates run. A
-   single-branch pass is not a pass.
+**Read this first: the order of operations changed, and it is the most useful
+thing this track has learned.** `ledger` was closed for 90 calls by reading a
+gate's blind arms as a control arm, *before* its corpus was built. Every venue
+from here runs that probe first. Authoring a corpus and then discovering the
+unaided model is at ceiling is what the last five venues did.
 
-2. **W4, after W3 lands.** A blind quantity extractor under the scripts
-   directory, three instances,
-   importing `ADJUDICATORS` rather than redeclaring it. Add `fal-z` (a reply
-   stating no number: the extractor returns null, never zero) and `fal-u` (a
-   reply whose unit differs from the stated one: the extractor reports the number
-   and converts nothing).
-   *Acceptance:* the battery scores sensitivity 1.0 and specificity 1.0 on
-   hand-written responses, before any generation call. Standing rule 2 is
-   satisfied there or the track stops there.
+1. **P2, the `ledger` v2 screen.** One triplet under both repairs the L04 review
+   named — indirect binding, so the governed entity is identified by a property
+   resolved through the sibling set rather than named in the core block, and a
+   multi-input rule sentence, so more than one quantity routes. Both preserve
+   skeleton identity. Then the bare arm first: three arms, three blind instances,
+   nine calls. Registered in
+   [`../notebook/2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md`](../notebook/2026-08-25-prediction-can-a-ledger-item-be-repaired-off-the-ceiling.md).
+   *Acceptance:* the unaided arm is not 3 of 3 unanimous and equal to key. If it
+   is, **Family A closes entirely** rather than dropping to `timing`, and the
+   finding is about scalar elicitation rather than about one construct.
 
-3. **W5, the corpus schema and the six pilot triplets.** One triplet per
-   construct, eighteen files, staged under a candidates directory beside the
-   other run records rather than under `datasets/`, which is governed and shared.
-   *Acceptance:* `load_quality_corpus` returns a two-tuple whose second element
-   is the only place an answer key lives, and a static-import test shows the
-   elicitation modules never import it.
+2. **P3, the Family B and C repairs, then their screens.** All three pilots
+   killed part of their own registered primary and named the replacement, which
+   is what pilots are for and why they ran before any corpus:
+   - `cascade`: the effect/foreclosure partition is unreadable by a membership
+     scorer, because doing without something is itself an ability, so any effect
+     touching the actor supports a *keep* or *avoid* phrasing. Replacement: one
+     target read across both arms.
+   - `council`: flip rate cannot be the primary, because a true tie item
+     coin-flips within a single ordering and leaves no floor. Replacement:
+     second-position rate, null exactly 0.5 under balanced orderings.
+   - `hinge`: the `NONE`-keyed matched arm does not terminate — every silence a
+     reader closes opens another, and a required single-slot block always finds
+     one. Replacement: give the matched arm its own on-list pivotal candidate so
+     naming lands in-set.
+   *Acceptance:* each repaired primary scores its own two-branch falsifier on
+   hand-written responses before a single generation call. Standing rule 2.
+
+3. **W2 and W4**, unblocked and unchanged, below.
+
+### W2 and W4, as originally written
+
+**W2.** Add a quantity layer upstream of `draw_event_indicators` that draws
+log-normal elicitation noise and calls the real `derive_movement_threshold` and
+`classify_movement`. Wire the drift and coverage gates into
+`check_known_answers`.
+*Acceptance:* drift below 0.02 under the pooled rule **and above 0.10 under the
+maximum rule**; coverage 0.95 within Monte Carlo error recomputed **and inside
+0.61 to 0.85 held fixed**. Both branches of both gates run. A single-branch pass
+is not a pass.
+
+**W4.** A blind quantity extractor under the scripts directory, three instances,
+importing `ADJUDICATORS` rather than redeclaring it. Add `fal-z` (a reply stating
+no number: the extractor returns null, never zero) and `fal-u` (a reply whose
+unit differs from the stated one: the extractor reports the number and converts
+nothing).
+*Acceptance:* the battery scores sensitivity 1.0 and specificity 1.0 on
+hand-written responses, before any generation call.
 
 ## Open kills
 
 | kill | reading | successor if it fires |
 |---|---|---|
-| Authoring yield below 3 of 5 on `ledger` at K = 10 | **2 of 5 cut, 3 pending.** L05 cut on triviality and disqualifier 14; L01 cut on a governing arm whose obstacle is remediable, firing disqualifiers 15 and 12 together. The kill fires if any one of L02, L03 or L04 also falls. | Family A drops to `timing` at reduced n; Families B and C carry the track |
-| Unaided J at or above 0.70 on a stratum | not yet measured | that stratum closes; the others continue |
+| Authoring yield below 3 of 5 on `ledger` at K = 10 | **FIRED, 2 of 5.** L01 cut on a governing arm whose obstacle is remediable, firing disqualifiers 15 and 12 together. L04 cut on the same-alarm dimension, label-sound and construct-void. L05 cut on triviality and disqualifier 14. L02 and L03 survived reviews raising eight and six objections. | executed: Families B and C carry the track |
+| Unaided J at or above 0.70 on a stratum | **FIRED on `ledger`, J = 1.000** over 45 unaided readings, 15 of 15 arms unanimous and equal to key. The 45 readings under G1's brief agree exactly, so the gate was measuring the cheap thing. | `ledger` closed; P2 tests whether the repairs escape it, and Family A closes entirely if they do not |
 | Discriminator outside its permutation-derived band | not yet measured | discard the block, rebuild the design rule |
 | Three constructs cannot express a scalar elicitation | open, and the largest design risk | `cascade`, `council` and `fit` move to Family B or C. W5's pilot is what surfaces this, deliberately before 45 triplets are authored rather than after. |
 
 ## Resume key
 
-No run has started and no checkpoint exists. The run directory for this track
-is created by the first unit that makes a call.
+Landed: `7f175a7` (registration, tau v2, runner), `63ea7c3` (pre-registration
+v3), `f578604` (site), `e7a1e22` (the ledger run and its 90 readings). Worktrees
+`quality-track` and `quality-corpus`, the second fast-forwarded onto the first so
+the registration is a genuine ancestor of the run rather than a claim.
 
-W0 and 0G are written and green against `de check --fast`, and are held
-uncommitted while W1 and W3 finish, because the pre-commit hook reads the whole
-tree. Commit them first when the tree is consistent: the registration is
-evidence only if it predates the implementation in the history.
+No checkpoint exists, because the 90 calls were dispatched as sub-agents rather
+than through `scripts/run_triggers.py`. P2 is nine calls and does not need one.
+The first unit that runs through the real runner creates the checkpoint.
+
+**Two hazards found the hard way, both worth reading before starting.**
+Pre-commit stashes the whole tree, so a concurrent session's hook run can carry
+off your unstaged edits — stage early, the stash cannot reach the index. And a
+pathspec commit builds a tree from HEAD plus its own paths, which reverts other
+units' files while leaving their new files on disk; with three units in one tree
+no ordering of three commits is green and the whole tree is, so they land
+together.

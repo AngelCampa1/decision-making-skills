@@ -126,6 +126,44 @@ hand-maintained while the table under it is counted. The count is twelve.
 | `actions` tool-use | **closed — no measurement exists** | no object is comparable across the arms |
 | **trigger instrument** | **working** | 2,555 calls, 0 unparseable, 0 isolation failures |
 | `tailoring` triplets (Track H) | **building — blocked** | 2 usable of 8 authored across two passes; causal-rule overlap AUC 0.740 against a [0.40, 0.60] band |
+| `ledger` triplets (Track H, volume dial) | **closed — ceiling** | unaided J = 1.000 over 45 blind readings; both registered kills fired, yield at 2 of 5 |
+
+**2026-08-25, `ledger`.** The sixth venue and the first closed before its corpus
+was built. Five triplets were authored in parallel to test whether difficulty
+could be bought from **volume** — K = 10 dated sibling facts, one of which feeds
+the causal chain — rather than from making the matched fact subtle, which is the
+dial `fit` uses and the reason `fit`'s yield is one in five.
+
+The yield kill fired: 3 of 5 cut. The ceiling kill fired independently and
+matters more. G1 pays for three blind re-derivations of every arm, and those 45
+readings are also the control arm Phase 3 was going to buy separately; read that
+way they came back 15 of 15 unanimous and equal to key. Because G1's brief is
+close to what `ledger` itself instructs, that bounds the *treated* arm, so the
+same 15 prompts ran again with the format contract identical and the reasoning
+scaffold deleted. 45 more readings, same result. Unaided J = 1.000 against a
+registered kill of 0.70.
+
+Three adversarial reviewers on three different items converged on the mechanism
+unprompted: **volume buys retrieval and not discrimination.** All ten siblings
+must be scanned, but the rule sentence is single-input and exclusive, so once
+scanned the siblings that could matter separate from the ones that cannot by
+type, in one pass, with no domain reasoning. Effective K was counted at 1-of-2,
+3-of-10, and 3-or-4 against an advertised 10.
+
+Two of them found a leak no gate here can see: `"the tied beer"`, `"her own
+practice"` and `"the field it was grown in"` are definite descriptions resolving
+to exactly one name, so lexical overlap with the rule sentence reads 0.0 while
+referential overlap is 1.0, and `scripts/separability.py` is token-based.
+
+Cost: **90 calls.** The plan budgeted roughly 3,900 before this question got an
+answer. The generalisation is that a gate reading every arm blind has already
+measured the unaided ceiling whatever else it was built for, and it should be
+read that way *before* the corpus is authored.
+
+Record: [`results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/`](../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/README.md).
+Not a published run — the calls were dispatched as sub-agents rather than
+through `scripts/run_triggers.py`, so there is no checkpoint and no notional
+cost, and nothing from it belongs in [`SCORECARD.md`](../SCORECARD.md).
 
 ---
 
