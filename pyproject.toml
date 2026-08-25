@@ -285,6 +285,14 @@ output = "coverage.json"
 # Resumability: a checkpoint that silently re-runs or silently skips corrupts
 # the result rather than merely wasting time.
 "decision_evals/runner.py" = { line = 100.0, branch = 100.0 }
+# The generalised elicitation loop behind Family A/B/C. The closed union
+# (`ScalarAsk`/`MembershipAsk`/`CallAsk`) and `exclusion_counts`'s per-arm
+# breakdown are integrity locks in the same sense as `runner.py`'s just above:
+# a branch that silently widens the union, lets `unit` reach the wrong member,
+# or folds an exclusion into a rate is the failure class three reviews found
+# in three other instruments on 2026-08-25. Reachable from
+# `scripts/run_elicitation.py`.
+"decision_evals/elicit.py" = { line = 100.0, branch = 100.0 }
 # Parse paths and failure paths must both be exercised.
 "decision_evals/scorers" = { line = 95.0, branch = 90.0 }
 "decision_evals/plugin" = { line = 95.0, branch = 90.0 }
