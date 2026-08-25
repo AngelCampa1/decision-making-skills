@@ -101,7 +101,7 @@ fact? If not, it is a preference survey and it is cut.
 
 | # | Experiment | Cost | State |
 |---|---|---|---|
-| H1 | **Phase 0: the control arm, before a corpus.** 20 invented life cores × 3 files (base / governing fact changed / matched non-governing fact changed) = **60 files**, ~35,000 newly authored characters (~1,200 per base core, ~150 per variant delta, ~1,500 per triplet × 20, plus ~5,000 for the falsifier battery); the on-disk corpus would be some 180,000 characters, because each variant is a whole file repeating its base and the eight triplets authored so far measure 72,358, about 9,000 each, so this row's original ~72,000 estimate for twenty was the cost of eight, and the two figures are not interchangeable. **Control arm only, no skill arm**: the question is not *does `fit.md` help* but *is there anything here for it to help with*. 20 × 3 × 2 repeats = **120 generation calls**; 3 judges × 120 responses = **360 blind extraction calls** (`ADJUDICATORS = 3` in `scripts/adjudicate.py`); 2 planted triplets × 3 hand-written responses × 3 judges = **18 falsifier calls**. Two repeats, not five, derived from Track I's ICC 0.83 to 0.85 exactly as N6, N7 and N9 derived it rather than chosen here. Primary: Youden's J, which is identically the programme's `d` (see below), over **40 sensitivity and 40 specificity events, clustered on the 20 triplets and never pooled over the 60 files**, by `stats.cluster.cluster_bootstrap_diff` with the triplet id as the cluster label. Pre-registered kill: **unaided J ≥ 0.70 closes the venue**, the value reached at sensitivity 0.85 and specificity 0.85, and 0.85 is `ADMISSIBILITY_CEILING` in `scripts/probe_casefile.py`. Prediction registered before authoring: [`notebook/2026-08-19-prediction-track-h-phase-0.md`](../../notebook/2026-08-19-prediction-track-h-phase-0.md). | 498 calls | **corpus authoring blocked; see below** |
+| H1 | **Phase 0: the control arm, before a corpus.** 20 invented life cores × 3 files (base / governing fact changed / matched non-governing fact changed) = **60 files**, ~35,000 newly authored characters (~1,200 per base core, ~150 per variant delta, ~1,500 per triplet × 20, plus ~5,000 for the falsifier battery); the on-disk corpus would be some 180,000 characters, because each variant is a whole file repeating its base and the eight triplets authored so far measure 72,358, about 9,000 each, so this row's original ~72,000 estimate for twenty was the cost of eight, and the two figures are not interchangeable. **Control arm only, no skill arm**: the question is not *does `fit.md` help* but *is there anything here for it to help with*. 20 × 3 × 2 repeats = **120 generation calls**; 3 judges × 120 responses = **360 blind extraction calls** (`ADJUDICATORS = 3` in `scripts/adjudicate.py`); 2 planted triplets × 3 hand-written responses × 3 judges = **18 falsifier calls**. Two repeats, not five, derived from Track I's ICC 0.83 to 0.85 exactly as N6, N7 and N9 derived it rather than chosen here. Primary: Youden's J, which is identically the programme's `d` (see below), over **40 sensitivity and 40 specificity events, clustered on the 20 triplets and never pooled over the 60 files**, by `stats.cluster.cluster_bootstrap_diff` with the triplet id as the cluster label. Pre-registered kill: **unaided J ≥ 0.70 closes the venue**, the value reached at sensitivity 0.85 and specificity 0.85, and 0.85 is `ADMISSIBILITY_CEILING` in `scripts/probe_casefile.py`. Prediction registered before authoring: [`notebook/2026-08-19-prediction-track-h-phase-0.md`](../../notebook/2026-08-19-prediction-track-h-phase-0.md). | 498 calls | **closed on the ceiling kill, 2026-08-25; see below** |
 
 #### H1: Phase 0, and the deviation it commits
 
@@ -132,6 +132,20 @@ dropped, against `SEPARABILITY_BAND` of [0.40, 0.60]. And that feature is **not*
 in `tailoring.FEATURES`, so the battery does not currently compute it: it was
 found by two readers, not by the gate.
 
+**That sentence was true from 2026-08-19 to 2026-08-25 and is appended to rather
+than rewritten.** The authoring kill above never got its third pass. What ended
+H1's authoring was a different registered kill on a different venue: on
+2026-08-25 the unaided arm of `ledger`, the volume-dial sibling of this corpus,
+read J = 1.000, and the ceiling kill closed **Family A entire** — `ledger`,
+`timing` and `fit` — because the three share the scalar elicitation form and the
+form is what failed. `fit` is the construct this corpus serves, so its authoring
+is over. Track H carries on through Families B and C, which never used that
+form, and the next unit is in [`QUALITY_STATE.md`](../QUALITY_STATE.md).
+Records:
+[`results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/`](../../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/README.md)
+and
+[`results/track-h/2026-08-25-28311e2-ledger-v2-screen/`](../../results/track-h/2026-08-25-28311e2-ledger-v2-screen/README.md).
+
 **What this does to the cost line.** At one clean triplet per five authored in
 pass two, or two usable of eight across both passes, which is the figure
 `docs/STATUS.md` carries and the one to quote for a whole-corpus estimate,
@@ -141,6 +155,11 @@ bill that closed Track G, arriving at a different track by a different route,
 and it is the open question about this venue rather than a detail of it. Nothing here has costed a
 smaller H1: whether the primary is estimable at ten triplets, or five, is a power
 question nobody has asked, and asking it is cheaper than authoring ninety more.
+
+**That bill was never paid.** The venue closed for 99 blind readings before any
+of the ninety were authored, and the order-of-operations lesson is the part worth
+carrying: read a gate's blind arms as a control arm *before* the corpus exists.
+Five venues here authored first and found the ceiling second.
 
 **τ has a registered rule and no derived number, and those are different.** The
 threshold is defined below as the maximum relative difference between two repeats
@@ -176,6 +195,41 @@ the other four therefore cannot ceiling this one by construction. It can still
 ceiling it by a *different* mechanism, and the registered prediction names the
 one to worry about: noticing that the matched fact is *not* governing may be the
 same reading act performed twice.
+
+**Family A closed on that primary on 2026-08-25, and this paragraph is where the
+falsification lands.** The table has grown to nine rows and seven of them are
+closed; the other two are still the working trigger instrument and this row's
+`tailoring` corpus. Two premises survive. Those first four venues did close on a
+verifier-backed accuracy at 0.917 to 0.971, and Track H's primary is a difference
+of two rates and not an accuracy. The inference between them does not. `ledger`,
+the volume-dial stratum of Family A, closed at unaided J = 1.000 over 90 blind
+readings, and a v2 item built under both repairs its reviewers named closed the
+whole family over 9 more.
+
+**What the argument missed is that the elicited quantity carries a key of its
+own.** Reading that key is a verifier-backed accuracy in exactly the sense the
+four venues were, and the two stop being independent at the top. Every arm equal
+to key gives sensitivity 1.000 and specificity 1.000 by arithmetic, so the
+matched arm is not free to vary and J follows the accuracy. The independence
+claimed above holds strictly below saturation, and saturation is the case that
+decided the venue: 18 arms, 99 readings, every arm unanimous and every arm equal
+to key, over six domains and three difficulty dials.
+
+**The hedge held and the candidate inside it did not.** A different mechanism did
+ceiling the venue, as the paragraph allowed. It was not the reading act performed
+twice. Three adversarial reviewers on three items, unable to see each other,
+converged on volume buying retrieval load rather than decision difficulty; the v2
+screen then raised effective sibling width to 10 of 10 in every arm, with all
+nine readers writing out all five subtractions, and the ceiling did not move.
+What outlives all three difficulty dials is the elicitation form: a scenario
+compact enough to fit one prompt and answerable by one number is not, for a
+current model, hard.
+
+**Two limits on how far this reaches.** One triplet with three instances is a
+screen and not an estimate, and both run READMEs say so before they say anything
+else. And every one of the 99 readings is single-call, so the two questions this
+section reserves for C through F — whether personal context survives a handoff,
+and whether a summariser destroys tailoring — are untouched by it.
 
 **An identity worth stating, because it removes an apparent second estimator.**
 This section reports `d = P(change | governing) − P(change | matched
@@ -228,10 +282,23 @@ and coverage does **not** improve with n.
 
 **Settle τ before authoring further.** A quantile, or a pooled noise estimate,
 rather than a max over n would remove the drift. This was found in
-source before H1 ran, and that every figure behind it rests on a reconstruction
+source before H1 ran, and every figure behind it rests on a reconstruction
 rather than a measurement: **no quantity has ever been elicited in this
 harness**. Full account:
 [`notebook/2026-08-19-h1-does-not-need-twenty-and-tau-drifts-with-n.md`](../../notebook/2026-08-19-h1-does-not-need-twenty-and-tau-drifts-with-n.md).
+
+**Settled on 2026-08-25, and the pooled estimate is what landed.** τ is `k` times
+the fitted noise scale over the base-pair **log** differences
+(`derive_movement_threshold_pooled` in `stats/track_h.py`, rule
+`pooled_log_noise_v2`), σ̂ is root-n consistent so the estimand is fixed in n,
+and the bootstrap recomputes τ inside every replicate. That last part is why the
+pooled estimate won over the quantile offered beside it: the bootstrap of an
+extreme order statistic is inconsistent, so no amount of recomputation would have
+rescued a maximum. `max_relative_v1` stays callable and every figure above is
+still on it. Quantities have been elicited since — 99 blind readings across
+Family A — dispatched as sub-agents, so `elicit.py` has landed and still has no
+run behind it. Registration:
+[`notebook/2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md`](../../notebook/2026-08-25-prediction-the-quality-venue-and-the-tau-rule.md).
 
 **And twenty triplets is not load-bearing.** Simulating the registered *point*
 rule (`Phase0Result.kill` is `j >= 0.70`, not an interval) over 174 cells:
@@ -288,6 +355,13 @@ row: it is an MDE, `stats/power.py`'s `minimum_detectable_effect` **will** be ru
 against Phase 0's observed J and its within-triplet variance, and N6's triple ICC
 of 0.00–0.06 may not be reused as a planning figure any more than the 0.315 it
 displaced.
+
+**No pass exists to authorise anything.** Phase 0 never ran; the ceiling kill
+closed the family first, at J = 1.000 against the 0.70 line. So the MDE this row
+defers is not owed against Family A's observed J. It is owed against whichever
+instrument clears the control screen [`QUALITY_STATE.md`](../QUALITY_STATE.md)
+schedules for Families B and C, and the ICC caution above travels with it
+unchanged.
 
 ### Track I: reliability as a first-class outcome
 

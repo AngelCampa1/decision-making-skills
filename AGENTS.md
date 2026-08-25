@@ -166,7 +166,9 @@ a clean checkout, which sees what a working directory cannot. A second workflow,
 `cli.py` is the whole of `de check`, in order, and each step lives in the module
 it is named after: `docs.py`, `citations.py`, `provenance.py`, `decisions.py`,
 `wiring.py`, `skills.py`, `sync.py`, `drift.py`.
-`scripts/run_triggers.py` is the runner behind every model call on record.
+`scripts/run_triggers.py` is the runner behind every checkpointed model call on
+record. Track H's probes go through sub-agents instead, which is why they carry
+no checkpoint, no `total_cost_usd` and nothing for `SCORECARD.md`.
 `datasets/` is the answer key, `skills/` the product, `results/` and `notebook/`
 the record. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) draws how they fit
 and how a run flows through them. `README.md` carries the component table and

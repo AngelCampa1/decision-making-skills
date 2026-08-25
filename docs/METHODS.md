@@ -228,7 +228,9 @@ Two structural guards belong to that same unrun path, and they are design
 rather than practice: the format contract is concatenated into every arm's
 system prompt with no way to omit it, and the option menu lives in the
 arm-independent rendering path, so neither can vary between arms by
-construction. Both live in the module `calibrate.py` alone calls. The published
+construction. Both live in `solvers/arms.py`, and nothing that publishes a
+trigger number builds an arm from it: `calibrate.py` and
+`concurrency_equivalence.py` are the two scripts that do. The published
 trigger runs build their prompts elsewhere, in
 [`../scripts/run_triggers.py`](../scripts/run_triggers.py), and are not
 governed by either.
@@ -264,7 +266,7 @@ an interval and stops.
 
 ---
 
-## 5. Pre-registration: two mechanisms, and only one has ever run
+## 5. Pre-registration: two mechanisms, and the second one stops before it runs
 
 **The one that runs.** A dated prediction is committed to
 [`../notebook/`](../notebook/) *before* the run. This is enforced, not trusted:
@@ -285,7 +287,7 @@ call but **committed after it**, so for that run only the author's word places
 the entry before the data, and the README says exactly that rather than letting
 the gate's green stand in for it.
 
-**The one that does not run.**
+**The one that refuses before it runs.**
 [`../evals/src/decision_evals/prereg.py`](../evals/src/decision_evals/prereg.py)
 implements the six refusals `PROTOCOL.md` §3 enumerates: a registration that is
 uncommitted or dirty; one whose commit is not an ancestor of HEAD or that
@@ -295,11 +297,25 @@ difficulty band; and a projected cost over the registered budget. Hashing the
 **analysis script** and not only the skill is the part most pre-registered ML
 work leaves open.
 
-It has never been called. It is scoped to the `confirm` arena and no
-confirmation run has happened, so it is declared in
-`[tool.decision-evals.unwired]` with the condition that would wire it. It
-carries a 100% branch floor and no caller. `AGENTS.md` puts the consequence in
-one line: **"A tested refusal with no caller is inert, and the gate reports
+It had no caller until 2026-08-24. `de confirm` is now that caller, by static
+import from the console script, so `[tool.decision-evals.unwired]` is empty and
+`de check`'s integrity wiring step is what keeps it that way. The command loads
+the registration, runs all six locks, and then stops: the `confirm` arena reads
+the private holdout, `datasets/holdout/` stays out of the tree until a verdict
+publishes, and no confirmation runner reads it yet. Nothing fabricated a holdout
+to get past a gate this repository wrote to stop exactly that. So the locks are
+live and the arena still **will refuse** for want of a split.
+
+The locks have already fired twice, both times on refactoring rather than on
+analysis. `preregistration/decision-making-v1.yaml` pinned
+`scripts/run_triggers.py`; three commits moved that file the same day and
+`_assert_hash` refused, which produced `-v2.yaml`. One commit the following day
+made `ask` a caller of `run_isolated` and it refused again, which produced
+`-v3.yaml`. Version 3's own header names the consequence: pinning a whole runner
+file means every ordinary harness commit asks for a version, and a lock that
+goes stale on unrelated work trains its reader to bump it without looking.
+[`../CONTRIBUTING.md`](../CONTRIBUTING.md) puts the older half of the lesson in
+one line: **"a tested refusal with no caller is inert, and the gate reports
 green either way."**
 
 **A registered band names its estimator and its denominator, not just its
@@ -496,6 +512,15 @@ comparisons survive, since every arm saw the same items. The external one does
 not. Everything below is a comparison between description *forms* at a fixed
 procedure set, which is a narrower claim than it was the day before. Read
 [`DECISIONS.md`](DECISIONS.md) before quoting any of it.
+
+**Closed 2026-08-25, and the paragraph above stays because the gap was real for
+six days.** Track N10 ran all six description arms on answer key v6 at 3,960
+calls, and its `full` arm is the shipped string: `run_triggers.py` reads the
+frontmatter `description` and the records stamp `skill_version` 0.3.0. So one
+arm on record now does describe what ships. What it does not do is license a
+cross-version comparison: every earlier trigger number was scored at v4 or
+below and `label_versions_comparable` refuses the pair, so N10 is a baseline for
+a later v6 arm rather than a reading against the ten arms above it.
 
 The through-line as [`../README.md`](../README.md) states it, at the point it
 was written:

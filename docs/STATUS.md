@@ -2,7 +2,7 @@
 
 **Audience:** the record.
 
-**Hand-maintained. Last updated 2026-08-14.** There is no generator behind this
+**Hand-maintained. Last updated 2026-08-25.** There is no generator behind this
 file and it does not pretend otherwise — see the note at the top of
 [`SCORECARD.md`](../SCORECARD.md) about a status file that claimed to be
 generated and was not.
@@ -113,6 +113,26 @@ It has drifted twice already and been corrected in place both times, and a third
 in-place correction would bury the thing worth knowing: the summary line is
 hand-maintained while the table under it is counted. The count is twelve.
 
+**Correction, 2026-08-25, appended a second time. Ninety-nine calls closed a
+venue and none of them reached this table.** Counted by line from the `.jsonl`
+files beside the two Track H run READMEs:
+
+| run | calls | from |
+|---|---|---|
+| `ledger` yield and ceiling | 90 | `2026-08-25-f578604-ledger-yield-and-ceiling/`, `g1-verdicts.jsonl` and `off-verdicts.jsonl` at 45 each |
+| Family A v2 screen | 9 | `2026-08-25-28311e2-ledger-v2-screen/screen-verdicts.jsonl` |
+| **new total** | **~12,573** | 12,474 + 90 + 9 |
+
+They were dispatched as sub-agents rather than through `scripts/run_triggers.py`,
+so there is no checkpoint, no notional cost and nothing here for
+[`SCORECARD.md`](../SCORECARD.md). That is why they were easy to leave out and it
+is not a reason to. This table counts calls made, which is the rule that keeps
+M5's voided 365 and N9's void 516 in it. And it is the 2026-08-13 omission
+repeating almost exactly: a run that measures the instrument rather than the
+skill never passes through the reporting path that puts a family in this table,
+and closing three constructs for ninety-nine calls is the cheapest decisive
+result on record.
+
 ---
 
 ## Venues built, and what happened to each
@@ -162,6 +182,7 @@ measured the unaided ceiling whatever else it was built for, and it should be
 read that way *before* the corpus is authored.
 
 Record: [`results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/`](../results/track-h/2026-08-25-f578604-ledger-yield-and-ceiling/README.md).
+
 **2026-08-25, Family A.** The reviewers who cut the v1 items also named the
 mechanism and two repairs for it, so a nine-call screen tested them before
 anything else was authored: identify the governed entity by a property resolved
@@ -524,6 +545,24 @@ written as deliberation and the negative ones as task requests. Rewriting the
 twelve long-band positive asks at the negatives' lexical density closed it, and
 took the pre-existing `matched:ask:type_token_ratio` from 4.28 to 3.03.
 
+**Correction, 2026-08-25, appended. The band split at the head of this section
+is wrong, and it sums right, which is why nothing caught it.** Counted from
+`datasets/triggers/decision-making/{s,m,l,xl}.yaml` at HEAD: 90, 90, 81 and 69
+items, so **s 30, m 30, l 27, xl 23** triples. The section reads l 28 and xl 22.
+Both readings total 110 triples and 330 items, so every figure derived from the
+totals — the call counts, the movement rates, the adjudication denominators —
+survives unchanged.
+
+The arithmetic that settles it is in this section already: v4 stood at s 24,
+m 24, l 21, xl 17, and v5 added six triples to every band, three routing to
+`council` and three to `hinge`. That gives 27 and 23 and cannot give 28 and 22.
+The same split is published in
+[`programme/part-3-the-instrument.md`](programme/part-3-the-instrument.md) and
+is corrected there in place, since that document appends nothing. Found by a
+documentation drift sweep rather than by a gate: no gate reads a band split
+against the corpus it describes, and a wrong split whose total is right is
+invisible to the one check that might have.
+
 ---
 
 ## Open decisions that belong to the maintainer
@@ -604,7 +643,7 @@ for personal information, digest pinned — in
 | **E** — handoff fidelity | 🔴 not started |
 | **F** — end-to-end | 🔴 not started |
 | **G** — volume / long context | 🔴 demoted; harness fixed and canary-verified to 101k tokens, no corpus |
-| **H** — tailoring, life decisions | 🟡 H1 authoring under way; 2 usable triplets of the 20 its row costs, registered kill did not fire, corpus not mergeable |
+| **H** — tailoring, life decisions | 🟡 **Family A closed 2026-08-25.** Both registered kills fired on `ledger` — yield at 2 of 5, then unaided J = 1.000 — and the ceiling kill closed the scalar triplet whole, because `ledger`, `timing` and `fit` share the elicitation form and the form is what failed. H1's authoring is over, not paused. Families B and C never used that form and carry the track; the next unit is in [`QUALITY_STATE.md`](QUALITY_STATE.md) |
 | **J** — write-up and release | 🔴 not started |
 
 ---

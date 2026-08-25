@@ -45,7 +45,7 @@ instances and reports their agreement chance-corrected. It stamps an answer-key
 version into every record and refuses, in code, to compare arms across a version
 boundary. It pins MCP empty at every call, because a connector present in one
 arm and absent in another is a confound. And it refuses to publish a result
-whose prediction cannot be shown by git ancestry to predate its data. Thirteen
+whose prediction cannot be shown by git ancestry to predate its data. Sixteen
 runs are published under those rules, raw transcripts included.
 
 What they have found so far is about *firing*: whether a skill switches on when
@@ -144,7 +144,7 @@ structure-matched filler), and **cot** (plain "think step by step"). The placebo
 is what makes the design worth running. A skill that beats *off* and ties
 *placebo* is a length effect, and a skill that ties *cot* is an expensive way to
 say "think". [`scripts/run_triggers.py`](scripts/run_triggers.py) is the runner
-behind every model call on record, and it pins MCP empty at every call with
+behind every trigger call on record, and it pins MCP empty at every call with
 `--strict-mcp-config`. The full lockdown is in
 [`docs/HARNESS_DISCLOSURE.md`](docs/HARNESS_DISCLOSURE.md).
 
@@ -194,7 +194,7 @@ it, and whether it has actually run.
 | `notebook/` | Append-only research log. Predictions go in *before* runs |
 | `docs/` | Protocol, status, the research programme, related work, limitations, and what was rejected. Start at [`docs/README.md`](docs/README.md), or [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit |
 | `paper/` | The write-up, in LaTeX. A draft; see [`paper/CHECKLIST.md`](paper/CHECKLIST.md) |
-| `scripts/` | Standalone analysis and runners, including `run_triggers.py`, the script behind every model call on record |
+| `scripts/` | Standalone analysis and runners, including `run_triggers.py`, the script behind every trigger call on record |
 | `tests/` | Unit, integration, property and golden tests |
 | `site/` | The website. It renders the markdown already in this repository in place, so no second copy of a document can disagree with the first |
 
@@ -206,36 +206,44 @@ No skill here carries a verdict. `decision-making` and all six procedures are
 `UNTESTED` and ship as `experimental`. [`SCORECARD.md`](SCORECARD.md) is the
 file that changes that, and it is empty.
 
-Every number on record measures whether a skill *fires*, which is upstream of
-whether it helps. Firing decides whether a skill is worth having installed at
-all, and it is the question this instrument was built for. Nothing here has yet
-measured whether a decision procedure improves a decision.
+Every trigger number on record measures whether a skill *fires*, which is
+upstream of whether it helps. Firing decides whether a skill is worth having
+installed at all, and it is the question this instrument was built for. The one
+venue built to ask the other question closed instead: Family A, the scalar
+triplet behind `ledger`, `timing` and `fit`, hit an unaided ceiling of J = 1.000
+over 99 blind readings, so there was no headroom left for a procedure to add.
+Nothing here has yet measured whether a decision procedure improves a decision.
 
-No published run has used the placebo or cot arm. Every call on record compares
-variants of the skill's *description*. The four-arm comparison is what a
-confirmation run would do, and no confirmation run has happened.
+No published run has used the placebo or cot arm. Every trigger call on record
+compares variants of the skill's *description*. The four-arm comparison is what
+a confirmation run would do, and no confirmation run has happened.
 
-One of the thirteen published runs is void. It was refused on parse rate before
+One of the sixteen published runs is void. It was refused on parse rate before
 any prediction was scored, which is the first registered void condition here to
 fire on its own.
 
-The description arms no longer measure what ships. The shipped description now
-enumerates six procedures, so the ten arms that varied earlier wordings describe
-something the skill has moved past. The harness therefore has no measurement of
-how the shipped description behaves in the venue anybody uses, which qualifies
-every finding above and needs a new arm and a new pre-registration to close.
+The description arms measure the shipped description in a proxy venue. N10 ran
+the shipped six-procedure wording against five variants on answer key v6, all of
+it through one isolated call per case. Nothing on record says how that
+description behaves in situ, where it sits among other skills with the model
+mid-task: N9 was the run that asked and it is void. That qualifies every finding
+above and needs a new arm and a new pre-registration to close.
 
 The corpus behind the earlier results was largely solvable without a model, a
 finding this harness produced about its own instrument. It scopes to answer-key
-version 2 and the runs above it. The rebuilt version 4 corpus is far harder to
+version 2 and the runs above it. The rebuild at version 4 is far harder to
 shortcut, the two keys are never mixed, and
 [`SCORECARD.md`](SCORECARD.md) carries both figures with the arms measured
-against them.
+against them. The live key has since moved to version 6, by addition and by
+rewriting three asks; no shortcut figure has been computed against it.
 
-The hash-locked pre-registration refusal is built, tested, and has never run. It
-is scoped to the `confirm` arena, no confirmation run has happened, and the
-module is declared in `[tool.decision-evals.unwired]` because a tested refusal
-that nothing calls is inert.
+The hash-locked pre-registration refusal is built, tested, and has fired twice
+with no confirmation run behind it. Both firings were on refactoring: the lock
+pins the whole of `scripts/run_triggers.py`, so an ordinary harness commit
+invalidates it, and the remedy each time was a new version rather than an edited
+hash. `de confirm` reaches the module from the console script, so
+`[tool.decision-evals.unwired]` is now empty. What has never run is the
+`confirm` arena itself, which still refuses for want of a holdout.
 
 [`docs/STATUS.md`](docs/STATUS.md) is the ledger: every run, what it showed,
 which measurements turned out to be broken, and which tracks are untouched.

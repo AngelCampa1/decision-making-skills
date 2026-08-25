@@ -85,18 +85,45 @@ elicitation form. Record:
 Families B and C never used that form. They carry the track, which is the
 independence the three-family split was built for.
 
-1. **P3a, land the three repairs.** All three are done and each scores its own
-   two-branch falsifier battery on hand-written responses, before any generation
-   call. `cascade`: 14 fixtures plus 3 one-rule-removed mutants; four control
-   replies that walk past the item score J = 1.000 with the denominator gate
-   removed and `undefined` with it. `council`: 35 checks, six mutants each caught
-   by a different case, and a registered per-item dispersion statistic closing
-   the objection that signed rates cancel. `hinge`: 29 checks, 22 hand-written
-   responses over five populations, and a prompt-length delta of zero characters
-   held through the repair.
-   *Acceptance:* one commit per family carrying the battery, the revised items,
-   the re-registered numbers and a [`DECISIONS.md`](DECISIONS.md) entry. A key
-   that moved bumps `set_version` and no comparison crosses it.
+1. **P3a, repair the repairs.** Three adversarial reviews ran against the three
+   repaired instruments and **all three came back unfit to fail anything**, before
+   a measurement call was spent on any of them. The batteries were green and the
+   batteries were not the test. Written up in
+   [`../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md`](../notebook/2026-08-25-three-exclusion-rules-and-all-three-read-high-on-the-treatment.md).
+
+   One defect, three mechanisms. `cascade`'s attention gate resolves to
+   `J_gated = sens - FAR_ungated/attention_rate`, so verbosity alone moves the
+   primary +0.300 with the error rate unchanged. `hinge` keeps `OFF_LIST` in the
+   denominator and lets `NO_BLOCK` leave it. `council`'s estimator is clean and
+   the commit rate returns through the reporting gate, where `low = rho*c` makes
+   reporting require `c > 0.5/rho`. **Each is an exclusion correlated with
+   competence, and all three read high on the treatment arm.**
+
+   The rule that comes out of it, and it binds every instrument from here: for
+   every rule that removes a record from a denominator, say what makes a record
+   leave, whether that is correlated with doing the task well, and which
+   direction it pushes. **A rule that cannot answer all three does not ship**, and
+   every exclusion class is printed by arm. None of the three did that, which is
+   why the attrition would have been invisible in the published output.
+
+   Item defects found alongside, each re-derived from the raw files before being
+   acted on: `hinge`'s key applies a per-tonne-of-flour price to a through-stone
+   tonnage (£10,160 against £9,570) and its matched-arm decoy forks at L = 97,
+   so the cliff check had been run on one arm and not the other; `council`'s K03
+   fails disqualifier 17, its valuation lapsing eleven days before the earliest
+   date the course it defends can be taken; `cascade`'s two "recorded blind
+   responses" are author-written reconstructions and no transcript exists.
+   *Acceptance:* each repaired primary answers the three denominator questions
+   for every exclusion rule it keeps, prints every exclusion class by arm, and
+   scores a battery in which **every mutant is caught by a case only it fails** —
+   four of `council`'s six were not. Then one commit per family with its
+   [`DECISIONS.md`](DECISIONS.md) entry. A key that moved bumps `set_version`.
+
+   **`council` carries one more, and it outranks the rest: there is no `arm`
+   dimension anywhere in its scorer**, while its kill condition requires an arm
+   comparison. Every number it can currently produce is a one-arm description,
+   and `on` against `off` is the question this project exists to answer. Field
+   names come from `solvers/arms.py`, shared with the `elicit-generic` work.
 
 2. **P3b, the Family B and C control screens.** The Family A lesson, applied
    before anything is authored at scale: read the unaided arm of each repaired
@@ -140,11 +167,20 @@ than through `scripts/run_triggers.py`. Nothing here belongs in
 first unit that runs through the real runner creates the checkpoint, and P3b is
 the first candidate.
 
-The three repaired Family B and C instruments sit in a scratchpad, batteries
-green, waiting on P3a to land them. They are not in the repository and a session
-resuming from a cold start does not have them — if the scratchpad is gone, the
-briefs that produced them are the three bullets under P3a and each battery is
-reproducible from its own item YAMLs.
+The three Family B and C instruments sit in a scratchpad, out for a second
+repair after all three failed adversarial review. They are not in the repository
+and a session resuming from a cold start does not have them. If the scratchpad is
+gone, nothing of value is lost that the review findings under P3a do not already
+carry: the batteries were green and the batteries were not the test, so a rebuild
+briefed on the three denominator questions is worth more than the artefacts were.
+
+**The lesson is one step further along than Family A's.** There, reading the blind
+arms as a control arm before authoring the corpus saved ninety calls. Here, a
+green two-branch falsifier battery passed on all three instruments that a review
+then found unfit to fail anything — because a battery written by the author tests
+the implementation against the author's own expectations, and the defect was in
+the expectations. **An author's battery is not a review, and a green one buys
+nothing on its own.**
 
 **Two hazards found the hard way, both worth reading before starting.**
 Pre-commit stashes the whole tree, so a concurrent session's hook run can carry

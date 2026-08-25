@@ -290,12 +290,17 @@ than unstarted, and reproduces the plan itself, because the plan file lives
 outside this repository and will not survive.
 
 Three items bind things stated elsewhere in this document, so they are repeated
-here. One of the three closed after the stop and is kept for the same reason:
-a reader who finds the constraint should find that it lifted.
+here. All three have moved since the stop and each is kept for the same reason:
+a reader who finds the constraint should find what happened to it.
 
-- **The twenty-four version 5 triples are unadjudicated.** No number may be
-  published against answer key v5 until the blind three-judge round has run on
-  them. Every downstream run in Part 3 and after is scored against that key.
+- **The twenty-four version 5 triples are adjudicated, and this constraint has
+  lifted.** It read *"unadjudicated, and no number may be published against
+  answer key v5 until the blind three-judge round has run on them"* when the
+  wave stopped. That round ran on 2026-08-21: 216 calls, zero unparseable,
+  movement 3/72 = 0.042 against the 0.20 kill. All three disputes broke the
+  one-positive-two-negative invariant, so the asks were rewritten and judged
+  again rather than the labels applied, which moved the key to version 6. Every
+  downstream run in Part 3 and after is scored against that key.
 - **Concurrency on the Claude CLI backend was measured on 2026-08-20 and the
   register did not move.** 840 calls, concurrency 8 agreeing with serial better
   than serial agrees with itself, 7.69× wall-clock. `CONCURRENCY_UNSAFE` still
@@ -303,10 +308,15 @@ a reader who finds the constraint should find that it lifted.
   What this does not cover: `scripts/run_triggers.py` runs its own serial loop
   and was not touched, so the published path is still serial. See
   [`the outcome`](../notebook/2026-08-20-concurrency-on-the-cli-backend-changes-nothing.md).
-- **The `confirm` pathway does not exist.** `de screen`, `de confirm` and
-  `de report` are registered as deliberately absent, and `decision_evals.prereg`
-  is the last entry in `[tool.decision-evals.unwired]`. Until they exist no
-  skill can leave `UNTESTED` and `SCORECARD.md` cannot have a row.
+- **The `confirm` pathway now refuses instead of not existing, and the row is
+  still empty.** `de screen` and `de confirm` are real commands as of
+  2026-08-24, `[tool.decision-evals.unwired]` is empty because `de confirm`
+  reaches `decision_evals.prereg`, and only `de report` is still registered as
+  deliberately absent. `de confirm` runs all six locks and then stops: the
+  `confirm` arena reads the private holdout and there is none on disk. So the
+  blocker moved from "nothing calls the gate" to "no split and no confirmation
+  runner", and until that closes no skill can leave `UNTESTED` and
+  `SCORECARD.md` cannot have a row.
 
 ---
 

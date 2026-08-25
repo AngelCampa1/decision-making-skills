@@ -1,22 +1,24 @@
 # Tailoring corpus authoring specification
 
-**Audience:** the evaluating reader, and the second author writing triplets 4
-to 20.
+**Audience:** the evaluating reader, and anyone authoring a Track H triplet.
 
 **Scope: `datasets/tailoring/`, the Track H Phase 0 corpus.** Registered in
 [`notebook/2026-08-19-prediction-track-h-phase-0.md`](../notebook/2026-08-19-prediction-track-h-phase-0.md)
 and in [`RESEARCH_PROGRAMME.md`](RESEARCH_PROGRAMME.md) under `#### H1`.
 
-Three triplets and two planted falsifiers are authored. **The remaining
-seventeen follow this document.** It exists so that a second author, who did not
-write the first three and has not read this session, applies the same test and
-produces items that are comparable with them.
+**The venue this was written for is closed.** Family A — `ledger`, `timing` and
+`fit`, the whole scalar triplet — closed on 2026-08-25 at unaided J = 1.000, so
+the seventeen further triplets this document was written to govern will not be
+written. Eight are authored across two passes, two of them usable. The rules
+below stay as written because they are what those eight cost, and because
+Families B and C carry the track now and author items of their own:
+[`QUALITY_STATE.md`](QUALITY_STATE.md) has where the work went.
 
-Everything below is in the present indicative because it governs authoring,
-which happens now. Nothing in it describes a mechanism that has run: no Track H
-item has ever been sent to a model, and `de check` does not enforce a single
-rule on this page. Compliance is authorial, and the reviewer named in §8 is what
-stands in for a gate.
+Everything below is in the present indicative because it governs authoring, and
+nothing on this page is enforced: `de check` reads no rule here, compliance is
+authorial, and the reviewer named in §8 stands in for a gate. The claim this
+paragraph used to carry — that no Track H item had ever been sent to a model —
+expired on 2026-08-25, when 99 blind readings closed the venue.
 
 ---
 

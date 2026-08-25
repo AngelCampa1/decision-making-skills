@@ -105,9 +105,9 @@ judgement about an answer key.
 |---|---|
 | ~~**Track 0.5**, `telemetry.span_attributes()` tested to 100% while nothing in `evals/src` called it~~ **done** on 2026-08-18: wired into `orchestrator.py`, the multi-node run its own docstring says the vocabulary was written for. Every `NodeRecord` now carries `attributes`, with a safe `{}` default so `results/track-0/tree_smoke.jsonl` still loads. `tests/unit/test_orchestrator.py`'s `TestNodeRecordCarriesTelemetryAttributes` asserts on the mapping directly | done |
 | ~~**Track 0.6**, `assert_isolated()` raising on `tools` and on `skills` and never inspecting `memory_paths`~~ **done** on 2026-08-18, decided **no**: checked live against claude-code 2.1.159 that `--setting-sources ""` stops a planted `CLAUDE.md` reaching `memory_paths` at all, confirming for the receipt what [`notebook/2026-08-10-isolation-canary.md`](../notebook/2026-08-10-isolation-canary.md) already found for the response, so no value of that field separates a clean isolated call from a compromised one and gating on it would refuse every run. `InitReceipt`'s docstring now says the gate covers `tools` **and** `skills`, which the code already did and the prose did not, and explains why `memory_paths` is recorded rather than gated. `memory_paths` was separately unreadable in production, since the real event is a mapping, `{"auto": path}`, and the old `isinstance(value, list)` check read it as `()` on every call this harness has ever made; fixed in `_memory_paths()`. See `notebook/2026-08-18-memory-paths-is-not-a-gate.md` | done |
-| **Fold the `stream-json` transport** into `providers/claude_code.py` beside the single-shot path | the multi-turn canary reproduces: `input_tokens` climbs *and* turn-*n* recalls turn-1 content |
+| ~~**Fold the `stream-json` transport** into `providers/claude_code.py` beside the single-shot path~~ **done**, and the programme's Track 0.1 row said so first. `Conversation` lives beside the single-shot path and shares `build_command`, so the isolation flags cannot be forgotten on the streaming form. The canary reproduced through the shipped class: `input_tokens` 179 → 334 → 422, turn 3 recalling the turn-1 codeword with an unrelated turn between. `tests/integration/test_multiturn.py`, marked `llm`, asserts the corrected falsifier against a live model | done |
 | **Either write `model_claude_code.py` against `lost_in_conversation`'s `generate()` interface, or retire that plan in writing.** The corpus is vendored and pinned, and `sharded.py` already runs live against it through this repository's own `Conversation`, bypassing the upstream plugin protocol entirely, so the shim may simply be obsolete | the shim exists and runs, or the programme stops saying it is "still needed". Either way the pin (`c865793f`, SHA-256) reaches a datasheet: `docs/EVAL_SET_DATASHEET.md` covers the authored trigger corpus and never mentions this one |
-| **Compute the MDE** for A1–A5 with `stats/power.py`, and write it into the programme beside each experiment | numbers exist where "sized from the MDE" currently is |
+| ~~**Compute the MDE** for A1–A5 with `stats/power.py`~~ **done**, and the not-computable rows are the finding. [`programme/part-4-does-the-failure-exist.md`](programme/part-4-does-the-failure-exist.md) carries an MDE table per experiment, computed by calling `stats/power.required_pairs` and `minimum_detectable_effect` against the corpus on disk rather than against a figure already written about it. A1 and A2 carry numbers; A3, A4 and A5 carry *not computable* with the reason, which the phrase "sized from the MDE" had been hiding. `de power` prints the sweep, because `p_discordant` is not known before a screening run | done |
 | ~~**Track I1**, `stats/reliability.py`~~ **done**, and the programme said so before this table did | done |
 | **Track K1–K4, K6**, the decision-frameworks review | `docs/DECISION_FRAMEWORKS.md` exists, every claim carrying a `quote` |
 
@@ -389,9 +389,10 @@ measurement claim:
   `site/inputs.json` globs."* **False, and checked rather than argued.** With
   three real nested worktrees on disk, each holding a full `docs/`,
   `decision_evals.site.input_files()` returns 192 inputs and **zero** under the
-  scratch directory. Every glob in `site/inputs.json` is anchored at a literal
-  top-level segment (`docs/**/*.md`, `skills/**/*.md`, `*.md`), so none can
-  reach a nested path. Nesting inside a nested worktree does not change it.
+  scratch directory. Every `hash` glob in `site/inputs.json` — the only ones
+  `load_inputs` reads — is anchored at a literal top-level segment
+  (`docs/**/*.md`, `skills/**/*.md`, `*.md`), so none can reach a nested path.
+  Nesting inside a nested worktree does not change it.
   Re-run it before trusting either version of this sentence.
 - *"…and shows up in this repository's own `git status`."* **Already fixed
   before this rule existed.** `.gitignore` carries `.claude/`, and git never

@@ -103,8 +103,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 # rewritten later without destroying the timestamps the method relies on.
 FORBIDDEN_EMAIL_DOMAINS = ("@ventoralabs.com",)
 
-#: The screening instrument, and the script behind every model call on record.
-#: ``de screen`` forwards to it rather than reimplementing it.
+#: The screening instrument, and the script behind every checkpointed model call
+#: on record. ``de screen`` forwards to it rather than reimplementing it.
 TRIGGER_RUNNER: Final = "scripts/run_triggers.py"
 
 #: The private holdout corpus. ``.gitignore`` keeps its records out of the tree

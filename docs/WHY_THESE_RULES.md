@@ -254,8 +254,8 @@ subscription stated. Writing "we spent $250" would be false.
 - **A coverage floor does not mean a module runs.** `de check` refuses a floored
   module that no entry point can reach, because this repository has now shipped
   two of them: `triggers` was tested to 100% and called by nothing while a
-  trigger set described a skill that no longer existed, and `prereg.py` carries
-  every refusal `docs/PROTOCOL.md` §3 promised while nothing calls it. A tested
+  trigger set described a skill that no longer existed, and `prereg.py` carried
+  every refusal `docs/PROTOCOL.md` §3 promised while nothing called it. A tested
   refusal with no caller is inert, and the gate reports green either way.
   Intentional gaps go in `[tool.decision-evals.unwired]` with the condition that
   would close them.
@@ -279,7 +279,7 @@ subscription stated. Writing "we spent $250" would be false.
   So `de check` now refuses a trigger set on disk carrying an item with no
   three-judge record, joined on the case id. It is keyed to the live answer key
   and not to published runs, because a run declares a version and the corpus file
-  moves on: four runs on disk declare v4 and the file is at v5, so checking them
+  moves on: four runs on disk declare v4 and the file is at v6, so checking them
   would mean resolving each past version out of git. `corrections.py` declined
   that same archaeology for the same reason. Keying to the live set buys the one
   property the run-keyed version could not have, which is that the check cannot

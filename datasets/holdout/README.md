@@ -11,8 +11,9 @@ a verdict publishes. The split is the only uncontaminated data this repository
 has, and contamination cannot be undone within a seed, so a copy in the tree is
 a copy that has been read.
 
-Nothing has been built here yet either. Every call on record is a `screen`-tier
-trigger measurement on the public split, `SCORECARD.md` is empty, and
+Nothing has been built here yet either. Every trigger call on record is a
+`screen`-tier measurement on the public split, the 99 Track H readings are a
+venue probe that never reached a skill, `SCORECARD.md` is empty, and
 `decision-making` and all six procedures carry `verdict: UNTESTED`.
 
 ## The records are JSONL, and that is load-bearing

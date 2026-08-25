@@ -169,7 +169,10 @@ tested, scoped to an arena that has never run, and reachable by nothing.
 
 ## One run, end to end
 
-This is the path behind every number published so far.
+This is the path behind every trigger number published so far. Two published
+track-H probes did not take it: their calls were dispatched as sub-agents, so
+they carry an answer key and raw readings but no checkpoint, no notional cost
+and no isolation receipt, and both records say so.
 
 ```mermaid
 flowchart TB
@@ -364,7 +367,7 @@ Routing is prose instructions to a model, so it is a claim, and `dm-1` through
 |---|---|
 | `skills/decision-making/` | The product. Authored here; everything else is a mirror. |
 | `evals/src/decision_evals/` | The harness. `gate_steps()` in `cli.py` is the gate's step table, and each repository-integrity step lives in the module it is named after: `docs.py`, `citations.py`, `provenance.py`, `decisions.py`, `wiring.py`, `skills.py`, `sync.py`, `drift.py`. |
-| `scripts/` | The runners. `run_triggers.py` is behind every model call on record. |
+| `scripts/` | The runners. `run_triggers.py` is behind every trigger call on record. |
 | `datasets/` | The answer key: `triggers/`, `tailoring/`, `templates/` and `golden/`, `probe/` and `library/`, hash-locked `vendor/`. |
 | `results/` | Published runs, one directory each, with their raw JSONL. |
 | `notebook/` | Append-only, dated. Predictions go in before runs. |
