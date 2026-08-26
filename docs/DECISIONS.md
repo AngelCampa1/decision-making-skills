@@ -1560,3 +1560,75 @@ added a third backend and put every model on it in `screen` regardless of tier.
 three `assert_*` helpers, so a change to any of those is governed too. That is
 wider than the argument above needs. The alternative was a rule keyed to a region
 of a file, and nothing here can check one.
+
+## 2026-08-25 — A control arm says what it controls for, and the guard reads it
+
+**Commits:** `6974859`
+
+Adds `skills/decision-making/placebo-council.md`, puts `matched_to` frontmatter
+on `skills/decision-making/placebo.md`, and declares both in
+`[tool.decision-evals.placebos]`. Governed path twice over, hence this entry.
+
+**The guard could not fail.** `_check_placebo` opened the literal filename
+`placebo.md` and measured it against `SKILL.md`. Recomputed from source: 612
+words against 557 (ratio 0.91, tolerance 0.15), four headings against four, no
+fenced block on either side. It passes, and it was always going to, because that
+is the only pair a hard-coded filename can name. The `on` arm for a procedure
+delivers that procedure's body, and `council.md` is 433 words, six headings and
+one fenced block. Against the same placebo every sub-check fails: ratio 1.29,
+six headings against four, one fenced block against none. No gate saw it.
+
+The pairing is now declared rather than inferred. Inference is how the hole got
+in, and a second placebo with a name the function did not know would have gone
+unmeasured exactly the same way.
+
+**Two declarations, and the gate refuses disagreement.** The register in
+`pyproject.toml` is what `_check_placebos` reads. The `matched_to` line in each
+placebo's own frontmatter is what the site reads to keep a control out of the
+published procedure list, which it previously did by holding the name `placebo`
+in a constant. `de check` refuses a marker that disagrees with the register, so
+neither can drift. `delivered_body` strips frontmatter before counting, so the
+marker never reaches a model and `placebo.md`'s 557 words are untouched.
+
+**The council placebo, measured against `council.md`:** 402 words against 433,
+band 368 to 498; six headings against six; one fenced block against one.
+
+**Its template is deliberately not council's.** `council.md` labels positions
+`A.` and `B.`, and `council`'s primary is the second-position rate, so a placebo
+carrying letter labels, ordinals or a contrast between positions would be a
+weaker copy of the treatment and the arm would answer "does the procedure beat
+itself". The four slots name a question, an understanding, a reply and a closing
+line. A scan for layout deixis over the delivered body returns nothing; the same
+scan over `council.md` returns fourteen hits, which is what makes it a scan and
+not a formality. Both live in `tests/unit/test_skills.py`, because no such
+scanner existed anywhere in the harness before today.
+
+A hand-written reply following that template parses to a committed outcome
+through the shipped `parse_answer`, pinned in `tests/unit/test_arms.py`. It cost
+no model call and it is the check that catches a collision between a placebo's
+output block and the `ANSWER:` line before a run is spent finding one.
+
+**A finding this does not fix: `placebo.md` is on-construct for `council`.** The
+structural guard measures size and shape and says so in its own docstring, so it
+cannot see this and neither can the extension above. Read line by line,
+`placebo.md` contains "Giving the weaker-sounding one a real hearing", which is
+council's step 2; "Where the honest answer is that two courses are close, say
+that they are close. A forced ranking between options that genuinely sit level
+presents a precision the situation does not contain", which is council's tie
+rule; "Read the whole thing first" and "Reading all of it before forming a
+view", which are order-effect instructions in an instrument whose primary is a
+position effect. It is a valid control for `SKILL.md`, whose construct is
+routing. It would not be a valid control for `council`, and that is why
+`placebo-council.md` does not inherit its content strategy.
+
+**Which arms carry it.** `build_arm` gives `placebo` the placebo body and gives
+`off` nothing but `BASE_FRAMING` and `FORMAT_CONTRACT`, so the `off` arm is
+clean. Those two ship in every arm, which means `BASE_FRAMING`'s "Choose the
+option the facts support" cannot advantage one arm over another. It is still
+worth writing down that the sentence presumes the facts settle it, in a
+procedure whose finding may be that two positions both stand.
+
+**What still has no gate.** Nothing checks that a procedure has a placebo at
+all, so five of the six procedures have none and that is invisible. The rule
+runs from placebo to body, because a placebo pointed at the wrong body is the
+failure that already happened here.
