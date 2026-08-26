@@ -87,7 +87,21 @@ Documentation = "https://github.com/AngelCampa1/decision-making-skills/blob/main
 Issues = "https://github.com/AngelCampa1/decision-making-skills/issues"
 Changelog = "https://github.com/AngelCampa1/decision-making-skills/blob/main/docs/STATUS.md"
 
+# The two skill-evolution engines under test, pinned. They are the *subject* of
+# the evolution study, never a dependency of the harness: nothing under
+# `evals/src/decision_evals/` imports them outside `evolution/`, and `de check`
+# runs without this group installed. Both MIT.
+#
+# `inspect-ai` is deliberately still absent. Its statistical vocabulary is worth
+# copying and its runner is not: this repository's own loop carries the
+# checkpoint, the ledger and the provenance the gate reads, and the note in
+# `[project]` about the removed declaration is the record of what an unimported
+# dependency costs.
 [dependency-groups]
+evolve = [
+    "gepa>=0.1.4",
+    "skillopt>=0.2.0",
+]
 dev = [
     "pytest>=8.3",
     "pytest-cov>=6.0",
