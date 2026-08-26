@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -13,16 +14,21 @@ from decision_evals.skills import (
     STANDARD_FIELDS,
     UNSHIPPABLE_VERDICTS,
     VERDICTS,
+    SkillIssue,
     check_mirrors,
+    delivered_body,
+    load_placebos,
     mirror_plan,
     orphaned_promotions,
     parse_skill,
+    placebo_marker,
     promotable,
     sync_mirrors,
     validate_all,
     validate_skill,
     verdict_of,
 )
+from decision_evals.solvers.arms import check_placebo_match
 
 BODY = "\n# Title\n\n## Abort if\nSkip when small.\n\n## Step\n" + ("word " * 60)
 PLACEBO = "# Title\n\n## A\nGeneric.\n\n## B\n" + ("word " * 60)
@@ -46,6 +52,17 @@ def _frontmatter(**overrides: Any) -> dict[str, Any]:
     return base
 
 
+#: What the fixtures declare. `_write` puts the placebo at `placebo.md` and the
+#: treatment at `SKILL.md`, so the map that covers them is one line each.
+DEMO_PLACEBOS: dict[str, str] = {
+    "demo-skill/placebo.md": "SKILL.md",
+    "good-one/placebo.md": "SKILL.md",
+}
+
+#: The frontmatter `_write` puts on a placebo that does not bring its own.
+MARKER = "---\nmatched_to: SKILL.md\n---\n"
+
+
 def _write(
     root: Path,
     *,
@@ -64,8 +81,16 @@ def _write(
         matter = yaml.safe_dump(front if front is not None else _frontmatter(), sort_keys=False)
         path.write_text(f"---\n{matter}---{body}", encoding="utf-8")
     if placebo is not None:
-        (directory / "placebo.md").write_text(placebo, encoding="utf-8")
+        # Every placebo declares what it controls for. Supplied text that already
+        # carries frontmatter is left alone, so a test can write a wrong marker.
+        marked = placebo if placebo.startswith("---") else MARKER + placebo
+        (directory / "placebo.md").write_text(marked, encoding="utf-8")
     return path
+
+
+def validate_skill_(path: Path, *, shipped: bool = False) -> list[SkillIssue]:
+    """`validate_skill` with the map the fixtures are written to."""
+    return validate_skill(path, placebos=DEMO_PLACEBOS, shipped=shipped)
 
 
 # -- the shipped skill ------------------------------------------------------
@@ -73,7 +98,8 @@ def _write(
 
 def test_the_shipped_skill_validates() -> None:
     """The real artifact, not a fixture. If this fails, the skill is broken."""
-    assert validate_skill(REPO_ROOT / "skills" / "decision-making" / "SKILL.md") == []
+    path = REPO_ROOT / "skills" / "decision-making" / "SKILL.md"
+    assert validate_skill(path, placebos=load_placebos(REPO_ROOT)) == []
 
 
 def test_the_shipped_skill_uses_only_portable_fields() -> None:
@@ -84,7 +110,7 @@ def test_the_shipped_skill_uses_only_portable_fields() -> None:
 
 def test_a_generated_baseline_validates(tmp_path: Path) -> None:
     """Guards the rest: each test below asserts a *deviation* is caught."""
-    assert validate_skill(_write(tmp_path)) == []
+    assert validate_skill_(_write(tmp_path)) == []
 
 
 # -- parsing ----------------------------------------------------------------
@@ -101,7 +127,7 @@ def test_a_generated_baseline_validates(tmp_path: Path) -> None:
 )
 def test_malformed_documents_report_rather_than_raise(tmp_path: Path, raw: str, match: str) -> None:
     """One broken skill must not hide the others' problems."""
-    issues = validate_skill(_write(tmp_path, raw=raw))
+    issues = validate_skill_(_write(tmp_path, raw=raw))
     assert len(issues) == 1
     assert match in issues[0].message
 
@@ -113,20 +139,20 @@ def test_a_vendor_extension_is_rejected(tmp_path: Path) -> None:
     """`context: fork` is a hard error in Codex, Cursor and the rest."""
     front = _frontmatter()
     front["context"] = "fork"
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("non-standard frontmatter" in str(i) for i in issues)
 
 
 def test_a_missing_required_field_is_reported(tmp_path: Path) -> None:
     front = _frontmatter()
     del front["description"]
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("missing required frontmatter" in str(i) for i in issues)
 
 
 def test_the_name_must_match_the_directory(tmp_path: Path) -> None:
     """Discovery uses the directory, so a mismatch means the name is decoration."""
-    issues = validate_skill(_write(tmp_path, front=_frontmatter(name="something-else")))
+    issues = validate_skill_(_write(tmp_path, front=_frontmatter(name="something-else")))
     assert any("does not match directory" in str(i) for i in issues)
 
 
@@ -136,14 +162,14 @@ def test_the_name_must_match_the_directory(tmp_path: Path) -> None:
 @pytest.mark.parametrize("description", ["", "   ", None])
 def test_an_empty_description_is_rejected(tmp_path: Path, description: Any) -> None:
     """It is the only text always resident in context."""
-    issues = validate_skill(_write(tmp_path, front=_frontmatter(description=description)))
+    issues = validate_skill_(_write(tmp_path, front=_frontmatter(description=description)))
     assert any("description is empty" in str(i) for i in issues)
 
 
 def test_a_description_without_a_negative_clause_is_rejected(tmp_path: Path) -> None:
     """Availability dominates; a description saying only when to fire fires on everything."""
     front = _frontmatter(description="Use whenever you are making any kind of decision.")
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("no negative clause" in str(i) for i in issues)
 
 
@@ -158,14 +184,14 @@ def test_a_description_without_a_negative_clause_is_rejected(tmp_path: Path) -> 
     ],
 )
 def test_recognised_negative_phrasings(tmp_path: Path, description: str) -> None:
-    assert validate_skill(_write(tmp_path, front=_frontmatter(description=description))) == []
+    assert validate_skill_(_write(tmp_path, front=_frontmatter(description=description))) == []
 
 
 # -- metadata and evidence --------------------------------------------------
 
 
 def test_metadata_must_be_a_mapping(tmp_path: Path) -> None:
-    issues = validate_skill(_write(tmp_path, front=_frontmatter(metadata="none")))
+    issues = validate_skill_(_write(tmp_path, front=_frontmatter(metadata="none")))
     assert any("must be a mapping" in str(i) for i in issues)
 
 
@@ -174,22 +200,22 @@ def test_an_unrecognised_verdict_is_rejected(tmp_path: Path) -> None:
     front = _frontmatter(
         metadata={"verdict": "PROBABLY_FINE", "claims": [{"id": "c", "text": "t"}]}
     )
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("is not one of" in str(i) for i in issues)
 
 
 def test_an_untested_skill_may_be_developed_but_not_shipped(tmp_path: Path) -> None:
     """The distinction the rule turns on."""
     path = _write(tmp_path)
-    assert validate_skill(path, shipped=False) == []
-    issues = validate_skill(path, shipped=True)
+    assert validate_skill_(path, shipped=False) == []
+    issues = validate_skill_(path, shipped=True)
     assert any("may not ship" in str(i) for i in issues)
 
 
 @pytest.mark.parametrize("verdict", sorted(VERDICTS - UNSHIPPABLE_VERDICTS))
 def test_a_skill_with_a_verdict_may_ship(tmp_path: Path, verdict: str) -> None:
     front = _frontmatter(metadata={"verdict": verdict, "claims": [{"id": "c1", "text": "t"}]})
-    assert validate_skill(_write(tmp_path, front=front), shipped=True) == []
+    assert validate_skill_(_write(tmp_path, front=front), shipped=True) == []
 
 
 def test_a_withdrawn_skill_may_be_developed_but_not_shipped(tmp_path: Path) -> None:
@@ -201,21 +227,23 @@ def test_a_withdrawn_skill_may_be_developed_but_not_shipped(tmp_path: Path) -> N
     """
     front = _frontmatter(metadata={"verdict": "WITHDRAWN", "claims": [{"id": "c1", "text": "t"}]})
     path = _write(tmp_path, front=front)
-    assert validate_skill(path, shipped=False) == []
-    assert any("WITHDRAWN skill may not ship" in str(i) for i in validate_skill(path, shipped=True))
+    assert validate_skill_(path, shipped=False) == []
+    assert any(
+        "WITHDRAWN skill may not ship" in str(i) for i in validate_skill_(path, shipped=True)
+    )
 
 
 @pytest.mark.parametrize("claims", [None, [], "not a list"])
 def test_claims_must_be_declared(tmp_path: Path, claims: Any) -> None:
     front = _frontmatter(metadata={"verdict": "UNTESTED", "claims": claims})
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("metadata.claims" in str(i) for i in issues)
 
 
 @pytest.mark.parametrize("claim", [{"id": "c1"}, {"text": "t"}, "a string"])
 def test_a_malformed_claim_is_reported(tmp_path: Path, claim: Any) -> None:
     front = _frontmatter(metadata={"verdict": "UNTESTED", "claims": [claim]})
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("malformed claim" in str(i) for i in issues)
 
 
@@ -226,7 +254,7 @@ def test_duplicate_claim_ids_are_reported(tmp_path: Path) -> None:
             "claims": [{"id": "c1", "text": "a"}, {"id": "c1", "text": "b"}],
         }
     )
-    issues = validate_skill(_write(tmp_path, front=front))
+    issues = validate_skill_(_write(tmp_path, front=front))
     assert any("duplicate claim ids" in str(i) for i in issues)
 
 
@@ -235,13 +263,127 @@ def test_duplicate_claim_ids_are_reported(tmp_path: Path) -> None:
 
 def test_a_missing_placebo_is_rejected(tmp_path: Path) -> None:
     """Writing it after seeing results is the degree of freedom the arm removes."""
-    issues = validate_skill(_write(tmp_path, placebo=None))
-    assert any("no placebo.md" in str(i) for i in issues)
+    issues = validate_skill(_write(tmp_path, placebo=None), placebos={})
+    assert any("no placebo" in str(i) for i in issues)
 
 
 def test_an_unmatched_placebo_is_rejected(tmp_path: Path) -> None:
-    issues = validate_skill(_write(tmp_path, placebo="# Tiny\n\n## A\nShort."))
-    assert any("not matched" in str(i) for i in issues)
+    issues = validate_skill_(_write(tmp_path, placebo="# Tiny\n\n## A\nShort."))
+    assert any("not matched to SKILL.md" in str(i) for i in issues)
+
+
+def test_a_placebo_is_measured_against_the_body_its_arm_delivers(tmp_path: Path) -> None:
+    """The hole this check was opened to close.
+
+    A placebo may stand in for a procedure rather than for `SKILL.md`, and
+    pointing it at the wrong body was invisible while the pairing came from the
+    filename, because the filename only ever named one pair.
+    """
+    path = _write(tmp_path, placebo=PLACEBO)
+    (path.parent / "procedure.md").write_text("# P\n\n## A\ntwo words\n", encoding="utf-8")
+
+    assert validate_skill(path, placebos={"demo-skill/placebo.md": "SKILL.md"}) == []
+
+    issues = validate_skill(path, placebos={"demo-skill/placebo.md": "procedure.md"})
+    assert any("not matched to procedure.md" in str(i) for i in issues)
+
+
+def test_an_undeclared_placebo_file_is_refused(tmp_path: Path) -> None:
+    """A placebo nothing declares is a placebo nothing measures."""
+    path = _write(tmp_path, placebo=PLACEBO)
+    (path.parent / "placebo-procedure.md").write_text(PLACEBO, encoding="utf-8")
+    assert any("placebo-procedure.md is on disk" in str(i) for i in validate_skill_(path))
+
+
+def test_a_declared_placebo_with_no_file_is_refused(tmp_path: Path) -> None:
+    issues = validate_skill(
+        _write(tmp_path, placebo=PLACEBO),
+        placebos=DEMO_PLACEBOS | {"demo-skill/placebo-gone.md": "SKILL.md"},
+    )
+    assert any("placebo-gone.md is declared" in str(i) for i in issues)
+
+
+def test_a_placebo_declared_against_an_absent_body_is_refused(tmp_path: Path) -> None:
+    issues = validate_skill(
+        _write(tmp_path, placebo=PLACEBO), placebos={"demo-skill/placebo.md": "gone.md"}
+    )
+    assert any("which is not on disk" in str(i) for i in issues)
+
+
+def test_the_shipped_council_placebo_matches_council() -> None:
+    """The real pair, not a fixture."""
+    directory = REPO_ROOT / "skills" / "decision-making"
+    match = check_placebo_match(
+        delivered_body(directory / "council.md"),
+        delivered_body(directory / "placebo-council.md"),
+    )
+    assert match.ok, match
+
+
+def test_delivered_body_strips_frontmatter() -> None:
+    """Counting YAML as skill prose has produced one wrong ratio on record."""
+    directory = REPO_ROOT / "skills" / "decision-making"
+    assert "matched_to" not in delivered_body(directory / "placebo-council.md")
+    assert delivered_body(directory / "council.md").startswith("# Council")
+
+
+#: Layout deixis: language that points at where something sits in the prompt
+#: rather than at what it says. No scanner for this shipped in the harness, so
+#: the pattern list is here, beside the one assertion that needs it.
+#:
+#: `council.md` keeps its `A.` / `B.` labels. A placebo that shared them would
+#: stop being a size control and become a weaker copy of the treatment, and the
+#: arm would then answer "does the procedure beat itself" instead of "does the
+#: procedure beat instruction bulk".
+POSITIONAL_PATTERNS: dict[str, str] = {
+    "option letter label": r"(?m)^\s*[A-Z][.)]\s",
+    "inline letter label": r"\b(?:option|position|case|choice)\s+[A-Z]\b",
+    "ordinal": r"\b(?:first|second|third|fourth|last|former|latter)\b",
+    "layout direction": r"\b(?:above|below|top|bottom|earlier|later)\b",
+    "list deixis": r"\b(?:the list|listed|in order|the order)\b",
+    "counted positions": r"\b(?:both|either|neither|each of them|two of them)\b",
+    "sequence marker": r"\b(?:step \d|then|next|finally|begin by)\b",
+}
+
+
+def scan_positional_language(body: str) -> list[tuple[str, str]]:
+    """Every layout-deixis hit in a body, as (what it is, what matched)."""
+    return [
+        (label, match.group(0))
+        for label, pattern in POSITIONAL_PATTERNS.items()
+        for match in re.finditer(pattern, body, flags=re.IGNORECASE)
+    ]
+
+
+def test_the_council_placebo_carries_no_positional_language() -> None:
+    """A placebo that names positions is a partial treatment wearing a control's clothes."""
+    body = delivered_body(REPO_ROOT / "skills" / "decision-making" / "placebo-council.md")
+    assert scan_positional_language(body) == []
+
+
+def test_the_scan_finds_positional_language_where_there_is_some() -> None:
+    """A scan that cannot hit is a scan that has not run."""
+    assert scan_positional_language("A. sell it\nB. keep it\nThe first is above.")
+
+
+def test_a_placebo_marker_that_disagrees_with_the_register_is_refused(
+    tmp_path: Path,
+) -> None:
+    """The site reads the marker and the guard reads the register."""
+    path = _write(tmp_path, placebo="---\nmatched_to: other.md\n---\n" + PLACEBO)
+    issues = validate_skill_(path)
+    assert any("declares `matched_to: other.md`" in str(i) for i in issues)
+
+
+def test_every_shipped_placebo_declares_what_it_controls_for() -> None:
+    directory = REPO_ROOT / "skills" / "decision-making"
+    declared = load_placebos(REPO_ROOT)
+    assert declared, "the register is empty, so the guard has nothing to check"
+    for key, treatment in declared.items():
+        assert placebo_marker(REPO_ROOT / "skills" / key) == treatment
+    assert {path.name for path in directory.glob("placebo*.md")} == {
+        key.split("/", 1)[1] for key in declared
+    }
 
 
 # -- batch ------------------------------------------------------------------
@@ -250,13 +392,13 @@ def test_an_unmatched_placebo_is_rejected(tmp_path: Path) -> None:
 def test_validate_all_covers_every_skill(tmp_path: Path) -> None:
     _write(tmp_path, name="good-one", front=_frontmatter(name="good-one"))
     _write(tmp_path, name="bad-one", front=_frontmatter(name="mismatch"), placebo=None)
-    issues = validate_all(tmp_path)
+    issues = validate_all(tmp_path, placebos=DEMO_PLACEBOS)
     assert {i.skill for i in issues} == {"mismatch"}
     assert len(issues) == 2
 
 
 def test_validate_all_on_an_empty_root(tmp_path: Path) -> None:
-    assert validate_all(tmp_path) == []
+    assert validate_all(tmp_path, placebos=DEMO_PLACEBOS) == []
 
 
 # -- mirrors ----------------------------------------------------------------

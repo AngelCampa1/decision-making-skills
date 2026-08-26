@@ -12,10 +12,9 @@
  *
  * The list comes from SKILL.md's routing table rather than from a directory
  * listing, and that is the load-bearing choice. The table is what an agent
- * actually routes from, so `placebo.md` -- the length-matched control arm,
- * which is not a procedure and must never be advertised as one -- is excluded
- * because it is not in the table, not because its name sits in an exclusion
- * list somebody has to maintain.
+ * actually routes from, so a control arm is excluded because it is not in the
+ * table and says so in its own frontmatter. A control must never be advertised
+ * as a procedure, and no page holds a list of which files those are.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -25,8 +24,16 @@ export const SKILL_ENTRY = 'decision-making/skill';
 /** The router itself. In the collection, not in its own table. */
 const ROUTER = 'skill';
 
-/** The control arm: same length and shape, no procedure in it. Never a procedure. */
-const CONTROL = 'placebo';
+/**
+ * A control arm declares what it is a control for, in its own frontmatter.
+ *
+ * `placebo.md` used to be excluded by name, which held for exactly as long as
+ * there was one control. `placebo-council.md` is matched to `council.md`
+ * instead of to `SKILL.md`, and a second name in an exclusion list is the shape
+ * of thing this module exists to stop. `de check` refuses a marker that
+ * disagrees with `[tool.decision-evals.placebos]`, so the two cannot drift.
+ */
+const CONTROL_MARKER = 'matched_to';
 
 /** The table SKILL.md routes from. Matched on the header, so a second table cannot be mistaken for it. */
 const TABLE_HEADER = ['What is hard', 'Read', 'What it produces'];
@@ -170,23 +177,24 @@ export async function skillFacts(): Promise<SkillFacts> {
   // failure that produced this module and the only one a page cannot notice
   // by looking at itself.
   const named = new Set(procedures.map((p) => p.file));
-  const present = new Set(
-    all
-      .map((entry) => entry.id)
-      .filter((id) => id.startsWith('decision-making/'))
-      .map((id) => id.slice('decision-making/'.length)),
+  const inSkill = all.filter((entry) => entry.id.startsWith('decision-making/'));
+  const present = new Map(
+    inSkill.map((entry) => [
+      entry.id.slice('decision-making/'.length),
+      (entry.data as Record<string, unknown>)[CONTROL_MARKER] !== undefined,
+    ]),
   );
   for (const procedure of procedures) {
     if (!present.has(procedure.file)) {
       fail(`the routing table names \`${procedure.md}\`, which is not in the skills collection`);
     }
   }
-  for (const file of present) {
-    if (file === ROUTER || file === CONTROL || named.has(file)) continue;
+  for (const [file, isControl] of present) {
+    if (file === ROUTER || isControl || named.has(file)) continue;
     fail(
       `\`${file}.md\` is in skills/decision-making/ and not in the routing table. ` +
         'Add it to the table (and it becomes a procedure the site publishes), or ' +
-        `name it as a control the way \`${CONTROL}.md\` is.`,
+        `declare \`${CONTROL_MARKER}:\` in its frontmatter to mark it a control arm.`,
     );
   }
 

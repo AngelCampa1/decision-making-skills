@@ -46,7 +46,7 @@ meter, and never money anybody spent.
 ```mermaid
 flowchart TB
     subgraph product["The product: markdown, no runtime"]
-        skills["<b>skills/decision-making/</b><br/>SKILL.md + six procedures<br/>+ placebo.md"]
+        skills["<b>skills/decision-making/</b><br/>SKILL.md + six procedures<br/>+ two control arms"]
         agents[".agents/skills/<br/><i>byte-identical mirror</i>"]
         plug["plugin/skills/<br/><i>no skill until a verdict exists</i>"]
         skills -- "de mirror" --> agents
@@ -347,14 +347,18 @@ Every file the skill ships beside `SKILL.md`, and whether the router names it:
 | `fit.md` | yes |
 | `hinge.md` | yes |
 | `ledger.md` | yes |
+| `placebo-council.md` | no |
 | `placebo.md` | no |
 | `timing.md` | yes |
 <!-- /de:generated -->
 
-`placebo.md` is the one the router never names. It is token-matched and
-structure-matched to a real procedure, and it exists so that "the skill helped"
-and "any document of that length helped" are not the same observation. It is a
-harness control, and [`METHODS.md`](METHODS.md) has the arms it belongs to.
+The two the router never names are control arms. `placebo.md` is token- and
+structure-matched to `SKILL.md`, and `placebo-council.md` to `council.md`. Each
+exists so that "the skill helped" and "any document of that length helped" are
+not the same observation. Which control stands in for which body is declared in
+`[tool.decision-evals.placebos]` and repeated in each file's own `matched_to`
+frontmatter, and `de check` refuses the two if they disagree. They are harness
+controls, and [`METHODS.md`](METHODS.md) has the arms they belong to.
 
 Routing is prose instructions to a model, so it is a claim, and `dm-1` through
 `dm-5` in the frontmatter are its falsifiable form. The verdict is `UNTESTED`.

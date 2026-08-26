@@ -25,13 +25,21 @@ unvalidated prompt library.
 from __future__ import annotations
 
 import shutil
+import tomllib
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final
 
 import yaml
 
-from decision_evals.solvers.arms import check_placebo_match
+from decision_evals.solvers.arms import PlaceboMatch, check_placebo_match
+
+#: Where the placebo-to-treatment map lives. Declared rather than inferred:
+#: the check used to read the literal filename ``placebo.md`` and compare it
+#: against ``SKILL.md``, which is the one pair in the repository that was ever
+#: going to match, so a placebo matched to nothing could not be caught.
+PLACEBOS_TABLE: Final[tuple[str, ...]] = ("tool", "decision-evals", "placebos")
 
 #: The complete set of portable frontmatter fields. Anything else is a
 #: portability defect in the canonical source.
@@ -119,11 +127,17 @@ def parse_skill(path: Path) -> SkillDocument:
     return document
 
 
-def validate_skill(path: Path, *, shipped: bool = False) -> list[SkillIssue]:
+def validate_skill(
+    path: Path, *, placebos: Mapping[str, str], shipped: bool = False
+) -> list[SkillIssue]:
     """Validate one skill directory.
 
     Args:
         path: The ``SKILL.md`` file.
+        placebos: The declared placebo-to-treatment map, keyed
+            ``<skill directory>/<placebo file>``. Required rather than
+            defaulted: a caller that forgets it would get a placebo check that
+            silently has nothing to check.
         shipped: True when validating a skill inside the plugin directory, where
             the evidence rule applies.
     """
@@ -138,7 +152,7 @@ def validate_skill(path: Path, *, shipped: bool = False) -> list[SkillIssue]:
     issues += _check_fields(name, front, path)
     issues += _check_description(name, front)
     issues += _check_metadata(name, front, shipped=shipped)
-    issues += _check_placebo(name, path.parent, document.body)
+    issues += _check_placebos(name, path.parent, placebos)
     return issues
 
 
@@ -221,24 +235,144 @@ def _check_metadata(name: str, front: dict[str, Any], *, shipped: bool) -> list[
     return issues
 
 
-def _check_placebo(name: str, directory: Path, body: str) -> list[SkillIssue]:
-    """A skill without a matched placebo cannot be placebo-controlled.
+def load_placebos(repo_root: Path) -> dict[str, str]:
+    """Every declared placebo, mapped to the file the ``on`` arm delivers.
+
+    Keys are ``<skill directory>/<placebo file>``, so the same map serves the
+    source tree and the plugin mirror. Values are the treatment file the
+    placebo stands in for.
+    """
+    pyproject = repo_root / "pyproject.toml"
+    if not pyproject.is_file():
+        return {}
+    node: object = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    for key in PLACEBOS_TABLE:
+        if not isinstance(node, dict):
+            return {}
+        node = node.get(key, {})
+    if not isinstance(node, dict):
+        return {}
+    return {str(key): str(value) for key, value in node.items()}
+
+
+def delivered_body(path: Path) -> str:
+    """The text an arm would actually put in the prompt.
+
+    Frontmatter is stripped where there is any, because the ``on`` arm sends
+    the body and counting YAML as skill prose has already produced one wrong
+    ratio on record. A procedure file carries no frontmatter and is returned
+    whole.
+    """
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return text
+    parts = text.split("---", 2)
+    return parts[2] if len(parts) == 3 else text
+
+
+def placebo_marker(path: Path) -> str | None:
+    """What a placebo says it is a control for, from its own frontmatter.
+
+    The site excludes a file from the published procedure list on this marker
+    rather than on a name it keeps in an exclusion list. Reading it here is
+    what keeps the marker and the register from drifting apart.
+    """
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return None
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return None
+    try:
+        loaded = yaml.safe_load(parts[1])
+    except yaml.YAMLError:
+        return None
+    if not isinstance(loaded, dict):
+        return None
+    marker = loaded.get("matched_to")
+    return marker if isinstance(marker, str) else None
+
+
+def _check_placebos(name: str, directory: Path, placebos: Mapping[str, str]) -> list[SkillIssue]:
+    """Every placebo in the directory matches the body it is a control for.
 
     Required at authoring time rather than at run time, because writing a
     length-matched placebo after seeing the treatment's results is exactly the
     degree of freedom the arm exists to remove.
+
+    The pairing is read from ``[tool.decision-evals.placebos]``. Inferring it
+    from the filename is what this function used to do, and reading the literal
+    name ``placebo.md`` against ``SKILL.md`` picked the one pair in the
+    repository that was always going to match. A placebo written for a
+    procedure and matched to nothing passed, because nothing looked at it.
     """
-    placebo = directory / "placebo.md"
-    if not placebo.exists():
+    on_disk = {path.name for path in sorted(directory.glob("placebo*.md"))}
+    declared = {
+        key.split("/", 1)[1]: value
+        for key, value in placebos.items()
+        if key.split("/", 1)[0] == directory.name and "/" in key
+    }
+
+    if not on_disk and not declared:
         return [
             SkillIssue(
                 name,
-                "no placebo.md. No SHIP verdict is issued without a passing placebo arm, "
+                "no placebo. No SHIP verdict is issued without a passing placebo arm, "
                 "and writing the placebo after seeing results is the degree of freedom "
                 "that arm exists to remove.",
             )
         ]
-    match = check_placebo_match(body, placebo.read_text(encoding="utf-8"))
+
+    issues: list[SkillIssue] = []
+    for orphan in sorted(on_disk - set(declared)):
+        issues.append(
+            SkillIssue(
+                name,
+                f"{orphan} is on disk and not in `[tool.decision-evals.placebos]`, so "
+                "nothing says which body it is a control for and nothing measures it "
+                "against one.",
+            )
+        )
+    for absent in sorted(set(declared) - on_disk):
+        issues.append(SkillIssue(name, f"{absent} is declared as a placebo and is not on disk"))
+
+    for placebo_file in sorted(set(declared) & on_disk):
+        treatment_file = declared[placebo_file]
+        marker = placebo_marker(directory / placebo_file)
+        if marker != treatment_file:
+            issues.append(
+                SkillIssue(
+                    name,
+                    f"{placebo_file} declares `matched_to: {marker}` and the register "
+                    f"declares {treatment_file}. The site reads the marker and the "
+                    "guard reads the register, so two answers here is two documents "
+                    "disagreeing about what the control controls for.",
+                )
+            )
+        treatment = directory / treatment_file
+        if not treatment.is_file():
+            issues.append(
+                SkillIssue(
+                    name,
+                    f"{placebo_file} is declared as the control for {treatment_file}, "
+                    "which is not on disk",
+                )
+            )
+            continue
+        issues += _report_match(
+            name,
+            placebo_file,
+            treatment_file,
+            check_placebo_match(
+                delivered_body(treatment), delivered_body(directory / placebo_file)
+            ),
+        )
+    return issues
+
+
+def _report_match(
+    name: str, placebo_file: str, treatment_file: str, match: PlaceboMatch
+) -> list[SkillIssue]:
     if match.ok:
         return []
 
@@ -258,14 +392,21 @@ def _check_placebo(name: str, directory: Path, body: str) -> list[SkillIssue]:
             "a skill that hands the model a block template needs a placebo that hands "
             "over one too, or the arms differ in how much structure was requested"
         )
-    return [SkillIssue(name, f"placebo is not matched: {'; '.join(failures)}")]
+    return [
+        SkillIssue(
+            name,
+            f"{placebo_file} is not matched to {treatment_file}: {'; '.join(failures)}",
+        )
+    ]
 
 
-def validate_all(skills_root: Path, *, shipped: bool = False) -> list[SkillIssue]:
+def validate_all(
+    skills_root: Path, *, placebos: Mapping[str, str], shipped: bool = False
+) -> list[SkillIssue]:
     """Validate every skill under a root, in directory order."""
     issues: list[SkillIssue] = []
     for path in sorted(skills_root.glob("*/SKILL.md")):
-        issues += validate_skill(path, shipped=shipped)
+        issues += validate_skill(path, placebos=placebos, shipped=shipped)
     return issues
 
 

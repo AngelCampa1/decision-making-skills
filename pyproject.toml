@@ -353,6 +353,24 @@ output = "coverage.json"
 # change: a declared-unwired module that becomes reachable is itself a refusal.
 
 # --------------------------------------------------------------------------- #
+# Every placebo, and the file the `on` arm delivers when that placebo is the
+# control.
+#
+# Keyed `<skill directory>/<placebo file>`, so one table covers `skills/` and
+# the plugin mirror. The pairing is declared because the check used to infer it:
+# it opened the literal name `placebo.md` and compared it against `SKILL.md`,
+# the one pair in the repository that was ever going to match. `council.md` is
+# 433 words against that placebo's 557, with six headings against four and one
+# fenced block against none, and nothing was looking.
+#
+# Adding a placebo here is what puts it under the match guard. A placebo file on
+# disk with no line here is refused, and so is a line here with no file.
+# --------------------------------------------------------------------------- #
+[tool.decision-evals.placebos]
+"decision-making/placebo.md" = "SKILL.md"
+"decision-making/placebo-council.md" = "council.md"
+
+# --------------------------------------------------------------------------- #
 # Commands the documentation names while they deliberately do not exist.
 #
 # `SCORECARD.md` has to be able to say that `de report` has never existed --

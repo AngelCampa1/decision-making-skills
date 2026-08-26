@@ -1,3 +1,14 @@
+---
+matched_to: SKILL.md
+declared_in: pyproject.toml, tool.decision-evals.placebos
+delivered: >
+  This frontmatter is stripped before the body reaches a model, so the 557
+  words below are unchanged and every published count still holds. It is here
+  because a control has to say what it is a control for: the site excludes a
+  file from the procedure list on this marker, and de check refuses a marker
+  that disagrees with the declared table.
+---
+
 # Helping someone decide
 
 People bring decisions when something matters to them and the way forward is not

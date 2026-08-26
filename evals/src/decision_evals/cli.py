@@ -1108,15 +1108,16 @@ def lint_skills_step() -> StepResult:
         typer.echo("skills/ is empty; nothing to validate")
         return StepResult(name, True, "no skills")
 
-    from decision_evals.skills import check_mirrors, validate_all
+    from decision_evals.skills import check_mirrors, load_placebos, validate_all
 
     # Source skills may carry UNTESTED -- that is the normal state during
     # development. The plugin directory is what ships, so the evidence rule
     # applies there.
-    issues = validate_all(skills_dir)
+    placebos = load_placebos(REPO_ROOT)
+    issues = validate_all(skills_dir, placebos=placebos)
     plugin_skills = REPO_ROOT / "plugin" / "skills"
     if plugin_skills.is_dir():
-        issues += validate_all(plugin_skills, shipped=True)
+        issues += validate_all(plugin_skills, placebos=placebos, shipped=True)
     issues += check_mirrors(REPO_ROOT)
 
     for issue in issues:

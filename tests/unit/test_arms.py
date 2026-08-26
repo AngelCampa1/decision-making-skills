@@ -182,3 +182,44 @@ def test_matching_fenced_blocks_satisfy_the_template_check() -> None:
 def test_two_documents_with_no_templates_at_all_match() -> None:
     """Most skills carry no output block; the check must not invent a failure."""
     assert check_placebo_match("# S\n\nprose", "# P\n\nprose").templates_match
+
+
+# -- the shipped placebo against the shipped extractor ----------------------
+
+#: A reply that obeys `placebo-council.md`'s four-slot template and the format
+#: contract. Hand-written, so this costs no model call, and it is the check that
+#: would catch a format collision between a placebo's output block and the
+#: `ANSWER:` line before a run is spent finding out.
+TEMPLATE_FOLLOWING_REPLY = """WHAT THEY ASKED
+  Whether to take the offer or keep going.
+
+WHAT YOU UNDERSTOOD
+  The price clears the mark they set themselves, and runway is eleven months.
+
+WHAT YOU SAY
+  Take it. The number they wrote down before anyone was buying has been met.
+
+HOW YOU LEAVE IT
+  You set the number cold, and it was met.
+
+ANSWER: Sell the company now"""
+
+
+def test_a_reply_following_the_council_placebo_template_still_parses() -> None:
+    from decision_evals.scorers.answer import parse_answer
+
+    options = ["Sell the company now", "Keep building for another year"]
+    parsed = parse_answer(TEMPLATE_FOLLOWING_REPLY, options)
+    assert parsed.ok
+    assert parsed.value == "Sell the company now"
+
+
+def test_the_council_placebo_arm_carries_no_frontmatter() -> None:
+    """The marker is for the site and the guard, never for the model."""
+    from decision_evals.generators.loader import REPO_ROOT
+    from decision_evals.skills import delivered_body
+
+    body = delivered_body(REPO_ROOT / "skills" / "decision-making" / "placebo-council.md")
+    prompt = build_arm("placebo", placebo_body=body).system_prompt
+    assert "matched_to" not in prompt
+    assert "# Writing back to someone" in prompt

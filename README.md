@@ -91,10 +91,11 @@ reversible choice draw the same deliberation budget.
 
 Where more than one applies they run in the order ledger, fit, cascade, timing,
 because each supplies an input to the next. `council.md` and `hinge.md` sit
-outside that chain and each runs alone. A seventh file,
-[`placebo.md`](skills/decision-making/placebo.md), is the token- and
-structure-matched control arm. It ships alongside because a skill that only
-beats nothing has not been measured against the thing that would fake it.
+outside that chain and each runs alone. Two more files are control arms:
+[`placebo.md`](skills/decision-making/placebo.md) is matched to the router and
+[`placebo-council.md`](skills/decision-making/placebo-council.md) to
+`council.md`. They ship alongside because a skill that only beats nothing has
+not been measured against the thing that would fake it.
 
 ### Install
 

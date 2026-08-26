@@ -209,12 +209,26 @@ question and is not part of the comparison:
 | `in_situ` | The skill delivered the way an install delivers it, alongside whatever else is in the prompt. Ecological validity, not effect size. |
 <!-- /de:generated -->
 
-The placebo
-([`../skills/decision-making/placebo.md`](../skills/decision-making/placebo.md))
-is token- and structure-matched filler, and the match is enforced rather than
-eyeballed: `check_placebo_match` refuses a placebo of the wrong size or shape,
-because an unmatched placebo is worse than none: it looks like a control while
-silently failing to control.
+A placebo is token- and structure-matched filler, and the match is enforced
+rather than eyeballed: `check_placebo_match` refuses a placebo of the wrong size
+or shape, because an unmatched placebo is worse than none: it looks like a
+control while silently failing to control.
+
+Which body a placebo is matched *to* is declared, and that is the part a
+filename cannot carry. `_check_placebos` reads
+`[tool.decision-evals.placebos]`, so
+[`placebo.md`](../skills/decision-making/placebo.md) is measured against
+`SKILL.md` and
+[`placebo-council.md`](../skills/decision-making/placebo-council.md) against
+[`council.md`](../skills/decision-making/council.md), which is the body the
+`on` arm delivers when `council` is the procedure under test.
+
+**The guard measures size and shape, never content.** Its own docstring says so.
+A placebo can pass all three sub-checks and still carry an instruction that does
+part of the treatment's work, and the only thing standing between that and a
+published effect is a human reading the placebo text. `placebo-council.md`
+records that reading in its `content_review` frontmatter, naming the four
+constructs it was checked against.
 
 **No published run has used the placebo or cot arm.** Every call on record is a
 trigger measurement, comparing variants of the skill's *description* against
