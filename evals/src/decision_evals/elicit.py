@@ -582,6 +582,7 @@ def run_elicitation(
             handle=handle,
             to_row=asdict,
             cost_of_record=lambda record: record.cost_usd,
+            elapsed_of_record=lambda record: record.duration_ms / 1000.0,
             concurrency=concurrency,
             backoff=backoff,
         )

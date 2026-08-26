@@ -496,13 +496,13 @@ Two spellings of one path rather than two paths.\
 # refused, and an entry naming no living document is refused.
 # --------------------------------------------------------------------------- #
 [tool.decision-evals.reviewed]
-"AGENTS.md" = "2ada1a3"
-"CONTRIBUTING.md" = "2ada1a3"
+"AGENTS.md" = "422ea52"
+"CONTRIBUTING.md" = "422ea52"
 "README.md" = "2ada1a3"
 "SCORECARD.md" = "9bfb353"
 "docs/ACCUMULATION_VENUE.md" = "291548d"
-"docs/ARCHITECTURE.md" = "2ada1a3"
-"docs/AUTONOMOUS_WORK_ORDER.md" = "2ada1a3"
+"docs/ARCHITECTURE.md" = "422ea52"
+"docs/AUTONOMOUS_WORK_ORDER.md" = "422ea52"
 "docs/DECISION_FRAMEWORKS.md" = "291548d"
 "docs/DOCUMENTATION_MAP.md" = "76f4974"
 "docs/EVAL_SET_DATASHEET.md" = "291548d"

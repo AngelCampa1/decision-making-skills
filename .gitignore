@@ -71,6 +71,13 @@ Thumbs.db
 # in notebook/.
 results/calibration/
 
+# Evolution search state. Hundreds of candidates, most of them worse than the
+# seed, scored on training seeds. It has a published run's directory shape
+# without being one, so `provenance.WORKING_DIRS` skips it by name and this rule
+# keeps it out of the tree. What gets published is the study that reads the
+# frozen winners.
+results/evolution/
+
 # Vendored third-party corpora: pinned by hash in *.lock.json, fetched by `de fetch`.
 # The payloads are large and byte-identical upstream, so the lock is committed and
 # the data is not.

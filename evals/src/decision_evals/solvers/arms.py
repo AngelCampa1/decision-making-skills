@@ -32,12 +32,24 @@ from typing import Final, Literal
 
 from decision_evals.generators.generate import Item
 
-ArmName = Literal["off", "on", "placebo", "cot", "in_situ"]
+ArmName = Literal["off", "on", "placebo", "cot", "in_situ", "candidate"]
 
-#: Every arm, in reporting order. ``in_situ`` is last because it answers a
-#: different question from the other four: not "does the skill help" but "does
-#: it still help when it is not the only thing in the prompt".
-ARM_NAMES: Final[tuple[ArmName, ...]] = ("off", "on", "placebo", "cot", "in_situ")
+#: Every arm, in reporting order. ``in_situ`` and ``candidate`` are last because
+#: they answer different questions from the first four: whether the skill still
+#: helps when it is not the only thing in the prompt, and whether a body no
+#: human wrote helps at all.
+#:
+#: ``candidate`` is appended rather than inserted, and the four published arms
+#: keep their positions, because a reporting order that shifts silently
+#: re-labels every table already on disk.
+ARM_NAMES: Final[tuple[ArmName, ...]] = (
+    "off",
+    "on",
+    "placebo",
+    "cot",
+    "in_situ",
+    "candidate",
+)
 
 #: What each arm is for, in one line, beside the arm itself.
 #:
@@ -59,6 +71,11 @@ ARM_PURPOSE: Final[dict[ArmName, str]] = {
     "in_situ": (
         "The skill delivered the way an install delivers it, alongside whatever "
         "else is in the prompt. Ecological validity, not effect size."
+    ),
+    "candidate": (
+        "A machine-written body, delivered exactly as `on` delivers a human one. "
+        "The arm an evolution engine's output is scored in, so that what changed "
+        "between them is the author."
     ),
 }
 
@@ -109,7 +126,11 @@ def build_arm(
 
     Args:
         arm: Which arm.
-        skill_body: The skill under test. Required by ``on`` and ``in_situ``.
+        skill_body: The skill under test. Required by ``on``, ``in_situ`` and
+            ``candidate``, and rendered identically in all three: a generated
+            body that reached the model through a different code path from a
+            written one would confound authorship with delivery, which is the
+            one comparison the ``candidate`` arm exists to make.
         placebo_body: Token- and structure-matched filler. Required by
             ``placebo``.
 
@@ -124,7 +145,7 @@ def build_arm(
 
     sections = [BASE_FRAMING]
 
-    if arm in ("on", "in_situ"):
+    if arm in ("on", "in_situ", "candidate"):
         if not skill_body:
             raise ArmError(f"the {arm!r} arm needs a skill body")
         sections.append(skill_body.strip())

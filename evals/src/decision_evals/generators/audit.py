@@ -37,14 +37,23 @@ template with fewer distractors.
 
 Auditors are injected rather than constructed here, so the filter is testable
 without model calls and ``de check`` stays free and deterministic.
+
+:func:`corpus_fingerprint` sits at the end of the module for the same reason:
+it is the check that the items a run resumed onto are the items it started
+from. It lived in ``scripts/calibrate.py`` while one script was the only
+caller. An evolution loop resumes a checkpoint per candidate, so it is now
+library code, and a second copy of a hash function is a second answer.
 """
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from string import Formatter
 
+from decision_evals.generators.generate import Item
 from decision_evals.generators.safe_eval import referenced_names
 from decision_evals.generators.schema import Distractor, Template
 
@@ -232,3 +241,56 @@ def summarise(verdicts: Sequence[DistractorVerdict]) -> AuditSummary:
         considered=len(verdicts),
         accepted=sum(1 for verdict in verdicts if verdict.accepted),
     )
+
+
+class CorpusMismatchError(RuntimeError):
+    """The checkpoint on disk describes a different corpus."""
+
+
+def corpus_fingerprint(items: Sequence[Item]) -> str:
+    """A hash of everything that was actually put in front of the model.
+
+    Item ids are coordinates — template, variant, stratum — and stay identical
+    when the *content* at those coordinates changes. So a rebuilt corpus resumes
+    cleanly off an old checkpoint and reports a number computed half on one set
+    of items and half on another, with nothing anywhere raising an eyebrow. That
+    is the single most damaging bug this harness could have, and it was one
+    template rewrite away from happening.
+
+    Document bodies are hashed for the same reason facts are, and theirs is the
+    version that bites at length: a casefile's ids stay identical while a hundred
+    thousand tokens of padding change underneath them. They are hashed in order,
+    because padding order is reshuffled between arms and a different arrangement
+    is a different prompt.
+    """
+    digest = hashlib.sha256()
+    for item in items:
+        digest.update(item.item_id.encode())
+        digest.update(item.question.encode())
+        digest.update(item.answer.encode())
+        for fact in item.facts:
+            digest.update(f"{fact.id}:{fact.text}".encode())
+        for document in getattr(item, "documents", ()):
+            digest.update(f"{document['id']}:{document['body']}".encode())
+    return digest.hexdigest()
+
+
+def assert_checkpoint_matches(checkpoint: Path, items: Sequence[Item]) -> None:
+    """Refuse to resume a checkpoint that was produced from other items."""
+    sidecar = checkpoint.with_suffix(".corpus")
+    fingerprint = corpus_fingerprint(items)
+
+    if not checkpoint.exists():
+        sidecar.parent.mkdir(parents=True, exist_ok=True)
+        sidecar.write_text(fingerprint, encoding="utf-8")
+        return
+
+    recorded = sidecar.read_text(encoding="utf-8").strip() if sidecar.exists() else "(none)"
+    if recorded != fingerprint:
+        raise CorpusMismatchError(
+            f"{checkpoint} was produced from a different corpus.\n"
+            f"  recorded: {recorded[:16]}\n"
+            f"  current:  {fingerprint[:16]}\n"
+            "Resuming would mix records from two sets of items into one number. "
+            "Move the checkpoint aside and start a fresh run."
+        )

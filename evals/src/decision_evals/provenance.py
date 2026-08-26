@@ -53,6 +53,18 @@ from typing import Final
 #: excludes them without naming them.
 RESULTS_ROOT: Final = "results"
 
+#: Directories under ``results/`` that hold working state rather than published
+#: runs, and are therefore skipped by :func:`discover_runs`.
+#:
+#: The shape above excludes the older checkpoint directories without naming
+#: them, because those are *files* one level down. ``results/evolution/`` is not
+#: one of those: a search writes a directory per run, which is the same shape a
+#: published run has, so the exclusion has to be by name. Everything listed here
+#: is gitignored, and ``tests/unit/test_provenance.py`` is what holds those two
+#: facts together -- a working directory that got committed would otherwise
+#: escape this gate permanently and silently.
+WORKING_DIRS: Final[frozenset[str]] = frozenset({"evolution"})
+
 #: Runs published before this gate existed, one per line, ``#`` for comments.
 BASELINE_PATH: Final = "results/provenance-baseline.txt"
 
@@ -172,12 +184,17 @@ def discover_runs(repo_root: Path) -> list[RunRecord]:
     A directory qualifies by *position* — ``results/<skill>/<run>/`` — not by
     what it contains. Qualifying on "has a README" would let a run escape the
     gate by omitting the file the gate exists to check.
+
+    :data:`WORKING_DIRS` is the one exception, skipped by name because a search's
+    working state has a published run's shape without being one.
     """
     root = repo_root / RESULTS_ROOT
     if not root.is_dir():
         return []
     runs: list[RunRecord] = []
     for skill_dir in sorted(p for p in root.iterdir() if p.is_dir()):
+        if skill_dir.name in WORKING_DIRS:
+            continue
         for run_dir in sorted(p for p in skill_dir.iterdir() if p.is_dir()):
             runs.append(
                 RunRecord(

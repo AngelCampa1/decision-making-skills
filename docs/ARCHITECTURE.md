@@ -23,21 +23,35 @@ flowchart TB
 
     repo["<b>decision-making</b><br/>the skill, the harness,<br/>the datasets and the record"]
 
-    cli["Claude Code CLI<br/><i>the model backend behind<br/>every call on record</i>"]
+    cli["Claude Code CLI<br/><i>subprocess, on a<br/>Claude Max subscription</i>"]
+    local["Local server<br/><i>OpenAI-compatible,<br/>on this machine</i>"]
+    free["Free hosted tier<br/><i>OpenAI-compatible,<br/>key in the environment</i>"]
     ci["GitHub Actions<br/><i>gate, and Pages deploy</i>"]
 
     maintainer --> repo
     repo -- "install from skills/ or .agents/skills/" --> installer
     repo -- "one isolated claude -p per case" --> cli
+    repo -- "one completion per case" --> local
+    repo -- "one completion per case" --> free
     cli -- "single-line JSON verdict" --> repo
+    local -- "chat completion" --> repo
+    free -- "chat completion" --> repo
     repo --> ci
     ci -- "renders the repository's own markdown" --> reader
 ```
 
-Every model call goes through the Claude Code CLI as a subprocess on a Claude
-Max subscription. There is no API key and none may be added, which is why
-`total_cost_usd` in a run record is a notional API-equivalent price: a burn
-meter, and never money anybody spent.
+Three venues carry model calls and every one of them goes through the same
+checkpointed runner, so which answered stays in the record. The Claude Code CLI
+runs as a subprocess on a Claude Max subscription. The other two are
+OpenAI-compatible endpoints: a local server, and a free hosted tier whose key
+lives in the environment and never in the tree.
+
+Nothing here bills, which is why `total_cost_usd` in a run record is a notional
+API-equivalent price: a burn meter, and never money anybody spent. It reads zero
+on both of the newer venues, so a run there is guarded by call count and
+wall-clock instead — `BudgetLedger` refuses to be built for a venue that reports
+no cost and carries neither cap, because a dollar cap that cannot fire is not a
+guard.
 
 ---
 
@@ -142,6 +156,7 @@ itself, so it grows a row the day a module does.
 | --- | --- |
 | `decision_evals/` | `adjudication` · `arenas` · `budget` · `citations` · `claims` · `cli` · `corpus` · `corrections` · `decisions` · `deployed` · `docs` · `drift` · `elicit` · `orchestrator` · `prereg` · `provenance` · `rescore` · `runner` · `sharded` · `site` · `skills` · `sync` · `tailoring` · `telemetry` · `trigger_arms` · `triggers` · `unbundle` · `wiring` |
 | `decision_evals/corpora/` | `lost_in_conversation` |
+| `decision_evals/evolution/` | `adapter` · `checkpoints` · `holdout` · `lineage` · `run` · `venues` |
 | `decision_evals/generators/` | `audit` · `generate` · `loader` · `safe_eval` · `schema` |
 | `decision_evals/providers/` | `antigravity` · `claude_code` · `openai_compatible` |
 | `decision_evals/scorers/` | `answer` · `bfcl` |
@@ -389,6 +404,7 @@ Every command the harness answers to:
 | `de confirm` | Check the pre-registration locks a confirmation run is bound to. |
 | `de deployed` | Report whether the published site is a build of the current `main`. |
 | `de drift` | List the documents whose subject has moved since anyone recorded reading them. |
+| `de evolve` | Evolve a skill against the corpus, and write the search down. |
 | `de fetch` | Download the vendored corpora and verify them against their locks. |
 | `de index` | Regenerate `docs/RUN_INDEX.md` from the published run records. |
 | `de lint` | Validate skill frontmatter, evidence metadata, and claim coverage. |

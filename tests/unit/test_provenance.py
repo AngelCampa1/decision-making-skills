@@ -17,6 +17,7 @@ import pytest
 from decision_evals.provenance import (
     BASELINE_PATH,
     INDEX_PATH,
+    WORKING_DIRS,
     GitFacts,
     ProvenanceError,
     ProvenanceIssue,
@@ -377,3 +378,27 @@ def test_every_published_run_is_checked(tmp_path: Path) -> None:
     """check_run is total: it returns a list for any directory shape."""
     repo = _repo(tmp_path, readme=None, prediction=None)
     assert isinstance(check_run(discover_runs(repo)[0], repo, _NO_GIT), list)
+
+
+# -- working directories ----------------------------------------------------
+
+
+def test_a_working_directory_is_not_discovered_as_a_run(tmp_path: Path) -> None:
+    """It has a published run's shape, so the exclusion has to be by name."""
+    for skill in ("decision-making", *WORKING_DIRS):
+        (tmp_path / "results" / skill / "2026-08-26-abc1234").mkdir(parents=True)
+    assert [run.path for run in discover_runs(tmp_path)] == [
+        "results/decision-making/2026-08-26-abc1234"
+    ]
+
+
+def test_every_working_directory_is_gitignored() -> None:
+    """The two facts that have to hold together.
+
+    Skipping a directory in the gate and letting it into the tree is worse than
+    either alone: the records would be committed and permanently invisible to
+    the check that binds a published number to the records under it.
+    """
+    ignored = (Path(__file__).resolve().parents[2] / ".gitignore").read_text(encoding="utf-8")
+    for name in WORKING_DIRS:
+        assert f"results/{name}/" in ignored

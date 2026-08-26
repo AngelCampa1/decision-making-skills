@@ -1,0 +1,695 @@
+"""Tests for the evolution package.
+
+The refusals are the point. Everything here exists because a search that ran
+badly and a search that ran well produce the same shape of output, so each
+check is a place where the difference becomes visible: a seed the engine may
+not see, a lineage whose winner had no competitor, a body whose hash does not
+match the record it is filed under.
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import date
+from pathlib import Path
+
+import pytest
+
+from decision_evals.budget import BudgetError
+from decision_evals.evolution.adapter import (
+    COMPONENT,
+    RESUME_FIELDS,
+    AdapterError,
+    DecisionAdapter,
+    Trace,
+    _feedback,
+)
+from decision_evals.evolution.checkpoints import (
+    CheckpointError,
+    paths_for,
+    read_manifest,
+    run_name,
+    write_manifest,
+)
+from decision_evals.evolution.holdout import (
+    HOLDOUT_FLOOR,
+    POOLS,
+    HoldoutBreachError,
+    assert_evolvable,
+    census,
+    holdout_seeds,
+    pool_of,
+)
+from decision_evals.evolution.lineage import (
+    Candidate,
+    LineageError,
+    append_candidate,
+    assert_searched,
+    best_scored,
+    body_sha,
+    find,
+    load_lineage,
+)
+from decision_evals.evolution.run import (
+    EvolveError,
+    EvolveRequest,
+    budget_for,
+    items_for,
+    seed_body,
+)
+from decision_evals.evolution.venues import (
+    MOCK_LADDER,
+    MOCK_MARKER,
+    MOCK_MODEL,
+    VenueError,
+    call_fn,
+    isolation_receipt,
+    key_is_present,
+    mock_call,
+    mock_reflector,
+    venue_for,
+)
+from decision_evals.runner import load_records
+from decision_evals.solvers.arms import render_item
+
+# -- the seed firewall ------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("seed", "expected"),
+    [(0, "train"), (999, "train"), (1000, "validation"), (HOLDOUT_FLOOR, "holdout"), (5000, None)],
+)
+def test_a_seed_reports_its_pool(seed: int, expected: str | None) -> None:
+    assert pool_of(seed) == expected
+
+
+def test_training_and_validation_seeds_pass() -> None:
+    assert_evolvable([0, 1, 1000])
+
+
+def test_a_holdout_seed_is_refused() -> None:
+    """The refusal the whole package exists for."""
+    with pytest.raises(HoldoutBreachError, match="fitted the test set"):
+        assert_evolvable([0, HOLDOUT_FLOOR])
+
+
+def test_a_seed_in_no_pool_is_refused() -> None:
+    """An unassigned seed is neither training nor test, which is worse than either."""
+    with pytest.raises(HoldoutBreachError, match="in no pool"):
+        assert_evolvable([0, 5000])
+
+
+def test_both_breaches_are_reported_at_once() -> None:
+    with pytest.raises(HoldoutBreachError) as caught:
+        assert_evolvable([HOLDOUT_FLOOR, 5000])
+    assert "holdout seed" in str(caught.value)
+    assert "in no pool" in str(caught.value)
+
+
+def test_holdout_seeds_are_reproducible_from_the_passphrase() -> None:
+    assert holdout_seeds("correct horse", 20) == holdout_seeds("correct horse", 20)
+
+
+def test_a_different_passphrase_draws_a_different_split() -> None:
+    assert holdout_seeds("one", 20) != holdout_seeds("two", 20)
+
+
+def test_every_drawn_seed_is_in_the_holdout_pool_and_distinct() -> None:
+    drawn = holdout_seeds("a passphrase", 200)
+    assert len(set(drawn)) == 200
+    assert all(pool_of(seed) == "holdout" for seed in drawn)
+
+
+def test_an_empty_passphrase_is_refused() -> None:
+    """A split anyone reading this file can rebuild is not a private split."""
+    with pytest.raises(ValueError, match="not in the tree"):
+        holdout_seeds("   ", 10)
+
+
+@pytest.mark.parametrize("count", [0, 10_000])
+def test_a_count_that_cannot_be_drawn_is_refused(count: int) -> None:
+    with pytest.raises(ValueError, match="count must be between"):
+        holdout_seeds("a passphrase", count)
+
+
+def test_the_census_counts_what_it_could_not_classify() -> None:
+    assert census([0, 1, 1000, HOLDOUT_FLOOR, 5000]) == {
+        "train": 2,
+        "validation": 1,
+        "holdout": 1,
+        "unassigned": 1,
+    }
+
+
+def test_the_pools_do_not_overlap() -> None:
+    spans = list(POOLS.values())
+    for index, span in enumerate(spans):
+        for other in spans[index + 1 :]:
+            assert not set(span) & set(other)
+
+
+# -- the lineage ------------------------------------------------------------
+
+
+def _candidate(**overrides: object) -> Candidate:
+    body = str(overrides.pop("body", "# A skill\n\nDo the thing."))
+    fields: dict[str, object] = {
+        "candidate_sha": body_sha(body),
+        "parent_sha": None,
+        "generation": 0,
+        "engine": "gepa",
+        "target_model": MOCK_MODEL,
+        "reflector_model": None,
+        "seeds": (0, 1),
+        "n_items": 8,
+        "score": 0.5,
+        "accepted": False,
+        "git_sha": "abc1234",
+        "created_at": "2026-08-26T00:00:00+00:00",
+        "body": body,
+    }
+    fields.update(overrides)
+    return Candidate(**fields)  # type: ignore[arg-type]
+
+
+def test_the_hash_is_of_the_exact_bytes() -> None:
+    """Trailing whitespace is something an engine mutates, so it is part of the key."""
+    assert body_sha("a body") != body_sha("a body ")
+
+
+def test_a_candidate_whose_hash_does_not_match_its_body_is_refused() -> None:
+    with pytest.raises(LineageError, match="not the hash of this body"):
+        _candidate(candidate_sha=body_sha("something else"))
+
+
+def test_an_unknown_engine_is_refused() -> None:
+    with pytest.raises(LineageError, match="unknown engine"):
+        _candidate(engine="handwritten")
+
+
+def test_the_first_generation_has_no_parent() -> None:
+    with pytest.raises(LineageError, match="no parent"):
+        _candidate(generation=0, parent_sha=body_sha("a parent"))
+
+
+def test_a_later_generation_needs_one() -> None:
+    """A search whose children are unparented is a list, not a lineage."""
+    with pytest.raises(LineageError, match="has no parent"):
+        _candidate(generation=2, parent_sha=None)
+
+
+def test_a_lineage_round_trips(tmp_path: Path) -> None:
+    path = tmp_path / "lineage.jsonl"
+    first = _candidate()
+    second = _candidate(body="# Better\n", generation=1, parent_sha=first.candidate_sha)
+    append_candidate(path, first)
+    append_candidate(path, second)
+    assert load_lineage(path) == [first, second]
+
+
+def test_a_missing_lineage_reads_as_empty(tmp_path: Path) -> None:
+    assert load_lineage(tmp_path / "nothing.jsonl") == []
+
+
+def test_a_truncated_line_is_reported_rather_than_skipped(tmp_path: Path) -> None:
+    """Skipping it would under-count the search, and the count is what is checked."""
+    path = tmp_path / "lineage.jsonl"
+    append_candidate(path, _candidate())
+    path.write_text(path.read_text(encoding="utf-8") + '{"candidate_sha": "ab', encoding="utf-8")
+    with pytest.raises(LineageError, match="is not JSON"):
+        load_lineage(path)
+
+
+def test_a_line_that_is_not_a_candidate_is_reported(tmp_path: Path) -> None:
+    path = tmp_path / "lineage.jsonl"
+    path.write_text(json.dumps({"who": "knows"}) + "\n", encoding="utf-8")
+    with pytest.raises(LineageError, match="is not a candidate"):
+        load_lineage(path)
+
+
+def test_blank_lines_are_ignored(tmp_path: Path) -> None:
+    path = tmp_path / "lineage.jsonl"
+    append_candidate(path, _candidate())
+    path.write_text(path.read_text(encoding="utf-8") + "\n\n", encoding="utf-8")
+    assert len(load_lineage(path)) == 1
+
+
+def test_a_search_of_one_is_refused() -> None:
+    """A run that explored one candidate and a run whose search failed look alike."""
+    with pytest.raises(LineageError, match="under the floor"):
+        assert_searched([_candidate()])
+
+
+def test_a_search_of_two_passes() -> None:
+    first = _candidate()
+    assert_searched(
+        [first, _candidate(body="# Two\n", generation=1, parent_sha=first.candidate_sha)]
+    )
+
+
+def test_the_best_score_wins_and_ties_break_late() -> None:
+    first = _candidate(score=0.5)
+    second = _candidate(body="# Two\n", generation=1, parent_sha=first.candidate_sha, score=0.5)
+    assert best_scored([first, second]) is second
+
+
+def test_an_unscored_search_has_no_winner() -> None:
+    with pytest.raises(LineageError, match="no candidate carries a score"):
+        best_scored([_candidate(score=None)])
+
+
+def test_a_declared_winner_is_resolved_by_hash() -> None:
+    first = _candidate()
+    assert find([first], first.candidate_sha) is first
+
+
+def test_a_winner_that_was_never_scored_here_is_refused() -> None:
+    """An engine returning a body this record cannot account for."""
+    with pytest.raises(LineageError, match="appears nowhere in this lineage"):
+        find([_candidate()], body_sha("never evaluated"))
+
+
+# -- the run directory ------------------------------------------------------
+
+
+def test_a_run_name_carries_the_date_the_commit_and_the_engine() -> None:
+    assert run_name(engine="gepa", git_sha="abc1234def", on=date(2026, 8, 26)) == (
+        "2026-08-26-abc1234-gepa"
+    )
+
+
+def test_a_slug_is_appended_and_flattened() -> None:
+    name = run_name(engine="gepa", git_sha="abc1234", on=date(2026, 8, 26), slug="First Try!")
+    assert name == "2026-08-26-abc1234-gepa-first-try"
+
+
+def test_a_truncated_sha_is_refused() -> None:
+    """Two runs at two commits would otherwise collide silently."""
+    with pytest.raises(CheckpointError, match="seven-character convention"):
+        run_name(engine="gepa", git_sha="abc")
+
+
+def test_a_run_name_defaults_to_today() -> None:
+    assert run_name(engine="gepa", git_sha="abc1234").startswith(date.today().isoformat())
+
+
+def test_the_manifest_round_trips(tmp_path: Path) -> None:
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    write_manifest(paths, {"engine": "gepa", "seeds": [0, 1]})
+    assert read_manifest(paths)["engine"] == "gepa"
+
+
+def test_a_dataclass_manifest_is_serialised(tmp_path: Path) -> None:
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    write_manifest(paths, EvolveRequest(engine="gepa", target_model=MOCK_MODEL))
+    assert read_manifest(paths)["target_model"] == MOCK_MODEL
+
+
+def test_records_with_no_manifest_cannot_be_attributed(tmp_path: Path) -> None:
+    with pytest.raises(CheckpointError, match="nothing says what this run was"):
+        read_manifest(paths_for(tmp_path, "2026-08-26-abc1234-gepa"))
+
+
+def test_the_three_files_sit_under_one_directory(tmp_path: Path) -> None:
+    paths = paths_for(tmp_path, "a-run")
+    assert {p.parent for p in (paths.records, paths.lineage, paths.manifest)} == {paths.root}
+
+
+# -- venues -----------------------------------------------------------------
+
+
+def test_the_mock_venue_resolves_without_a_server_or_a_key() -> None:
+    venue = venue_for(MOCK_MODEL)
+    assert venue.bills is False
+    assert venue.receipts is False
+
+
+def test_the_local_venue_can_be_asked_for_a_receipt() -> None:
+    assert venue_for("ollama/qwen3:4b").receipts is True
+
+
+def test_a_hosted_venue_needs_its_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Surfaced before the run has a checkpoint and a half-written lineage."""
+    monkeypatch.delenv("NVIDIA_API_KEY", raising=False)
+    with pytest.raises(VenueError, match="NVIDIA_API_KEY"):
+        venue_for("nvbuild/meta/llama-3.1-8b-instruct")
+
+
+def test_a_hosted_venue_with_a_key_offers_no_receipt(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("NVIDIA_API_KEY", "not-a-real-key")
+    venue = venue_for("nvbuild/meta/llama-3.1-8b-instruct")
+    assert venue.receipts is False
+    assert "no receipt obtainable" in isolation_receipt(venue)
+
+
+def test_an_unknown_prefix_is_refused() -> None:
+    with pytest.raises(VenueError, match="no venue for"):
+        venue_for("gpt-4o")
+
+
+def test_the_key_check_reports_presence_without_reading_the_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("NVIDIA_API_KEY", "  ")
+    assert key_is_present() is False
+    monkeypatch.setenv("NVIDIA_API_KEY", "something")
+    assert key_is_present() is True
+
+
+def test_the_mock_answers_correctly_only_when_the_marker_is_present() -> None:
+    item = items_for([0], limit=1)[0]
+    prompt = render_item(item)
+    oracle = mock_call({prompt: item.answer})
+    with_marker = oracle(prompt, f"you should {MOCK_MARKER}.", False)
+    assert with_marker.text == f"ANSWER: {item.answer}"
+
+
+def test_the_mock_guesses_from_the_menu_without_the_marker() -> None:
+    item = items_for([0], limit=1)[0]
+    prompt = render_item(item)
+    guessed = mock_call({prompt: item.answer})(prompt, "no guidance here", False)
+    assert guessed.text.removeprefix("ANSWER: ") in item.options
+
+
+def test_a_marker_with_no_answer_key_is_worth_nothing() -> None:
+    """A marker that cannot be rewarded should not be."""
+    item = items_for([0], limit=1)[0]
+    prompt = render_item(item)
+    unkeyed = mock_call()(prompt, f"you should {MOCK_MARKER}.", False)
+    assert unkeyed.text.removeprefix("ANSWER: ") in item.options
+
+
+def test_the_mock_reads_the_menu_rather_than_the_facts() -> None:
+    """Facts render as bullets too, and answering from them scores zero everywhere."""
+    item = items_for([0], limit=1)[0]
+    prompt = render_item(item)
+    chosen = mock_call()(prompt, "", False).text.removeprefix("ANSWER: ")
+    assert chosen in item.options
+
+
+def test_the_mock_answers_an_item_with_no_menu_with_nothing() -> None:
+    assert mock_call()("no options here", "", False).text == "ANSWER: "
+
+
+def test_the_mock_venue_supplies_its_own_call() -> None:
+    assert call_fn(venue_for(MOCK_MODEL))("Options:\n- a\n- b", "", False).text.startswith("ANSWER")
+
+
+def test_a_bare_model_name_is_refused_in_this_package_s_own_type() -> None:
+    """`local_call` refuses it because a typo un-registers the venue."""
+    from decision_evals.evolution.venues import Venue
+    from decision_evals.providers.openai_compatible import ollama
+
+    with pytest.raises(VenueError, match="does not name its venue"):
+        call_fn(Venue(model="qwen3:4b", endpoint=ollama(), bills=False))
+
+
+def test_the_reflector_climbs_one_rung_per_proposal() -> None:
+    """It counts calls rather than reading the text. The docstring says why."""
+    reflect = mock_reflector()
+    for rung in MOCK_LADDER:
+        assert rung in reflect("```\nAnswer the question.\n```")
+
+
+def test_the_reflector_repeats_the_last_rung_once_the_ladder_runs_out() -> None:
+    """So a proposal from an accepted parent repeats a body and the search converges."""
+    reflect = mock_reflector()
+    for _ in MOCK_LADDER:
+        reflect("```\nAnswer.\n```")
+    assert reflect("```\nAnswer.\n```") == reflect("```\nAnswer.\n```")
+
+
+def test_the_reflector_survives_a_prompt_with_no_fenced_block() -> None:
+    assert MOCK_LADDER[0] in mock_reflector()("no fences here")
+
+
+# -- the adapter ------------------------------------------------------------
+
+
+def _adapter(tmp_path: Path, items: list | None = None, **overrides: object) -> DecisionAdapter:
+    """An adapter over the mock venue, holding the answer key for ``items``.
+
+    The key has to cover exactly the items a test evaluates. Cover fewer and the
+    marker is unrewarded on the rest, which the hashed guess hides by being
+    right about half the time anyway.
+    """
+    items = items if items is not None else items_for([0], limit=2)
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_calls=200)
+    venue = venue_for(MOCK_MODEL)
+    fields: dict[str, object] = {
+        "venue": venue,
+        "checkpoint": tmp_path / "records.jsonl",
+        "lineage": tmp_path / "lineage.jsonl",
+        "budget": budget_for(request, venue),
+        "git_sha": "abc1234",
+        "call": mock_call({render_item(item): item.answer for item in items}),
+        "now": lambda: "2026-08-26T00:00:00+00:00",
+    }
+    fields.update(overrides)
+    return DecisionAdapter(**fields)  # type: ignore[arg-type]
+
+
+def test_a_trace_scores_one_or_zero() -> None:
+    assert (
+        Trace(
+            item_id="x",
+            seed=0,
+            question="q",
+            rendered="r",
+            response="ANSWER: a",
+            expected="a",
+            parsed="a",
+            parse_status="parsed",
+            zero_cause=None,
+            correct=True,
+        ).score
+        == 1.0
+    )
+
+
+def test_the_marker_is_worth_points_and_the_absence_of_it_is_not(tmp_path: Path) -> None:
+    """The whole smoke path in one assertion: a body the venue rewards scores higher."""
+    items = items_for([0], limit=12)
+    adapter = _adapter(tmp_path, items)
+    plain = adapter.evaluate(items, {COMPONENT: "Answer the question."})
+    marked = adapter.evaluate(items, {COMPONENT: f"When the facts conflict, {MOCK_MARKER}."})
+    assert sum(marked.scores) == len(items)
+    assert sum(plain.scores) < len(items)
+
+
+def test_re_evaluating_a_candidate_resumes_rather_than_re_running(tmp_path: Path) -> None:
+    """An engine scores the base program on the valset and then on minibatches of it."""
+    items = items_for([0], limit=4)
+    adapter = _adapter(tmp_path)
+    first = adapter.evaluate(items, {COMPONENT: "Answer the question."})
+    again = adapter.evaluate(items, {COMPONENT: "Answer the question."})
+    assert first.scores == again.scores
+    # `num_metric_calls` reports what the engine spent, which is one evaluation
+    # per item either way. What resumed is visible in the checkpoint.
+    assert again.num_metric_calls == len(items)
+    assert len(load_records(adapter.checkpoint)) == len(items)
+
+
+def test_two_candidates_are_two_sets_of_calls(tmp_path: Path) -> None:
+    """The resume key holds them apart; `(item_id, arm)` alone would not."""
+    items = items_for([0], limit=4)
+    adapter = _adapter(tmp_path)
+    adapter.evaluate(items, {COMPONENT: "One."})
+    adapter.evaluate(items, {COMPONENT: "Two."})
+    records = load_records(adapter.checkpoint)
+    assert len(records) == 2 * len(items)
+    assert len({record.candidate_sha for record in records}) == 2
+
+
+def test_the_resume_key_names_the_seed_and_the_candidate() -> None:
+    assert set(RESUME_FIELDS) == {"item_id", "arm", "candidate_sha", "seed"}
+
+
+def test_every_candidate_is_recorded_before_it_is_scored(tmp_path: Path) -> None:
+    adapter = _adapter(tmp_path)
+    adapter.evaluate(items_for([0], limit=2), {COMPONENT: "One."})
+    lineage = load_lineage(tmp_path / "lineage.jsonl")
+    assert len(lineage) == 1
+    assert lineage[0].generation == 0
+    assert lineage[0].accepted is False
+
+
+def test_an_empty_body_is_refused_rather_than_scored_as_a_loser(tmp_path: Path) -> None:
+    with pytest.raises(AdapterError, match="no 'skill_md' text"):
+        _adapter(tmp_path).evaluate(items_for([0], limit=2), {COMPONENT: "   "})
+
+
+def test_an_empty_batch_is_refused(tmp_path: Path) -> None:
+    """A zero meaning "nothing ran" and one meaning "everything was wrong"."""
+    with pytest.raises(AdapterError, match="empty batch"):
+        _adapter(tmp_path).evaluate([], {COMPONENT: "A skill."})
+
+
+def test_a_holdout_item_never_reaches_the_venue(tmp_path: Path) -> None:
+    items = items_for([0], limit=1)
+    leaked = [items[0].model_copy(update={"seed": HOLDOUT_FLOOR})]
+    with pytest.raises(HoldoutBreachError):
+        _adapter(tmp_path).evaluate(leaked, {COMPONENT: "A skill."})
+
+
+def test_a_search_past_its_call_cap_stops(tmp_path: Path) -> None:
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_calls=1, child_calls=1)
+    adapter = _adapter(tmp_path, budget=budget_for(request, venue_for(MOCK_MODEL)))
+    with pytest.raises(BudgetError, match="budget refused"):
+        adapter.evaluate(items_for([0], limit=4), {COMPONENT: "A skill."})
+
+
+def test_reflection_reads_the_losses(tmp_path: Path) -> None:
+    items = items_for([0], limit=4)
+    adapter = _adapter(tmp_path)
+    scored = adapter.evaluate(items, {COMPONENT: "Answer."}, capture_traces=True)
+    dataset = adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, [COMPONENT])
+    assert set(dataset) == {COMPONENT}
+    assert all("Feedback" in example for example in dataset[COMPONENT])
+
+
+def test_reflection_on_a_clean_batch_says_so_rather_than_saying_nothing(tmp_path: Path) -> None:
+    items = items_for([0], limit=4)
+    adapter = _adapter(tmp_path, items)
+    body = f"When the facts conflict, {MOCK_MARKER}."
+    scored = adapter.evaluate(items, {COMPONENT: body}, capture_traces=True)
+    dataset = adapter.make_reflective_dataset({COMPONENT: body}, scored, [COMPONENT])
+    assert "prefer a smaller edit" in dataset[COMPONENT][0]["Feedback"]
+
+
+def test_reflection_without_traces_is_refused(tmp_path: Path) -> None:
+    adapter = _adapter(tmp_path)
+    scored = adapter.evaluate(items_for([0], limit=2), {COMPONENT: "Answer."})
+    with pytest.raises(AdapterError, match="without captured traces"):
+        adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, [COMPONENT])
+
+
+def test_a_component_this_adapter_does_not_own_is_refused(tmp_path: Path) -> None:
+    """A skill is one file; a candidate with more components would not install."""
+    adapter = _adapter(tmp_path)
+    scored = adapter.evaluate(items_for([0], limit=2), {COMPONENT: "Answer."}, capture_traces=True)
+    with pytest.raises(AdapterError, match="was asked to update"):
+        adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, ["system_prompt"])
+
+
+def test_the_proposal_hook_is_present_and_none() -> None:
+    """Read without a getattr default by the engine, so omitting it disables mutation."""
+    assert DecisionAdapter.propose_new_texts is None
+
+
+def _trace(**overrides: object) -> Trace:
+    fields: dict[str, object] = {
+        "item_id": "x",
+        "seed": 0,
+        "question": "q",
+        "rendered": "r",
+        "response": "",
+        "expected": "act",
+        "parsed": None,
+        "parse_status": "missing",
+        "zero_cause": "format_violation",
+        "correct": False,
+    }
+    fields.update(overrides)
+    return Trace(**fields)  # type: ignore[arg-type]
+
+
+def test_an_infrastructure_zero_tells_the_reflector_to_ignore_it() -> None:
+    assert "ignore this example" in _feedback(_trace(zero_cause="infrastructure"))
+
+
+def test_an_unparseable_reply_is_named_as_a_format_failure() -> None:
+    assert "parseable" in _feedback(_trace())
+
+
+def test_a_wrong_answer_names_both_options() -> None:
+    feedback = _feedback(_trace(parsed="hold", zero_cause="agent_wrong"))
+    assert "'hold'" in feedback
+    assert "'act'" in feedback
+
+
+# -- the driver -------------------------------------------------------------
+
+
+def test_a_request_with_no_validation_seeds_is_refused() -> None:
+    with pytest.raises(EvolveError, match="training seeds and validation seeds"):
+        EvolveRequest(engine="gepa", target_model=MOCK_MODEL, val_seeds=())
+
+
+def test_a_seed_in_both_splits_is_refused() -> None:
+    """An acceptance gate reading what the proposal was written against accepts anything."""
+    with pytest.raises(EvolveError, match="both the training and validation"):
+        EvolveRequest(engine="gepa", target_model=MOCK_MODEL, train_seeds=(0,), val_seeds=(0,))
+
+
+def test_a_request_carrying_a_holdout_seed_is_refused() -> None:
+    with pytest.raises(HoldoutBreachError):
+        EvolveRequest(engine="gepa", target_model=MOCK_MODEL, val_seeds=(HOLDOUT_FLOOR,))
+
+
+def test_the_seed_body_drops_the_frontmatter(tmp_path: Path) -> None:
+    """Frontmatter is the install contract, and one of its fields is a measured artefact."""
+    skill = tmp_path / "SKILL.md"
+    skill.write_text("---\nname: x\n---\n\n# The body\n", encoding="utf-8")
+    assert seed_body(tmp_path, "SKILL.md") == "# The body\n"
+
+
+def test_a_body_with_no_frontmatter_is_returned_whole(tmp_path: Path) -> None:
+    skill = tmp_path / "SKILL.md"
+    skill.write_text("# The body\n", encoding="utf-8")
+    assert seed_body(tmp_path, "SKILL.md") == "# The body\n"
+
+
+def test_an_unterminated_frontmatter_is_returned_whole(tmp_path: Path) -> None:
+    skill = tmp_path / "SKILL.md"
+    skill.write_text("---\nname: x\n", encoding="utf-8")
+    assert seed_body(tmp_path, "SKILL.md").startswith("---")
+
+
+def test_a_missing_seed_skill_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(EvolveError, match="is missing"):
+        seed_body(tmp_path, "nowhere.md")
+
+
+def test_the_shipped_skill_is_a_usable_seed() -> None:
+    body = seed_body(Path(__file__).resolve().parents[2])
+    assert body.strip()
+    assert not body.startswith("---")
+
+
+def test_the_limit_is_per_seed_so_the_strata_stay_balanced() -> None:
+    """Capping the flattened list would take every stratum from the first seed."""
+    items = items_for([0, 1], limit=3)
+    assert len(items) == 6
+    assert {item.seed for item in items} == {0, 1}
+
+
+def test_no_limit_generates_the_whole_corpus() -> None:
+    assert len(items_for([0])) > 100
+
+
+def test_a_budget_for_a_free_venue_can_still_stop_the_run() -> None:
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_calls=10)
+    budget = budget_for(request, venue_for(MOCK_MODEL))
+    assert budget.run.limit_calls == 10
+    assert budget.run.limit_seconds == request.max_seconds
+
+
+def test_an_inner_cap_is_never_larger_than_the_run() -> None:
+    request = EvolveRequest(
+        engine="gepa", target_model=MOCK_MODEL, max_calls=5, generation_calls=60, child_calls=30
+    )
+    budget = budget_for(request, venue_for(MOCK_MODEL))
+    assert budget.generation.limit_calls == 5
+    assert budget.child.limit_calls == 5
+
+
+def test_an_engine_with_no_driver_says_so(tmp_path: Path) -> None:
+    from decision_evals.evolution.run import evolve
+
+    with pytest.raises(EvolveError, match="has no driver here yet"):
+        evolve(
+            EvolveRequest(engine="skillopt", target_model=MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+        )

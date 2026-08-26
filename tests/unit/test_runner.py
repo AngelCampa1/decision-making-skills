@@ -599,6 +599,98 @@ def test_completed_keys_are_read_per_arm(items: list[Item], tmp_path: Path) -> N
     assert len(again) == len(items)
 
 
+def test_two_candidates_in_one_checkpoint_are_different_work(
+    items: list[Item], tmp_path: Path
+) -> None:
+    """The defect the widened key exists to prevent.
+
+    Every child of an evolution run scores in the ``candidate`` arm on the same
+    items. Under the default key both children are ``(item_id, "candidate")``,
+    so the second one resumes into the first one's rows, runs nothing, and
+    reports the first child's score as its own.
+    """
+    checkpoint = tmp_path / "run.jsonl"
+    call = _answers_correctly(items)
+    fields = ("item_id", "arm", "candidate_sha", "seed")
+    first = run_arm(
+        items,
+        build_arm("candidate", skill_body="# Child one\nTry this."),
+        model="haiku",
+        checkpoint=checkpoint,
+        call=call,
+        ledger=BudgetLedger(limit_usd=10.0),
+        candidate_sha="aaaa1111",
+        resume_fields=fields,
+    )
+    second = run_arm(
+        items,
+        build_arm("candidate", skill_body="# Child two\nTry that."),
+        model="haiku",
+        checkpoint=checkpoint,
+        call=call,
+        ledger=BudgetLedger(limit_usd=10.0),
+        candidate_sha="bbbb2222",
+        resume_fields=fields,
+    )
+    assert len(first) == len(items)
+    assert len(second) == len(items)
+    assert {record.candidate_sha for record in load_records(checkpoint)} == {
+        "aaaa1111",
+        "bbbb2222",
+    }
+
+
+def test_the_same_candidate_still_resumes(items: list[Item], tmp_path: Path) -> None:
+    """Widening the key must not cost resumability, which is the whole budget."""
+    checkpoint = tmp_path / "run.jsonl"
+    call = _answers_correctly(items)
+    fields = ("item_id", "arm", "candidate_sha", "seed")
+    kwargs: dict[str, object] = {
+        "model": "haiku",
+        "checkpoint": checkpoint,
+        "call": call,
+        "candidate_sha": "aaaa1111",
+        "resume_fields": fields,
+    }
+    arm = build_arm("candidate", skill_body="# Child one\nTry this.")
+    run_arm(items[:2], arm, ledger=BudgetLedger(limit_usd=10.0), **kwargs)  # type: ignore[arg-type]
+    again = run_arm(items, arm, ledger=BudgetLedger(limit_usd=10.0), **kwargs)  # type: ignore[arg-type]
+    assert len(again) == len(items) - 2
+
+
+def test_records_carry_the_seed_they_were_generated_from(items: list[Item], tmp_path: Path) -> None:
+    """``item_id`` has no seed in it, so without this column a resampled holdout
+    and a training item are indistinguishable on disk."""
+    checkpoint = tmp_path / "run.jsonl"
+    run_arm(
+        items,
+        ARM,
+        model="haiku",
+        checkpoint=checkpoint,
+        call=_answers_correctly(items),
+        ledger=BudgetLedger(limit_usd=10.0),
+    )
+    written = load_records(checkpoint)
+    assert {record.seed for record in written} == {item.seed for item in items}
+    assert all(record.candidate_sha is None for record in written)
+
+
+def test_a_resume_column_the_loop_cannot_build_is_refused(
+    items: list[Item], tmp_path: Path
+) -> None:
+    """Silently, such a column matches nothing and every item looks pending."""
+    with pytest.raises(RunError, match="cannot resume on"):
+        run_arm(
+            items,
+            ARM,
+            model="haiku",
+            checkpoint=tmp_path / "run.jsonl",
+            call=_answers_correctly(items),
+            ledger=BudgetLedger(limit_usd=10.0),
+            resume_fields=("item_id", "template_id"),
+        )
+
+
 def test_a_truncated_final_line_does_not_void_the_checkpoint(tmp_path: Path) -> None:
     """A run killed mid-write leaves a partial line; that must not cost the rest."""
     checkpoint = tmp_path / "run.jsonl"
@@ -1006,3 +1098,38 @@ def test_the_last_attempt_getting_through_is_a_normal_record(
     )
     assert len(attempts) == 2
     assert records[0].zero_cause is None
+
+
+def test_time_spent_waiting_out_a_rate_limit_is_charged_to_the_clock(
+    items: list[Item], tmp_path: Path
+) -> None:
+    """The wall-clock cap is the guard on a venue that bills nothing.
+
+    A run held at a free tier's rate limit burns no dollars and no calls, so a
+    ledger that only counted those would sit at zero all afternoon. The pause is
+    booked against the clock after each batch rather than at the end, because a
+    cap that is only read once the run is over is a report.
+
+    ``retry_after`` is what makes this deterministic: the server's own number is
+    used verbatim, so the charge is exactly the delay rather than a sample from
+    the jittered schedule.
+    """
+    attempts: list[int] = []
+    answer = _answers_correctly(items)
+
+    def call(prompt: str, system_prompt: str, append: bool) -> CliResult:
+        attempts.append(1)
+        if len(attempts) == 1:
+            raise RateLimitedError("429", retry_after=0.05)
+        return answer(prompt, system_prompt, append)
+
+    with pytest.raises(RunError, match="past the"):
+        run_arm(
+            items[:2],
+            ARM,
+            model="haiku",
+            checkpoint=tmp_path / "run.jsonl",
+            call=call,
+            ledger=BudgetLedger(limit_usd=1.0, limit_seconds=0.04),
+            backoff=Backoff(base_delay=0.0, max_delay=0.0, breaker_trips=99),
+        )

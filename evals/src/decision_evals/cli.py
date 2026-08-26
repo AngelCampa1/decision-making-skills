@@ -47,6 +47,9 @@ from decision_evals.drift import (
     worklist,
 )
 from decision_evals.drift import census as drift_census
+from decision_evals.evolution.run import EvolveRequest
+from decision_evals.evolution.run import evolve as run_evolution
+from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm
 from decision_evals.prereg import (
     PreregistrationError,
     RepoState,
@@ -1285,6 +1288,91 @@ def mirror() -> None:
     for path in changed:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
     typer.echo(f"{len(changed)} mirror(s) updated")
+
+
+@app.command()
+def evolve(
+    engine: Annotated[
+        str, typer.Option(help="Which search to run. Only `gepa` is wired.")
+    ] = "gepa",
+    target: Annotated[str, typer.Option(help="The model the skill is evolved *for*.")] = MOCK_MODEL,
+    reflector: Annotated[
+        str, typer.Option(help="The model that writes the proposals. Blank uses the target.")
+    ] = "",
+    train_seeds: Annotated[str, typer.Option(help="Comma-separated training seeds.")] = "0,1",
+    val_seeds: Annotated[str, typer.Option(help="Comma-separated validation seeds.")] = "1000",
+    max_calls: Annotated[int, typer.Option(help="Whole-run call cap.")] = 60,
+    max_seconds: Annotated[float, typer.Option(help="Whole-run wall-clock cap.")] = 1800.0,
+    generation_calls: Annotated[int, typer.Option(help="Call cap per generation.")] = 400,
+    child_calls: Annotated[int, typer.Option(help="Call cap per candidate.")] = 200,
+    limit: Annotated[int, typer.Option(help="Items per seed. 0 means all of them.")] = 0,
+    slug: Annotated[str, typer.Option(help="Appended to the run directory name.")] = "",
+) -> None:
+    """Evolve a skill against the corpus, and write the search down.
+
+    Defaults to the in-process mock venue, which makes a bare `de evolve` a
+    smoke run: no server, no key, no quota, and a lineage at the end that proves
+    the loop closed. Point `--target` at `ollama/...` or `nvbuild/...` for a run
+    that means something.
+
+    This spends quota on any target but the mock one. The caps are calls and
+    wall-clock rather than dollars, because both real venues report zero cost
+    and a dollar cap that cannot fire is not a guard.
+    """
+    head = _git_output(["rev-parse", "HEAD"])
+    if head is None:
+        typer.secho("not a git repository, so no commit can be recorded", fg=typer.colors.RED)
+        raise typer.Exit(1)
+
+    request = EvolveRequest(
+        engine=engine,
+        target_model=target,
+        reflector_model=reflector or None,
+        train_seeds=_seeds(train_seeds),
+        val_seeds=_seeds(val_seeds),
+        max_calls=max_calls,
+        max_seconds=max_seconds,
+        generation_calls=generation_calls,
+        child_calls=child_calls,
+        limit=limit,
+        slug=slug,
+    )
+    result = run_evolution(
+        request,
+        repo_root=REPO_ROOT,
+        git_sha=head,
+        reflection_lm=_reflector(request),
+    )
+    typer.echo(f"explored {result.explored} candidate(s)")
+    typer.echo(f"winner   {result.winner.candidate_sha[:12]} scored {result.winner.score}")
+    typer.echo(f"lineage  {result.paths.lineage.relative_to(REPO_ROOT)}")
+
+
+def _seeds(text: str) -> tuple[int, ...]:
+    """Parse a comma-separated seed list.
+
+    Raises:
+        typer.Exit: A field that is not an integer. Dropping one silently would
+            run a search over a smaller pool than was asked for and report the
+            result as if it had not.
+    """
+    try:
+        return tuple(int(part) for part in text.split(",") if part.strip())
+    except ValueError as exc:
+        typer.secho(f"seeds must be integers: {exc}", fg=typer.colors.RED)
+        raise typer.Exit(1) from exc
+
+
+def _reflector(request: EvolveRequest) -> Callable[[str], str] | None:
+    """The callable GEPA writes proposals with.
+
+    On the mock venue this is :func:`~decision_evals.evolution.venues.mock_reflector`,
+    which improves on a fixed schedule. GEPA refuses to start with no reflector
+    at all when the adapter supplies no ``propose_new_texts``, and a smoke run's
+    job is to prove the loop closes rather than to write a skill.
+    """
+    model = request.reflector_model or request.target_model
+    return mock_reflector() if model == MOCK_MODEL else reflection_lm(model)
 
 
 @app.command()

@@ -28,7 +28,14 @@ from decision_evals.arenas import (
     policy_for,
     resolve_model,
 )
-from decision_evals.budget import BudgetError, BudgetLedger, estimate_cost_usd, project_cost
+from decision_evals.budget import (
+    LEDGER_SCOPES,
+    BudgetError,
+    BudgetLedger,
+    NestedBudget,
+    estimate_cost_usd,
+    project_cost,
+)
 from decision_evals.prereg import (
     Preregistration,
     PreregistrationError,
@@ -461,6 +468,185 @@ def test_a_call_that_would_overrun_is_refused_before_it_happens() -> None:
     """Checked before the call, so the limit is a limit rather than a report."""
     with pytest.raises(BudgetError, match="past the"):
         BudgetLedger(limit_usd=10.0, spent_usd=9.0).assert_can_afford(1.01)
+
+
+# -- the three limits -------------------------------------------------------
+#
+# Dollars were the only unit while every call went through a subscription that
+# priced them. A local model and a free tier both report zero, so a ledger
+# carrying only a dollar cap authorises everything it is ever shown.
+
+
+def test_a_free_venue_with_only_a_dollar_cap_is_refused() -> None:
+    """The refusal the whole free-tier venue rests on."""
+    with pytest.raises(BudgetError, match="cannot fire"):
+        BudgetLedger(limit_usd=10.0, bills=False)
+
+
+@pytest.mark.parametrize("guard", [{"limit_calls": 100}, {"limit_seconds": 600.0}])
+def test_a_free_venue_with_a_guard_that_can_bind_is_allowed(guard: dict[str, float]) -> None:
+    assert BudgetLedger(limit_usd=0.0, bills=False, **guard)  # type: ignore[arg-type]
+
+
+def test_a_call_cap_below_one_is_refused() -> None:
+    with pytest.raises(BudgetError, match="at least 1"):
+        BudgetLedger(limit_usd=10.0, limit_calls=0)
+
+
+def test_a_clock_cap_at_or_below_zero_is_refused() -> None:
+    with pytest.raises(BudgetError, match="must be positive"):
+        BudgetLedger(limit_usd=10.0, limit_seconds=0.0)
+
+
+def test_an_unset_cap_reports_no_remainder_rather_than_zero() -> None:
+    """None and 0 are opposite answers, and confusing them stops a run early."""
+    ledger = BudgetLedger(limit_usd=10.0)
+    assert ledger.remaining_calls is None
+    assert ledger.remaining_seconds is None
+
+
+def test_a_set_cap_reports_what_is_left() -> None:
+    ledger = BudgetLedger(limit_usd=10.0, limit_calls=10, limit_seconds=60.0)
+    charged = ledger.record(0.0, calls=4, seconds=15.0)
+    assert charged.remaining_calls == 6
+    assert charged.remaining_seconds == 45.0
+
+
+def test_neither_remainder_goes_negative() -> None:
+    over = BudgetLedger(
+        limit_usd=10.0, limit_calls=2, spent_calls=5, limit_seconds=10.0, elapsed_seconds=30.0
+    )
+    assert over.remaining_calls == 0
+    assert over.remaining_seconds == 0.0
+
+
+def test_exhaustion_reads_every_limit() -> None:
+    assert BudgetLedger(limit_usd=10.0, limit_calls=5, spent_calls=5).exhausted
+    assert BudgetLedger(limit_usd=10.0, limit_seconds=60.0, elapsed_seconds=60.0).exhausted
+    assert not BudgetLedger(
+        limit_usd=10.0, spent_usd=1.0, limit_calls=5, spent_calls=1, limit_seconds=60.0
+    ).exhausted
+
+
+def test_a_free_venue_is_not_exhausted_by_a_dollar_figure() -> None:
+    """The mirror of the construction refusal: zero cost cannot exhaust anything."""
+    spent = BudgetLedger(limit_usd=0.0, spent_usd=0.0, bills=False, limit_calls=5)
+    assert not spent.exhausted
+
+
+@pytest.mark.parametrize(
+    "charge",
+    [
+        {"calls": -1},
+        {"seconds": -1.0},
+        {"seconds": 1.0, "backoff_seconds": -1.0},
+    ],
+)
+def test_a_negative_charge_is_refused(charge: dict[str, float]) -> None:
+    with pytest.raises(BudgetError, match="cannot be negative"):
+        BudgetLedger(limit_usd=10.0).record(**charge)  # type: ignore[arg-type]
+
+
+def test_backoff_longer_than_the_call_it_is_part_of_is_refused() -> None:
+    """Backoff is a share of the elapsed time, so it cannot exceed it."""
+    with pytest.raises(BudgetError, match="part of the elapsed time"):
+        BudgetLedger(limit_usd=10.0).record(0.0, seconds=2.0, backoff_seconds=3.0)
+
+
+def test_waiting_can_be_booked_without_a_call() -> None:
+    """A backpressure pause burns the clock and nothing else."""
+    waited = BudgetLedger(limit_usd=10.0, limit_seconds=600.0).record(
+        calls=0, seconds=45.0, backoff_seconds=45.0
+    )
+    assert waited.spent_calls == 0
+    assert waited.elapsed_seconds == 45.0
+    assert waited.backoff_seconds == 45.0
+
+
+def test_a_call_past_the_call_cap_is_refused_before_it_happens() -> None:
+    with pytest.raises(BudgetError, match="past the 10-call limit"):
+        BudgetLedger(limit_usd=10.0, limit_calls=10, spent_calls=10).assert_can_afford()
+
+
+def test_a_call_past_the_clock_cap_is_refused_before_it_happens() -> None:
+    ledger = BudgetLedger(
+        limit_usd=10.0, limit_seconds=600.0, elapsed_seconds=590.0, backoff_seconds=300.0
+    )
+    with pytest.raises(BudgetError, match="waiting out rate limits"):
+        ledger.assert_can_afford(seconds=30.0)
+
+
+def test_a_free_venue_is_not_stopped_by_the_dollar_arm() -> None:
+    BudgetLedger(limit_usd=0.0, bills=False, limit_calls=10).assert_can_afford(5.0)
+
+
+def test_a_call_inside_every_cap_passes() -> None:
+    BudgetLedger(
+        limit_usd=10.0, spent_usd=1.0, limit_calls=10, spent_calls=1, limit_seconds=600.0
+    ).assert_can_afford(1.0, seconds=10.0)
+
+
+def test_a_reset_keeps_the_limits_and_drops_the_totals() -> None:
+    spent = BudgetLedger(limit_usd=10.0, limit_calls=10, limit_seconds=60.0).record(
+        2.0, calls=3, seconds=20.0, backoff_seconds=5.0
+    )
+    fresh = spent.reset()
+    assert (fresh.limit_usd, fresh.limit_calls, fresh.limit_seconds) == (10.0, 10, 60.0)
+    assert (fresh.spent_usd, fresh.spent_calls, fresh.elapsed_seconds, fresh.backoff_seconds) == (
+        0.0,
+        0,
+        0.0,
+        0.0,
+    )
+
+
+# -- the nested budget ------------------------------------------------------
+
+
+def _nested(*, run: int = 100, generation: int = 20, child: int = 5) -> NestedBudget:
+    return NestedBudget(
+        run=BudgetLedger(limit_usd=0.0, bills=False, limit_calls=run),
+        generation=BudgetLedger(limit_usd=0.0, bills=False, limit_calls=generation),
+        child=BudgetLedger(limit_usd=0.0, bills=False, limit_calls=child),
+    )
+
+
+@pytest.mark.parametrize("scope", LEDGER_SCOPES)
+def test_the_refusal_names_the_scope_that_refused(scope: str) -> None:
+    """A bare "over budget" is not actionable when three budgets are in play."""
+    caps = {"run": 100, "generation": 20, "child": 5}
+    budget = _nested(**{**caps, scope: 1})
+    budget = budget.record(calls=1)
+    with pytest.raises(BudgetError, match=f"the {scope} budget refused"):
+        budget.assert_can_afford()
+
+
+def test_one_call_is_charged_to_all_three_scopes() -> None:
+    charged = _nested().record(calls=1, seconds=3.0, backoff_seconds=1.0)
+    for scope in LEDGER_SCOPES:
+        ledger: BudgetLedger = getattr(charged, scope)
+        assert (ledger.spent_calls, ledger.elapsed_seconds, ledger.backoff_seconds) == (1, 3.0, 1.0)
+
+
+def test_a_new_generation_rolls_both_inner_ledgers_over() -> None:
+    spent = _nested().record(calls=3)
+    rolled = spent.start_generation()
+    assert rolled.run.spent_calls == 3
+    assert rolled.generation.spent_calls == 0
+    assert rolled.child.spent_calls == 0
+
+
+def test_a_new_child_leaves_the_generation_accumulating() -> None:
+    """A per-child cap bounds one pathological candidate, not the generation."""
+    spent = _nested().record(calls=3)
+    rolled = spent.start_child()
+    assert rolled.run.spent_calls == 3
+    assert rolled.generation.spent_calls == 3
+    assert rolled.child.spent_calls == 0
+
+
+def test_a_run_that_can_afford_the_call_everywhere_passes() -> None:
+    _nested().assert_can_afford()
 
 
 # -- cost estimation --------------------------------------------------------

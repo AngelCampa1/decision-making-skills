@@ -92,6 +92,22 @@ class RunRecord:
     parent_node_id: str | None = None
     turn_index: int | None = None
 
+    #: The corpus seed the item was generated from, and the body that was in the
+    #: system prompt. Both default to ``None`` for the same reason the node
+    #: columns do: every record already on disk came from one corpus at one seed
+    #: against a body written by hand, so ``None`` is true of those runs.
+    #:
+    #: They exist because an evolution run breaks the assumption ``item_id``
+    #: rested on. ``item_id`` is ``f"{template_id}#v{variant}-d{count}-{position}"``
+    #: and carries no seed, so the same id names a different scenario under a
+    #: different seed, and a checkpoint holding two seeds cannot tell them apart.
+    #: Resuming on ``(item_id, arm)`` would then skip an item that was never run.
+    #: ``candidate_sha`` is the same problem one level up: every child of an
+    #: evolution run scores in the ``candidate`` arm, and only this column says
+    #: which body answered.
+    seed: int | None = None
+    candidate_sha: str | None = None
+
 
 #: Model prefixes measured to return *different text* when calls run
 #: concurrently, and therefore refused above ``concurrency=1``.
@@ -376,6 +392,7 @@ def _run_loop[T: Identified, R](
     handle: TextIO,
     to_row: Callable[[R], Mapping[str, object]],
     cost_of_record: Callable[[R], float],
+    elapsed_of_record: Callable[[R], float],
     concurrency: int,
     backoff: Backoff | None,
 ) -> list[R]:
@@ -399,6 +416,14 @@ def _run_loop[T: Identified, R](
     *shared*: one :class:`Backpressure` is built here and handed to every
     ``dispatch``, because a per-worker backoff sends the same burst back at the
     same wall.
+
+    **The ledger is charged in three currencies, and on a free venue only two of
+    them can stop anything.** Dollars read zero on a local model and on a free
+    tier. Calls are charged one per dispatch, by the default on
+    :meth:`~decision_evals.budget.BudgetLedger.record`. Seconds come from
+    ``elapsed_of_record``, plus the time the shared :class:`Backpressure` spent
+    holding the run at a rate limit -- charged after each batch rather than at
+    the end, because a cap that is only read once the run is over is a report.
 
     Records are written in completion order rather than in ``pending`` order.
     Nothing downstream reads a checkpoint positionally, and resume is keyed on
@@ -435,6 +460,9 @@ def _run_loop[T: Identified, R](
     # every worker observes.
     backpressure = Backpressure(backoff)
 
+    # `backpressure.slept` is cumulative, so the ledger is charged the delta.
+    charged_backoff = 0.0
+
     with ThreadPoolExecutor(max_workers=concurrency) as pool:
         submitted = 0
         in_flight: dict[Future[R], float] = {}
@@ -459,10 +487,16 @@ def _run_loop[T: Identified, R](
                 # One writer, on this thread. Appending to one handle from
                 # several threads interleaves partial lines, and a corrupt
                 # interior line is the one thing the loaders refuse.
-                ledger = ledger.record(cost_of_record(record))
+                ledger = ledger.record(cost_of_record(record), seconds=elapsed_of_record(record))
                 handle.write(json.dumps(to_row(record), ensure_ascii=False) + "\n")
                 handle.flush()
                 produced.append(record)
+
+            waited = backpressure.slept - charged_backoff
+            if waited > 0:
+                charged_backoff = backpressure.slept
+                ledger = ledger.record(calls=0, seconds=waited, backoff_seconds=waited)
+
             if failure is not None:
                 raise failure
     return produced
@@ -481,6 +515,8 @@ def run_arm(
     concurrency: int = 1,
     measuring_concurrency: bool = False,
     backoff: Backoff | None = None,
+    candidate_sha: str | None = None,
+    resume_fields: Sequence[str] = ("item_id", "arm"),
 ) -> list[RunRecord]:
     """Run one arm over a set of items, resuming from any checkpoint.
 
@@ -501,6 +537,18 @@ def run_arm(
             ``None`` uses :data:`DEFAULT_BACKOFF`. Concurrency does not create
             quota, so a closed window otherwise turns into ``concurrency``
             infrastructure zeros per batch as fast as the pool can produce them.
+        candidate_sha: Identifies the body in ``arm.system_prompt`` when that
+            body was generated rather than written. Recorded on every row, and
+            it belongs in ``resume_fields`` whenever one checkpoint holds more
+            than one candidate.
+        resume_fields: The columns that identify a call for resume. The default
+            is ``("item_id", "arm")``, which is what every checkpoint on disk
+            carries and what every published run resumed on, so it is left
+            alone: widening it by default would make :func:`completed_keys` skip
+            every existing line for a missing column and silently re-run whole
+            checkpoints. An evolution run passes
+            ``("item_id", "arm", "candidate_sha", "seed")``, because there the
+            first two identify a *set* of calls rather than one.
         measuring_concurrency: Permit ``concurrency > 1`` on a model listed in
             :data:`CONCURRENCY_UNSAFE`. Only the falsifier that populates that
             register may pass it: the register exists because such a run was
@@ -574,8 +622,25 @@ def run_arm(
         )
 
     checkpoint.parent.mkdir(parents=True, exist_ok=True)
-    done = completed_keys(checkpoint)
-    pending = [item for item in items if (item.item_id, arm.arm) not in done]
+    done = completed_keys(checkpoint, resume_fields)
+    key_of: dict[str, Callable[[Item], object]] = {
+        "item_id": lambda item: item.item_id,
+        "arm": lambda _item: arm.arm,
+        "candidate_sha": lambda _item: candidate_sha,
+        "seed": lambda item: item.seed,
+    }
+    unknown = [field for field in resume_fields if field not in key_of]
+    if unknown:
+        raise RunError(
+            f"cannot resume on {unknown}: this loop knows how to build a key from "
+            f"{sorted(key_of)} only. A column it cannot reconstruct here would "
+            f"never match a recorded row, and every item would look pending."
+        )
+    pending = [
+        item
+        for item in items
+        if tuple(str(key_of[field](item)) for field in resume_fields) not in done
+    ]
 
     def cost_of(item: Item) -> tuple[str, float]:
         """The prompt to send and what to authorise for it."""
@@ -599,6 +664,7 @@ def run_arm(
             prompt=prompt,
             identity=identity,
             backpressure=backpressure,
+            candidate_sha=candidate_sha,
         )
 
     with checkpoint.open("a", encoding="utf-8") as handle:
@@ -610,6 +676,7 @@ def run_arm(
             handle=handle,
             to_row=asdict,
             cost_of_record=lambda record: record.cost_usd,
+            elapsed_of_record=lambda record: record.duration_ms / 1000.0,
             concurrency=concurrency,
             backoff=backoff,
         )
@@ -624,6 +691,7 @@ def _run_one(
     prompt: str,
     identity: NodeIdentity | None = None,
     backpressure: Backpressure,
+    candidate_sha: str | None = None,
 ) -> RunRecord:
     """One call, retried while the answer is "come back later".
 
@@ -657,6 +725,7 @@ def _run_one(
             result=None,
             response=str(exc),
             identity=identity,
+            candidate_sha=candidate_sha,
         )
 
     score = score_item(item, result.text)
@@ -668,6 +737,7 @@ def _run_one(
         result=result,
         response=result.text,
         identity=identity,
+        candidate_sha=candidate_sha,
     )
 
 
@@ -716,6 +786,7 @@ def _record(
     result: CliResult | None,
     response: str,
     identity: NodeIdentity | None = None,
+    candidate_sha: str | None = None,
 ) -> RunRecord:
     from decision_evals.scorers.answer import Score
 
@@ -743,6 +814,8 @@ def _record(
         node_id=identity.node_id if identity else None,
         parent_node_id=identity.parent_node_id if identity else None,
         turn_index=identity.turn_index if identity else None,
+        seed=item.seed,
+        candidate_sha=candidate_sha,
     )
 
 
