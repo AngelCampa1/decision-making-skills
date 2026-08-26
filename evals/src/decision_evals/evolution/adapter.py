@@ -97,7 +97,7 @@ class Trace:
         return 1.0 if self.correct else 0.0
 
 
-def _evaluation_batch() -> type[EvaluationBatch[Any, Any]]:
+def _evaluation_batch() -> Any:
     """Import GEPA's return type at call time.
 
     ``gepa`` lives in the ``evolve`` dependency group, which ``de check`` never
@@ -191,7 +191,40 @@ class DecisionAdapter:
             HoldoutBreachError: The batch carries a seed no engine may see.
             BudgetError: The run is out of calls, seconds or dollars.
         """
-        body = candidate.get(COMPONENT)
+        traces = self.score(candidate.get(COMPONENT) or "", batch)
+        batch_type = _evaluation_batch()
+        return batch_type(
+            outputs=[trace.response for trace in traces],
+            scores=[trace.score for trace in traces],
+            trajectories=traces if capture_traces else None,
+            # What the *engine* spent, which is one metric evaluation per item.
+            # The calls this harness actually made is a smaller number whenever a
+            # candidate is re-evaluated on items it already covers, and reporting
+            # that as the engine's spend means `max_metric_calls` never falls and
+            # the search does not terminate. The two counters answer different
+            # questions and both are kept: the ledger is charged the calls, GEPA
+            # is told the evaluations.
+            num_metric_calls=len(batch),
+        )
+
+    # -- the scored environment, which is not GEPA's ------------------------
+
+    def score(self, body: str, batch: Sequence[Item]) -> list[Trace]:
+        """Score one body on one batch, and record that it happened.
+
+        Everything an engine needs and nothing shaped like any particular
+        engine's protocol. :meth:`evaluate` is a wrapper for GEPA and
+        :mod:`decision_evals.evolution.skillopt_env` is a wrapper for SkillOpt;
+        both go through here, so the firewall, the budget, the resume key and
+        the lineage cannot be right for one engine and absent for the other.
+
+        Raises:
+            AdapterError: An empty body, or an empty batch. Both would otherwise
+                produce a clean zero, and a zero that means "nothing ran" is
+                indistinguishable from a zero that means "everything was wrong".
+            HoldoutBreachError: The batch carries a seed no engine may see.
+            BudgetError: The run is out of calls, seconds or dollars.
+        """
         if not body or not body.strip():
             raise AdapterError(
                 f"this candidate has no {COMPONENT!r} text. An empty body scores like a "
@@ -210,10 +243,9 @@ class DecisionAdapter:
         # after two candidates -- a refusal for spending that never happened.
         self.budget.assert_can_afford(calls=_pending(batch, self.checkpoint, sha))
 
-        arm = build_arm("candidate", skill_body=body)
         records = run_arm(
-            batch,
-            arm,
+            list(batch),
+            build_arm("candidate", skill_body=body),
             model=self.venue.model,
             checkpoint=self.checkpoint,
             call=self.call,
@@ -233,23 +265,8 @@ class DecisionAdapter:
         # re-run, so the returned list is short by exactly the items that were
         # already scored. The traces have to come off the checkpoint.
         traces = _traces(batch, load_records(self.checkpoint), sha)
-        scores = [trace.score for trace in traces]
-        self._record_candidate(body, sha, batch, scores)
-
-        batch_type = _evaluation_batch()
-        return batch_type(
-            outputs=[trace.response for trace in traces],
-            scores=scores,
-            trajectories=traces if capture_traces else None,
-            # What the *engine* spent, which is one metric evaluation per item.
-            # `len(records)` -- the calls this harness actually made -- is a
-            # smaller number whenever a candidate is re-evaluated on items it
-            # already covers, and reporting that as the engine's spend means
-            # `max_metric_calls` never falls and the search does not terminate.
-            # The two counters answer different questions and both are kept: the
-            # ledger is charged the calls, GEPA is told the evaluations.
-            num_metric_calls=len(batch),
-        )
+        self._record_candidate(body, sha, batch, [trace.score for trace in traces])
+        return traces
 
     def make_reflective_dataset(
         self,

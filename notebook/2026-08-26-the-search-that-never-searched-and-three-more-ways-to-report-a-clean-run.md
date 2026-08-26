@@ -94,10 +94,39 @@ not report which candidate a proposal was mutated from. It is right whenever the
 search moves forward and wrong whenever it branches back to an earlier point on
 the frontier. SkillOpt reports parentage and will not need the approximation.
 
-## Two things this does not have
+## SkillOpt, and the thing the plan got wrong about it
 
-**SkillOpt has no driver yet.** `de evolve --engine skillopt` refuses rather than
-guessing. Its environment package is the next commit.
+The plan said SkillOpt's model layer ships an OpenAI-compatible backend and that
+we would point it at ours. Its router knows three backends — `azure_openai`,
+`codex` and `claude` — and none is called that, which for an afternoon looked
+like the study losing an engine: the CLI backends are the venue the maintainer
+ruled out, and patching the router to add a fourth would mean the result was
+about a patched engine rather than about SkillOpt.
+
+It is fine. `azure_openai` takes an `auth_mode` of `openai_compatible`, and on
+that path `_make_client` builds a plain `OpenAI(base_url=..., api_key=...)`
+against any endpoint. So Ollama and NVIDIA Build are reachable through SkillOpt's
+own configuration, and `skillopt_env.venue_config` writes that section. Nothing
+here is a patch, which is the property that matters.
+
+`skillopt_env.build_env` is the environment: `build_train_env`, `build_eval_env`,
+`rollout` and `get_task_types`, with `rollout` calling the same
+`DecisionAdapter.score` GEPA's `evaluate` calls. One set of books for both
+engines, so a comparison is between engines rather than between two integrations
+that each did their own bookkeeping.
+
+`hard` and `soft` are the same number in every row. The ground truth here is an
+option from a fixed menu, so there is no partial credit, and a fabricated
+gradient between 0 and 1 would hand SkillOpt's reflection a signal that is not in
+the data.
+
+**What is still missing is the driver.** `ReflACTTrainer(cfg, adapter).train()`
+is a clean entry point and its `cfg` is a flat dictionary with a large surface.
+`de evolve --engine skillopt` refuses rather than guessing at those keys, because
+a run under settings nobody chose is not a comparison. Closing it is Phase 2
+work with a real run behind it.
+
+## One thing this does not have
 
 **The seed pools are asserted, not yet used against a real holdout.** `POOLS` puts
 training at 0–999, validation at 1000–1499 and the holdout at 10000 and up, and

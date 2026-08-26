@@ -172,6 +172,18 @@ packages = ["decision_evals"]
 module = ["statsmodels.*", "scipy.*"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+# The engines under study. They live in the `evolve` dependency group, which
+# `de check` never installs, so mypy sees them on a developer's machine and not
+# in CI -- and a type checker that reports different errors depending on whether
+# an optional package happens to be present is a gate that passes locally and
+# fails on a clean checkout. `follow_imports = "skip"` makes both environments
+# agree by treating them as untyped either way, which is also the truth: neither
+# ships a `py.typed` marker.
+module = ["gepa.*", "skillopt.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
 # --------------------------------------------------------------------------- #
 # Tests
 # --------------------------------------------------------------------------- #

@@ -179,8 +179,11 @@ def evolve(
     """
     if request.engine != "gepa":
         raise EvolveError(
-            f"engine {request.engine!r} has no driver here yet. `gepa` is wired; "
-            "`skillopt` runs through its own environment package."
+            f"engine {request.engine!r} has no driver here yet. `gepa` is wired end to "
+            "end. `skillopt` has its environment and its venue configuration in "
+            "`evolution/skillopt_env.py`, and what is missing is the flat config its "
+            "`ReflACTTrainer` reads: guessing at those keys would produce a run whose "
+            "settings nobody chose."
         )
 
     venue = venue_for(request.target_model)
@@ -309,4 +312,4 @@ def _optimize(**kwargs: Any) -> Any:
             "not install it, because the engine under study must not become a dependency "
             "of the instrument."
         ) from exc
-    return gepa.optimize(**kwargs)  # type: ignore[attr-defined]
+    return gepa.optimize(**kwargs)

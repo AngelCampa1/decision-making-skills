@@ -156,7 +156,7 @@ itself, so it grows a row the day a module does.
 | --- | --- |
 | `decision_evals/` | `adjudication` · `arenas` · `budget` · `citations` · `claims` · `cli` · `corpus` · `corrections` · `decisions` · `deployed` · `docs` · `drift` · `elicit` · `orchestrator` · `prereg` · `provenance` · `rescore` · `runner` · `sharded` · `site` · `skills` · `sync` · `tailoring` · `telemetry` · `trigger_arms` · `triggers` · `unbundle` · `wiring` |
 | `decision_evals/corpora/` | `lost_in_conversation` |
-| `decision_evals/evolution/` | `adapter` · `checkpoints` · `holdout` · `lineage` · `run` · `venues` |
+| `decision_evals/evolution/` | `adapter` · `checkpoints` · `holdout` · `lineage` · `run` · `skillopt_env` · `venues` |
 | `decision_evals/generators/` | `audit` · `generate` · `loader` · `safe_eval` · `schema` |
 | `decision_evals/providers/` | `antigravity` · `claude_code` · `openai_compatible` |
 | `decision_evals/scorers/` | `answer` · `bfcl` |

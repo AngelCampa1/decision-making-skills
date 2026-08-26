@@ -9,6 +9,7 @@ match the record it is filed under.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from datetime import date
 from pathlib import Path
@@ -57,6 +58,14 @@ from decision_evals.evolution.run import (
     items_for,
     seed_body,
 )
+from decision_evals.evolution.skillopt_env import (
+    COMPAT_AUTH,
+    TASK_TYPES,
+    SkillOptError,
+    _deployment,
+    build_env,
+    venue_config,
+)
 from decision_evals.evolution.venues import (
     MOCK_LADDER,
     MOCK_MARKER,
@@ -69,8 +78,36 @@ from decision_evals.evolution.venues import (
     mock_reflector,
     venue_for,
 )
+from decision_evals.generators.generate import Item
 from decision_evals.runner import load_records
 from decision_evals.solvers.arms import render_item
+
+#: The engines are the *subject* of this study, so they live in the `evolve`
+#: dependency group and the gate never installs them. A test that needs one is
+#: skipped rather than failed: a red gate on a missing subject would push
+#: somebody to make the instrument depend on the thing it measures.
+needs_skillopt = pytest.mark.skipif(
+    importlib.util.find_spec("skillopt") is None,
+    reason="skillopt is in the `evolve` group, which the gate does not install",
+)
+needs_gepa = pytest.mark.skipif(
+    importlib.util.find_spec("gepa") is None,
+    reason="gepa is in the `evolve` group, which the gate does not install",
+)
+
+
+class _Scored:
+    """A stand-in for GEPA's ``EvaluationBatch``.
+
+    ``make_reflective_dataset`` reads one attribute off it, and building the real
+    one needs the engine installed. A stub keeps those tests running in a gate
+    that deliberately does not have the engine; the one test that the real type
+    comes back is marked and skipped there instead.
+    """
+
+    def __init__(self, trajectories: list[Trace] | None) -> None:
+        self.trajectories = trajectories
+
 
 # -- the seed firewall ------------------------------------------------------
 
@@ -426,7 +463,9 @@ def test_the_reflector_survives_a_prompt_with_no_fenced_block() -> None:
 # -- the adapter ------------------------------------------------------------
 
 
-def _adapter(tmp_path: Path, items: list | None = None, **overrides: object) -> DecisionAdapter:
+def _adapter(
+    tmp_path: Path, items: list[Item] | None = None, **overrides: object
+) -> DecisionAdapter:
     """An adapter over the mock venue, holding the answer key for ``items``.
 
     The key has to cover exactly the items a test evaluates. Cover fewer and the
@@ -471,22 +510,20 @@ def test_the_marker_is_worth_points_and_the_absence_of_it_is_not(tmp_path: Path)
     """The whole smoke path in one assertion: a body the venue rewards scores higher."""
     items = items_for([0], limit=12)
     adapter = _adapter(tmp_path, items)
-    plain = adapter.evaluate(items, {COMPONENT: "Answer the question."})
-    marked = adapter.evaluate(items, {COMPONENT: f"When the facts conflict, {MOCK_MARKER}."})
-    assert sum(marked.scores) == len(items)
-    assert sum(plain.scores) < len(items)
+    plain = adapter.score("Answer the question.", items)
+    marked = adapter.score(f"When the facts conflict, {MOCK_MARKER}.", items)
+    assert sum(trace.score for trace in marked) == len(items)
+    assert sum(trace.score for trace in plain) < len(items)
 
 
 def test_re_evaluating_a_candidate_resumes_rather_than_re_running(tmp_path: Path) -> None:
     """An engine scores the base program on the valset and then on minibatches of it."""
     items = items_for([0], limit=4)
     adapter = _adapter(tmp_path)
-    first = adapter.evaluate(items, {COMPONENT: "Answer the question."})
-    again = adapter.evaluate(items, {COMPONENT: "Answer the question."})
-    assert first.scores == again.scores
-    # `num_metric_calls` reports what the engine spent, which is one evaluation
-    # per item either way. What resumed is visible in the checkpoint.
-    assert again.num_metric_calls == len(items)
+    first = adapter.score("Answer the question.", items)
+    again = adapter.score("Answer the question.", items)
+    assert [t.score for t in first] == [t.score for t in again]
+    # What resumed is visible in the checkpoint: one row per item, not two.
     assert len(load_records(adapter.checkpoint)) == len(items)
 
 
@@ -494,8 +531,8 @@ def test_two_candidates_are_two_sets_of_calls(tmp_path: Path) -> None:
     """The resume key holds them apart; `(item_id, arm)` alone would not."""
     items = items_for([0], limit=4)
     adapter = _adapter(tmp_path)
-    adapter.evaluate(items, {COMPONENT: "One."})
-    adapter.evaluate(items, {COMPONENT: "Two."})
+    adapter.score("One.", items)
+    adapter.score("Two.", items)
     records = load_records(adapter.checkpoint)
     assert len(records) == 2 * len(items)
     assert len({record.candidate_sha for record in records}) == 2
@@ -507,7 +544,7 @@ def test_the_resume_key_names_the_seed_and_the_candidate() -> None:
 
 def test_every_candidate_is_recorded_before_it_is_scored(tmp_path: Path) -> None:
     adapter = _adapter(tmp_path)
-    adapter.evaluate(items_for([0], limit=2), {COMPONENT: "One."})
+    adapter.score("One.", items_for([0], limit=2))
     lineage = load_lineage(tmp_path / "lineage.jsonl")
     assert len(lineage) == 1
     assert lineage[0].generation == 0
@@ -542,7 +579,7 @@ def test_a_search_past_its_call_cap_stops(tmp_path: Path) -> None:
 def test_reflection_reads_the_losses(tmp_path: Path) -> None:
     items = items_for([0], limit=4)
     adapter = _adapter(tmp_path)
-    scored = adapter.evaluate(items, {COMPONENT: "Answer."}, capture_traces=True)
+    scored = _Scored(adapter.score("Answer.", items))
     dataset = adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, [COMPONENT])
     assert set(dataset) == {COMPONENT}
     assert all("Feedback" in example for example in dataset[COMPONENT])
@@ -552,14 +589,15 @@ def test_reflection_on_a_clean_batch_says_so_rather_than_saying_nothing(tmp_path
     items = items_for([0], limit=4)
     adapter = _adapter(tmp_path, items)
     body = f"When the facts conflict, {MOCK_MARKER}."
-    scored = adapter.evaluate(items, {COMPONENT: body}, capture_traces=True)
+    scored = _Scored(adapter.score(body, items))
     dataset = adapter.make_reflective_dataset({COMPONENT: body}, scored, [COMPONENT])
     assert "prefer a smaller edit" in dataset[COMPONENT][0]["Feedback"]
 
 
 def test_reflection_without_traces_is_refused(tmp_path: Path) -> None:
     adapter = _adapter(tmp_path)
-    scored = adapter.evaluate(items_for([0], limit=2), {COMPONENT: "Answer."})
+    adapter.score("Answer.", items_for([0], limit=2))
+    scored = _Scored(None)
     with pytest.raises(AdapterError, match="without captured traces"):
         adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, [COMPONENT])
 
@@ -567,9 +605,22 @@ def test_reflection_without_traces_is_refused(tmp_path: Path) -> None:
 def test_a_component_this_adapter_does_not_own_is_refused(tmp_path: Path) -> None:
     """A skill is one file; a candidate with more components would not install."""
     adapter = _adapter(tmp_path)
-    scored = adapter.evaluate(items_for([0], limit=2), {COMPONENT: "Answer."}, capture_traces=True)
+    scored = _Scored(adapter.score("Answer.", items_for([0], limit=2)))
     with pytest.raises(AdapterError, match="was asked to update"):
         adapter.make_reflective_dataset({COMPONENT: "Answer."}, scored, ["system_prompt"])
+
+
+@needs_gepa
+def test_the_gepa_wrapper_returns_the_engine_s_own_type(tmp_path: Path) -> None:
+    """The one test that needs the engine installed, and it is about the seam."""
+    from gepa.core.adapter import EvaluationBatch
+
+    items = items_for([0], limit=2)
+    adapter = _adapter(tmp_path, items)
+    scored = adapter.evaluate(items, {COMPONENT: "Answer."}, capture_traces=True)
+    assert isinstance(scored, EvaluationBatch)
+    assert scored.num_metric_calls == len(items)
+    assert scored.trajectories is not None
 
 
 def test_the_proposal_hook_is_present_and_none() -> None:
@@ -693,3 +744,93 @@ def test_an_engine_with_no_driver_says_so(tmp_path: Path) -> None:
             repo_root=tmp_path,
             git_sha="abc1234",
         )
+
+
+# -- the SkillOpt environment -----------------------------------------------
+
+
+@needs_skillopt
+def test_a_rollout_reports_the_shape_skillopt_reads(tmp_path: Path) -> None:
+    """`hard` is the corpus's own correct/incorrect; nothing here invents a gradient."""
+    items = items_for([0], limit=4)
+    env = build_env(_adapter(tmp_path, items), train=items, validation=items)
+    rows = env.rollout(env.build_train_env(4, seed=0), "Answer the question.", str(tmp_path))
+    assert len(rows) == len(items)
+    assert {row["hard"] for row in rows} <= {0, 1}
+    assert all(row["soft"] == float(row["hard"]) for row in rows)
+    assert all(row["task_type"] == TASK_TYPES[0] for row in rows)
+
+
+@needs_skillopt
+def test_a_rollout_carries_the_failure_cause_not_only_the_score(tmp_path: Path) -> None:
+    items = items_for([0], limit=4)
+    env = build_env(_adapter(tmp_path, items), train=items, validation=items)
+    rows = env.rollout(env.build_train_env(0, seed=0), "Answer.", str(tmp_path))
+    for row in rows:
+        assert (row["zero_cause"] is None) == bool(row["hard"])
+
+
+@needs_skillopt
+def test_both_engines_score_through_the_same_object(tmp_path: Path) -> None:
+    """One protocol, or the study compares the integrations rather than the engines."""
+    items = items_for([0], limit=4)
+    core = _adapter(tmp_path, items)
+    env = build_env(core, train=items, validation=items)
+    env.rollout(env.build_train_env(0, seed=0), "Answer.", str(tmp_path))
+    assert len(load_lineage(core.lineage)) == 1
+    assert len(load_records(core.checkpoint)) == len(items)
+
+
+@needs_skillopt
+def test_an_eval_split_that_names_no_pool_is_refused(tmp_path: Path) -> None:
+    """Falling back to training is an acceptance gate that accepts everything."""
+    items = items_for([0], limit=2)
+    env = build_env(_adapter(tmp_path, items), train=items, validation=items)
+    with pytest.raises(SkillOptError, match="names no pool"):
+        env.build_eval_env(2, "train", seed=0)
+
+
+@needs_skillopt
+def test_the_eval_env_draws_from_validation(tmp_path: Path) -> None:
+    train = items_for([0], limit=2)
+    validation = items_for([1000], limit=3)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=validation)
+    assert env.build_eval_env(0, "val", seed=0).split == "validation"
+    assert len(env.build_eval_env(0, "val", seed=0)) == len(validation)
+
+
+@needs_skillopt
+def test_one_task_type_rather_than_an_invented_breakdown(tmp_path: Path) -> None:
+    items = items_for([0], limit=2)
+    env = build_env(_adapter(tmp_path, items), train=items, validation=items)
+    assert env.get_task_types() == list(TASK_TYPES)
+
+
+def test_the_venue_reaches_skillopt_as_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Its own auth mode, in its own backend. A patched engine is a different engine."""
+    monkeypatch.setenv("NVIDIA_API_KEY", "not-a-real-key")
+    section = venue_config(
+        venue_for("ollama/qwen3:4b"), venue_for("nvbuild/meta/llama-3.1-8b-instruct")
+    )["model"]
+    assert section["target_azure_openai_auth_mode"] == COMPAT_AUTH
+    assert section["optimizer_azure_openai_auth_mode"] == COMPAT_AUTH
+
+
+def test_the_config_names_the_model_the_server_knows(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The venue prefix is what our registry keys on. No server was ever told about it."""
+    monkeypatch.setenv("NVIDIA_API_KEY", "not-a-real-key")
+    section = venue_config(
+        venue_for("ollama/qwen3:4b"), venue_for("nvbuild/meta/llama-3.1-8b-instruct")
+    )["model"]
+    assert section["target"] == "qwen3:4b"
+    assert section["optimizer"] == "meta/llama-3.1-8b-instruct"
+
+
+def test_a_model_with_no_venue_prefix_is_passed_through() -> None:
+    assert _deployment("qwen3:4b") == "qwen3:4b"
+
+
+def test_the_mock_venue_cannot_be_reached_over_http() -> None:
+    """It answers inside this process, so a config pointing at it points at nothing."""
+    with pytest.raises(SkillOptError, match="no base URL"):
+        venue_config(venue_for(MOCK_MODEL), venue_for("ollama/qwen3:4b"))
