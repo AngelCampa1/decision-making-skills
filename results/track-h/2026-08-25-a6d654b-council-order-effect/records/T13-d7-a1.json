@@ -1,0 +1,53 @@
+{
+  "opaque": "T13",
+  "item_id": "K07",
+  "ordering": "AB",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The conservator's written report is the pivot of this decision.**\n\nIdris Sankey-Marchmont states in writing that rehousing and aqueous treatment carried out in the strongroom as it stands will need to be repeated within a decade. That statement deserves to sit at the centre of the analysis before any numbers are worked through, because it changes what LINDCASTER's GBP 340,000 actually purchases.\n\n---\n\n**What LINDCASTER actually buys**\n\nAt GBP 250 per item and 70 items a month, ordering now gets the work started around October 2026 and finished around May 2028, comfortably inside the September 2028 deadline. 1,360 items is a large number and sounds like a strong response to a collection that is losing 62 items a year to the unusable band.\n\nBut the conservator's report re-labels what those 1,360 treatments are. They are not permanent remediation. They are remediation that will have to be repeated within ten years, in a room that will still be sitting at 62 per cent relative humidity with an eleven-point swing. Buffered enclosures holding an item's microclimate within three points of its packing condition for eight to twelve years are consistent with this: they slow deterioration but they hold the item at roughly the humidity at which it was packed, which is approximately 62 per cent. High humidity continues to drive acid hydrolysis in iron gall ink and acidic board. The clock is not stopped; it is slowed.\n\nThe conservator's decade warning and the enclosure's eight-to-twelve year horizon are essentially the same number. The enclosures buy time; they do not buy permanence.\n\nNow consider the plant under LINDCASTER. It is deferred to the 2029\u201330 capital programme. The GBP 400,000 line is real and currently unallocated, which is genuinely encouraging. But the board sets the programme in November 2028 and nothing is committed. The plant will cost at least GBP 295,000 at 2026 prices; by 2029 it will cost more. If it is approved, the institution will then have to return to all 1,360 items treated under LINDCASTER and redo the work in the corrected environment \u2014 because that is what the conservator's report says must happen. The total expenditure across the two programmes would substantially exceed GBP 635,000 for work that HAVERSHOLT could accomplish for GBP 340,000.\n\nIf the 2029\u201330 programme does not fund the plant \u2014 because the board allocates the line elsewhere or because the capital cost has risen beyond the available headroom \u2014 LINDCASTER leaves the institution with 1,360 treatments that will need repeating, 2,840 untreated items still deteriorating in a bad environment, no plant, and no bequest money remaining.\n\n---\n\n**What HAVERSHOLT actually buys**\n\nThe Threlkeld Environmental quote is held to 30 January 2027. Fourteen weeks before the 29 May 2027 commissioning date is approximately 19 February 2027, so an order placed by late January satisfies both the quote window and the lead-time requirement without difficulty from the current date of August 2026.\n\nGBP 295,000 purchases an environment that brings the strongroom from 62 per cent with an eleven-point swing to the 45\u201355 per cent range with a swing under five points. That is not a partial improvement; it is compliance with the standard the institution works to. From commissioning, all 4,200 items benefit. Deterioration to the unusable band, running at 62 items a year, stops \u2014 or rather slows to the rate driven by intrinsic acidity rather than by an actively hostile environment.\n\nThe remaining GBP 45,000 funds approximately 180 items of deacidification and rehousing. Those 180 treatments are carried out after the plant is commissioned, in a controlled environment, and the conservator's report says that work done in a compliant environment does not need to be repeated within a decade. The money is spent once.\n\n180 items is a small number relative to 4,200 and especially relative to the 1,010 already in the unusable band. That is the real cost of HAVERSHOLT and it should be acknowledged squarely. Roughly 1,180 items that are already unusable will remain so; the 62-item-a-year deterioration will have added perhaps another 46 items to the unusable band between now and plant commissioning. Those items are not reached.\n\nBut compare the alternative. Under LINDCASTER, 1,360 items are treated in a way that the conservator says will need redoing. Between now and a plant arriving in 2029\u201330 at the earliest \u2014 if it arrives at all \u2014 the same 62-items-a-year deterioration continues for approximately four years, adding roughly 248 more items to the unusable band (versus 46 under HAVERSHOLT). LINDCASTER reaches more items in the short term but does not stop the underlying mechanism, and the treatments it commissions are explicitly time-limited.\n\n---\n\n**The iron gall risk**\n\n2,900 of the 4,200 items are on iron gall ink or acidic board. Iron gall ink at high humidity undergoes sulphuric acid corrosion of the cellulose substrate; the damage is irreversible and accelerates as fibres weaken. An environment compliant with the 45\u201355 per cent standard substantially slows this mechanism across all 2,900 items. Enclosures packing items at 62 per cent do not.\n\n---\n\n**The logic of the bequest**\n\nThe Hesketh-Ravenna bequest is a one-off capital injection. The question is not simply how many items it touches but what it permanently changes. HAVERSHOLT permanently changes the environment for every item in the collection and ensures that any conservation money spent after commissioning is not wasted. LINDCASTER permanently changes nothing structural; it produces treatments that will need repeating and defers the plant to a programme that is not yet committed.\n\nThe conservator's written statement is not a caveat; it is a professional judgement that the work being proposed under LINDCASTER is conditionally useful at best. Spending GBP 340,000 on work described in writing by the institution's own conservator as requiring repetition within ten years is not a sound use of a non-renewable bequest.\n\n---\n\nCALL\n  HAVERSHOLT\n\nGROUNDS\n  The conservator's written finding that treatment in the current environment must be repeated within a decade means that LINDCASTER spends a non-renewable bequest on impermanent work, while HAVERSHOLT fixes the root cause for all 4,200 items and ensures the conservation spend that follows it does not have to be done twice.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-945bz5rb"
+  },
+  "cost_usd": 0.09538200000000001,
+  "duration_ms": 114997,
+  "session_id": "09fe2e41-258e-4d77-9136-54bfec1c2f69",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 6072,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 6072,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 116.10985565185547
+}

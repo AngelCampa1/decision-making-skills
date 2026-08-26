@@ -1,0 +1,61 @@
+{
+  "opaque": "T14",
+  "item_id": "K04",
+  "ordering": "AB",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The shortfall and what each course must do**\n\nThe 2031 peak-week demand on the planning forecast is 15.4 ML/day against a rated works output of 14.2 ML/day. The gap is 1.2 ML/day. That is the number both courses are being asked to close.\n\n---\n\n**Course SKELWITH examined**\n\nThe forecast saving is 1.4 ML/day, which would close the gap with 0.2 ML/day to spare. But the only real-world comparator \u2014 the Kilvaddy programme \u2014 returned 1.1 against a forecast of 1.3, an achievement ratio of 84.6 percent. Applied to this scheme: 1.4 \u00d7 84.6% = 1.18 ML/day. That is already 0.02 ML/day short of the 1.2 target, and that is at the moment of programme completion, 2030-03-31.\n\nThe drift-back term then makes this materially worse. Distribution loss on renewed mains recovers at 0.1 ML/day per year without further maintenance spend. The 2031 peak-week assessment is approximately one year after the programme completes. So the expected net saving in the 2031 peak week is not 1.18 but approximately 1.08 ML/day \u2014 a shortfall of 0.12 ML/day against the 1.2 required.\n\nIn 2032 the drift takes it to roughly 0.98 ML/day, and the gap widens further each subsequent year. Maintaining the Kilvaddy-adjusted 1.18 ML/day saving indefinitely requires a continuing programme of expenditure that will need to be funded from the next capital envelope, whose settlement is December 2029. There is no assurance that envelope will be sized or directed to do that.\n\nSo SKELWITH:\n- does not close the 1.2 ML/day gap in its target year (expected ~1.08 ML/day saved, gap ~0.12 ML/day)\n- erodes further year on year without fresh capital\n- leaves no rated physical headroom\n\nThe financial saving of \u00a32,500,000 is real and the earlier start (2027 versus 2029) is genuinely useful during the growth phase, but neither compensates for the fundamental shortfall in the output figure.\n\n---\n\n**Course HARBOTTLE examined**\n\nThe licensed yield is 3.0 ML/day \u2014 2.5 times the 1.2 ML/day deficit. When the source is available, total rated supply is 17.2 ML/day against a 2031 demand of 15.4, a surplus of 1.8 ML/day. That surplus recharges the service reservoirs at 1.8 ML/day whenever the burn is flowing above the hands-off threshold.\n\nThe hands-off flow condition is the central risk. Abstraction stops when the Vraich gauge falls below 12.1 ML/day. When it stops, supply falls to 14.2 ML/day against a 15.4 ML/day demand, a live deficit of 1.2 ML/day drawing storage down at that rate. At 62 ML of treated storage: 62 \u00f7 1.2 = 51.7 days of cover, which is precisely where the \"about 51 days\" figure comes from.\n\nThe worst recorded hands-off period is 41 days (2022), all falling between June and September. 41 days is inside the 51.7-day storage cover with approximately 12.8 ML (10.7 days) to spare. The 2025 restriction was 29 days, well within cover. The pattern being exclusively in the summer months means storage will ordinarily be approaching peak charge coming into the restriction season, because spring demand is lower and the source will have been running. Even if storage is not fully charged at the start of a restriction, the margin is substantial: storage would have to start at below 50 ML (rather than 62 ML) before the worst-on-record 41-day period would exhaust it.\n\nThere is a legitimate climate-change concern \u2014 restriction periods could lengthen. But there is no evidence in the data provided of a trend towards longer restrictions (41 days in 2022, 29 days in 2025), and the 10-day margin above the worst historical case is not negligible.\n\nThe source is a capital asset. Its 3.0 ML/day of licensed capacity is available regardless of the condition of the mains. It does not erode without maintenance spend. It does not require the regulator's next envelope to function. It commissions 2029-06-30 and is fully rated before the 2031 peak-week horizon arrives.\n\nCost: \u00a38,400,000 within a \u00a311,200,000 envelope, leaving \u00a32,800,000 for other obligations.\n\n---\n\n**Comparing the two directly**\n\n| Factor | HARBOTTLE | SKELWITH |\n|---|---|---|\n| Capacity delivered vs 1.2 target | 3.0 ML/day rated | ~1.08 ML/day expected in 2031 |\n| Gap closed by 2031? | Yes, with 1.8 ML/day headroom | No; ~0.12 ML/day short |\n| Degradation over time? | Stable (capital asset) | 0.1 ML/day/year without further spend |\n| Reliability risk | Hands-off condition (max 41 days historically; 51 days cover) | Performance outturn (Kilvaddy ratio) |\n| Cost | \u00a38,400,000 | \u00a35,900,000 |\n| Operational start | 2029-06-30 | Tranches from 2027 |\n| Requires further capital to maintain? | No | Yes |\n\nThe \u00a32.5M saving from SKELWITH is real, and the earlier phased delivery from 2027 provides marginal headroom during the growth period before Cullivoe commissions. But these advantages do not outweigh a scheme that, on its own best-evidenced output, fails to meet the statutory adequacy test in 2031 and worsens thereafter.\n\nHARBOTTLE costs more and carries a drought-contingency risk, but that risk is quantified, bounded by historical data, and comfortably within existing storage cover. SKELWITH's shortfall is also quantified \u2014 and it points the wrong way.\n\n---\n\nCALL\n  HARBOTTLE\n\nGROUNDS\n  SKELWITH's best-evidenced output (Kilvaddy-adjusted 1.18 ML/day, drifting to approximately 1.08 by 2031) does not close the 1.2 ML/day shortfall and erodes further each year without fresh capital, whereas HARBOTTLE delivers 3.0 ML/day of rated headroom and its hands-off drought risk is bounded within the 51-day coverage of existing storage, comfortably exceeding the worst recorded restriction of 41 days.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-3whkb2ez"
+  },
+  "cost_usd": 0.07739230000000001,
+  "duration_ms": 96821,
+  "session_id": "ec01aaa8-10ee-41ea-b592-d3f808e3350b",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 5034,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5034,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 98.61406064033508,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

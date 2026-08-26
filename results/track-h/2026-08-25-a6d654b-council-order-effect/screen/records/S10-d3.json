@@ -1,0 +1,44 @@
+{
+  "opaque": "S10",
+  "draw": 3,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**1. Establishing the planning timeline**\n\nThe application was validated 2026-08-14. Adding the three determination horizons and then 22 weeks of works:\n\n| Scenario | Consent granted | Works complete |\n|---|---|---|\n| Target (13 wks) | 2026-11-13 | 2027-04-16 |\n| Median (34 wks) | 2027-04-10 | 2027-09-11 |\n| Slowest (61 wks) | 2027-10-15 | 2028-03-17 |\n\nThe Hallowbrand lease expires 2027-11-30. Under the target and median scenarios, Culverstone is occupied before that date; under the slowest, it is not ready until mid-March 2028, leaving a gap of roughly 3.5 months in which vehicles must stand at Nethercote.\n\n**2. What the Nethercote gap actually costs**\n\n3.5 months \u00d7 \u00a318,500 = approximately \u00a364,750. More seriously, Nethercote carries no workshop, so during that period maintenance has to go to a third-party facility. That is an irritant, not a catastrophe: 3.5 months is a foreseeable and bounded risk, and advance contracting for workshop space is routine. Faskally's deposit-extended hold runs to 2028-06-30, which is beyond even the slowest recorded determination plus build, so Culverstone cannot slip out of reach.\n\n**3. Dead mileage**\n\nCulverstone is 3 miles further from Verrancombe Bridge. Each of 22 vehicles makes at minimum two dead-mileage runs (out/back) on each of 313 operating days:\n\n22 \u00d7 313 \u00d7 6 miles \u00d7 \u00a30.63 = **\u00a326,029 per year**\n\nThis reduces the annual rent saving from \u00a396,000 to about \u00a370,000.\n\n**4. Ten-year financial comparison**\n\n| Item | KESTERWICK | ARDENSHAW |\n|---|---|---|\n| Rent (10 yr) | \u00a31,180,000 | \u00a32,140,000 |\n| Dead mileage (10 yr) | \u00a3260,000 | nil |\n| Capex | \u00a3480,000 | nil |\n| Deposit (if required) | \u00a340,000 | nil |\n| Worst-case Nethercote | \u00a365,000 | nil |\n| **Rough total** | **\u00a32,025,000** | **\u00a32,140,000** |\n\nEven pricing in every adverse assumption simultaneously, KESTERWICK is cheaper across the decade. The workshop at Culverstone is not an addition; it is baked into the \u00a3480,000, so both courses deliver a two-bay workshop.\n\n**5. Liquidity**\n\nCash \u00a3640,000, facility \u00a3200,000 \u2014 total headroom \u00a3840,000. The capex of \u00a3480,000 is the single largest draw and will fall in staged payments once works begin, not as a lump. The deposit (\u00a340,000 if needed) and Nethercote tail are well within the remaining cushion. Trentmoor is not being asked to overreach.\n\n**6. The bid deadline is the deciding ground**\n\nThe 44/44A contract bid is due 2027-09-14. Depot cost enters as a fixed line.\n\nUnder the median planning scenario, works complete on approximately 2027-09-11 \u2014 three days before the bid closes. That is tight, but the median is not the ceiling; consent could come earlier. More importantly, even if the build is running its last week as the bid lands, Trentmoor holds Culverstone on a signed lease at \u00a3118,000 per year and can quote that figure with full legal backing. Under ARDENSHAW the fixed line is \u00a3214,000.\n\nThe difference is \u00a396,000 per year, every year of the next contract term. In a tendered environment, where the operator's cost structure flows directly into the subsidy required or the price charged, that gap is not overhead \u2014 it is competitive exposure. A rival with access to cheaper premises can undercut by the exact amount ARDENSHAW costs in excess rent. If Trentmoor loses the 44/44A refranchise because its depot is priced at \u00a3214,000 per year, it is left holding a ten-year lease on premises it no longer needs to staff at Hallowbrand's rate.\n\nUnder the worst planning case (61 weeks), the bid lands before consent is granted. That is the one genuine difficulty. Trentmoor would be bidding on an application still live, not a lease signed. Options at that point: bid on the expected Culverstone cost with disclosure of the planning position, or seek a short agreed extension from Hallowbrand to bridge to occupation (which the landlord may well grant rather than see an empty depot). Neither is clean, but neither is fatal, and the worst case has a recorded frequency of once in three years \u2014 it is a tail risk, not the central case.\n\n**7. Why ARDENSHAW does not pay**\n\nARDENSHAW's entire case rests on certainty. That certainty is real: workshop operational from 2027-12-01, no consent to wait for, bid to the penny. But the price of that certainty is \u00a396,000 a year for ten years, plus the competitive penalty in the bid. The median planning scenario removes most of the uncertainty from KESTERWICK anyway \u2014 Culverstone is ready before Hallowbrand expires and in time to support the bid. Buying ten years of cost premium to insure against a scenario that the published data puts at a minority probability is not a rational exchange.\n\nREADING ends.\n\n---\n\nCALL\n  KESTERWICK\n\nGROUNDS\n  The 44/44A bid on 2027-09-14 requires a fixed depot-cost line, and the \u00a396,000-per-year gap between the two courses makes ARDENSHAW structurally uncompetitive for that bid, while the median planning outcome delivers Culverstone before Hallowbrand expires and in time to support the bid number that keeps the contract winnable.",
+  "cost_usd": 0.1292197,
+  "duration_ms": 160409,
+  "session_id": "8e30e827-2653-4f03-9648-e20b31811788",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1039,
+    "output_tokens": 8496,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 8496,
+        "cache_read_input_tokens": 1039,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 161.66007113456726
+}

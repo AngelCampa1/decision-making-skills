@@ -1,0 +1,44 @@
+{
+  "opaque": "S10",
+  "draw": 4,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Dead mileage**\nCulverstone is 3 miles further each way for the 22 vehicles on the 44/44A network.\n22 vehicles \u00d7 6 miles \u00d7 313 days \u00d7 \u00a30.63 = **\u00a326,029/year** additional running cost.\n\n**Annual cost comparison once at Culverstone**\nKESTERWICK: \u00a3118,000 rent + \u00a326,000 dead mileage = **\u00a3144,000/year**\nARDENSHAW: \u00a3214,000/year\nAnnual advantage of KESTERWICK: **\u00a370,000/year**\n\n**Capital under KESTERWICK**\n\u00a3480,000 works + \u00a340,000 deposit = \u00a3520,000\nPayback at \u00a370,000/year: **7.4 years** \u2014 within the 10-year term, with 2.6 years of clear surplus.\n\n**Ten-year cost comparison**\nARDENSHAW over-cost vs KESTERWICK rent: \u00a396,000 \u00d7 10 = **\u00a3960,000**\nKESTERWICK total outlay (capital + cumulative dead mileage): \u00a3520,000 + \u00a3260,000 = **\u00a3780,000**\nRaw ten-year advantage of KESTERWICK: **\u00a3180,000**\n\n---\n\n**Planning timeline \u2014 the critical variable**\nValidation date: 2026-08-14. Hallowbrand expires: 2027-11-30.\nFor a direct Hallowbrand \u2192 Culverstone move, consent must arrive within approximately **46 weeks** (leaving 22 weeks to build before the lease expires).\n\n| Scenario | Consent granted | Culverstone ready | Hallowbrand gap? |\n|---|---|---|---|\n| Target (13 wks) | 2026-11-13 | \u2248 2027-04-08 | None \u2014 8 months early |\n| Median (34 wks) | \u2248 2027-04-10 | \u2248 2027-09-11 | None \u2014 11 weeks early |\n| Worst recorded (61 wks) | \u2248 2028-01-23 | \u2248 2028-06-26 | ~7 months on Nethercote |\n\nSince the median (34 weeks) is comfortably inside the 46-week threshold, **more than half of historical outcomes produce no Nethercote exposure at all.**\n\n**Worst-case Nethercote cost**\n7 months \u00d7 \u00a318,500 = \u00a3129,500. Unquantified workshop-outsourcing costs during that period could add further, but the Faskally deposit protects the site until 2028-06-30 \u2014 which is four days after the worst recorded build-out date of \u2248 2028-06-26. The protection window fits, though tightly.\n\nEven charging the full Nethercote cost: \u00a3180,000 raw advantage \u2212 \u00a3129,500 = **\u00a350,500 net advantage for KESTERWICK** in the historically worst scenario. Add workshop outsourcing at, say, \u00a310,000/month for 7 months and KESTERWICK is approximately break-even with ARDENSHAW at the extreme tail. In the median outcome \u2014 the most likely single scenario \u2014 KESTERWICK is ahead by the full \u00a3180,000.\n\n---\n\n**Cash**\nAvailable: \u00a3640,000 cash + \u00a3200,000 facility = \u00a3840,000.\nKESTERWICK outlay: \u00a3520,000 committed capital, leaving \u00a3320,000 cash + \u00a3200,000 facility as working buffer. Tight if construction overruns, but not exposed \u2014 the business is generating ongoing revenue throughout, and the largest single draw (works) is phased over 22 weeks, likely spread across invoices rather than a single day-one payment.\n\n---\n\n**The 44/44A bid (due 2027-09-14)**\nUnder ARDENSHAW the depot line is \u00a3214,000 \u2014 exact and uncontestable. This is the strongest single point in ARDENSHAW's favour.\n\nUnder KESTERWICK at the median, Culverstone is ready \u2248 2027-09-11 \u2014 three days before the bid deadline. If consent runs slightly long (say 40 weeks, still below median), they may be pricing Culverstone into the bid while still completing construction, but the site is held by deposit and they know exactly what the cost will be. Pricing Culverstone into a bid submitted during final fit-out is not unusual in tendered transport contracts, and the lower number (\u00a3144,000 vs \u00a3214,000) makes the bid competitive rather than uncertain. The operational contract does not start until 2028-04-01 \u2014 by which point even a planning determination at 54 weeks would have produced an occupied Culverstone. Only if determination runs beyond roughly 55 weeks does the April 2028 contract start slightly precede Culverstone occupation; in that case they begin the new term on Nethercote for a matter of weeks, which is manageable.\n\nUnder ARDENSHAW the depot is known and clean, but it costs \u00a370,000/year more \u2014 a fixed drag embedded in every future bid.\n\n---\n\n**Planning refusal**\nThis is the only scenario that is genuinely catastrophic under KESTERWICK: \u00a340,000 gone, Hallowbrand offer lapsed, Nethercote indefinitely, renegotiating Hallowbrand from weakness. The application has been validated, which is a necessary (not sufficient) indicator of acceptability. This tail risk is real and should not be dismissed, but it is not a reason on its own to pay \u00a370,000 per year for a decade when the base-case outcome is clearly favourable.\n\n---\n\n**What ARDENSHAW is really selling**\nARDENSHAW removes planning risk, construction risk, workshop continuity risk, and bid-day uncertainty. Those are genuine goods. The question is what they cost. Over ten years they cost \u00a3700,000 in rent differential, against which KESTERWICK's worst-case additional costs (capital + dead mileage + worst-case Nethercote) total roughly \u00a3910,000 \u2014 a narrower gap than the headline \u00a3180,000 once outsourced maintenance is added. But in the median world \u2014 and the median is the rational planning case \u2014 KESTERWICK's total additional costs are \u00a3780,000 against \u00a3960,000 for ARDENSHAW, a clear \u00a3180,000 saving delivered while also giving you a purpose-built depot and a lower fixed cost going into every future bid cycle.\n\n**Payback summary**\nAt \u00a370,000/year net benefit, the \u00a3520,000 capital is recovered in 7.4 years. Years 8\u201310 of the Culverstone term yield roughly \u00a3210,000 of clear advantage, and the firm enters whatever follows 2037 with installed hardstanding, fuel infrastructure and a two-bay workshop rather than returning the Hallowbrand keys with nothing to show for a decade of elevated rent.\n\n---\n\nCALL\n  KESTERWICK\n\nGROUNDS\n  The \u00a370,000-per-year net annual saving repays the full Culverstone capital commitment inside eight years and remains positive even under the historically worst planning determination, making the premium demanded by ARDENSHAW larger than the risk it eliminates.",
+  "cost_usd": 0.2180397,
+  "duration_ms": 267137,
+  "session_id": "d55a43ea-eace-457b-b0b6-83f760c083bb",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1039,
+    "output_tokens": 14419,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 14419,
+        "cache_read_input_tokens": 1039,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 268.36727714538574
+}

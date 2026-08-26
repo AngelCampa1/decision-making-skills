@@ -159,6 +159,18 @@ Also dispatched directly, so no checkpoint, and the $10.33 is notional. The 19
 parked duplicates from the race are in `readings-C03-parked.jsonl` and are **not**
 counted here, because they were issued and discarded rather than scored.
 
+**Correction, 2026-08-25, appended a fifth time. `council` adds two hundred and
+seventeen.** Counted by line and by file from the run's own record:
+
+| run | calls | from |
+|---|---|---|
+| `council` admission screen | 41 | `2026-08-25-a6d654b-council-order-effect/screen/records/` |
+| `council` order-effect primary | 176 | `2026-08-25-a6d654b-council-order-effect/records/`, indexed by `draws-index.json` |
+| **new total** | **~13,330** | 13,113 + 217 |
+
+Dispatched directly, so no checkpoint. USD 24.60 and USD 5.82 notional. Zero
+failed calls of any kind across all 217.
+
 **The one-line version's count was checked against the table under it this time
 and has not drifted.** It reads "eleven results" with a correction below saying
 the count is twelve, and *Results in hand* still holds twelve rows: M4, L5, M5,
@@ -184,6 +196,7 @@ they were easy to miss.
 | **Family A entire** (scalar triplet: `ledger`, `timing`, `fit`) | **closed — ceiling** | 18 arms, 99 blind readings, every arm unanimous and equal to key, across six domains and three difficulty dials |
 | `hinge` H01 (Track H, set-membership) | **closed — ceiling** | crossed primary **+0.850** [+0.725, +0.975] over 40 unaided blind readings, **+0.950** [+0.850, +1.000] hand-adjudicated, against a registered kill of 0.70 |
 | `cascade` C01–C03 (Track H, set-membership) | **closed — ceiling** | J **+1.000**, **+1.000** and **+0.850** over 40 unaided blind readings each, both adjudication cells on all three items, against a registered kill of 0.70. C01's machine figure falls to +0.650 without one guard list; the adjudicated figure does not move |
+| `council` K03–K13 (Track H, order effect) | **closed — real null** | second-position rate **0.4722**, exact p 0.5598, 95% CI [0.3885, 0.5571] over 176 draws, both orderings, nine admitted items. Zero exclusions of any class, realised leak 0.0000. Eight of nine items answered identically 16/16 under both orderings |
 
 **2026-08-25, `ledger`.** The sixth venue and the first closed before its corpus
 was built. Five triplets were authored in parallel to test whether difficulty
@@ -321,6 +334,53 @@ registered validity thresholds produced no reading at all, while a third,
 because two scoring parameters were module globals rather than `Rules` fields.
 No gate could see that, and C03's own two misses are exactly what the threshold
 was built to size.
+
+**2026-08-25, `council`. The eighth venue, and the only one that could not
+ceiling.** `council` is the one construct here with no answer key: the two
+orderings are scored against each other, so there is no label to be easy. It
+returned a null instead. Second-position rate **0.4722** on 144 committed
+records, exact p 0.5598, 95% CI **[0.3885, 0.5571]**, against an exact null of
+0.5 under balanced orderings. Every exclusion class is zero in both orderings,
+`u = 1.000`, and the realised leak is 0.0000 computed from the printed counts
+rather than assumed.
+
+**Eight of the nine admitted items named the same course sixteen times out of
+sixteen, with identical counts under both orderings.** They sit at the null for
+the one reason a null does not license calling a model indifferent — total
+order-blindness with a hard content preference. Three items depart and all three
+are primacy, which is a sign test at p 0.25.
+
+Two things this run says about the instruments rather than the model. **The
+admission screen was the defective one**: a four-draw unanimity gate rejects a
+7-of-8 consistent item 41.4% of the time, so K03 was very plausibly cut by the
+screen's own sampling noise while K09 at 5 of 8 is a real property — and the gate
+could not tell those apart. That is the Family A G1 correction arriving in a
+second venue. And **the markdown-rule attrition that looked arm-correlated cost
+nothing here**: 164 of 176 replies carry a thematic break somewhere and zero
+carry one inside the `CALL` block, so realised attrition is 0 of 176, CI [0.0000,
+0.0207]. The defect was real, the fix is right, and the arm-correlation
+hypothesis is untestable on one arm.
+
+The registered prediction was wrong in magnitude and in direction: 0.60 sits
+outside the interval, and 0.60 was a recency prediction while every departure
+observed is primacy. The commit-rate prediction of 0.70 stays a loss against a
+measured 1.000, CI [0.9747, 1.0000].
+
+**The skill arm is not issued, and that was decided before this number
+existed.** Its pre-registration set the issuing grid as a function of the
+measured control rate, declining below a departure that puts ρ_off under 0.566.
+At 0.4722 the departure is 0.028, so the arm does not run and 2,552 calls are
+not spent.
+
+Record: [`results/track-h/2026-08-25-a6d654b-council-order-effect/`](../results/track-h/2026-08-25-a6d654b-council-order-effect/README.md).
+
+**What the four venues say together.** Family A at unaided J = 1.000 over 99
+readings, `hinge` at +0.950 hand-adjudicated, `cascade` at +1.000, +1.000 and
++0.850, and `council` at a real null. Four constructs, four answer-key shapes,
+one of them with no answer key at all. **On single-call scale there is nothing
+here for a decision procedure to improve.** That is a statement about the venue
+and not about the procedures: nothing measured tests volume, long context,
+delegation, or work carried across a conversation.
 
 Family A at unaided J = 1.000 over 99 readings, `hinge` at +0.950
 hand-adjudicated, `cascade` at +1.000. **Three independent constructs, six

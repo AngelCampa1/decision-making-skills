@@ -1,0 +1,61 @@
+{
+  "opaque": "T13",
+  "item_id": "K07",
+  "ordering": "AB",
+  "draw": 8,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers at face value**\n\nHAVERSHOLT: \u00a3295,000 plant + \u00a345,000 treatment = \u00a3340,000, 180 items conserved, environment fixed for all 4,200.\nLINDCASTER: \u00a3340,000 treatment = 1,360 items conserved, environment left at 62 % RH / 11-point swing, plant deferred.\n\nOn raw item counts, LINDCASTER looks like a 7.5-to-1 win. The real question is whether those 1,360 treatments are durable.\n\n---\n\n**The conservator's written report is the pivot**\n\nIdris Sankey-Marchmont states in writing that rehousing and aqueous treatment carried out into the strongroom as it stands will need to be repeated within a decade. That is a professional judgement on the record. If it stands \u2014 and there is no contrary professional view in the papers \u2014 LINDCASTER does not commission 1,360 permanent conservation treatments. It commissions 1,360 treatments that expire inside ten years and will then have to be bought again, in a collection that will still not have a fit environment.\n\nThe enclosures are described as holding an item's microclimate within 3 points of its packing condition. Packing condition is currently around 62 % RH. Three points of drift means enclosures hold items at 59\u201365 % RH. The standard is 45\u201355 %. Buffered packaging at those humidity levels slows the rate of harm; it does not meet the standard, and it does not alter the conservator's conclusion.\n\n---\n\n**What LINDCASTER actually costs over time**\n\nLINDCASTER's true cost is:\n- \u00a3340,000 now for treatments the conservator says will need repeating\n- Plant cost in 2029\u201330 prices (the \u00a3295,000 quote is held only to 2027-01-30; by 2029 that figure will have escalated, almost certainly above \u00a3295,000 and potentially eating most or all of the \u00a3400,000 unallocated line)\n- A second round of conservation after the plant is eventually installed\n\nThe \u00a3400,000 2029\u201330 line is real but uncommitted. The board sets it in November 2028. There is no guarantee it goes to the plant rather than to whatever else competes for it by then. LINDCASTER asks the Institute to trust that a future board will allocate an uncommitted line to a capital project whose cost is unknown.\n\n---\n\n**What HAVERSHOLT actually costs over time**\n\n\u00a3340,000 now, all of it spent by the deadline, for:\n- A plant quoted at a fixed price (\u00a3295,000) held until 2027-01-30, commissioned 2027-05-29\n- 180 items conserved in a compliant environment, where the conservator's objection does not apply and the work is durable\n- The clock stopped for all 4,200 items, including the 830 not yet in the unusable band but deteriorating toward it at ~62 per year\n\nAfter HAVERSHOLT, the 2029\u201330 \u00a3400,000 line \u2014 or any other future resource \u2014 can fund conservation treatments that will actually last, because the environment will be right. LINDCASTER spends that same future money on plant plus a second round of treatment for the 1,360 items treated now.\n\n---\n\n**The unusable-band deterioration under each course**\n\nFrom 2019 to 2025, 370 items crossed into the unusable band (roughly 62 per year). Under LINDCASTER, that rate continues for the 2,840 items not treated, and continues in degraded conditions for the 1,360 that are treated, because the humidity is still wrong. Under HAVERSHOLT, the plant is commissioned May 2027 \u2014 nine months from now \u2014 and the deterioration rate falls for all 4,200 items simultaneously, including the 1,010 already in the unusable band and the 1,890 items on iron gall or acidic board that LINDCASTER would also leave untreated.\n\n---\n\n**The order-timing constraint**\n\nThe quote is held to 2027-01-30. The plant requires an order fourteen weeks before the 2027-05-29 commissioning date, which puts the order deadline at approximately 2027-02-19. Ordering by 2027-01-30 satisfies both constraints (price locked, lead time met, with a few weeks to spare). Today is 2026-08-25: there are five months to complete whatever internal governance and procurement process is required before placing the order. That is tight but not impossible, and the decision needs to be made now.\n\n---\n\n**Is LINDCASTER ever the right answer?**\n\nLINDCASTER would be compelling if: (a) the conservator's report did not exist, or applied only to rehousing rather than aqueous treatment; (b) the 2029\u201330 plant funding were committed rather than unallocated; (c) the quote were open-ended rather than expiring in five months. None of those conditions hold. The conservator's written report collapses the apparent numerical advantage of LINDCASTER: 1,360 treatments that must be repeated within a decade are not 1,360 items saved.\n\n---\n\nREADING\nThe conservator's written professional opinion that conservation carried out in the current environment will need repeating within a decade is the controlling fact: LINDCASTER spends the entire bequest on treatments that expire, leaves the environment unresolved, and defers the plant to an uncommitted future line at unknown higher cost, whereas HAVERSHOLT fixes the structural cause first, makes the 180 treatments it can afford genuinely durable, and protects all 4,200 items from the date of commissioning.\n\nCALL\nHAVERSHOLT\n\nGROUNDS\nThe conservator's written finding that treatment in the current environment must be repeated within a decade means LINDCASTER consumes the whole bequest on work that will need buying again, while HAVERSHOLT resolves the structural cause at a locked price, makes every treatment it can fund permanent, and leaves future resources free for durable conservation rather than remediation.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-n38zdbzg"
+  },
+  "cost_usd": 0.086892,
+  "duration_ms": 106463,
+  "session_id": "6f50e5e5-aa33-4682-ba13-542d1276fe1b",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 5507,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 5507,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 107.7573390007019,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

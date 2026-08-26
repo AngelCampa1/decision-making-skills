@@ -1,0 +1,181 @@
+# Track H order-effect item K04, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K04
+block: A
+stratum: undefeated
+stratum_alias_v1: tie
+mechanism: capacity-rate
+ordering: BA
+first_course: SKELWITH
+second_course: HARBOTTLE
+pair: K04-ashcombe-water-undefeated-ab.yaml
+domain: municipal_water_infrastructure
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [HARBOTTLE, SKELWITH, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Marisol Enderby-Tregarth and I am operations director of the Ashcombe
+  and Vraich Water Board. We supply 41,000 properties from a single treatment
+  works at Ashcombe and we are the statutory undertaker for the whole of the
+  Vraich catchment.
+
+  The works is rated at 14.2 megalitres a day. Peak-week output in July 2026
+  was 13.6 megalitres a day, of which 3.1 was distribution loss. The county has
+  consented 1,900 homes across the catchment, phased from 2027 to 2031, which
+  our forecast puts at a further 1.8 megalitres a day at full occupation.
+
+  The figures I have been given:
+
+  - Peak-week demand in 2031 on that forecast: 15.4 megalitres a day against a
+    rated 14.2, so we are 1.2 short.
+  - A borehole and treatment stream at Cullivoe: GBP 8,400,000, licensed at 3.0
+    megalitres a day, commissioned 2029-06-30.
+  - The Cullivoe licence carries a hands-off flow condition on the Vraich burn.
+    Abstraction stops when flow at the Vraich gauge drops under 12.1
+    megalitres a day, which it did on 41 days in 2022 and on 29 days in 2025,
+    all of them between June and September.
+  - Mains renewal and pressure management across the Brackenhowe and Dunlairg
+    districts: GBP 5,900,000 in three tranches from 2027-04-01 to 2030-03-31,
+    forecast to cut distribution loss by 1.4 megalitres a day.
+  - The same programme at Kilvaddy returned 1.1 megalitres a day against a
+    forecast of 1.3. At that ratio our 1.4 returns 1.18.
+  - Distribution loss on renewed mains drifts back at about 0.1 megalitres a
+    day a year without further spend.
+  - We hold 62 megalitres of treated storage across the four service
+    reservoirs.
+  - Our capital envelope to 2031 is GBP 11,200,000 and the regulator settles
+    the next one in December 2029. It funds one of these and not both.
+  - Both quotations were issued on 2026-07-24 and are held to 2027-06-30.
+    Neither scheme needs an order before 2026-12-01.
+
+  Two courses are on the table.
+
+  Course SKELWITH. Renew the mains and manage pressure across both districts by
+  March 2030. GBP 5,900,000 is GBP 2,500,000 less, it lands from 2027 instead
+  of 2029, and a megalitre saved is one we never pump. At the Kilvaddy ratio it
+  returns 1.18 megalitres a day against a 1.2 shortfall, and it drifts back at
+  0.1 a year unless we keep spending.
+
+  Course HARBOTTLE. Build the Cullivoe source and commission it in June 2029.
+  GBP 8,400,000 buys 3.0 megalitres a day of licensed capacity against a 1.2
+  shortfall, rated rather than forecast, and it is ours whatever the mains do.
+  On a low burn the source stops and we run 14.2 against 15.4, which 62
+  megalitres of storage covers for about 51 days.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism: capacity-rate
+  mechanism_note: >-
+    The item turns on a rated throughput in megalitres a day set against a
+    demand rate in the same units. Every figure that decides it is a rate, and
+    the two courses close the same 1.2 megalitre a day gap by adding rated
+    supply or by removing loss.
+  arithmetic: >-
+    The hands-off threshold is stated in the item's own units: the licence
+    condition is 0.14 cubic metres a second, and 0.14 x 86400 = 12,096 cubic
+    metres a day, which is 12.1 megalitres a day.
+    13.6 + 1.8 = 15.4 against a rated 14.2, so the gap is 1.2. Kilvaddy
+    returned 1.1 of a forecast 1.3, a ratio of 0.846, and 0.846 x 1.4 = 1.18.
+    A suspended Cullivoe leaves the 1.2 gap open, and 62 / 1.2 = 51.7 days of
+    storage against a longest recorded suspension of 41 days.
+  why_neither_is_defeated: >-
+    Both courses close the 1.2 megalitre a day gap and no stated figure rules
+    either out. HARBOTTLE costs GBP 2,500,000 more and its licence suspends in
+    the months the peak falls in, but 62 megalitres of storage covers a 1.2
+    shortfall for about 51 days against a longest recorded suspension of 41,
+    and 3.0 megalitres a day of rated source survives a forecast being wrong.
+    SKELWITH lands from 2027 rather than 2029, costs less, and at the Kilvaddy
+    ratio returns 1.18 against a gap of 1.2, which leaves 0.02 for the same
+    storage to carry and needs sustaining spend against a 0.1 a year drift. A reader who
+    weights rated capacity over forecast savings lands on HARBOTTLE, a reader
+    who weights cost, timing and treated volume avoided lands on SKELWITH, and
+    both readings use every figure given.
+  information_timeline: >-
+    Read on 2026-08-25. Both quotations were issued 2026-07-24 and hold to
+    2027-06-30, and neither scheme needs an order before 2026-12-01, so every
+    figure that defends either course still stands on the earliest date that
+    course can be taken. HARBOTTLE is ordered inside the hold and commissioned
+    2029-06-30, ahead of the 2031 peak the gap is measured at. SKELWITH is
+    ordered inside the hold and starts 2027-04-01. The GBP 11,200,000 envelope
+    runs to 2031 and funds either scheme, and the regulator's December 2029
+    settlement falls after both are committed. No figure here lapses before the
+    action it defends is available.
+  internal_consistency: >-
+    13.6 + 1.8 = 15.4 and 15.4 - 14.2 = 1.2, so the gap is stated once and is
+    derivable. 62 / 1.2 = 51.7, which is the 51 days the course paragraph
+    names, against a longest recorded suspension of 41. 8,400,000 - 5,900,000 =
+    2,500,000, the figure the other course paragraph names. 8,400,000 +
+    5,900,000 = 14,300,000 exceeds the 11,200,000 envelope, which is why the
+    item is an either-or rather than a sequencing question. No headcount,
+    capacity or date is stated twice with different values.
+  why_a_reader_commits: >-
+    The two courses close the same gap by different means at a GBP 2,500,000
+    difference in price, so a reader who has decided whether a rated licence or
+    a forecast saving is the safer thing to buy has decided the item, and
+    BALANCED leaves the board a capital programme it has to set either way.
+  checks:
+    dates:
+      - "2026-07-24 before 2027-06-30  # the quotations were issued inside their own hold"
+      - "2027-06-30 after 2026-12-01  # the price hold outlives the latest date either scheme needs an order"
+      - "2026-12-01 after 2026-08-25  # the order deadline is in the future when the question is asked"
+      - "2029-06-30 after 2026-12-01  # Cullivoe is commissioned after the order that buys it"
+      - "2027-06-30 after 2027-04-01  # the hold outlives the start of the first mains tranche"
+      - "2030-03-31 after 2027-04-01  # the mains programme ends after it starts"
+    arithmetic:
+      - "13.6 + 1.8 == 15.4  # peak-week output plus the consented growth"
+      - "(13.6 + 1.8) - 14.2 == 1.2  # the stated shortfall against the rated works"
+      - "13.6 < 14.2  # today's peak-week output sits under the rated capacity"
+      - "3.0 > (13.6 + 1.8) - 14.2  # HARBOTTLE's licensed capacity exceeds the shortfall"
+      - "62 / ((13.6 + 1.8) - 14.2) > 41  # storage covers the gap longer than the longest recorded suspension"
+      - "1.4 < 3.1  # the mains programme cannot save more loss than the works actually leaks"
+      - "(1.1 / 1.3) * 1.4 > 1.18  # the Kilvaddy ratio applied to the forecast saving"
+      - "(1.1 / 1.3) * 1.4 < 1.19  # and it is 1.18 to the item's precision, not 1.19"
+      - "(1.1 / 1.3) * 1.4 < 1.2  # SKELWITH's return does not close the gap on its own"
+      - "8400000 - 5900000 == 2500000  # the price difference the SKELWITH paragraph names"
+      - "8400000 + 5900000 > 11200000  # both schemes together exceed the capital envelope"
+  admissible_calls: [HARBOTTLE, SKELWITH, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

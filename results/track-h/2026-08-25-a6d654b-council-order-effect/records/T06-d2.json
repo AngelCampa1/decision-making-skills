@@ -1,0 +1,61 @@
+{
+  "opaque": "T06",
+  "item_id": "K04",
+  "ordering": "BA",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Setting out the arithmetic**\n\nThe works is rated at 14.2 Ml/day. 2031 peak-week forecast is 15.4 Ml/day. The shortfall is 1.2 Ml/day. The capital envelope is \u00a311.2M and funds one scheme, not both. Quotations run to 2027-06-30 and no order is needed before 2026-12-01, so there is no procurement urgency today.\n\n---\n\n**SKELWITH: what it actually delivers**\n\nThe stated saving is 1.4 Ml/day. The Kilvaddy precedent returned 1.1 against a 1.3 forecast, a ratio of 84.6 %. Applied here: 1.4 \u00d7 0.846 = 1.18 Ml/day. The scheme runs in three tranches, completing March 2030.\n\nThe peak week to worry about is July 2031. That is approximately 16 months after completion. Drift-back at 0.1 Ml/day per year: 0.1 \u00d7 (16 \u00f7 12) \u2248 0.13 Ml/day. Net saving at July 2031: 1.18 \u2212 0.13 = **1.05 Ml/day**.\n\nAgainst a 1.2 Ml/day shortfall, works output required = 15.4 \u2212 1.05 = **14.35 Ml/day**, against a rated 14.2. That is a residual peak-week gap of 0.15 Ml/day.\n\nHow large is the storage draw? If peak demand runs for, say, four weeks (a generous assumption for July/August): 0.15 \u00d7 28 = **4.2 Ml** from 62 Ml of treated storage. That is operationally trivial and well within normal reservoir management. On that basis, SKELWITH gets the board through 2031 peak\u2014just\u2014using storage to paper over a small residual shortfall.\n\nWhat makes this fragile:\n\n- The Kilvaddy ratio is a single-project precedent. If actual delivery is 80 % rather than 85 %, the net saving falls to ~0.99 Ml/day and the storage draw widens.\n- Drift-back begins the moment a section of mains is renewed, not when the whole scheme is signed off. Savings from Tranche 1 (April 2027\u2013March 2028) will have been drifting back for three years before the 2031 peak. A more granular calculation than the simple end-date approach makes the net position worse.\n- \"About 0.1 Ml/day per year\" is a central estimate. If the renewed mains are in similar ground conditions to the older sections, it could be faster.\n- The constraint disappears only if the next regulatory period (settled December 2029) funds ongoing leakage management. That settlement has not happened, and the board cannot count on it.\n- The gain is demand-side only. It does not increase the rated output of the works; it merely reduces the draw on it. Any demand growth beyond the forecast (a hot year, developer overrun, population density higher than planned) erodes the saving.\n\nCost is \u00a35.9M, leaving \u00a35.3M of the capital envelope for other business.\n\n---\n\n**HARBOTTLE: what it actually delivers**\n\nCullivoe adds 3.0 Ml/day of rated capacity against a 1.2 Ml/day shortfall\u20142.5 times what is required. It is rated, not forecast. It does not drift. When running, total available output is 17.2 Ml/day against 15.4 Ml/day demand: a 1.8 Ml/day surplus that fills the service reservoirs. No ongoing maintenance spend is needed to preserve the gain.\n\nThe hands-off flow condition is the scheme's primary risk. When the Vraich burn drops below 12.1 Ml/day, Cullivoe stops and available output falls back to 14.2 Ml/day. At 2031 peak demand, that produces a deficit of 1.2 Ml/day\u2014covered by storage for 62 \u00f7 1.2 = **51.7 days**.\n\nThe historical trigger data: 41 days in 2022, 29 days in 2025, all June\u2013September. Both totals fall inside the 51-day cover. Critically, neither 41 nor 29 is a consecutive run. The June\u2013September window is 123 days. The burn will fluctuate above and below the trigger threshold many times across that window, partially recharging storage on the days Cullivoe runs. When Cullivoe is running during summer, it produces a surplus of 1.8 Ml/day; a full reservoir can be re-established from half-empty in about 17 days. The realistic consecutive-day risk is therefore considerably less than 41, making the 51-day cover adequate under observed conditions and with a meaningful margin.\n\nThe risk worth naming explicitly: the hands-off condition bites exactly in the season when demand is at its peak. That is the worst-case timing. However, because the trigger is tied to a gauged flow with a defined threshold, the risk is quantified and bounded. The board knows it is 51 days of cover against up to 41 days historically. The risk is not open-ended.\n\nOne further point: Cullivoe adds a second source to a system that currently depends entirely on a single treatment works. For a statutory undertaker serving 41,000 properties with no alternative supply, that structural resilience has value that does not appear directly in the cost comparison.\n\nCost is \u00a38.4M, leaving \u00a32.8M of the capital envelope for other business.\n\n---\n\n**The interim period, 2027\u20132029**\n\nUnder HARBOTTLE, Cullivoe is not commissioned until June 2029. In the intervening years, the 1,900 phased homes are connecting. At 1.8 Ml/day at full occupation over approximately five years, new demand grows at roughly 0.36 Ml/day per year. By peak week 2028 the works faces demand of approximately 14.32 Ml/day against a rated 14.2: a deficit of 0.12 Ml/day. By summer 2029 (before June), approximately 0.48 Ml/day.\n\nThese are small exceedances. Over a four-week peak period in 2028: 0.12 \u00d7 28 = 3.4 Ml from 62 Ml of storage. Over a four-week peak period in summer 2029 (pre-June): 0.48 \u00d7 28 = 13.4 Ml. Both sit comfortably within available storage. The service reservoirs are not at risk of operational depletion. Crucially, these storage draws occur before Cullivoe is commissioned; once the source comes on in June 2029, the daily surplus refills storage rapidly. The two storage demands\u2014interim shortfall and summer hands-off\u2014do not overlap.\n\nUnder SKELWITH, savings begin accruing from 2027, which is genuinely better for the interim. However, since the interim breach under HARBOTTLE is modest and covered by storage, the earlier delivery of SKELWITH is a practical advantage rather than a decisive one.\n\n---\n\n**The capital comparison**\n\nSKELWITH costs \u00a32.5M less. That is a real saving for a board of this scale and should not be dismissed. However, the question is whether the additional \u00a32.5M buys a materially better outcome, and I think it does. HARBOTTLE provides 2.5 times the required capacity on a rated basis, a second source, no drift-back risk, and a quantified rather than open-ended hands-off exposure. SKELWITH provides a saving that\u2014adjusted for performance ratio and drift-back\u2014falls short of the target it is meant to meet, requires the next regulatory settlement to lock in spending to arrest deterioration, and adds no new source to a single-works system.\n\n---\n\n**Conclusion**\n\nSKELWITH is the cheaper and earlier scheme, but it does not reliably close the 2031 gap. Adjusted for the Kilvaddy ratio (1.18 Ml/day) and 16 months of drift-back (~0.13 Ml/day), it returns about 1.05 Ml/day against a 1.2 Ml/day need, leaving a residual shortfall that is operationally manageable only because the small storage draw (4\u20135 Ml at peak week) is trivial against 62 Ml of capacity. Maintaining even that reduced level requires the next regulatory period to fund ongoing leakage spend\u2014an assumption the board cannot bank. \n\nHARBOTTLE costs more and carries a summer hands-off risk, but 62 Ml of storage covers 51 days at the deficit rate against a historical maximum of 41 days (non-consecutive) triggered in the worst observed year. The capacity is rated at 3.0 Ml/day, it does not drift, and it gives a single-works utility a second source for the first time.\n\nCALL\n  HARBOTTLE\n\nGROUNDS\n  SKELWITH, adjusted for the Kilvaddy performance ratio and sixteen months of drift-back, delivers only about 1.05 megalitres a day against a 1.2 megalitre shortfall and must be continuously maintained to hold even that, whereas HARBOTTLE provides 3.0 megalitres a day of rated, drift-free capacity, adds a second source to a single-works system serving 41,000 properties, and its summer hands-off exposure\u2014historically 41 non-consecutive days\u2014sits within the 51-day cover that 62 megalitres of treated storage provides.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-az54nalp"
+  },
+  "cost_usd": 0.2652273,
+  "duration_ms": 333906,
+  "session_id": "e4e66f92-1647-45e5-beef-88ef09e72878",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 17556,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 17556,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 335.0970323085785,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "opaque": "T06",
+  "item_id": "K04",
+  "ordering": "BA",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The arithmetic of the 2031 shortfall**\n\nThe board's rated capacity is 14.2 ML/day. Forecast peak-week demand in 2031 is 15.4 ML/day. The gap is 1.2 ML/day. Every comparison below is tested against that number.\n\n---\n\n**Testing SKELWITH**\n\nThe forecast saving of 1.4 ML/day must be scaled to the Kilvaddy benchmark before being trusted. Kilvaddy returned 1.1 against a forecast 1.3, a delivery ratio of 84.6 %. Applied to 1.4, that gives 1.185 ML/day \u2014 call it 1.18 as stated. That is already 0.02 ML/day short of the 1.2 needed, before any allowance for post-completion erosion.\n\nThe programme runs in three tranches and is complete by 31 March 2030. Peak-week in 2031 falls in July \u2014 roughly sixteen months after completion. At 0.1 ML/day erosion per year, the drift-back by that point is 0.1 \u00d7 16/12 \u2248 0.13 ML/day. The net saving available in July 2031 is therefore:\n\n1.18 \u2212 0.13 = **1.05 ML/day**\n\nAgainst a 1.2 ML/day shortfall, SKELWITH leaves the board **0.15 ML/day undersupplied** at the very moment it is most exposed. If tranches are treated individually (each drifting from its own completion date rather than from the programme end), the residual is even smaller. By 2032 the erosion reaches 0.23 ML/day and the gap widens further without fresh capital that the board does not yet have authority to spend \u2014 the next regulatory envelope does not settle until December 2029, with no certainty of what it will fund.\n\nSKELWITH's early-landing benefit is real: demand does not hit rated capacity until 2028 even without intervention, and partial completion of Tranche 1 in 2027 gives modest headroom through the interim period. But the scheme's purpose is to close the 2031 gap, and on the numbers it does not.\n\n---\n\n**Testing HARBOTTLE**\n\nCullivoe delivers 3.0 ML/day of licensed, rated capacity \u2014 2.5 times the shortfall. Commissioned 30 June 2029, it gives no benefit before that date, which matters but is manageable (see below). Once running, it turns a 1.2 ML/day deficit into a 1.8 ML/day surplus, leaving headroom for further growth beyond 2031 without additional infrastructure.\n\nThe hands-off flow (HOF) condition is the scheme's principal risk. When the Vraich burn falls below 12.1 ML/day, Cullivoe stops and the board is back to rated 14.2 against a peak demand of 15.4 \u2014 a 1.2 ML/day deficit, precisely what it had before. The question is how long that condition can persist and whether storage covers it.\n\n- Worst recorded restriction: 41 days (2022)\n- Recent restriction: 29 days (2025)\n- All restrictions fall June\u2013September\n- 62 ML of treated storage at a 1.2 ML/day draw-down rate covers **51.7 days**\n\nThe storage margin over the worst recorded restriction is therefore ten days. That is not lavish, but the condition is entirely foreseeable: the board knows the season, monitors the gauge, and can pre-fill reservoirs and reduce leakage-related demand ahead of the risk window. The trend in restriction length (41 to 29 days over three years) is in the right direction, though climate risk means it should not be taken for granted. On the other hand, the Cullivoe borehole is not the board's only source during an HOF event \u2014 it is simply the incremental 3.0 ML/day that is suspended. The existing 14.2 ML/day works continues to operate.\n\nThe HOF risk is also temporally bounded: outside June\u2013September, Cullivoe runs uninterrupted and the board has 17.2 ML/day of combined rated capacity, a 1.8 ML/day surplus. The summer window is the critical exposure period, and 62 ML of storage is specifically designed for exactly this kind of bridging role.\n\n---\n\n**The interim gap under HARBOTTLE (2027\u20132029)**\n\nWith no SKELWITH mains savings, peak-week demand could reach approximately 14.32 ML/day in 2028 and 14.68 ML/day in the first half of 2029 before Cullivoe commissions. These exceed rated output by 0.12 and 0.48 ML/day respectively. However, \"peak-week\" is one week per year. An excess of 0.12 ML/day for seven days consumes only 0.84 ML of storage \u2014 less than 1.4 % of the 62 ML held. The 2028 and early-2029 gaps are real operational constraints but are readily absorbed by storage management and demand-side measures over periods measured in days, not months.\n\n---\n\n**Cost and envelope**\n\nSKELWITH at \u00a35.9M leaves \u00a35.3M unspent within the \u00a311.2M envelope. That headroom is attractive, but unused capital does not close a supply gap. If the board chose SKELWITH and the 0.15 ML/day shortfall materialised in 2031, it would need a new source in the next regulatory period \u2014 but the December 2029 settlement gives it only eighteen months to design, procure and commission anything before 2031, which is insufficient for a greenfield borehole and treatment stream. The cost saving from SKELWITH would be consumed by the delay premium and the operational consequences of being undersupplied.\n\nHARBOTTLE at \u00a38.4M fits within the \u00a311.2M envelope and leaves \u00a32.8M for ancillary works \u2014 pressure management, telemetry on the Vraich gauge, or strategic storage enhancement to widen the HOF buffer.\n\n---\n\n**Summary comparison**\n\n| Factor | SKELWITH | HARBOTTLE |\n|---|---|---|\n| Effective gain by July 2031 | ~1.05 ML/day (after ratio and drift) | 3.0 ML/day rated |\n| Closes 1.2 ML/day gap? | No (0.15 ML/day short) | Yes (1.8 ML/day surplus) |\n| Reliability caveat | Gradual erosion, requires ongoing spend | HOF condition, up to 41 days historically |\n| Storage covers caveat? | N/A | Yes \u2014 51 days vs 41-day worst case |\n| Earliest benefit | 2027 (partial) | June 2029 |\n| Cost | \u00a35.9M | \u00a38.4M |\n| Long-term position | Deteriorating without reinvestment | Stable rated infrastructure |\n\nSKELWITH's early start and lower cost are genuine advantages, but neither compensates for the fundamental finding: adjusted for Kilvaddy underperformance and sixteen months of drift-back, it delivers roughly 1.05 ML/day against a 1.2 ML/day need and continues to erode. HARBOTTLE is more expensive and later, but it resolves the shortfall decisively, and its principal risk \u2014 the HOF condition \u2014 is bounded by a storage cushion that covers the worst year on record with ten days to spare.\n\n---\n\nCALL\n  HARBOTTLE\n\nGROUNDS\n  SKELWITH, at the Kilvaddy delivery ratio and after sixteen months of post-completion drift, yields approximately 1.05 megalitres per day against a 1.2-megalitre shortfall and continues to erode, whereas HARBOTTLE's 3.0-megalitre rated output closes and substantially exceeds that gap, and its hands-off-flow restriction risk is bounded by 51 days of treated storage set against a worst-recorded 41-day restriction.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-ac5gobay"
+  },
+  "cost_usd": 0.1569873,
+  "duration_ms": 184849,
+  "session_id": "cee21861-5436-4b93-8acc-7f024b62d699",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 10339,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 10339,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 186.14509916305542
+}

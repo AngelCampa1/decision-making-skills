@@ -1,0 +1,61 @@
+{
+  "opaque": "T18",
+  "item_id": "K13",
+  "ordering": "AB",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Revenue arithmetic**\n\nCurrent position: GBP 2.1m on 148 tonnes, 90% of maximum capacity (164 tonnes across four jigs at 41 tonnes each).\n\nSALTGRAVE \u2013 Thurlmere stays on its current informal footing, Ostrey is locked in on the three-year offer:\n\n| Customer | Tonnes | Rate (GBP/kg) | Revenue |\n|---|---|---|---|\n| Marchgate | 65 | 14.19 | 922,350 |\n| Thurlmere | 46 | 14.19 | 652,740 |\n| Ostrey | 37 | 14.60 | 540,200 |\n| **Total** | **148** | | **~2,115,290** |\n\nMORVEDD \u2013 Thurlmere new contract, Ostrey released:\n\n| Customer | Tonnes | Rate (GBP/kg) | Revenue |\n|---|---|---|---|\n| Marchgate | 65 | 14.19 | 922,350 |\n| Thurlmere | 96 | 15.40 | 1,478,400 |\n| **Total** | **161** | | **~2,400,750** |\n\nThe annual revenue advantage of MORVEDD over SALTGRAVE is approximately GBP 285,000\u2013302,000. Over three years that gross advantage is roughly GBP 857,000, and after the GBP 96,000 capex it is around GBP 761,000 in the best case. That is the prize.\n\n**Concentration**\n\nSALTGRAVE leaves the book at three names: Marchgate 44 %, Thurlmere 31 %, Ostrey 25 %. No single name exceeds half of revenue.\n\nMORVEDD produces two names: Thurlmere 62 %, Marchgate 38 %. Thurlmere's 62 % sits on a six-months termination right in the change-of-control clause. Those two facts together define the entire decision.\n\nFor a GBP 2.1m turnover business with nineteen staff and the fixed-cost profile of a dye works \u2013 wet plant, heated liquor circuits, skilled operatives \u2013 losing 62 % of revenue inside a six-month window is not a recoverable setback. It is an existential event. Revenue would fall from roughly GBP 2.4m to whatever Marchgate provides (approximately GBP 922k), with Ostrey gone permanently to another dyer. No redundancy round is fast enough to right-size to that turnover without destroying the skill base and the remaining customer relationships. The business probably does not survive it in recognisable form.\n\n**The Vennerdale variable**\n\nThurlmere changed hands in 2025, one year ago. Vennerdale is a group acquirer whose subsequent intentions are not visible to Gallowfield. There are several ways the change-of-control clause can be triggered: Vennerdale sells Thurlmere on; Vennerdale is itself acquired; Vennerdale restructures the subsidiary. Each of those events converts a nominal three-year contract into a six-month notice. Because Vennerdale acquired Thurlmere only in 2025, the probability of a further ownership change during a three-year window is meaningfully higher than it would be for a long-established private owner.\n\nThe insistence on two dedicated jigs with a separate liquor circuit also deserves scrutiny. It makes Gallowfield operationally more committed and less able to pivot, while the change-of-control clause means Thurlmere/Vennerdale retains a route out that Gallowfield cannot block. That asymmetry systematically favours the buyer, not the supplier.\n\n**What the three-year contract actually provides**\n\nThe label \"three-year contract\" is doing more reassurance than the terms warrant. Under normal circumstances, three years of contractual certainty at GBP 1.478m a year would be valuable. Here, the change-of-control clause converts the commitment into something closer to: *three years provided Vennerdale makes no changes to its corporate structure, and six months' notice thereafter.* For a group that has been the owner for twelve months, that clause is not a technicality \u2013 it is a live option they hold throughout the term. The three-year commitment on Gallowfield's side (GBP 96k capex, Ostrey released, two jigs tied up) is far more binding than the three-year commitment on Thurlmere's side.\n\n**The Ostrey cost is not recoverable**\n\nTwenty-two years of continuous business represents a relationship that is, practically speaking, irreplaceable once severed. If Ostrey is released to create room for Thurlmere and MORVEDD later collapses \u2013 whether at month eight, month twenty, or month thirty-five \u2013 Ostrey will have found a dyer, be contracted to them, and will have no reason to return. The GBP 540k annual revenue Ostrey provides is the core of any recovery scenario if things go wrong. Releasing them removes that backstop.\n\n**Capacity and optionality**\n\nSALTGRAVE: 148 of 164 tonnes used, sixteen tonnes of headroom. New customer enquiries can be entertained. One jig can be taken offline for maintenance without turning away work. Marchgate can be offered modest volume growth as an incentive to finally sign a contract.\n\nMORVEDD: 161 of 164 tonnes used, three tonnes of headroom. The business is sealed. There is no room for Marchgate growth, no tolerance for operational overruns on the dedicated jigs, no ability to trial a fourth name. A company at 98 % of physical capacity with 62 % concentration in one name has no practical options if anything goes wrong.\n\n**The Marchgate problem under each course**\n\nMarchgate's absence of a contract is a standing risk under both courses, but under SALTGRAVE there is space and negotiating room to address it. Under MORVEDD, Gallowfield's dependence on Thurlmere weakens its hand with every other relationship, including Marchgate: any hint that Marchgate might leave would be devastating when you are already running at capacity with 62 % of revenue in one basket.\n\n**Expected-value framing**\n\nAssign a rough probability of, say, 30 % that Thurlmere/Vennerdale exercises the termination right during the three-year window (corporate change, strategic reversal, vertical integration). That is not a remote scenario given the recency of the acquisition.\n\nScenario A (70 % weight): MORVEDD runs to term. Net gain over SALTGRAVE: approximately GBP 761k over three years. Then the position reverts to no contract, heavy Thurlmere dependence, and Ostrey permanently gone.\n\nScenario B (30 % weight): MORVEDD collapses on termination, say at month 18. Revenue falls from GBP 2.4m to GBP 922k. After GBP 96k capex, and with Ostrey gone, the business faces restructuring that could not be managed without lasting damage. Assign a conservative value destruction of, say, GBP 1.5m (the revenue the book would have generated under SALTGRAVE over the remaining period, plus the cost of contraction).\n\nRough expected value: (0.70 \u00d7 GBP 761k) \u2013 (0.30 \u00d7 GBP 1,500k) = GBP 533k \u2013 GBP 450k = approximately GBP 83k net positive for MORVEDD. That is paper-thin, and the 30 % probability for Scenario B is arguably conservative given Vennerdale's short ownership history. Shift it to 35 % and MORVEDD is net negative. More importantly, an expected-value calculation understates the risk here because the downside scenario is not just a financial loss \u2013 it is a business-ending event for a company with nineteen employees and illiquid assets. Existential risk should be penalised beyond its probability-weighted value.\n\n**Modest advantages of SALTGRAVE over the stated alternative**\n\nSigning Ostrey at GBP 14.60/kg on a three-year contract adds a small but guaranteed improvement over the current average (GBP 14.19/kg) and converts the most loyal customer on the book into a contracted one. SALTGRAVE also preserves GBP 96,000 in cash that can be directed toward a Marchgate retention conversation, capacity maintenance, or as a buffer if Thurlmere's volumes soften in 2027 even without a change of control.\n\n**Summary**\n\nMORVEDD has a larger revenue number and a genuine three-year contract. Those are real. But the contract is conditional in a way that maps precisely onto a plausible near-term event (another corporate change at a recently-acquired subsidiary), the concentration it creates is company-threatening if triggered, and it permanently burns the one loyal, long-standing relationship that would form the foundation of any recovery. SALTGRAVE costs approximately GBP 285,000\u2013302,000 per year in foregone revenue. That is the price of not placing an existential bet on Vennerdale's corporate stability.\n\n---\n\nREADING\nThe 62% concentration is tolerable only if the six-months change-of-control clause is close to zero-probability; given that Vennerdale acquired Thurlmere in 2025 and the clause runs on either side throughout the term, that probability is not close to zero. The revenue premium from MORVEDD (~GBP 285\u2013302k/year) is real but does not compensate for an existential downside triggered by a single corporate event outside Gallowfield's control; SALTGRAVE preserves the three-name book, secures the one contracted relationship on offer (Ostrey, twenty-two years), avoids locking 98% of physical capacity into a single customer, and keeps GBP 96k and the bank facility free to address the Marchgate risk that neither course eliminates.\n\nCALL\nSALTGRAVE\n\nGROUNDS\nThe six-months change-of-control termination clause, sitting on a 62% revenue concentration with a group that has owned Thurlmere for barely a year, makes the nominal three-year commitment contingent on a corporate event outside Gallowfield's control, and the resulting downside \u2014 revenue collapsing from GBP 2.4m to GBP 922k with Ostrey permanently gone \u2014 is existential for a nineteen-person business, which means the GBP 302,400 annual premium does not survive the expected-value test once the severity of the failure scenario is properly weighted.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-wy3h5gal"
+  },
+  "cost_usd": 0.20651300000000003,
+  "duration_ms": 246503,
+  "session_id": "0502c1e3-b158-4f8d-a4f5-2edeb82eb2ff",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 973,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 13480,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 973,
+        "output_tokens": 13480,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 247.95173287391663,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

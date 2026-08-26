@@ -1,0 +1,61 @@
+{
+  "opaque": "T10",
+  "item_id": "K11",
+  "ordering": "AB",
+  "draw": 5,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Reframing the comparison**\n\nThe problem statement correctly points out that the GBP 27,072 learning-curve remake bill is identical under both courses and can therefore be set aside. The decision rests on three live financial variables \u2014 overtime, crossing remakes, and the reputation cost of visible quality deterioration \u2014 plus the operational risk of running two parallel systems.\n\n---\n\n**Blended remake rates: what practices actually see**\n\nThe pilot measured 11.4 % for the first 300 units and 4.2 % for the next 300. At 646 units a year (\u2248 54 units/month), a technician clears the 300-unit threshold around month 5.6 and the 600-unit threshold around month 11. Those numbers frame what each practice observes month by month.\n\n*KIRKBANE \u2014 all ten start 2027-01-04*\n\nFor the first 5\u20136 months, all ten transitioning technicians sit at 11.4 %. Blended across twelve benches:\n\n(10 \u00d7 11.4 + 2 \u00d7 3.4) \u00f7 12 \u2248 **10.1 %**\n\nThat is more than three times the settled rate. Every one of the forty practices sees it at once. The rate only drops sharply \u2014 to roughly 4.1 % \u2014 when the cohort collectively clears 300 units around mid-2027, and returns to par by December 2027.\n\n*AVENSWOOD \u2014 three batches of 3, then 1, across nine months*\n\n| Period | New (phase) | Remaining old | 2 pilot | Blended |\n|---|---|---|---|---|\n| Jan\u2013Apr 2027 | 3 at 11.4 % | 7 at 3.1 % | 3.4 % | **\u2248 5.2 %** |\n| Apr\u2013Jul 2027 | 3 at 11.4 % + 3 at 4.2 % | 4 at 3.1 % | 3.4 % | **\u2248 5.5 %** |\n| Jul\u2013Oct 2027 | 3 at 11.4 % + 3 at 4.2 % + 3 settling | 1 at 3.1 % | 3.4 % | **\u2248 7.5 %** |\n| Oct\u2013Dec 2027 | 1 at 11.4 % + others graduating | 0 | \u2014 | **\u2248 6\u20136.5 %** |\n\nThe peak of roughly 7.5 % in mid-2027 is bad, but it is materially lower than KIRKBANE's 10 % opening, and it is diluted across time rather than announced simultaneously to all practices. Three-quarters of the bench is at settled quality from day one; a practice that phones with a query almost always reaches capacity that is not on the steep slope.\n\n---\n\n**Crossing remakes under AVENSWOOD**\n\nThe pilot placed 2 technicians on the new system alongside 10 on the old, and recorded 40 crossing remakes in four months. The most natural model for crossing-remake rate is proportional to the product of technicians on each side (new \u00d7 old), because a crossing remake requires an active hand-off across the boundary in both directions.\n\nPilot calibration: 2 \u00d7 10 = 20 exposure-units over 4 months \u2192 40 remakes \u2192 **0.5 remakes per exposure-unit per month.**\n\nAVENSWOOD exposure across three phases (each \u2248 3 months):\n\n| Phase | Split | Exposure-units | Duration | Remakes |\n|---|---|---|---|---|\n| Jan\u2013Apr 2027 | 5 new, 7 old | 35 | 3 months | 52.5 |\n| Apr\u2013Jul 2027 | 8 new, 4 old | 32 | 3 months | 48.0 |\n| Jul\u2013Oct 2027 | 11 new, 1 old | 11 | 3 months | 16.5 |\n| **Total** | | | | **\u2248 117** |\n\nAt GBP 96 each: **\u2248 GBP 11,230.**\n\nThis estimate is uncertain \u2014 better case-routing protocols could halve it; sloppy handovers could push it higher \u2014 but it is unlikely to reach GBP 44,000.\n\nUnder KIRKBANE, everyone is on the same system from 2027-01-04. Crossing remakes are effectively zero.\n\n---\n\n**Direct financial comparison (excluding the equal learning-curve cost)**\n\n| Item | KIRKBANE | AVENSWOOD |\n|---|---|---|\n| Overtime | GBP 44,000 | GBP 0 |\n| Crossing remakes | GBP 0 | \u2248 GBP 11,230 |\n| **Net differential** | **GBP 44,000** | **\u2248 GBP 11,230** |\n\nAVENSWOOD is approximately **GBP 33,000 cheaper** on measurable direct costs.\n\n---\n\n**The dual shade library**\n\nRunning two shade libraries for nine months is a genuine risk. Practices receive shade references from the lab's records, and if a case started under one library is matched against the other, the result can be a mismatched restoration \u2014 another form of crossing error. Strict protocols (for example, locking completed shade records against the system on which work started) can contain this, but it is not costless to manage. It is worth noting, however, that the pilot measurement of 40 crossing remakes almost certainly already reflects shade-library confusion as part of its cause, since the pilot ran two libraries concurrently. The GBP 11,230 estimate therefore probably absorbs this risk, rather than understating it.\n\n---\n\n**Reputation and practice-retention risk**\n\nForty practices seeing a 10 % remake rate in the same month under KIRKBANE is the hardest item to price. Each practice that defects as a result of a quality shock costs far more than GBP 33,000 to replace \u2014 revenue, relationship rebuild time, and the margin on years of future orders. Even if practices are understanding about a disclosed transition, a simultaneous system-wide deterioration is a compelling reason for procurement managers to look elsewhere. The concentrated, simultaneous nature of KIRKBANE's spike is the item that weighs most heavily against it.\n\nUnder AVENSWOOD, the elevated rate is real but diffused. The majority of output is always at settled quality. Practices that do experience above-par remakes are dealing with one or two technicians in transition, not a laboratory-wide crisis.\n\n---\n\n**Deadline check**\n\nThe Kessendale support deadline is 2028-06-30. Under AVENSWOOD, the last technician moves to the new system on 2027-10-04 \u2014 Kessendale is therefore decommissioned roughly eight months before its support expiry. The fact that this technician completes their learning curve only around September 2028 is irrelevant to the deadline: they are already working on the replacement system. Both courses are comfortably within the deadline.\n\n---\n\n**Summary judgement**\n\nAVENSWOOD is better on every measurable dimension except the dual-library management burden and the crossing-remake count \u2014 and both of those disadvantages, totalled, cost roughly a quarter of what KIRKBANE's overtime bill costs. The staggered course also prevents a quality catastrophe visible simultaneously to all forty practices, which is the kind of event that loses accounts permanently. The nine months of parallel-system running is an operational inconvenience that is fully manageable with disciplined case-routing protocols.\n\nREADING\n\nCALL\nAVENSWOOD\n\nGROUNDS\nAVENSWOOD saves roughly GBP 33,000 against KIRKBANE once crossing remakes are set against overtime, and by keeping three-quarters of the bench at the settled rate throughout it avoids the simultaneous ten-per-cent remake-rate shock that KIRKBANE would deliver to all forty practices in the same month \u2014 the single outcome most likely to trigger practice defections that no financial calculation could recover.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-qighcamn"
+  },
+  "cost_usd": 0.19114,
+  "duration_ms": 220065,
+  "session_id": "6de536f1-aafb-4db3-b3c8-08ad8cc82131",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 12487,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 12487,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 221.1823546886444,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "opaque": "T22",
+  "item_id": "K06",
+  "ordering": "AB",
+  "draw": 5,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Dead mileage correction**\nThe rent saving of \u00a396,000 a year (\u00a3214,000 \u2212 \u00a3118,000) is not the true net figure. Culverstone is 3 miles further from Verrancombe Bridge than Hallowbrand. Each of the 22 route-44 vehicles makes one outward dead run and one inward dead run each operating day, adding 6 miles per vehicle per day: 22 \u00d7 6 \u00d7 \u00a30.63 \u00d7 313 = \u00a326,029 a year. The real net annual advantage of Culverstone over Hallowbrand is therefore approximately \u00a370,000, not \u00a396,000. Every number that follows uses this corrected figure.\n\n---\n\n**Capital and payback arithmetic**\n\n| Item | \u00a3 |\n|---|---|\n| Works | 480,000 |\n| Faskally deposit (unavoidable if KESTERWICK chosen after 5 Dec) | 40,000 |\n| **Total hard capital** | **520,000** |\n\nAt \u00a370,000 net saving a year, payback is 7.4 years. The ten-year Culverstone term then yields 2.6 years of unrecovered benefit before the term even expires and a renegotiation held from a better position. Over the same ten years, ARDENSHAW costs \u00a32.14m in rent against \u00a31.18m \u2014 a \u00a3960,000 gross difference set against the \u00a3520,000 investment. By any undiscounted measure KESTERWICK recovers its cost comfortably inside the term.\n\n---\n\n**Planning scenarios and the Hallowbrand gap**\n\nApplication validated 2026-08-14. Hallowbrand expires 2027-11-30.\n\n| Determination | Consent | Works complete (+ 22 wks) | Position at 2027-11-30 |\n|---|---|---|---|\n| 13-week target | 2026-11-13 | ~2027-04-16 | In Culverstone 7 months early |\n| 34-week median | ~2027-04-10 | ~2027-09-11 | In Culverstone 11 weeks early |\n| 61-week worst recorded | ~2027-10-15 | ~2028-03-18 | **Needs Nethercote** |\n\nOnly the historically slowest outcome produces a gap. That gap runs from roughly 1 December 2027 to 18 March 2028 \u2014 approximately 15\u201316 weeks at \u00a318,500 a month, so about \u00a366,000\u2013\u00a374,000. The deposit secures Culverstone to 30 June 2028, which comfortably encloses the worst-case completion date of March 2028.\n\nWorst-case total cash exposure: \u00a3520,000 capital + \u00a374,000 Nethercote = **~\u00a3594,000**. Cash held is \u00a3640,000; add the \u00a3200,000 facility and headroom is \u00a3840,000. Even the worst case is fundable without external refinancing, though the reserve position becomes tight and would need careful management of timing.\n\n---\n\n**The no-workshop problem at Nethercote**\n\nNethercote carries a real operational cost: maintenance must be outsourced or vehicles transported to a workshop for the gap period. This is not trivial for 31 vehicles, but it is a time-limited, bounded problem. Operators routinely manage short bridging arrangements. It is a cost and nuisance, not a structural threat.\n\n---\n\n**The 2027-09-14 bid deadline**\n\nUnder the median scenario (the most probable single outcome), works are complete by approximately 11 September 2027, three days before bid submission. That is extremely tight for moving in, but the costs are known and confirmed.\n\nUnder the worst-case scenario, consent has not yet been granted on bid day (worst-case consent arrives ~15 October 2027, six weeks after bid day). However, the new contract term begins 2028-04-01. Even on the slowest determination ever recorded, Culverstone is occupied by mid-March 2028 \u2014 fully operational before the contract starts. A bid priced on Culverstone costs with a note that occupation is projected before contract commencement is a coherent and defensible position.\n\nThe inverse is the deeper concern. ARDENSHAW locks depot cost into the bid at \u00a3214,000 a year \u2014 a fixed line. A competitor who has secured a cheaper site has a structural \u00a370,000-a-year cost advantage expressed directly as a lower price or a higher margin on the same price. In a competitively tendered network contract, that gap is not trivial. KESTERWICK eliminates it; ARDENSHAW cements it for the entire next contract term.\n\n---\n\n**Summary of the decision**\n\n| Dimension | KESTERWICK | ARDENSHAW |\n|---|---|---|\n| Annual depot cost (net of dead mileage) | ~\u00a3144,000 | \u00a3214,000 |\n| Net annual advantage | **\u00a370,000** | \u2014 |\n| Capital required | \u00a3520,000 | nil |\n| Payback within term | Yes (~7.4 yrs) | N/A |\n| Planning risk | Real; worst case managed | None |\n| Transition risk | Up to ~16 wks at Nethercote | None |\n| Maximum total exposure | ~\u00a3594,000 vs \u00a3840,000 available | \u2014 |\n| Bid competitiveness from 2027-09-14 | Lower cost, advantage | Higher cost, disadvantage |\n| Position in 2037 | Out of lease, renegotiate | Still tenants at \u00a3214,000 |\n\nKESTERWICK carries the planning and transition risk. Those risks are real. But they are time-limited, financially bounded, and sit well within the company's available resources even in the worst recorded scenario. ARDENSHAW is not risk-free: it is the permanent, annual, compounding risk of being structurally more expensive than competitors \u2014 locked in at the exact moment the 44/44A bid is being formed.\n\n---\n\nREADING\n\nThe net annual saving of \u00a370,000 pays back the worst-case total outlay of roughly \u00a3595,000 within nine of the ten years in the Culverstone term; the worst-case Nethercote gap of approximately sixteen weeks is fundable from existing cash reserves without drawing the facility; and accepting Hallowbrand at \u00a3214,000 would permanently embed a material cost disadvantage into the September 2027 competitive bid for a contract that runs to 2031, compounding the loss well beyond the lease itself.\n\nCALL\n  KESTERWICK\n\nGROUNDS\n  The worst-case total outlay of roughly \u00a3595,000 is recoverable from the \u00a370,000 net annual saving inside nine years and is fundable from existing reserves without the facility, while renewing at Hallowbrand would lock a \u00a370,000-a-year structural cost penalty directly into the September 2027 bid and every year of the contract that follows it.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-tz4q5lzr"
+  },
+  "cost_usd": 0.1602097,
+  "duration_ms": 196838,
+  "session_id": "7d0b5835-d18c-427f-bb9d-4293e91c3856",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1039,
+    "output_tokens": 10562,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 10562,
+        "cache_read_input_tokens": 1039,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 197.92530798912048,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

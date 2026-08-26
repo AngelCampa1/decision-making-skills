@@ -1,0 +1,61 @@
+{
+  "opaque": "T02",
+  "item_id": "K12",
+  "ordering": "AB",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The organising question**\n\nThe numbers in the two courses are not the real choice. The real choice is whether to accept near-certain damage to the bank facility in exchange for lower short-run costs, or pay a meaningful but bounded premium for the only route that keeps the licence term inside the loan term. Everything else flows from that.\n\n---\n\n**What PENNYQUAY actually delivers**\n\nThe undertaking route does work procedurally\u2014the Rivers Board accepts it and the renewal would be lodged on time. But the Board's own record shows what it delivers in practice: Cadgarth (2024) and Nant Elwy (2025) both filed on undertakings and both received six-year terms, not fifteen. There is no signal that Blaenclydach would be treated differently; the Board appears to treat the undertaking as a conditional compliance signal and prices the term accordingly.\n\nA six-year renewal issued from 2028 runs to approximately 2034. The loan runs to 2039. The bank's letter of 22 June 2026 is precise: a licence term shorter than the loan puts the facility under review. PENNYQUAY does not risk that outcome\u2014it produces it, with a reliability that the Cadgarth and Nant Elwy precedents leave very little room to dispute. The GBP 8,436 outage saving and the nil deposit exposure are real, but they sit on the wrong side of a near-certain bank-covenant breach on a GBP 480,000 facility. A facility under review on a two-person scheme is not a tolerable steady state; it is an existential condition.\n\n---\n\n**What LINTHAUGH actually costs**\n\nStated costs on a grant: GBP 9,000 application, GBP 19,152 in export loss. The GBP 46,000 deposit is real cash out by 1 December 2026, but if the derogation is granted and the February works proceed, it is applied against the contract\u2014it is a timing exposure, not a net loss. The genuine incremental cost of LINTHAUGH over PENNYQUAY, in a grant scenario, is GBP 9,000 in application fees plus the difference in export losses: GBP 19,152 minus GBP 8,436 = GBP 10,716, totalling roughly GBP 19,716.\n\nOn a refusal, the position is different: GBP 9,000 is unrecoverable and the GBP 46,000 deposit is forfeit (non-returnable after 1 December), so the refusal scenario costs GBP 55,000 net\u2014and still leaves the undertaking route as the only remaining path, with the same bank-covenant consequences as PENNYQUAY.\n\n---\n\n**The probability question**\n\nThe Rivers Board granted 4 of 11 derogations in 2025 (36%), decided all within 14 weeks, and\u2014critically\u2014published a dated regulatory driver test implicitly in every refusal: every refused scheme lacked one. Blaenclydach's driver is unambiguous and externally imposed: the abstraction licence expires 31 May 2028, the renewal must be lodged by 31 May 2027, that deadline precedes the lawful works period, and the certificate needed for a complete renewal cannot be obtained without works outside that period. That is precisely the factual profile the Board has used to distinguish grants from refusals. The base rate is 36%, but the base rate pools schemes that lacked any driver at all. Blaenclydach's application sits in the subset that has a clear, dated, statutory driver, and that subset has a materially better record.\n\nA precise probability is not available, but it is reasonable to place the grant probability above 60%, possibly well above. At 65% probability of grant the expected calculation is straightforward: a 65% chance of eliminating the bank covenant problem on a GBP 480,000 facility, against a 35% chance of losing GBP 55,000 while ending up in the same place as PENNYQUAY anyway. Even attributing a conservative value to resolving the bank-covenant risk\u2014say GBP 100,000, which is a fraction of the loan at stake\u2014the expected value of LINTHAUGH is substantially positive relative to PENNYQUAY.\n\n---\n\n**The timing arithmetic**\n\nDerogation lodged 19 October 2026 \u2192 decision 25 January 2027. Works start promptly; screen commissioned by mid-March 2027; certificate issued within six weeks, so by approximately late April 2027. Renewal lodged complete before 31 May 2027. The sequence closes with two to three weeks of headroom. There is no timing failure in the grant scenario.\n\nOn refusal (25 January 2027), 18 weeks runs to approximately 1 June 2027\u2014essentially the deadline. The undertaking route remains open, just barely, which is why the problem description flags it as an available fallback. In the refusal scenario the undertaking is filed under pressure and produces a six-year term with a bank-covenant consequence, but the option itself is not foreclosed.\n\nThe July slot for Vossbeck is confirmed by 30 April 2027\u2014well after the derogation decision on 25 January. If the derogation is refused, Blaenclydach can move immediately to the July slot without having lost that option. The deposit risk is real but does not trap the scheme into an impossible timetable.\n\n---\n\n**Weighing it together**\n\nPENNYQUAY's appeal is certainty of low near-term cost. Its liability is certainty of a short licence term and a triggered bank-covenant clause on a GBP 480,000 debt running thirteen more years. For a two-person operation, that is not a manageable background risk\u2014it is the dominant risk.\n\nLINTHAUGH's liability is a GBP 46,000 deposit at risk on a refusal, plus GBP 9,000 in application costs. Its upside is the only route available to a fifteen-year renewal that outlasts the loan. The derogation case is strong because the dated driver test, which the Board applies consistently, is squarely met. The downside of a refusal leaves the scheme in PENNYQUAY's position with additional sunk costs\u2014bad, but not materially worse than a course that reaches the same bank-covenant outcome with certainty.\n\nLINTHAUGH is the course with a plausible exit from the loan-term problem. PENNYQUAY has none.\n\n---\n\nCALL\n  LINTHAUGH\n\nGROUNDS\n  PENNYQUAY reliably delivers a six-year renewal on the strength of the Cadgarth and Nant Elwy precedents, which is shorter than the 2039 loan term and triggers the bank-covenant clause with near-certainty, whereas LINTHAUGH is the only route to a fifteen-year renewal and the derogation application is strongly placed because Blaenclydach carries the dated regulatory driver that distinguishes every granted application from every refused one.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-dnjqfrf3"
+  },
+  "cost_usd": 0.12474570000000001,
+  "duration_ms": 151601,
+  "session_id": "6d8eaeed-9c51-4808-b164-c1c923806135",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1059,
+    "output_tokens": 8198,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 8198,
+        "cache_read_input_tokens": 1059,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 153.6748561859131,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

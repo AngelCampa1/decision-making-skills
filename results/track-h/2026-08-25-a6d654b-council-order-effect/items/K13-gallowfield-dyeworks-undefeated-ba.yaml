@@ -1,0 +1,216 @@
+# Track H order-effect item K13, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K13
+stratum: undefeated
+stratum_alias_v1: tie
+ordering: BA
+first_course: MORVEDD
+second_course: SALTGRAVE
+pair: K13-gallowfield-dyeworks-undefeated-ab.yaml
+domain: textile_dyeing_customer_book
+mechanism: counterparty-concentration
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [SALTGRAVE, MORVEDD, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Marisol Trentbeck-Aird and I run Gallowfield Dyeworks at Ravensmoor,
+  nineteen staff, commission dyeing woven wool for menswear mills. Turnover
+  GBP 2.1m on 148 tonnes a year, at an average GBP 14.19 a kg.
+
+  Our book is three mills:
+
+  - Marchgate Weaving, 44% of turnover, 65 tonnes.
+  - Thurlmere Cloth, 31%, 46 tonnes.
+  - Ostrey Mills, 25%, 37 tonnes, and they have been with us twenty-two years.
+
+  What has landed on my desk:
+
+  - We run four dye jigs at 41 tonnes a year each, so 164 tonnes is everything
+    we can do.
+  - Thurlmere have offered a three-year contract from 2027-01-01 taking 96
+    tonnes a year at GBP 15.40 a kg, on condition that two jigs are dedicated
+    to their cloth and dye nothing else. I have to answer by 2026-10-31.
+  - Dedicating the two jigs means new pumps and a separate liquor circuit,
+    GBP 96,000 and eight weeks, orderable up to 2026-11-02 for a 2027-01-01
+    start.
+  - Thurlmere were bought by the Vennerdale group in 2025. The draft contract
+    lets either side end it on six months' notice on a change of control.
+  - Ostrey have offered to commit their 37 tonnes for three years at GBP 14.60
+    a kg. That offer stands until 2026-11-28.
+  - Marchgate buy at the average and have no contract with us at all.
+  - We hold GBP 180,000 and the bank facility is untouched.
+
+  Two courses are on the table.
+
+  Course MORVEDD. Take Thurlmere's 96 tonnes at GBP 15.40, dedicate two jigs
+  at GBP 96,000, and release Ostrey to make the room. That is GBP 302,400 a
+  year and GBP 907,200 across the term, the only three-year commitment of that
+  size on offer. Thurlmere then hold 62% of us on six months' notice, and
+  Vennerdale bought them in 2025. The jigs stay ours throughout.
+
+  Course SALTGRAVE. Decline Thurlmere, keep Ostrey Mills, and take their 37
+  tonnes on contract for three years at GBP 14.60. The book keeps three names
+  with the largest at 44%, no jig is dedicated to Thurlmere and no capital
+  goes out. We turn down GBP 302,400 a year, and Marchgate at 44% have still
+  signed nothing. Ostrey have been on the book twenty-two years.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism_note: >-
+    Counterparty-concentration. Capacity is fixed at 164 tonnes, so taking one
+    customer from 46 tonnes to 96 is arithmetically the same act as removing
+    another, and the quantity that moves is the share of turnover resting on a
+    single buyer's decision. The change-of-control clause is what turns that
+    share into an exposure rather than a preference.
+  why_neither_is_defeated: >-
+    Both courses are affordable, both fit inside 164 tonnes, and both leave the
+    dyehouse with committed volume it does not have today. MORVEDD adds
+    GBP 302,400 a year for three years on a defended sum, which is the lean.
+    Against it stands 62% of turnover resting on a mill that changed hands last
+    year, under a contract either side can end on six months' notice for that
+    very reason, and the loss of a customer of twenty-two years who cannot be
+    recalled once released. SALTGRAVE keeps three names on the book and puts a
+    contract under the smallest of them for the first time. A reader who
+    weights three years of committed margin lands on MORVEDD, a reader who
+    weights the concentration and the notice clause lands on SALTGRAVE, and
+    both readings use every figure given.
+  case_for_SALTGRAVE: >-
+    A dyehouse with 62% of its turnover in one mill is a subcontractor of that
+    mill, and this one was bought by a group in 2025 and wrote a change of
+    control break into its own draft. Six months' notice against a three-year
+    commitment of two dedicated jigs and GBP 96,000 of pumps is not a contract,
+    it is an option the buyer holds. Releasing Ostrey to make room ends
+    twenty-two years and cannot be undone: their tonnage goes to a competitor
+    and comes back, if ever, at their price. Committing Ostrey's 37 tonnes for
+    three years at GBP 14.60 puts the first contract the dyehouse has ever held
+    under the smallest customer, costs nothing, needs no capital, and leaves
+    every jig free to take the work that walks in.
+  case_for_MORVEDD: >-
+    Thurlmere are offering GBP 15.40 against an average of GBP 14.19 on
+    50 tonnes more than they take now, which is GBP 302,400 a year and
+    GBP 907,200 across the term, on a book that currently holds no contract at
+    all except the one Ostrey are proposing at a quarter of the size.
+    Concentration is a fact about the shape of the book and not about its
+    quality: the alternative to 62% of a larger turnover is 44% resting on
+    Marchgate, who buy at the average and have signed nothing. The pumps cost
+    GBP 96,000 against GBP 180,000 in hand, the jigs stay ours, and a
+    six-month notice clause is six months of visibility that no customer on the
+    book gives today.
+  arithmetic: >-
+    Book today: 44% + 31% + 25% = 100% of 2,100,000, at 14.19 a kg giving 65.1,
+    45.9 and 37.0 tonnes, 148.0 in total. Capacity 4 x 41 = 164. MORVEDD:
+    Thurlmere 96 t x 15.40 = 1,478,400; Marchgate 65.1 t x 14.19 = 923,769;
+    total 2,402,169 on 161.1 tonnes, uplift 302,169 a year, taken as 302,400 on
+    the rounded tonnages, and 907,200 across three years. Thurlmere share
+    1,478,400 / 2,402,169 = 61.5%, reported as 62%. SALTGRAVE: Ostrey 37 t x
+    14.60 = 540,200 against 525,000, uplift 15,200, book unchanged at three
+    names with the largest at 44%.
+  internal_consistency: >-
+    Figures stated more than once, checked against each other. Turnover:
+    GBP 2.1m stated once, and the three shares 44, 31 and 25 sum to 100.
+    Tonnages: 65, 46 and 37 sum to 148, which is the tonnage in the opening
+    line, and 148 x 14.19 a kg is 2,100,120, which rounds to the stated
+    turnover. Capacity: four jigs at 41 tonnes is 164, and MORVEDD's 96 plus 65
+    is 161, inside it; the item never claims a total the jigs cannot dye.
+    Dates: 2026-10-31 to answer, 2026-11-02 to order the pumps and 2026-11-28
+    for the Ostrey offer, each stated once and in that sequence. Prices:
+    GBP 14.19, GBP 15.40 and GBP 14.60 each appear once. No figure is stated
+    twice with different values.
+  information_timeline: >-
+    Earliest date each course can be taken, against the date its defending
+    figures lapse. MORVEDD: Thurlmere must be answered by 2026-10-31 and the
+    GBP 96,000 of pumps can be ordered up to 2026-11-02, two days after the
+    answer, so the capital commitment follows the decision rather than
+    preceding it; eight weeks from 2026-11-02 is 2026-12-28, three days before
+    the 2027-01-01 start. SALTGRAVE: the Ostrey offer stands to 2026-11-28,
+    twenty-eight days after the Thurlmere deadline, so declining Thurlmere on
+    2026-10-31 leaves the course that defends the decision still open. This is
+    the check that a defending figure must outlive the earliest date its course
+    can be taken, and both pass; had the pumps needed ordering before
+    2026-10-31, the GBP 96,000 would have been committed against an answer not
+    yet given.
+  why_a_reader_commits: >-
+    The Thurlmere deadline is 2026-10-31 and silence is a refusal, so declining
+    to choose is a call for SALTGRAVE without the Ostrey contract that makes
+    SALTGRAVE worth choosing. The two courses also state their own numbers,
+    GBP 302,400 a year against a book that keeps three names, and anyone who
+    has run a commission shop has a view on which of those they would rather
+    hold.
+  authors_lean: >-
+    MORVEDD, printed second under AB. The lean is the GBP 302,400 a year and it
+    is a lean rather than a defeat: 62% of turnover on a mill that changed
+    hands in 2025, a six-month break written into its own draft, and the
+    permanent loss of a twenty-two-year customer are live arguments against it
+    that no figure in the item settles.
+  checks:
+    dates:
+      - "2026-10-31 after 2026-08-25  # the Thurlmere deadline is in the future when the question is asked"
+      - "2026-11-02 after 2026-10-31  # the pumps can be ordered after Thurlmere has been answered"
+      - "2026-11-28 after 2026-10-31  # the Ostrey offer outlives the Thurlmere deadline"
+      - "2026-11-02 before 2027-01-01  # the pumps are ordered before the contract starts"
+      - "2027-01-01 after 2026-11-28  # the contract starts after the Ostrey offer closes"
+    arithmetic:
+      - "44 + 31 + 25 == 100  # the three shares of turnover sum to the whole book"
+      - "65 + 46 + 37 == 148  # the three tonnages sum to the stated throughput"
+      - "148 * 1000 * 14.19 == 2100120  # 148 tonnes at the average price"
+      - "148 * 1000 * 14.19 < 2.1 * 1000000 + 1000  # which rounds to the stated GBP 2.1m turnover"
+      - "164 / 41 == 4  # four dye jigs at 41 tonnes a year each"
+      - "96 + 65 < 164  # MORVEDD's volume fits inside the jigs"
+      - "96 + 65 + 37 > 164  # keeping Ostrey as well would not, which is why they are released"
+      - "96 * 1000 * 15.40 == 1478400  # Thurlmere's contracted volume at the contracted price"
+      - "65 * 1000 * 14.19 == 922350  # Marchgate's tonnage at the average price"
+      - "65 * 1000 * 14.19 < 44 / 100 * 2.1 * 1000000  # the 65 t is the rounded form of Marchgate's 44 per cent"
+      - "46 * 1000 * 14.19 > 31 / 100 * 2.1 * 1000000  # and 46 t is the rounded form of Thurlmere's 31 per cent"
+      - "(96 * 1000 * 15.40 + 44 / 100 * 2.1 * 1000000) - 2.1 * 1000000 == 302400  # the MORVEDD uplift a year"
+      - "((96 * 1000 * 15.40 + 44 / 100 * 2.1 * 1000000) - 2.1 * 1000000) * 3 == 907200  # and across the term"
+      - "96 * 1000 * 15.40 / (96 * 1000 * 15.40 + 44 / 100 * 2.1 * 1000000) > 0.615  # Thurlmere's share of the new book"
+      - "96 * 1000 * 15.40 / (96 * 1000 * 15.40 + 44 / 100 * 2.1 * 1000000) < 0.625  # 61.5 per cent, reported as 62"
+      - "37 * 1000 * 14.60 == 540200  # Ostrey's tonnage on the offered contract"
+      - "37 * 1000 * 14.60 - 25 / 100 * 2.1 * 1000000 == 15200  # the SALTGRAVE uplift a year"
+      - "96000 < 180000  # the pumps are covered by cash in hand"
+  admissible_calls: [SALTGRAVE, MORVEDD, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

@@ -1,0 +1,44 @@
+{
+  "opaque": "S11",
+  "draw": 3,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The gap and what each course actually delivers**\n\nThe 2031 shortfall is 1.2 ML/day against rated capacity. That is the target each course must meet.\n\n*HARBOTTLE* licences 3.0 ML/day at Cullivoe \u2014 1.8 ML/day more than the shortfall. The only condition that erodes that is the hands-off flow (HOF) restriction on the Vraich burn.\n\n*SKELWITH*, adjusted for the Kilvaddy outturn ratio (1.1/1.3 \u00d7 1.4), returns 1.18 ML/day. That is 0.02 ML/day short of the 1.2 target before any drift is applied.\n\n**The drift problem with SKELWITH**\n\nThe programme completes by March 2030. By peak-week 2031 \u2014 roughly 15 to 16 months later \u2014 drift at 0.1 ML/day/year will have eroded approximately 0.13 ML/day of the gain, leaving an effective yield of around 1.05 ML/day. Against a 1.2 ML/day shortfall that is a residual deficit of approximately 0.15 ML/day. SKELWITH therefore does not close the gap by 2031 on current evidence; it merely narrows it. Closing it permanently would require sustained additional pressure-management spend, which draws on future capital envelopes that have not been settled.\n\n**The HOF risk with HARBOTTLE**\n\nThe restriction condition is real and falls entirely in June\u2013September \u2014 the same peak-demand window where the board is most exposed. Recent experience: 41 restriction days in 2022, 29 in 2025. The board quotes 62 ML of treated storage covering approximately 51 days of deficit at 1.2 ML/day. Even the worst recent year (41 days) sits well within that buffer, with 10 days of headroom. The trend between 2022 and 2025 is also downward, though climate variability means that cannot be assumed to persist. Critically, the restriction events are predictable in season, which allows the board to pre-fill storage and manage demand, further widening the operational margin.\n\nTwo qualifications apply. First, the 51-day figure assumes storage is drawn down solely to cover the 1.2 ML/day deficit; if storage is partially depleted by normal peak demand before a restriction event begins, the usable buffer is shorter. Second, commissioning is June 2029, so the board would have two operational summers before 2031 to rehearse restriction management before it becomes a regulatory exposure.\n\nOn balance the HOF risk is a manageable operational condition, not a structural failure of supply.\n\n**Financial and regulatory framing**\n\nSKELWITH costs \u00a32.5M less (\u00a35.9M versus \u00a38.4M) and begins paying back from 2027 rather than 2029. The saving of a megalitre per day in energy and chemical cost is real. However, the \u00a32.5M saving does not automatically become available for a complementary scheme: the envelope funds one of these and not both, the next settlement is December 2029, and SKELWITH's residual deficit would re-enter that settlement as an unresolved supply obligation \u2014 likely requiring HARBOTTLE-type expenditure from a future envelope at prices that will have moved since the current quotation lapses on 2027-06-30.\n\nHARBOTTLE at \u00a38.4M leaves \u00a32.8M in the current envelope. That headroom is modest but available for routine capital maintenance rather than carrying forward a structural supply gap.\n\n**Quotation validity**\n\nBoth quotations hold to 2027-06-30. No order is needed before 2026-12-01. There is time to decide without losing price certainty on either scheme; this point neither favours nor disfavours a choice.\n\n**Summary of the comparison**\n\n| Criterion | HARBOTTLE | SKELWITH |\n|---|---|---|\n| Closes 1.2 ML/day gap? | Yes \u2014 3.0 ML/day, 1.8 surplus | No \u2014 ~1.05 ML/day by 2031 after drift |\n| Reliability | Conditional (HOF, ~29\u201341 days/yr) but covered by 51 days' storage | Permanent benefit subject to ongoing spend |\n| Cost | \u00a38.4M | \u00a35.9M |\n| Delivery | 2029-06-30 | 2027\u20132030 in tranches |\n| Residual need next period | Nil | Yes \u2014 residual deficit and drift |\n| Drift | None | 0.1 ML/day/year |\n\nSKELWITH's economic and timing advantages are genuine, but they do not outweigh the fact that it fails the basic test: it does not demonstrably close the 1.2 ML/day shortfall by 2031. HARBOTTLE closes it with margin, and the margin is large enough to absorb both the HOF restriction and reasonable forecast uncertainty in development take-up.\n\n---\n\nREADING\nSKELWITH's adjusted yield of approximately 1.05 ML/day by 2031 peak-week (1.18 ML/day at completion, less ~0.13 ML/day of drift over 15 months) falls short of the 1.2 ML/day shortfall and then continues to erode, whereas HARBOTTLE's 3.0 ML/day licensed capacity exceeds the shortfall by 1.8 ML/day and the HOF restriction risk \u2014 worst case 41 consecutive summer days \u2014 is covered by 62 ML of treated storage providing approximately 51 days of deficit cover, making HARBOTTLE the only course that reliably closes the gap within the current capital period.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH cannot demonstrably close the 1.2 ML/day gap by 2031 once the Kilvaddy performance ratio and post-completion drift are applied, whereas HARBOTTLE's 3.0 ML/day licensed yield exceeds the shortfall decisively and its sole operational risk \u2014 the hands-off flow restriction \u2014 is bounded by 62 ML of storage that covers the worst observed 41-day restriction period with a 10-day margin.",
+  "cost_usd": 0.06644230000000001,
+  "duration_ms": 85526,
+  "session_id": "9e11b969-5c48-4a4c-aa0f-a7bcc39922d6",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 4305,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4305,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 86.69015622138977
+}

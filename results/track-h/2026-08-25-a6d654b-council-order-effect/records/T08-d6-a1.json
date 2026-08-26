@@ -1,0 +1,53 @@
+{
+  "opaque": "T08",
+  "item_id": "K05",
+  "ordering": "AB",
+  "draw": 6,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Grant eligibility: the arithmetic that undermines PENDLARROW**\n\nThe practice's calculation of 31.8 per cent is done on last year's figures \u2014 that is, it adds the annualised Ardgowrie contract (\u00a3118,000) to a farm-and-equine base of \u00a3504,000, and divides by total turnover for the year ending March 2026 (\u00a31,840,000 plus the same \u00a3118,000). That gives \u00a3622,000 / \u00a31,958,000 = 31.8 per cent. The problem is that the assessment date is 2027-04-30, thirteen months after the base year closed, and the scheme reads the annualised value of work *in force on that date* \u2014 not last year's figures.\n\nSmall animal has compounded at eleven per cent a year for four years. Applying that rate over thirteen months:\n\n\u00a31,336,000 \u00d7 (1.11)^(13/12) \u2248 \u00a31,336,000 \u00d7 1.120 \u2248 \u00a31,496,000\n\nFarm-and-equine with Ardgowrie remains \u00a3622,000. The annualised total in force at April 2027 is therefore roughly \u00a32,118,000, and the ratio is:\n\n\u00a3622,000 / \u00a32,118,000 = 29.4 per cent\n\nThat is below the 30 per cent threshold. The grant is not awarded.\n\nTo check this the other way: with \u00a3622,000 in the numerator, small animal must stay at or below \u00a31,451,333 for the ratio to hold at thirty per cent. Starting from \u00a31,336,000 in March 2026 and growing at eleven per cent annually, small animal crosses that ceiling after roughly:\n\nln(1,451,333 / 1,336,000) / ln(1.11) \u2248 0.79 years \u2248 nine and a half months\n\nThat puts the crossing point around mid-January 2027 \u2014 more than three months before the assessment. Even if one concedes a more favourable methodology and uses the actual year-to-March-2027 accounts for the denominator (approximately \u00a32,036,000, with five months of Ardgowrie already in the farm figure), and treats only the annualised Ardgowrie contract as the uplift to the numerator, the ratio comes to roughly \u00a3622,000 / \u00a32,036,000 = 30.5 per cent \u2014 a margin of half a percentage point against a background of sustained eleven per cent small animal growth. That is not a safe position to plan around.\n\nThe grant is either unavailable at the assessment date or is hanging by half a percentage point over an active growth trend. PENDLARROW's financial case is built on something that is probably beyond reach and certainly not secure.\n\n**What PENDLARROW looks like without the grant**\n\nFit-out: \u00a3260,000 from deposit, leaving \u00a350,000. Vehicle: \u00a334,000, leaving \u00a316,000. Farm vet hired from November 2026 at \u00a371,000 including on-costs. Ardgowrie revenue from November 2026 at \u00a3118,000 per year \u2014 \u00a39,833 per month. Net monthly contribution from the contract before vehicle amortisation and farm overheads: approximately \u00a33,917. The grant, if it arrives at all, comes after the April 2027 assessment, meaning the practice operates for roughly eight or nine months with \u00a316,000 in the bank and a new overhead of \u00a371,000 per year, before any recovery. Any unplanned expenditure in that window \u2014 equipment failure, a disputed invoice, a bad month at the new Ordsall Green premises \u2014 has no cushion.\n\nThe annual net contribution of \u00a347,000 (\u00a3118,000 minus \u00a371,000) is a real number. But it is earned against the risks below.\n\n**Night call-out: what the outgoing practice's experience tells us**\n\nThe previous practice held Ardgowrie for nine years. That is not a trial; it is a mature, established relationship worth \u00a3118,000 per year. They did not walk away because the economics turned bad or because the relationship broke down. They walked away specifically because of night call-out load. That is a loud signal. It means that after nine years of familiarity, of optimised rotas, of knowing the herd and the farm team, a practice concluded that the night burden was intolerable enough to cost itself \u00a3118,000 a year rather than continue.\n\nKirstie Ballantyne-Rowe is willing to move with the contract. That is a genuine positive: she knows the cattle, she knows Ardgowrie's seasonal patterns, she has the relationships on the farm. But she was part of the team at the practice that gave the contract back. Moving to Wrentham Cross \u2014 a practice with no existing out-of-hours farm infrastructure, whose momentum and staffing have been built around small animal for four years \u2014 does not resolve the structural problem. One dedicated farm vet does not provide 24-hour cover. Someone else will be drawn in at night. That someone comes from a practice that has hired for small animal, expanded into a new small animal premises, and has no tradition of farm emergency call-outs.\n\nThe risk extends beyond the farm side. If night calls begin landing on existing vets, retention across the whole practice is at risk. Losing a good small animal vet to night farm rota resentment is a real and foreseeable cost.\n\n**The lock-in and the contingent liability**\n\nTo claim the grant, the practice must hold a herd health contract of 700 cattle or more until April 2030 \u2014 roughly three and a half years from when Ardgowrie would start. The grant becomes repayable in full if that requirement is not met. Ardgowrie has already moved practices once. They could move again, for any reason: a new farm manager, a merger with a neighbouring farm, a competitor offering a lower rate. That would leave WCVG without the required herd coverage and liable to repay \u00a3100,000 on top of having lost the contract revenue. The lock-in attaches to a client relationship WCVG does not control, and the client has demonstrated willingness to change.\n\n**Strategic direction**\n\nThe practice has four years of eleven per cent small animal growth behind it and is about to open a third small animal premises. Farm-and-equine has been flat for three years. The Ordsall Green lease is already signed and the fit-out is going ahead regardless \u2014 that capital is committed. The question is whether the practice also takes on Ardgowrie.\n\nUnder WESTERGATE, the next hire goes into small animal. A small animal vet at Ordsall Green will generate revenue in a segment that is already growing and whose growth will be amplified by the new capacity. The contribution of that hire \u2014 in a premises opened specifically to capture small animal demand \u2014 will almost certainly exceed \u00a347,000 per year, which is all PENDLARROW nets from Ardgowrie before vehicle costs and farm overheads. The farm-and-equine ratio will continue to fall under WESTERGATE, but that is not a problem in itself: there is no grant to preserve, no locked-in ratio requirement, and the growth is happening where it is happening.\n\n**Summary**\n\nPENDLARROW's financial justification is the \u00a3100,000 grant. The grant is probably unattainable because eleven per cent small animal growth will push the ratio below thirty per cent before the April 2027 assessment. Without the grant, PENDLARROW delivers \u00a347,000 per year from a contract whose night call burden ended a nine-year relationship elsewhere, tied to a client the practice cannot control, with \u00a316,000 in cash reserve and a commitment that runs until April 2030. WESTERGATE leaves \u00a350,000 in the bank, redirects the next hire into the segment that is growing, and carries none of those obligations.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe grant that is the sole financial justification for accepting PENDLARROW's risks is almost certainly beyond reach \u2014 eleven per cent annual small animal growth will erode the farm-and-equine ratio to roughly 29 per cent by the April 2027 assessment \u2014 and without it, what PENDLARROW actually offers is the unresolved night call-out load that terminated a nine-year contract at the outgoing practice, a lock-in until 2030 on a client WCVG cannot control, and sixteen thousand pounds of cash reserve.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-g2dwgwcf"
+  },
+  "cost_usd": 0.31592825,
+  "duration_ms": 375866,
+  "session_id": "c850f92a-f191-429b-9475-414193d5923a",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1123,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 20680,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1123,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 20680,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 1123,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1123
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 376.91499066352844
+}

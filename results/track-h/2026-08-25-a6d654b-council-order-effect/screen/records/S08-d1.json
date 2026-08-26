@@ -1,0 +1,44 @@
+{
+  "opaque": "S08",
+  "draw": 1,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The grant arithmetic as presented may already be broken**\n\nThe 31.8 per cent ratio is calculated by adding Ardgowrie's \u00a3118,000 to last year's farm and equine base and dividing by last year's total. But the assessment date is 2027-04-30, and the grant language says it reads the *annualised value of the work in force on that date*, not the most recent completed accounts. Small animal has grown at 11 per cent for four years and there is no reason to expect that to stop. By April 2027, the annualised small animal run-rate will be approximately \u00a31,336,000 \u00d7 (1.11)^(13/12), which is around \u00a31,493,000. Plug that in:\n\nFarm and equine: \u00a3504,000 + \u00a3118,000 = \u00a3622,000  \nTotal: \u00a3622,000 + \u00a31,493,000 = \u00a32,115,000  \nRatio: 29.4 per cent\n\nThat is below the 30 per cent floor. The grant may simply not be payable. Even if the assessor uses a methodology that is more favourable to the practice \u2014 for example, anchoring to the last audited accounts for everything except new contracts \u2014 the margin between the projected ratio and the threshold will be thin and sensitive to exactly how the assessor reads the rule. The 31.8 per cent figure is not wrong as a calculation, but it rests on a denominator that is moving upward fast.\n\n**The Ardgowrie contract is available because it is hard**\n\nThe outgoing practice held it for nine years before deciding the night call-out load was not worth it. Nine years is not a short run; they were not novices. The reason given on the handover call is explicit and specific. Ardgowrie has 900 dairy cattle. Dairy herds calve year-round and have emergency colic, dystocia, and metabolic crises at all hours. The contract requires a dedicated farm vet. One person covering 900 dairy cattle's night emergencies, indefinitely, is the exact operating model the previous practice just abandoned.\n\nKirstie Ballantyne-Rowe is willing to move with the contract. That is useful \u2014 continuity of the cattle relationship is real. But Kirstie was part of the practice that handed it back. She may be willing now because she has not yet experienced being the sole on-call vet for those nights without the backstop of a larger farm team. If she burns out or leaves, Wrentham Cross is left holding 900 cattle's night rota with no farm vet. That is not a theoretical risk: the practice that just left was a going concern for nine years and still reached the point where the burden was the reason to quit.\n\n**The grant repayment condition amplifies the operational risk**\n\nThe \u00a3100,000 grant is repayable in full if the practice stops holding a herd health contract of 700 or more cattle before 2030-04-30. That is three and a half years from Ardgowrie's start date. If the night call-out load proves unmanageable \u2014 the documented reason it is available \u2014 the practice faces a binary: absorb the operational damage to protect the grant, or exit and repay \u00a3100,000. The grant does not insure against this outcome; it creates a financial penalty for the most likely adverse outcome.\n\n**The cash position under PENDLARROW is dangerously thin**\n\nStarting deposit: \u00a3310,000. Fit-out: \u00a3260,000. Vehicle for the farm vet: \u00a334,000. Those two capital items together are \u00a3294,000. That leaves \u00a316,000 in the capital reserve before the grant comes back \u2014 and the grant, if it comes at all, will not arrive until sometime after the April 2027 assessment. For a practice turning over \u00a31.84M across two sites, \u00a316,000 of capital buffer is close to nothing. Equipment failure, an unexpected departure, a delayed payment from a large client, or a building snag on the new premises \u2014 any of these would require borrowing that the practice currently does not have. WESTERGATE, by contrast, leaves \u00a350,000 after the fit-out. That is still modest, but it is not a crisis.\n\n**The economics of the contract itself are modest**\n\nThe gross margin on Ardgowrie is \u00a3118,000 less the farm vet's \u00a371,000, which is \u00a347,000 a year. In year one the vehicle consumes \u00a334,000 of that, netting \u00a313,000. From year two the margin is \u00a347,000 minus vehicle running costs. This is not negligible, but it is not the transformative number the grant made it look like. If the grant is uncertain or not payable, the contract is a moderate margin business attached to a heavy operational burden.\n\n**Small animal is the growth engine and WESTERGATE serves it**\n\nSmall animal turnover has compounded at 11 per cent for four consecutive years and the Ordsall Green fit-out exists because that growth has outgrown the existing two premises. On WESTERGATE, the next hire goes into the part of the practice that is growing, in the new premises, with the straightforward on-call patterns of a small animal caseload. On PENDLARROW, the next hire is a farm vet to service a contract that the previous holder gave up, and the practice then cannot hire into small animal without further cost.\n\n**Farm and equine ratio over time**\n\nEven with Ardgowrie, the ratio declines quickly as small animal grows. By year to March 2028 it falls below 27.5 per cent, which is where the practice is today without Ardgowrie. The ratio improvement is temporary; the operational commitment runs to 2030.\n\n**Summary**\n\nThe case for PENDLARROW rests on the \u00a3100,000 grant. Peel that away \u2014 because the ratio at assessment may be below 30 per cent when small animal growth is properly projected \u2014 and what remains is: a contract with documented night call-out problems, a four-year exit penalty, a cash reserve of \u00a316,000, and a farm vet who is a single point of failure. The case for WESTERGATE is that it keeps \u00a350,000 in reserve, puts the next hire where the business is growing, and carries no locked-in obligation attached to someone else's problem.\n\n---\n\nREADING\nThe grant arithmetic probably fails on the forward-projected ratio; even if it does not, the Ardgowrie contract is available precisely because its night call-out load is unsustainable for a small farm team, the grant repayment clause locks the practice into absorbing that load until 2030, and the cash reserve after fit-out and vehicle under PENDLARROW is \u00a316,000 \u2014 inadequate for a practice of this size. WESTERGATE forgoes \u00a3100,000 that may in any case not be payable, keeps \u00a350,000 in reserve, and directs the next hire into the 11-per-cent-growth business the new premises is being built to serve.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe Ardgowrie contract is available because its night call-out load drove out its previous holder, the grant repayment obligation would then trap the practice with that same burden until 2030, and the forward-projected farm-and-equine ratio at the April 2027 assessment date \u2014 once small animal growth is properly applied \u2014 most likely falls below the 30 per cent qualification threshold, removing the principal financial justification for accepting it.",
+  "cost_usd": 0.19568825,
+  "duration_ms": 229391,
+  "session_id": "e8e1ba75-b9b1-4564-9f5c-19e40353fc0b",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1123,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 12664,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1123,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 12664,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 1123,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1123
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 230.50777053833008
+}

@@ -1,0 +1,183 @@
+# Track H order-effect item K05, stratum: undefeated, ordering: AB.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K05
+block: A
+stratum: undefeated
+stratum_alias_v1: tie
+mechanism: threshold-eligibility
+ordering: AB
+first_course: WESTERGATE
+second_course: PENDLARROW
+pair: K05-wrentham-vet-undefeated-ba.yaml
+domain: veterinary_practice
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [WESTERGATE, PENDLARROW, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Nkem Faraday-Loach and I am senior partner at Wrentham Cross Veterinary
+  Group. We are four vets and eleven support staff across two premises, doing
+  small animal work in the town and farm and equine work out across the
+  Marchwold hills.
+
+  We have taken a lease on another premises at Ordsall Green and we are fitting
+  it out as a small animal surgery. The fit-out is GBP 260,000 and the builder
+  needs an order by 2026-10-16. That part is settled.
+
+  The figures I have been given:
+
+  - Turnover for the year to 2026-03-31 was GBP 1,840,000. Farm and equine was
+    GBP 504,000 of it, which is 27.4 per cent.
+  - Small animal turnover has grown 11 per cent a year for four years. Farm and
+    equine has been flat for three.
+  - The Marchwold Rural Practice Grant pays 40 per cent of a premises fit-out,
+    capped at GBP 100,000, to practices whose farm and equine work is at least
+    30 per cent of turnover. The assessment on 2027-04-30 reads the annualised
+    value of the work in force on that date.
+  - The grant is repayable in full if the practice stops holding a herd health
+    contract of 700 cattle or more before 2030-04-30.
+  - The grant is claimed after the assessment, against fit-out invoices dated
+    on or after 2026-04-01, so the building work is paid for before any of it
+    comes back.
+  - Ardgowrie Farms have offered us their herd health contract, 900 dairy
+    cattle, GBP 118,000 a year, starting 2026-11-01. They want an answer by
+    2026-09-30. Annualised on last year's
+    figures that puts farm and equine at GBP 622,000 of GBP 1,958,000, which is
+    31.8 per cent.
+  - The contract needs a dedicated farm vet at GBP 71,000 including on-costs
+    and a fitted vehicle at GBP 34,000.
+  - Ardgowrie's outgoing practice gave the contract up in June after nine
+    years, and their reason on the handover call was the night call-out load.
+    Their farm vet, Kirstie Ballantyne-Rowe, has said she would move with it.
+  - We have GBP 310,000 on deposit and no borrowing.
+
+  Two courses are on the table.
+
+  Course WESTERGATE. Fund the fit-out from deposit, decline the Ardgowrie herd
+  contract, and put our next hire into small animal. We forgo GBP 100,000 and
+  keep the ratio free to follow the growth, with no herd health contract to
+  hold until 2030-04-30 and no night rota to build. Farm and equine stays where
+  it stands, on a book flat for three years.
+
+  Course PENDLARROW. Take Ardgowrie from November, hire the farm vet, and claim
+  the grant at the April assessment. GBP 118,000 of work against a GBP 71,000
+  vet lifts the ratio to 31.8 per cent and pays GBP 100,000 into a GBP 260,000
+  fit-out. We hold 900 cattle and their night call-outs until 2030, which is
+  what the outgoing practice handed back over.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism: threshold-eligibility
+  mechanism_note: >-
+    The item turns on a stated cut-off, 30 per cent of turnover, that the
+    practice sits below and one course carries it over. Nothing here is a rate
+    of throughput or a sequence of dates: it is a qualifying ratio measured
+    once, with a condition attached to keeping what qualifying pays.
+  arithmetic: >-
+    504,000 / 1,840,000 = 27.4 per cent. Adding the contract annualised,
+    622,000 / 1,958,000 = 31.8 per cent, clear of the 30 per cent cut-off.
+    118,000 - 71,000 = 47,000 a year before the vehicle and consumables. The
+    grant is 40 per cent of 260,000 = 104,000, capped at 100,000.
+  why_neither_is_defeated: >-
+    Both courses fund the same fit-out from money the practice holds, and no
+    stated figure rules either out. PENDLARROW clears the cut-off by 1.8
+    points, brings GBP 100,000 into a GBP 260,000 build, and takes work that
+    grosses GBP 47,000 over the vet who does it, with the vet who has been
+    doing it willing to come. Against that it fixes 900 cattle and a night
+    call-out load into the practice until 2030 on a contract the last holder
+    handed back over that load, and the repayment condition removes the option
+    to hand it back. WESTERGATE forgoes GBP 100,000 to put the same hire into
+    the 11 per cent segment and keeps the practice free of a four-year
+    obligation, on a deposit that covers the build without it. A reader who
+    weights the cash and the rural book lands on PENDLARROW, a reader who
+    weights growth and the freedom to stop lands on WESTERGATE, and both
+    readings use every figure given.
+  information_timeline: >-
+    Read on 2026-08-25. Ardgowrie want an answer by 2026-09-30 and the contract
+    starts 2026-11-01, six months before the 2027-04-30 assessment, so the 31.8
+    per cent that qualifies PENDLARROW is in force on the date it is measured.
+    The builder's order falls 2026-10-16 under both courses, and the grant is
+    claimed after the assessment against invoices dated on or after 2026-04-01,
+    so a fit-out ordered in October is still eligible in April. The GBP 310,000
+    on deposit covers the GBP 260,000 fit-out with GBP 50,000 left, which
+    carries the GBP 34,000 vehicle. Nothing that defends either course lapses
+    before that course can be taken.
+  internal_consistency: >-
+    504,000 / 1,840,000 = 27.4 per cent and 622,000 / 1,958,000 = 31.8 per
+    cent, both stated once and both derivable from 504,000 + 118,000 and
+    1,840,000 + 118,000. 900 cattle clears the 700 the repayment condition
+    names. 40 per cent of 260,000 is 104,000, above the 100,000 cap, so the
+    grant is the cap. Four vets and eleven support staff across two premises
+    are each stated once, and the practice becomes three premises under both
+    courses.
+  why_a_reader_commits: >-
+    One course takes GBP 100,000 and a four-year obligation and the other takes
+    neither, which is a difference in kind rather than in degree, and the
+    builder's order on 2026-10-16 means the practice has to have answered
+    Ardgowrie by 2026-09-30 whatever it thinks of the balance.
+  checks:
+    dates:
+      - "2026-09-30 before 2026-10-16  # Ardgowrie must be answered before the builder's order falls due"
+      - "2026-09-30 after 2026-08-25  # the Ardgowrie answer is still in the future when the question is asked"
+      - "2026-11-01 before 2027-04-30  # the herd contract is in force on the date the grant is assessed"
+      - "2026-10-16 on or after 2026-04-01  # the fit-out order falls inside the eligible invoice window"
+      - "2027-04-30 before 2030-04-30  # the grant is assessed well before the repayment condition lapses"
+      - "2026-11-01 before 2030-04-30  # the contract has to be held right through the repayment window"
+    arithmetic:
+      - "504000 + 118000 == 622000  # farm and equine turnover with the contract annualised"
+      - "1840000 + 118000 == 1958000  # total turnover with the contract annualised"
+      - "504000 / 1840000 < 0.30  # without the contract the practice sits under the cut-off"
+      - "(504000 + 118000) / (1840000 + 118000) > 0.30  # with it the practice clears the cut-off"
+      - "(504000 + 118000) / (1840000 + 118000) * 100 > 31.75  # the stated 31.8 per cent rounds from this"
+      - "(504000 + 118000) / (1840000 + 118000) * 100 < 31.85  # and does not round to 31.9"
+      - "504000 / 1840000 * 100 > 27.35  # the stated 27.4 per cent rounds from this"
+      - "504000 / 1840000 * 100 < 27.45  # and does not round to 27.5"
+      - "40 / 100 * 260000 > 100000  # 40 per cent of the fit-out exceeds the cap, so the grant is the cap"
+      - "118000 - 71000 == 47000  # the contract grosses this over the vet who works it"
+      - "310000 - 260000 > 34000  # deposit covers the fit-out and still carries the vehicle"
+      - "900 > 700  # the herd clears the size the repayment condition names"
+  admissible_calls: [WESTERGATE, PENDLARROW, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

@@ -1,0 +1,61 @@
+{
+  "opaque": "T20",
+  "item_id": "K12",
+  "ordering": "BA",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The licence renewal deadline and what it requires**\n\nThe renewal must be lodged by 2027-05-31. A complete file needs a fish-pass compliance certificate. The 2011 screen cannot earn one; the replacement screen can, and the certificate follows within six weeks of commissioning. The only lawful in-river window is 1 July \u2013 30 September. The next July window opens after the deadline: you cannot fit the screen in July and then file a complete renewal by 31 May. That is the structural constraint that drives the whole analysis.\n\n**What PENNYQUAY actually delivers**\n\nPENNYQUAY sidesteps the structural constraint by using the undertaking route \u2013 accepted practice, and clearly workable from a pure lodgement standpoint. The fatal detail is the renewal term. Cadgarth (2024) and Nant Elwy (2025) both used undertakings and both received six-year rather than fifteen-year renewals. Two consecutive cases is not a coincidence; it is a revealed pattern. A six-year renewal from the 2028 expiry runs to approximately 2034. The loan runs to 2039. The bank's letter of 22 June 2026 is unambiguous: a licence term shorter than the loan puts the facility under review. PENNYQUAY therefore directly and predictably triggers the bank threat. For a two-person operation carrying a GBP 480,000 loan, a loan-facility review is not a manageable nuisance; it is potentially existential. The GBP 8,436 outage saving is trivial against that exposure.\n\n**What the derogation probability really is**\n\nThe Rivers Board decided eleven applications in 2025 and granted four. On raw numbers that is 36%. But the single most important piece of information in the problem is this: every refusal published named a scheme with no dated regulatory driver. That is not a partial correlation; it is a complete one among the published decisions. Blaenclydach has an unambiguous, documented, dated regulatory driver: the abstraction-licence renewal must be lodged by 2027-05-31, a complete file requires a certificate, and the certificate requires the replacement screen. This is precisely the kind of driver whose absence condemned every refused scheme. The inference that schemes with a clear dated driver fare significantly better than the raw 36% is well-founded; 0 out of 0 such schemes were refused.\n\n**The deposit and the fallback**\n\nThe GBP 46,000 deposit paid on 2026-12-01 is non-returnable after that date. It is a real sunk cost if the derogation fails. A refusal on 2027-01-25 leaves eighteen weeks \u2013 to exactly 2027-05-31 \u2013 to lodge by the undertaking route. That fallback is available but tight and still lands in the six-year-renewal / bank-review outcome. The cost of a failed derogation is therefore GBP 9,000 (application) + GBP 46,000 (deposit lost) + the same bank exposure that PENNYQUAY carries. That is the downside case, and it is painful.\n\n**Weighing the outcomes**\n\n| | LINTHAUGH granted | LINTHAUGH refused | PENNYQUAY |\n|---|---|---|---|\n| Renewal term | 15 years (2043) | 6 years via undertaking | 6 years via undertaking |\n| Loan covered to 2039? | Yes | No | No |\n| Bank risk | None | Triggered | Triggered |\n| Cash cost | ~GBP 74,152 | ~GBP 55,000 + undertaking route | ~GBP 8,436 |\n\nPENNYQUAY saves money only in the sense that it chooses the certain bad outcome cheaply rather than risking the certain bad outcome expensively. If the derogation is likely to succeed \u2013 and the dated-driver evidence strongly suggests it is \u2013 then LINTHAUGH buys a fifteen-year licence and eliminates the bank risk for roughly GBP 74,000. PENNYQUAY accepts a six-year licence and the bank review for GBP 8,436. The additional cost of LINTHAUGH is the premium on avoiding an outcome (bank review on a GBP 480,000 loan) whose value to a two-person scheme is almost certainly far greater than the premium itself.\n\nThe non-returnable deposit is the hardest part of the decision. But it must be weighed against what it is buying: a high-probability path to a fifteen-year renewal rather than a certain path to a six-year renewal that the bank has already flagged. Paying GBP 46,000 to hold a slot that is likely to be used is rational; declining to pay it and accepting the loan threat is not.\n\n**Confirming the timeline works**\n\nDerogation lodged 2026-10-19 \u2192 decision 2027-01-25. If granted, screen installed by mid-March, certificate within six weeks (by late April / early May), renewal lodged complete before 2027-05-31. The arithmetic closes with margin. If refused, the undertaking route is available up to 2027-05-31, so no deadline is missed (though the bank exposure then remains).\n\n---\n\nREADING\nBlaenclydach has a clear, dated regulatory driver \u2013 the 2027-05-31 renewal deadline with the certificate requirement \u2013 that matches exactly the characteristic absent from every published refusal, making the derogation probability substantially higher than the raw 4/11 rate; PENNYQUAY predictably delivers a six-year renewal (as it did for both Cadgarth and Nant Elwy) which the bank has already warned would put the facility under review, an exposure that dwarfs the GBP 46,000 deposit and GBP 9,000 application cost; and a refusal still leaves eighteen weeks to file the undertaking as a fallback, so the downside of LINTHAUGH is the same bank risk as PENNYQUAY plus GBP 55,000, not a worse regulatory outcome.\n\nCALL\nLINTHAUGH\n\nGROUNDS\nThe bank's warning makes a six-year renewal potentially existential for the scheme, and Blaenclydach's unambiguous dated regulatory driver \u2013 absent from every published refusal \u2013 makes the derogation sufficiently likely to succeed that paying the deposit and application fee to pursue a fifteen-year renewal is the rational choice.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-06w32s42"
+  },
+  "cost_usd": 0.09035570000000001,
+  "duration_ms": 105181,
+  "session_id": "8369a08d-03a5-413f-9d5d-e559e68cdf50",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1059,
+    "output_tokens": 5906,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5906,
+        "cache_read_input_tokens": 1059,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 106.28524208068848,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

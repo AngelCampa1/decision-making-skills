@@ -1,0 +1,61 @@
+{
+  "opaque": "T03",
+  "item_id": "K11",
+  "ordering": "BA",
+  "draw": 5,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The fixed cost is the same under both courses**\nThe GBP 27,072 in learning-curve remakes is incurred regardless. It is not a differentiator and I leave it aside from here.\n\n---\n\n**What each course adds above that fixed cost**\n\n*KIRKBANE adds GBP 44,000 in overtime.* That figure is firm and quoted.\n\n*AVENSWOOD adds cross-system remakes.* The pilot gives the baseline: 40 remakes in four months while 2 of 12 technicians were on the new system. To estimate what AVENSWOOD generates, I need to scale that rate.\n\nCross-system remakes arise when a case touches a technician on each system. The probability of that scales roughly with the product of the fraction of the bench on each side. During the pilot: (2 \u00d7 10) / 144 = 0.139.\n\nUnder AVENSWOOD the two pilot technicians are already settled on the new system throughout, so the bench counts run:\n\n| Months | New-system bench | Old-system bench | Cross-weight |\n|---|---|---|---|\n| 1\u20133 (Jan\u2013Mar 2027) | 2 pilots + 3 cohort 1 = 5 | 7 | 35/144 = 0.243 |\n| 4\u20136 (Apr\u2013Jun 2027) | 5 + 3 cohort 2 = 8 | 4 | 32/144 = 0.222 |\n| 7\u20139 (Jul\u2013Sep 2027) | 8 + 3 cohort 3 = 11 | 1 | 11/144 = 0.076 |\n\nAverage cross-weight: (0.243 + 0.222 + 0.076) / 3 \u2248 0.180, compared with the pilot's 0.139. The scaling factor is 0.180 / 0.139 \u2248 1.29.\n\nPilot rate: 10 cross-system remakes per month. Adjusted rate: \u2248 13 per month. Over nine months: \u2248 116 remakes \u00d7 GBP 96 = **approximately GBP 11,100**.\n\nIf I double that to allow for shade-note confusion, complex bridgework passing across more technicians, and anything else I cannot see, the ceiling is roughly **GBP 22,000**. That is still half of KIRKBANE's overtime bill.\n\nFinancial verdict: AVENSWOOD saves roughly GBP 22,000\u2013GBP 33,000.\n\n---\n\n**Effective lab-wide remake rate and what the forty practices see**\n\nThe two pilot technicians are through the curve by the time either course starts (they moved in May 2026; 11 months later is April 2027, and at 900 units they are already at 3.4%, very nearly par). I treat them as settled at 3.1% for the January 2027 start.\n\n*Under KIRKBANE, January 2027:*\nAll 10 new starters hit 11.4% simultaneously.\nEffective lab-wide rate: (2 \u00d7 3.1 + 10 \u00d7 11.4) / 12 = **10.0%**\nEvery consignment from every technician for the first several months is at roughly three times the settled rate. All 40 practices see this in the same window.\n\n*Under AVENSWOOD, January 2027:*\nOnly cohort 1 (3 technicians) is at 11.4%. Seven remain on Kessendale at 3.1%.\nEffective lab-wide rate: (2 \u00d7 3.1 + 3 \u00d7 11.4 + 7 \u00d7 3.1) / 12 = **5.2%**\n\nThe peak under AVENSWOOD comes in April 2027 when cohort 1 is at \u2248 4.2% and cohort 2 is at 11.4%:\n(2 \u00d7 3.1 + 3 \u00d7 4.2 + 3 \u00d7 11.4 + 4 \u00d7 3.1) / 12 \u2248 **5.8%**\n\nThe effective rate under AVENSWOOD never meaningfully clears 6.5%. Under KIRKBANE it opens at 10%.\n\nA 10% remake rate is visible. Practice managers who receive two retakes on a bridge in a month will ask questions. A rate of 5\u20136% is elevated but sits within a range that most referrers will attribute to normal variation rather than a systemic failure. The risk under KIRKBANE is not only the modelled cost of remakes; it is the unmodelled cost of a practice beginning to consider alternatives. Losing a single mid-volume practice costs more than any figure on this page.\n\n---\n\n**The operational complexity of running two systems**\n\nThis is AVENSWOOD's real weakness. Maintaining two shade-note libraries for nine months, with practices referencing the lab's copies, means that a divergence between the two could produce a shade mismatch that nobody catches until the crown is seated. That is a process-control problem, not a modelled cost line.\n\nIt is, however, a manageable problem. A reconciliation check before each case is dispatched\u2014confirming which library the relevant technician is drawing from\u2014closes most of the gap. The pilot ran two systems for four months and generated 40 avoidable remakes: real, costly, but not catastrophic. The nine months under AVENSWOOD will generate more, and that is already built into the estimate above.\n\nThe phrase \"nobody is on the steep part alone\" is also a meaningful operational point. Three technicians learning together can share cases, compare outputs, and calibrate technique against each other. Ten technicians learning together under KIRKBANE achieve the same peer support but at ten times the client-visible risk.\n\n---\n\n**The 2028-06-30 deadline**\n\nBoth courses clear it. Under AVENSWOOD the last technician starts on the new system on 2027-10-04, nine months before Kessendale loses support. The learning curve extends to roughly September 2028, but by then the technician is working entirely on the supported system; the only consequence is a slightly elevated personal remake rate through mid-2028, during which they are approaching par (3.4% by unit 900). This is not a deadline concern for either course.\n\n---\n\n**Summary table**\n\n| | AVENSWOOD | KIRKBANE |\n|---|---|---|\n| Learning-curve remakes | GBP 27,072 | GBP 27,072 |\n| Overtime | \u2014 | GBP 44,000 |\n| Cross-system remakes | \u2248 GBP 11,000\u201322,000 | \u2014 |\n| Peak effective lab remake rate | \u2264 6.5% | \u2248 10.0% |\n| Number of practices exposed simultaneously | Fraction, diluted across 9 months | All 40, same month |\n| Two libraries to maintain | Yes, 9 months | No |\n| All technicians off Kessendale by | 2027-10-04 | 2027-01-04 |\n| All technicians fully settled | \u2248 Sep 2028 | \u2248 Dec 2027 |\n\nThe only genuine advantages KIRKBANE holds are operational simplicity (one system, one library from January 2027) and having everyone fully settled nine months earlier. Neither closes a GBP 22,000\u2013GBP 33,000 gap in direct costs, and neither offsets the reputational exposure of presenting a near-10% effective remake rate simultaneously to all forty referrers.\n\n---\n\nCALL\n  AVENSWOOD\n\nGROUNDS\n  The GBP 44,000 overtime commitment under KIRKBANE exceeds the bounded cross-system remake cost under AVENSWOOD by at least GBP 22,000, and concentrating all ten starters in a single January cohort drives the effective laboratory remake rate to roughly 10% simultaneously across every one of the forty practices, a client-relationship risk that the phased approach keeps below 6.5% at every point in the transition.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-wxbf048a"
+  },
+  "cost_usd": 0.160945,
+  "duration_ms": 191565,
+  "session_id": "ccda9130-c6ae-44f3-9c27-023b4144c5ea",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 10474,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 10474,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 192.69051146507263,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

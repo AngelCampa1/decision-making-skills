@@ -1,0 +1,53 @@
+{
+  "opaque": "T21",
+  "item_id": "K09",
+  "ordering": "AB",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What each course actually buys**\n\nELSWICK buys certainty for the February 2027 assessment and nothing else. Six hours a week from Halverston, on top of the nine already broadcast, reaches fifteen\u2014one clear of the mark. The commissioned fraction is 6/15 = 40 percent, inside the 50 percent ceiling. On paper this is clean.\n\nCRANMOOR buys a person who builds content that stays built, and who also works the register. The hours produced through the coordinator's roster are owned going forward. The cost is \u00a321,000 against ELSWICK's \u00a320,280: effectively the same recurring charge.\n\n**The February 2027 question**\n\nThe station's own figure is that fourteen hours needs about fifteen more contributors. In all of 2025, without a coordinator, nine were added\u2014call it nine a year, or roughly three-quarters per month. Even at twice that rate with a coordinator in post from 1 October 2026, the four-month window to early February yields perhaps six to eight new contributors, not fifteen. CRANMOOR almost certainly does not get the station to fourteen hours in time for the February assessment. This is the most important factual point in the analysis, and it must be accepted rather than wished away.\n\n**The cost of missing February**\n\nIf CRANMOOR fails in February, the station is reassessed on 31 August 2027. With the coordinator in post for ten months by then, fourteen hours is realistic. Payment begins in September 2027\u2014five months late into the four-year term, since the term runs from 1 April 2027 regardless.\n\nLost grant: 5 months \u00d7 (\u00a396,000 \u00f7 12) = \u00a340,000.\n\nDuring the April\u2013August gap the station has no grant income but fixed costs of \u00a358,000 a year continue: approximately \u00a324,200 for five months drawn from the reserve. Add six months of coordinator salary pre-grant (October 2026 to March 2027, \u00a310,500), and the reserve draw across the whole period is roughly \u00a335,000, leaving approximately \u00a327,000. The reserve survives. The four-year term is unaffected. This is a real cost, but it is a contained one.\n\n**The structural problems with ELSWICK that do not appear on the February scorecard**\n\n*The Halverston rate.* The rate of \u00a365 per hour is held only to 31 December 2026. ELSWICK begins 5 October 2026 on a rolling twelve-month term. The first renewal falls in October 2027\u2014ten months after the rate lock expires. If Halverston moves to, say, \u00a378 an hour, the annual cost rises to roughly \u00a324,300. That is a price the station has no lever to resist, because by October 2027 the content will have been live in the schedule for a year and replacing it quickly is exactly what CRANMOOR was meant to avoid.\n\n*The commissioned-content ceiling.* Six commissioned hours against nine volunteer hours gives 40 percent. The buffer to the 50 percent cap is ten percentage points. The nine hours of volunteer originated content was produced by thirty-four contributors who have been declining: forty-one in 2024, thirty-four now, a loss of roughly three and a half per year. If that drift continues without active management, volunteer output may fall. As the volunteer total shrinks, the commissioned fraction rises toward the ceiling. ELSWICK has no mechanism to arrest this. The coordinator under CRANMOOR does, which is the whole second half of their job description.\n\n*The contributor register.* Commissioned producers do not join the register. ELSWICK therefore does nothing for the thirty-contributor floor. Thirty-four now, losing roughly three and a half per year without a coordinator: by a second assessment point in 2028 or a compliance review further into the four-year term, the register could be approaching or below thirty. CRANMOOR addresses this directly. ELSWICK ignores it.\n\n*Permanent repurchase.* Every year ELSWICK requires the station to recommit \u00a320,000-plus of the grant surplus to Halverston to maintain compliance. CRANMOOR's recruited volunteers produce permanently. After four years of Local Voice, CRANMOOR leaves the station with a larger, actively managed contributor base; ELSWICK leaves it where it is today, still renting six hours a week.\n\n**The board cap**\n\nBoth courses are within the \u00a322,000 annual cap on new recurring commitments. This constraint does not decide the question.\n\n**Why the expected cost of CRANMOOR is worth carrying**\n\nThe choice is not between a certain outcome and an uncertain one; it is between a quick and expensive rental of compliance and a slower, owned build of it. The reserve can absorb the gap. The four-year term is not shortened. The station ends 2031 with content infrastructure it built rather than infrastructure it was always one contract renewal away from losing.\n\nELSWICK trades a five-month grant shortfall (avoidable, \u00a340,000) for a permanent cost of the same magnitude each year, declining community capacity, a softening contributor floor, and exposure to Halverston's pricing after December 2026. That is a poor exchange.\n\n---\n\nCALL\nCRANMOOR\n\nGROUNDS\nThe coordinator is the only mechanism on the table that simultaneously arrests the declining contributor register and builds permanently owned originated hours, whereas ELSWICK rents compliance annually from a supplier whose rate is already unlocked and does nothing for the community capacity on which Local Voice compliance depends throughout the four-year term; the financial cost of the likely February miss is real but containable within the existing reserve.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-bg3_quf8"
+  },
+  "cost_usd": 0.161265,
+  "duration_ms": 208067,
+  "session_id": "3c3e8dd7-8da5-4d41-a2ab-2c53c3a4e4a9",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 941,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 10474,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 941,
+        "output_tokens": 10474,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 209.149231672287
+}

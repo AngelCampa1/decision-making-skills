@@ -1,0 +1,61 @@
+{
+  "opaque": "T01",
+  "item_id": "K05",
+  "ordering": "BA",
+  "draw": 6,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Financial anatomy of each course**\n\n*Fit-out and cash.* The \u00a3260,000 builder's order is fixed under both courses. The deposit is \u00a3310,000.\n\nUnder PENDLARROW: \u00a3310,000 minus the fit-out leaves \u00a350,000; the vehicle purchase at \u00a334,000 takes it to \u00a316,000. The practice then runs on operating cash flow until the grant arrives after the April 2027 assessment. \u00a316,000 on deposit is a dangerously thin cushion for a practice turning over \u00a31.84M, and any cost overrun or slow month creates acute pressure. The grant, if received, restores the reserve to \u00a3116,000.\n\nUnder WESTERGATE: \u00a3310,000 minus the fit-out leaves \u00a350,000. No vehicle purchase. The buffer is thin but appreciably safer, and it grows as Ordsall Green generates income.\n\n*Ardgowrie contribution.* Revenue \u00a3118,000; dedicated vet \u00a371,000; vehicle amortised over five years roughly \u00a37,000; marginal drugs, insurance and rota cover above that. The net contribution before overhead allocation is in the region of \u00a338,000\u2013\u00a340,000 a year. That is a positive but modest margin, and it comes before any disruption to the rest of the practice is costed.\n\n*The grant.* 40 per cent of \u00a3260,000 is \u00a3104,000, capped at \u00a3100,000. That cap is reached. It is real money \u2014 38.5 per cent of the fit-out cost \u2014 and its loss is not trivial. But receiving it is contingent on two things: passing the April 2027 assessment at or above 30 per cent farm and equine, and then holding a 700-plus cattle herd health contract without interruption until 2030-04-30.\n\n---\n\n**The grant qualification calculation is more fragile than it looks**\n\nThe client's figure of 31.8 per cent uses the year-to-March-2026 accounts as the base for all income, then adds the annualised Ardgowrie contract. That is:\n\n> Farm/equine \u00a3622,000 \u00f7 total \u00a31,958,000 = 31.8 per cent\n\nThe flaw is that the assessment does not read last year's accounts. It reads the *annualised value of the work in force on 2027-04-30*. By that date, small animal will have absorbed another full year of 11 per cent growth.\n\nProjecting forward:\n- Small animal, annualised at April 2027: \u00a31,336,000 \u00d7 1.11 \u2248 **\u00a31,483,000**\n- Farm and equine, annualised (Ardgowrie in force): \u00a3504,000 + \u00a3118,000 = **\u00a3622,000**\n- Total: **\u00a32,105,000**\n- Ratio: 622 \u00f7 2,105 = **29.6 per cent**\n\nThat is below the 30 per cent threshold by less than half a percentage point. For the ratio to clear 30 per cent, the total annualised figure must not exceed \u00a3622,000 \u00f7 0.30 = \u00a32,073,000. Small animal alone at April 2027 is projected at \u00a31,483,000, which combined with farm and equine already overshoots that ceiling by \u00a332,000.\n\nThere is genuine uncertainty about the assessor's methodology. If they use the most recent completed year's accounts \u2014 March 2026 \u2014 the client's 31.8 per cent figure stands and the grant is secured. If they use a current run-rate measure, which is what \"annualised value of work in force\" most naturally means, the practice fails the threshold despite having taken on Ardgowrie and all its obligations. This is not a remote scenario; it is the arithmetic consequence of an 11-per-cent growth trajectory in the larger arm of the business.\n\nThe consequence of that failure would be: Ardgowrie taken on, farm vet hired, vehicle bought, night rota built \u2014 and no grant. The practice then holds the contract with a net annual contribution of roughly \u00a340,000, no upfront offset, and an operational burden already known to have broken one practice.\n\n---\n\n**The night call-out risk is a demonstrated operational failure, not a theoretical one**\n\nThe outgoing practice was not a new entrant that misjudged what it was taking on. It held the Ardgowrie contract for nine years, meaning it had a full working knowledge of the herd, the farm, the seasonal pattern of calvings and the call-out load. After nine years it gave the contract back. The stated reason, given on the handover call, was the night call-out load.\n\nThat is the strongest possible evidence about this specific contract. It is not hearsay about dairy farming generally; it is a direct, contemporaneous account of what Ardgowrie required of a practice that stuck with it for nearly a decade. The fact that Kirstie Ballantyne-Rowe is willing to move with the contract is useful for clinical continuity, but it does not transfer the call-out burden. Night cover for 900 dairy cattle is a rota problem for the practice as a whole, not a single-person problem.\n\nWrentham Cross currently has four vets. A dedicated farm vet at \u00a371,000 gives one person for farm days. Nights require cover. Either existing vets \u2014 who are, predominantly, small-animal practitioners \u2014 participate in a farm on-call rota, or a second farm hire is eventually needed, in which case the economics of the Ardgowrie contract deteriorate further. Neither path is cost-free or straightforward to sustain.\n\nUnder PENDLARROW this rota must be maintained, in one form or another, until 2030-04-30 without dropping the herd health contract below 700 cattle. If the night load forces the practice to surrender the contract before that date \u2014 as it forced the outgoing practice \u2014 the \u00a3100,000 becomes immediately repayable. The grant, in that scenario, converts from an asset into a liability.\n\n---\n\n**The repayment cliff is asymmetric**\n\nIf the grant is received and the contract is maintained to 2030: the practice is \u00a3100,000 better off and Ardgowrie has contributed roughly \u00a3160,000 net over four years (at \u00a340,000/year), against a vehicle cost of \u00a334,000. Net advantage over WESTERGATE: roughly \u00a3226,000 before overhead and rota cost.\n\nIf the grant is received and the contract is surrendered before 2030: \u00a3100,000 repayable, farm vet potentially stranded on payroll or redeployed at cost, vehicle partly depreciated. Net position could be materially worse than WESTERGATE.\n\nIf the grant is not received (assessment fails) and the contract is held anyway: no repayment risk, but the operational burden remains and the financial case for the contract weakens significantly.\n\nThe asymmetry is that the downside scenarios \u2014 especially the combination of grant received and contract subsequently abandoned \u2014 are not implausible. The outgoing practice's experience tells us the downside is reachable from exactly this starting point.\n\n---\n\n**Strategic direction**\n\nThe practice's organic growth is in small animal at 11 per cent per year. Farm and equine has been flat for three years. The Ordsall Green fit-out is a small animal surgery, correctly aligned with where the business is heading. A new hire under WESTERGATE goes into the growing side; a new hire under PENDLARROW goes into the stagnant side with a locked obligation attached to it.\n\nThe farm and equine ratio will continue declining regardless of whether Ardgowrie is taken. With Ardgowrie and continued 11-per-cent small-animal growth, the ratio falls back below 30 per cent within two years of the grant assessment. The grant is a one-time benefit that does not change the structural trajectory of the business.\n\n---\n\n**Summary**\n\n| | PENDLARROW | WESTERGATE |\n|---|---|---|\n| Deposit after fit-out and vehicle | \u00a316,000 | \u00a350,000 |\n| Grant received | Possible; ~29.6% ratio at assessment puts it in doubt | Nil |\n| Annual net contribution | ~\u00a340,000 (Ardgowrie) | None from farm/equine |\n| Contingent liability | \u00a3100,000 to 2030-04-30 | None |\n| Night rota obligation | Yes, to 2030 | No |\n| Strategic alignment | Backward (flat arm of business) | Forward (growing arm) |\n| Demonstrated operational risk | Yes \u2014 outgoing practice walked away for this reason | None |\n\nThe case for PENDLARROW rests on the grant being received and the contract being maintained without disruption to 2030. Both conditions are genuinely uncertain, and the second one has already failed once for the specific contract on the table.\n\n---\n\nCALL\n  WESTERGATE\n\nGROUNDS\n  The outgoing practice's nine-year relationship with Ardgowrie ended specifically because the night call-out load became untenable \u2014 direct evidence that PENDLARROW's prerequisite, holding a 900-cattle herd health contract without interruption until 2030-04-30, is an operationally demonstrated liability \u2014 and that exposure is compounded by the likelihood that small-animal growth at eleven per cent per year will push the farm-and-equine share below the thirty per cent threshold at the April 2027 assessment, leaving the practice with the full burden and no grant to show for it.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-445b62tf"
+  },
+  "cost_usd": 0.2445839,
+  "duration_ms": 292852,
+  "session_id": "03ad8185-8ff5-48b7-85e1-2aa5ec60cccb",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1123,
+    "output_tokens": 16182,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 16182,
+        "cache_read_input_tokens": 1123,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 294.19394087791443,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

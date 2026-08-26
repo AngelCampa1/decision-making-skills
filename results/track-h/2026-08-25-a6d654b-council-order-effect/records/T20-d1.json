@@ -1,0 +1,61 @@
+{
+  "opaque": "T20",
+  "item_id": "K12",
+  "ordering": "BA",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The licence term and the bank**\n\nThe bank's 2026-06-22 letter is the load-bearing fact here. It says explicitly that a licence term shorter than the loan\u2014which runs to 2039\u2014puts the facility under review. The only two published precedents for filing with a dated undertaking (Cadgarth 2024, Nant Elwy 2025) both resulted in six-year renewals. Six years from the 2028 expiry reaches 2034. That is five years short of the loan and would immediately engage the bank's condition. A facility-under-review event for a two-person operation carrying GBP 480,000 of debt is not a procedural inconvenience; it is an existential threat. PENNYQUAY steers almost certainly into that threat because the undertaking-to-six-year outcome is the only pattern the record shows.\n\nLINTHAUGH, if the derogation is granted, produces a complete file with a fish-pass compliance certificate rather than an undertaking. A complete file produces a standard fifteen-year renewal, reaching 2043, clearing the loan by four years and neutralising the bank clause entirely. That difference\u2014six years versus fifteen\u2014is what the whole decision turns on.\n\n**The derogation odds and the regulatory driver**\n\nThe headline figure of 4 grants out of 11 applications looks unattractive (36 %), but the Board has itself published the distinguishing feature: every single refusal named a scheme that carried no dated regulatory driver. Blaenclydach has an unambiguous dated regulatory driver\u2014the abstraction licence expiry of 2028-05-31 mandates a complete renewal file by 2027-05-31, and that deadline is incapable of being met without a new screen unless the derogation is granted. The Board's own publication record implies that the presence of a dated driver is a necessary condition of approval, and possibly close to sufficient. The usable probability of approval for a scheme in Blaenclydach's position is materially higher than 36 %; the base rate includes seven refusals that all lacked the feature Blaenclydach possesses.\n\n**The deposit and the downside**\n\nThe non-returnable GBP 46,000 deposit (payable 2026-12-01, decision 2027-01-25) is a genuine risk because the timeline requires committing capital before the result is known. If the derogation is refused, that GBP 46,000 is gone and Blaenclydach falls back on the undertaking route\u2014same destination as PENNYQUAY but GBP 55,000 worse off (GBP 9,000 application plus GBP 46,000 deposit). That is a real cost.\n\nBut the comparator is not \"LINTHAUGH fails cleanly and costs nothing extra.\" The comparator is PENNYQUAY, which near-certainly delivers the 6-year renewal and the bank-review trigger. The question is whether a GBP 55,000 worst-case loss is worse than the near-certain triggering of a bank-review clause over a GBP 480,000 loan. It is not. The bank risk dominates.\n\n**Energy costs**\n\nA February outage at 168 MWh versus a July outage at 74 MWh, at 11.4 p/kWh, is GBP 19,152 against GBP 8,436\u2014a GBP 10,716 difference. Real but secondary. These are one-off losses; a loan called in or repriced upward at penalty rates would dwarf them.\n\n**The fallback still works**\n\nA refusal on 2027-01-25 leaves 18 weeks to the 2027-05-31 filing deadline. Within that window Vossbeck will have confirmed the July slot (deadline 2027-04-30, no deposit required). So refusal does not trap Blaenclydach in a position worse than PENNYQUAY with respect to timing; it traps them only with the extra GBP 55,000 already spent. That is the true and bounded cost of failure.\n\n**Balance**\n\nPENNYQUAY has lower visible costs and no deposit risk. If the two-case precedent on undertakings were uncertain, or if the bank had not written as it did, or if there were no dated regulatory driver pointing strongly toward a derogation grant, PENNYQUAY would be worth serious weight. None of those conditions holds. The undertaking precedent is consistent, the bank has been explicit, and the regulatory driver is strong. LINTHAUGH is the better course.\n\n---\n\nREADING\nThe dated regulatory driver distinguishes Blaenclydach from every scheme the Board has refused, making derogation odds materially better than the 4/11 base rate; the deposit risk in LINTHAUGH, though real, is bounded at GBP 55,000 in the worst case, whereas PENNYQUAY's undertaking route carries near-certain six-year renewal precedent, which clips the licence to 2034 and directly engages the bank's stated facility-review condition over a GBP 480,000 loan running to 2039 \u2014 a risk that dwarfs the deposit.\n\nCALL\nLINTHAUGH\n\nGROUNDS\nPENNYQUAY's undertaking route leads with near-certainty to a six-year renewal expiring 2034, five years short of the 2039 loan, triggering the bank's own stated facility-review clause, whereas LINTHAUGH exploits the fact that every Board refusal named a scheme without a dated regulatory driver \u2014 a disqualifying feature Blaenclydach does not share \u2014 to pursue the certificate and fifteen-year renewal that keeps the loan facility safe.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-0krwcltd"
+  },
+  "cost_usd": 0.0997557,
+  "duration_ms": 117524,
+  "session_id": "1ff99c2f-dffc-4865-8399-0e86bb0159fe",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1059,
+    "output_tokens": 6532,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6532,
+        "cache_read_input_tokens": 1059,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 118.69560384750366,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

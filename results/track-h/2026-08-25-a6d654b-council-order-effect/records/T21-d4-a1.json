@@ -1,0 +1,53 @@
+{
+  "opaque": "T21",
+  "item_id": "K09",
+  "ordering": "AB",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What each course must achieve**\n\nThe Local Voice tier has three gateable conditions as of 2027-02-28:\n\n1. Fourteen hours a week of originated speech in the 07:00\u201319:00 window (currently nine)\n2. Commissioned work no more than half of that originated total (\u2264 seven hours if the total is exactly fourteen)\n3. Thirty registered contributors (currently thirty-four, falling)\n\nFailing on any one of the three sends the station to an August 2027 reassessment, with no Local Voice payment until it clears. Fixed costs continue regardless. Because the four-year term still runs from April 2027, a failed February assessment does not shorten the grant, but it strips roughly five months of income \u2014 approximately \u00a340,000 at \u00a396,000 a year \u2014 and draws the reserve sharply down from its current \u00a362,000.\n\n---\n\n**The hours problem and the February window**\n\nBoth courses start this autumn. The coordinator would be in post by 1 October 2026. The measurement window runs across the four weeks ending 28 February 2027. That is, at most, roughly twenty-two weeks between the coordinator's first day and the start of the measurement window, and the last of those weeks is itself the measurement period, so in practice the station needs to have reached fourteen hours a week no later than early February.\n\nThe brief specifies that reaching fourteen hours requires about fifteen additional contributors. In all of 2025, without a coordinator, the station added nine. That is approximately 0.75 contributors a month. Even if a coordinator doubles that rate to 1.5 a month, twenty-two weeks delivers at most about eight new contributors \u2014 roughly half of the fifteen required. Contributor recruitment also has a lag: new volunteers need to be found, onboarded, scheduled, and producing usable output before they count in the schedule. The conversion from signing-up to broadcast-ready hours takes further time that the window does not provide.\n\nCRANMOOR's long-run logic is sound \u2014 owned hours, no recurrent purchase, register growth built in \u2014 but its ability to deliver before February 2027 is not credible at any realistic recruitment velocity. The probability of passing the February assessment under CRANMOOR is low.\n\n---\n\n**ELSWICK against each criterion**\n\n*Hours.* Six hours a week commissioned from Halverston, added to the current nine, gives fifteen. That is one hour above the fourteen-hour threshold. It is contractual, not contingent on recruitment or volunteer availability.\n\n*Commissioned cap.* Six commissioned hours out of fifteen total originated hours is 40 per cent. The ceiling is 50 per cent. ELSWICK passes with margin.\n\n*Contributor register.* The thirty-four current contributors are entirely separate from Halverston's producers, who do not join the register. The station has lost seven contributors over roughly two years, approximately 3\u20134 per year. Projecting six months forward to February 2027 at that rate suggests a register of 32\u201333 at the assessment date \u2014 above the thirty-count threshold and with a buffer of two to three. The declining trend is a genuine concern for the medium term but does not threaten the February gate at the current rate of attrition. Existing staff can prioritise register retention actively; the threshold is thirty, not forty-one.\n\n---\n\n**Financial comparison**\n\nBoth courses cost within the board's \u00a322,000 cap: CRANMOOR at \u00a321,000, ELSWICK at \u00a320,280. Against the current \u00a371,000 grant and \u00a358,000 fixed costs, the margin is \u00a313,000. Either commitment produces a modest deficit of \u00a37,000\u2013\u00a38,000 a year during the bridging period, drawing on the \u00a362,000 reserve. Both are sustainable through March 2027 on the reserve alone. If, however, CRANMOOR fails February and the station receives no Local Voice payment from April to August 2027, the reserve must also cover those five months of costs \u2014 fixed costs plus the coordinator, totalling roughly \u00a333,000 over that gap \u2014 leaving the station with a reserve of around \u00a325,000 at the point the reassessment grant finally arrives. That is a thin cushion for a station with annual fixed costs of \u00a358,000 and three paid staff. ELSWICK, by passing in February, avoids that gap entirely.\n\n---\n\n**Long-run trade-offs**\n\nELSWICK's real weakness is structural: \u00a320,280 a year goes permanently to Halverston, the content is not owned, and the register gets no active support from the commission. Once the Local Voice grant is in payment the board cap lifts, and the station could consider adding a part-time development resource at that point, without the pressure of an impending assessment. CRANMOOR's approach \u2014 building owned hours and register strength simultaneously \u2014 is the right strategy at a slightly longer horizon. The issue is not whether CRANMOOR is good policy; it is whether it can deliver in time.\n\n---\n\nCALL\n  ELSWICK\n\nGROUNDS\n  CRANMOOR cannot credibly recruit the fifteen additional contributors needed to reach fourteen hours within the roughly twenty weeks of viable build time before the February 2027 assessment window, whereas ELSWICK delivers fifteen hours by contract, passes all three criteria with high confidence, and secures the full four-year Local Voice grant from April 2027 without drawing the reserve through a funding gap.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-dfvyrg3a"
+  },
+  "cost_usd": 0.120885,
+  "duration_ms": 154216,
+  "session_id": "9b7ae3a6-74ad-4389-91a2-94452d9e20dc",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 941,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7782,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 941,
+        "output_tokens": 7782,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 155.3781614303589
+}

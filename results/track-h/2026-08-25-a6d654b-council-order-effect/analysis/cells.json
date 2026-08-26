@@ -1,0 +1,222 @@
+[
+  {
+    "item_id": "K03",
+    "ordering": "AB",
+    "opaque": "T11",
+    "first_course": "TARNSIDE",
+    "second_course": "VELLACOTT",
+    "stratum": "undefeated",
+    "admitted": false,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T11.txt"
+  },
+  {
+    "item_id": "K03",
+    "ordering": "BA",
+    "opaque": "T15",
+    "first_course": "TARNSIDE",
+    "second_course": "VELLACOTT",
+    "stratum": "undefeated",
+    "admitted": false,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T15.txt"
+  },
+  {
+    "item_id": "K04",
+    "ordering": "AB",
+    "opaque": "T14",
+    "first_course": "HARBOTTLE",
+    "second_course": "SKELWITH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T14.txt"
+  },
+  {
+    "item_id": "K04",
+    "ordering": "BA",
+    "opaque": "T06",
+    "first_course": "HARBOTTLE",
+    "second_course": "SKELWITH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T06.txt"
+  },
+  {
+    "item_id": "K05",
+    "ordering": "AB",
+    "opaque": "T08",
+    "first_course": "WESTERGATE",
+    "second_course": "PENDLARROW",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T08.txt"
+  },
+  {
+    "item_id": "K05",
+    "ordering": "BA",
+    "opaque": "T01",
+    "first_course": "WESTERGATE",
+    "second_course": "PENDLARROW",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T01.txt"
+  },
+  {
+    "item_id": "K06",
+    "ordering": "AB",
+    "opaque": "T22",
+    "first_course": "KESTERWICK",
+    "second_course": "ARDENSHAW",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T22.txt"
+  },
+  {
+    "item_id": "K06",
+    "ordering": "BA",
+    "opaque": "T17",
+    "first_course": "KESTERWICK",
+    "second_course": "ARDENSHAW",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T17.txt"
+  },
+  {
+    "item_id": "K07",
+    "ordering": "AB",
+    "opaque": "T13",
+    "first_course": "HAVERSHOLT",
+    "second_course": "LINDCASTER",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T13.txt"
+  },
+  {
+    "item_id": "K07",
+    "ordering": "BA",
+    "opaque": "T12",
+    "first_course": "HAVERSHOLT",
+    "second_course": "LINDCASTER",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T12.txt"
+  },
+  {
+    "item_id": "K08",
+    "ordering": "AB",
+    "opaque": "T07",
+    "first_course": "TREVANNOCK",
+    "second_course": "ORMSCLEUCH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T07.txt"
+  },
+  {
+    "item_id": "K08",
+    "ordering": "BA",
+    "opaque": "T19",
+    "first_course": "TREVANNOCK",
+    "second_course": "ORMSCLEUCH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T19.txt"
+  },
+  {
+    "item_id": "K09",
+    "ordering": "AB",
+    "opaque": "T21",
+    "first_course": "CRANMOOR",
+    "second_course": "ELSWICK",
+    "stratum": "undefeated",
+    "admitted": false,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T21.txt"
+  },
+  {
+    "item_id": "K09",
+    "ordering": "BA",
+    "opaque": "T04",
+    "first_course": "CRANMOOR",
+    "second_course": "ELSWICK",
+    "stratum": "undefeated",
+    "admitted": false,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T04.txt"
+  },
+  {
+    "item_id": "K10",
+    "ordering": "AB",
+    "opaque": "T09",
+    "first_course": "HAVERSHOLT",
+    "second_course": "TREGOWAN",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T09.txt"
+  },
+  {
+    "item_id": "K10",
+    "ordering": "BA",
+    "opaque": "T05",
+    "first_course": "HAVERSHOLT",
+    "second_course": "TREGOWAN",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T05.txt"
+  },
+  {
+    "item_id": "K11",
+    "ordering": "AB",
+    "opaque": "T10",
+    "first_course": "KIRKBANE",
+    "second_course": "AVENSWOOD",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T10.txt"
+  },
+  {
+    "item_id": "K11",
+    "ordering": "BA",
+    "opaque": "T03",
+    "first_course": "KIRKBANE",
+    "second_course": "AVENSWOOD",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T03.txt"
+  },
+  {
+    "item_id": "K12",
+    "ordering": "AB",
+    "opaque": "T02",
+    "first_course": "PENNYQUAY",
+    "second_course": "LINTHAUGH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T02.txt"
+  },
+  {
+    "item_id": "K12",
+    "ordering": "BA",
+    "opaque": "T20",
+    "first_course": "PENNYQUAY",
+    "second_course": "LINTHAUGH",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T20.txt"
+  },
+  {
+    "item_id": "K13",
+    "ordering": "AB",
+    "opaque": "T18",
+    "first_course": "SALTGRAVE",
+    "second_course": "MORVEDD",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T18.txt"
+  },
+  {
+    "item_id": "K13",
+    "ordering": "BA",
+    "opaque": "T16",
+    "first_course": "SALTGRAVE",
+    "second_course": "MORVEDD",
+    "stratum": "undefeated",
+    "admitted": true,
+    "prompt_path": "D:\\code\\_scratch-rescue\\2026-08-25-b48b4cd8\\council-v2\\primary-run\\prompts\\T16.txt"
+  }
+]

@@ -1,0 +1,178 @@
+# Track H order-effect item K07, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K07
+block: A
+stratum: undefeated
+stratum_alias_v1: tie
+mechanism: precedence-constraint
+ordering: BA
+first_course: LINDCASTER
+second_course: HAVERSHOLT
+pair: K07-barrowfield-archive-undefeated-ab.yaml
+domain: archival_conservation
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [HAVERSHOLT, LINDCASTER, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Solveig Marchetti-Aubrey and I am head of collections at the Barrowfield
+  Institute. We hold 4,200 catalogued items, mostly nineteenth century estate
+  and legal papers, in one strongroom in the basement of a building we have
+  occupied since 1911.
+
+  The figures I have been given:
+
+  - The Hesketh-Ravenna bequest gives us GBP 340,000 for the collection. It
+    must be spent by 2028-09-30 and no part of it may be carried over.
+  - The strongroom sits at 62 per cent relative humidity and swings 11 points
+    across a year. The standard we work to is 45 to 55 per cent with a swing
+    under 5.
+  - Air handling and dehumidification plant for the strongroom: GBP 295,000,
+    commissioned 2027-05-29, quoted by Threlkeld Environmental on 2026-06-18
+    and held to 2027-01-30. They need the order fourteen weeks before
+    commissioning.
+  - Our conservator, Idris Sankey-Marchmont, reports in writing that rehousing
+    and aqueous treatment carried out into the strongroom as it stands will
+    need to be repeated within a decade.
+  - Deacidification and rehousing runs at about GBP 250 an item at the volumes
+    we would be commissioning. Our contract conservators can take 70 items a
+    month and can start within eight weeks of an order.
+  - 2,900 of the 4,200 items are on iron gall ink or acidic board.
+  - The 2019 condition survey put 640 items in the unusable band. The 2025
+    resurvey put 1,010.
+  - Buffered enclosures hold an item's own microclimate within 3 points of its
+    packing condition for eight to twelve years.
+  - The 2029-30 capital programme carries an unallocated GBP 400,000 line.
+    Nothing is committed against it and the board sets it in November 2028.
+
+  Two courses are on the table.
+
+  Course LINDCASTER. Commission no plant and put the whole GBP 340,000 into
+  deacidification and rehousing, about 1,360 items off the resurvey. We are
+  losing 62 items a year to the unusable band and this is the only money that
+  reaches them, the enclosures hold their microclimate for eight to twelve
+  years, and the plant waits for the 2029-30 programme.
+
+  Course HAVERSHOLT. Commission the plant in May 2027 and spend what remains on
+  conservation. GBP 295,000 of plant and GBP 45,000 of treatment, which is
+  about 180 items. The environment stops the clock for all 4,200 rather than
+  for the ones we can afford, nothing we commission has to be done twice, and
+  the conservator's report says so in writing.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism: precedence-constraint
+  mechanism_note: >-
+    The item turns on a stated precedence between two tasks: the conservator
+    reports that treatment done into the current strongroom must be repeated
+    within a decade, which puts the plant ahead of the treatment. One course
+    honours the precedence and buys 180 items, the other breaks it and buys
+    1,360. Nothing here is a qualifying ratio or a chain of dates. The single
+    deadline, 2028-09-30, applies identically to both courses.
+  arithmetic: >-
+    340,000 / 250 = 1,360 items. (340,000 - 295,000) / 250 = 180 items. The
+    loss rate is (1,010 - 640) / 6 = 61.7 items a year, about 62. The
+    conservator's decade and the enclosures' eight to twelve years are the same
+    horizon read from opposite ends.
+  why_neither_is_defeated: >-
+    Both courses spend the whole bequest inside the deadline and no stated
+    figure rules either out. HAVERSHOLT honours a written professional
+    judgement, fixes the environment for all 4,200 items rather than for the
+    fraction the money reaches, and buys nothing that has to be paid for twice.
+    Against that it treats 180 items while 62 a year cross into the unusable
+    band, and the plant has an identified future funding line that the items do
+    not. LINDCASTER reaches 1,360 items with money that expires, and the
+    conservator's own decade is bounded below by enclosures rated at eight to
+    twelve years, which is longer than the wait for the 2029-30 programme.
+    Against that the GBP 400,000 line is unallocated, the board does not set it
+    until November 2028, and the treatment would then be repeated. A reader who
+    weights the written precedence lands on HAVERSHOLT, a reader who weights 62
+    items a year against a decade of enclosure life lands on LINDCASTER, and
+    both readings use every figure given.
+  information_timeline: >-
+    Read on 2026-08-25. The Threlkeld quotation holds to 2027-01-30 and the
+    order is needed fourteen weeks before commissioning, which is 2027-02-20,
+    so an order placed while the quote stands is inside the lead time and
+    HAVERSHOLT's GBP 295,000 does not lapse before it can be spent. Under
+    LINDCASTER the conservators start within eight weeks of an order and take
+    70 items a month, so 1,360 items ordered this September run to about
+    2028-06-23, inside the 2028-09-30 deadline by roughly three months. The
+    2029-30 capital line is set in November 2028, after the bequest expires,
+    which is an exposure LINDCASTER carries rather than a figure that lapses.
+  internal_consistency: >-
+    340,000 / 250 = 1,360 and (340,000 - 295,000) / 250 = 180, the two figures
+    the course paragraphs name. (1,010 - 640) / 6 = 61.7, the 62 items a year
+    the paragraph names, over the six years from the 2019 survey to the 2025
+    resurvey. 2,900 items on iron gall or acidic board sits inside the 4,200
+    held. The conservator's decade and the enclosures' eight to twelve years
+    are two readings of one horizon and are stated as such. No count or date is
+    stated twice with different values.
+  why_a_reader_commits: >-
+    The gap is 180 items against 1,360 from the same money, which is wide
+    enough that a reader who has formed a view on whether the conservator's
+    written precedence outranks 62 items a year has already chosen, and the
+    bequest cannot be split between the courses without buying a plant that
+    does not run.
+  checks:
+    dates:
+      - "2026-06-18 before 2027-01-30  # the Threlkeld quotation was issued inside its own hold"
+      - "2027-01-30 after 2026-08-25  # the quotation still stands when the question is asked"
+      - "2027-01-30 before 2027-05-29  # the hold lapses before commissioning, so the order falls inside it"
+      - "2027-05-29 before 2028-09-30  # the plant is commissioned before the bequest must be spent"
+      - "2028-09-30 after 2026-08-25  # the spend deadline is in the future"
+    arithmetic:
+      - "340000 / 250 == 1360  # items LINDCASTER reaches with the whole bequest"
+      - "(340000 - 295000) / 250 == 180  # items HAVERSHOLT reaches with what the plant leaves"
+      - "295000 < 340000  # the plant fits inside the bequest"
+      - "(340000 - 295000) / 250 < 2900  # the plant course treats a fraction of the acidic items"
+      - "2900 < 4200  # the acidic items sit inside the catalogued holding"
+      - "(1010 - 640) / (2025 - 2019) > 61.5  # the stated 62 items a year rounds from this"
+      - "(1010 - 640) / (2025 - 2019) < 62  # and the stated 62 is a round-up"
+      - "(340000 / 250) / 70 < 23  # 70 items a month clears the whole order inside the 23 months to the deadline"
+      - "62 - 55 > 5  # the strongroom sits further above the standard than its permitted swing"
+      - "11 > 5  # the annual humidity swing exceeds the standard's"
+  admissible_calls: [HAVERSHOLT, LINDCASTER, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

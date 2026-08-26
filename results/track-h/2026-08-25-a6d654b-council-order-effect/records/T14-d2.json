@@ -1,0 +1,61 @@
+{
+  "opaque": "T14",
+  "item_id": "K04",
+  "ordering": "AB",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The demand position**\n\nCurrent peak-week output is 13.6 ML/day. Adding 1.8 ML/day for the consented homes gives 15.4 ML/day against a works rated at 14.2 ML/day. The shortfall is 1.2 ML/day. That figure is the target both courses must hit.\n\n---\n\n**Testing SKELWITH against the target**\n\nThe forecast saving is 1.4 ML/day but the Kilvaddy outturn ratio is 1.1/1.3, so the realistic figure is 1.4 \u00d7 (1.1/1.3) = 1.18 ML/day.\n\n1.18 ML/day against a 1.2 ML/day shortfall already misses by 0.02 ML/day before the drift term is applied. The programme completes 2030-03-31. The 2031 peak demand is the relevant test, roughly twelve months later. Drift at 0.1 ML/day per year reduces the net benefit to approximately 1.08 ML/day by then, leaving the board 0.12 ML/day short at the critical moment. In 2032 it is 0.22 ML/day short unless further capital is committed \u2014 and the next regulatory settlement is not until December 2029, with no guarantee of envelope size.\n\nSKELWITH's attractions are real: it costs \u00a32.5 M less, it starts delivering from April 2027, and saved water is never pumped. But it fails its primary task at the Kilvaddy ratio, and it erodes further without reinvestment. A mains renewal programme that does not close the supply-demand gap is not a supply solution; it is a partial demand-reduction measure that leaves the statutory duty to supply unmet.\n\nThe \u00a32.5 M saving is stranded: the capital envelope funds one scheme, and there is nothing identified within the envelope to deploy the residual on that would cover the remaining shortfall.\n\n---\n\n**Testing HARBOTTLE against the target**\n\n14.2 + 3.0 = 17.2 ML/day rated output, against 15.4 ML/day demand. Headroom of 1.8 ML/day. On that basis the scheme is more than adequate.\n\nThe vulnerability is the hands-off flow condition. When the Vraich burn falls below 12.1 ML/day the Cullivoe abstraction stops entirely, and the board is back to 14.2 ML/day against 15.4, a net draw on storage of 1.2 ML/day.\n\nStorage: 62 ML \u00f7 1.2 ML/day = 51.7 days.\n\nRestriction history: 41 days in 2022 (worst recent year), 29 days in 2025. Both years fell entirely within June\u2013September.\n\nThe 51-day storage buffer exceeds the worst observed restriction run (41 days) by roughly ten days. That is not a large margin, and it depends on reservoirs being substantially full entering a restriction event \u2014 which is a reasonable expectation since the restriction trigger is low river flow in summer, not a failure at the works, and the works will have been running at full rate prior to the restriction onset. The board's own calculation in the brief gives the same 51-day figure, implying this has already been stress-tested against the current storage topology.\n\nThere is a climate-change caveat: future dry years might produce more than 41 restricted days. That risk is real but it sits beyond the 2031 horizon under review, and the regulatory settlement in December 2029 provides a natural moment to revisit if monitoring shows the trend worsening.\n\nHARBOTTLE is commissioned 2029-06-30, which means it is operational for roughly two full peak seasons before 2031. The 3.0 ML/day licensed capacity also provides growth headroom for the period after 2031 without further capital, whereas SKELWITH's benefit is in structural decline from the day the last trench is backfilled.\n\nCost: \u00a38.4 M against an \u00a311.2 M envelope is well within budget.\n\n---\n\n**Direct comparison**\n\n| Criterion | HARBOTTLE | SKELWITH |\n|---|---|---|\n| Closes 1.2 ML/day gap? | Yes, with 1.8 ML/day to spare | No \u2014 1.18 ML/day at Kilvaddy ratio, then drifts |\n| Stable over time? | Yes \u2014 rated capacity | No \u2014 loses 0.1 ML/day/year |\n| Weather dependency? | Yes, up to ~41 days/year historically | None |\n| Storage covers restriction? | 51 days vs 41-day historic max | N/A |\n| Commissioned before 2031? | Yes, June 2029 | Fully complete March 2030 |\n| Capital cost | \u00a38.4 M | \u00a35.9 M |\n| Capital remaining | \u00a32.8 M | \u00a35.3 M (but no identified use) |\n| Statutory duty met in 2031? | Yes | No |\n\nThe capital cost difference (\u00a32.5 M) would matter if SKELWITH solved the problem. It does not. Spending \u00a35.9 M to remain short of supply is not a saving; it is a deferred cost with added statutory risk.\n\n---\n\nREADING\nThe decisive issue is that SKELWITH at the Kilvaddy-adjusted performance figure delivers 1.18 ML/day against a 1.2 ML/day shortfall, then loses a further 0.1 ML/day per year to drift, leaving the board short of its statutory supply duty in 2031 and worsening thereafter; HARBOTTLE delivers 3.0 ML/day of stable rated capacity, covers the gap with 1.8 ML/day of headroom, and the hands-off restriction risk is bounded by 62 ML of storage providing 51 days of cover against a historic worst of 41 days.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH fails to close the 1.2 ML/day shortfall even at its realistic Kilvaddy-ratio outturn and then erodes by 0.1 ML/day per year, leaving the statutory supply duty unmet in 2031, whereas HARBOTTLE delivers 3.0 ML/day of stable rated capacity within budget and its hands-off restriction risk is bounded by 62 ML of storage covering 51 days against a historic maximum of 41 restricted days.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-5wxbidet"
+  },
+  "cost_usd": 0.08639730000000001,
+  "duration_ms": 104589,
+  "session_id": "447c00ed-cce2-41eb-b926-1a7ae0465f7f",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 5634,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5634,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 105.74689555168152,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

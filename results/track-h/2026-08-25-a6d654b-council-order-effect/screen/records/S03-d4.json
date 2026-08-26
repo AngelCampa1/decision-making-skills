@@ -1,0 +1,44 @@
+{
+  "opaque": "S03",
+  "draw": 4,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What the two courses cost that the other does not**\n\nThe problem helpfully isolates three moving parts:\n\n1. The learning-curve remake bill (GBP 27,072) is declared identical under both courses and can be set aside.\n2. KIRKBANE uniquely requires GBP 44,000 in overtime.\n3. AVENSWOOD uniquely generates crossing remakes and dual-library overhead.\n\nEverything else is the same. The decision therefore comes down to whether AVENSWOOD's additional costs exceed GBP 44,000.\n\n---\n\n**Estimating crossing remakes under AVENSWOOD**\n\nThe pilot gives a measured data point: two technicians on the new system, ten on the old, running for four months produced 40 crossing remakes.\n\nCrossing remakes occur when a case that started on one system is continued on the other. The probability of any given case being at risk is proportional to the chance that its journey touches both sides of the split, which scales with *p \u00d7 (1 \u2212 p)* where *p* is the fraction of the bench on the new system.\n\nPilot parameters: p = 2/12 = 0.167 \u2192 p(1 \u2212 p) = 0.139 \u2192 10 crossing remakes per month at this split.\nImplied rate constant: 10 \u00f7 0.139 \u2248 72 crossing remakes per month per unit of p(1 \u2212 p).\n\nAVENSWOOD's three phases, each of three months:\n\n| Phase | New bench | Old bench | p | p(1\u2212p) | Remakes/month | 3-month total |\n|---|---|---|---|---|---|---|\n| Jan\u2013Apr 2027 | 3 | 9 | 0.25 | 0.1875 | 13.5 | 40 |\n| Apr\u2013Jul 2027 | 6 | 6 | 0.50 | 0.2500 | 18.0 | 54 |\n| Jul\u2013Oct 2027 | 9 | 3 | 0.75 | 0.1875 | 13.5 | 40 |\n| **Total** | | | | | | **\u2248 134** |\n\nAt GBP 96 each: roughly **GBP 12,900** in crossing remake costs.\n\nThe model assumes crossing-remake risk scales with the split ratio throughout the dual-system window. The pilot figure is the only empirical anchor, and real numbers could be somewhat higher or lower. Even if I add a 50 % safety margin, I reach GBP 19,350. AVENSWOOD stays cheaper than KIRKBANE by a large margin.\n\n---\n\n**Other AVENSWOOD costs**\n\n*Dual shade and material libraries.* The lab has already run this for four months with the pilot pair; it is a known burden, not an unknown one. It is a management and coordination cost, but practices already work from the lab's notes, and the four-month pilot produced no suggestion that shade inconsistency alone drove the crossing remakes (those were caused by case routing, not shade divergence per se). Nine months of dual libraries is operationally uncomfortable, not catastrophic.\n\n*These are unquantified but almost certainly well below GBP 21,000* (the remaining gap between GBP 44,000 and GBP 19,350 in the worst-case crossing-remake scenario).\n\n---\n\n**The shape of quality disruption matters too**\n\nUnder KIRKBANE, all 10 remaining technicians are simultaneously at 11.4% remake rate in January 2027. The whole-lab daily output is roughly 31 units \u00d7 (10/12) handled by new-system technicians = 26 units per day touching an 11.4% rate, against a 3.1% baseline. Every one of the 40 practices will notice the spike in the same reporting month. A concentrated visible quality event across the entire client portfolio is a relationship risk that does not appear in the cost table but is real.\n\nUnder AVENSWOOD, at any point in time at least nine of twelve bench positions (in the first phase, nine of twelve; improving thereafter) are running at or near settled rates. Individual practices may see disruption depending on which technician handles their work, but the lab never presents a wall-to-wall quality dip to the market simultaneously.\n\n---\n\n**Does timing relative to the 2028-06-30 deadline affect the choice?**\n\nUnder KIRKBANE the entire bench is clear of Kessendale by 2027-12-04, eighteen months before deadline, with comfortable headroom.\n\nUnder AVENSWOOD the last technician transitions to the new system on 2027-10-04, still more than twenty months before the deadline. Kessendale can be decommissioned that day. The final technician's learning curve extends to roughly September 2028, but that is their period of elevated remakes on the *new* system, not continued dependence on Kessendale. Deadline risk is negligible under either course.\n\n---\n\n**Summary**\n\n| Item | KIRKBANE | AVENSWOOD |\n|---|---|---|\n| Learning curve remakes (GBP) | 27,072 | 27,072 |\n| Overtime (GBP) | 44,000 | \u2014 |\n| Crossing remakes (GBP) | \u2248 0 | \u2248 12,900 |\n| Dual-library overhead | None | 9 months |\n| Simultaneous client-facing quality shock | All 40 practices, same month | Distributed across portfolio |\n| Off Kessendale by deadline | Yes (Dec 2027) | Yes (Oct 2027) |\n\nAVENSWOOD is cheaper by approximately **GBP 31,000** in hard costs, and it avoids the concentrated reputational risk of a simultaneous quality event across all forty practices. The dual-library burden is genuine but is already proven manageable through the pilot period, and it would need to cost more than GBP 31,000 in hidden waste to shift the decision\u2014implausible for a nine-month administrative overhead in a twelve-person laboratory.\n\nCALL\n  AVENSWOOD\n\nGROUNDS\n  The GBP 44,000 overtime required by KIRKBANE exceeds the projected crossing-remake bill under AVENSWOOD by roughly GBP 31,000, and AVENSWOOD additionally avoids a simultaneous quality shock to all forty practices in the same month.",
+  "cost_usd": 0.15517,
+  "duration_ms": 186656,
+  "session_id": "71512b00-9e6e-4988-bf5a-bfb96345ccd3",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 10089,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 10089,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 187.77244329452515
+}

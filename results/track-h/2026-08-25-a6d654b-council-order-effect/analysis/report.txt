@@ -1,0 +1,242 @@
+==============================================================================
+COUNCIL ORDER-EFFECT PRIMARY: second-position rate, both orderings
+==============================================================================
+  model sonnet (claude-sonnet-4-6), arm off (unaided), blind
+  8 draws per ordering per item, AB and BA, all 11 measured items
+  the primary is the second-position rate. The flip rate is superseded:
+  it has no floor, so a correctly indifferent model and an unstable one
+  both produce 0.5.
+
+  battery: 65 checks, 0 failures
+
+
+-- the record ------------------------------------------------------------------
+  176 draws attempted, 176 recorded, 0 failed
+  176 call attempts on record, failed attempts by kind: none
+  isolation receipts asserted on every draw: 176/176 declare no tools, no skills, no slash commands
+  models on the receipts: ['claude-sonnet-4-6']
+  distinct working directories: 176 over 176 calls
+  U+FFFD replacement characters across every reply: 0
+  notional cost (a burn meter, never a spend): USD 24.60
+
+
+-- every exclusion class, by arm and by ordering, raw counts beside rates ------
+  all 11 items, both sets pooled FOR ATTRITION ONLY
+  arm     ord       first    second  balanced  off_menu ambiguous   no_call  issued  commit  abstain  unres  resolve
+  off     AB           54        34         0         0         0         0      88   1.000    0.000  0.000    1.000
+  off     BA           42        46         0         0         0         0      88   1.000    0.000  0.000    1.000
+  on      AB            0         0         0         0         0         0       0       -        -      -        -
+  on      BA            0         0         0         0         0         0       0       -        -      -        -
+  placebo AB            0         0         0         0         0         0       0       -        -      -        -
+  placebo BA            0         0         0         0         0         0       0       -        -      -        -
+  cot     AB            0         0         0         0         0         0       0       -        -      -        -
+  cot     BA            0         0         0         0         0         0       0       -        -      -        -
+  in_situ AB            0         0         0         0         0         0       0       -        -      -        -
+  in_situ BA            0         0         0         0         0         0       0       -        -      -        -
+  all     both         96        80         0         0         0         0     176   1.000    0.000  0.000    1.000
+  surface-normalised calls: 0 of 176
+  attrition by ordering: AB kept 88 lost 0, BA kept 88 lost 0, Fisher exact p 1.0000  (orderings not distinguished)
+
+  the 9 admitted items (the pre-registered primary)
+  arm     ord       first    second  balanced  off_menu ambiguous   no_call  issued  commit  abstain  unres  resolve
+  off     AB           48        24         0         0         0         0      72   1.000    0.000  0.000    1.000
+  off     BA           28        44         0         0         0         0      72   1.000    0.000  0.000    1.000
+  on      AB            0         0         0         0         0         0       0       -        -      -        -
+  on      BA            0         0         0         0         0         0       0       -        -      -        -
+  placebo AB            0         0         0         0         0         0       0       -        -      -        -
+  placebo BA            0         0         0         0         0         0       0       -        -      -        -
+  cot     AB            0         0         0         0         0         0       0       -        -      -        -
+  cot     BA            0         0         0         0         0         0       0       -        -      -        -
+  in_situ AB            0         0         0         0         0         0       0       -        -      -        -
+  in_situ BA            0         0         0         0         0         0       0       -        -      -        -
+  all     both         76        68         0         0         0         0     144   1.000    0.000  0.000    1.000
+  surface-normalised calls: 0 of 144
+  attrition by ordering: AB kept 72 lost 0, BA kept 72 lost 0, Fisher exact p 1.0000  (orderings not distinguished)
+
+  the 2 recorded-stratum items, K03 and K09
+  arm     ord       first    second  balanced  off_menu ambiguous   no_call  issued  commit  abstain  unres  resolve
+  off     AB            6        10         0         0         0         0      16   1.000    0.000  0.000    1.000
+  off     BA           14         2         0         0         0         0      16   1.000    0.000  0.000    1.000
+  on      AB            0         0         0         0         0         0       0       -        -      -        -
+  on      BA            0         0         0         0         0         0       0       -        -      -        -
+  placebo AB            0         0         0         0         0         0       0       -        -      -        -
+  placebo BA            0         0         0         0         0         0       0       -        -      -        -
+  cot     AB            0         0         0         0         0         0       0       -        -      -        -
+  cot     BA            0         0         0         0         0         0       0       -        -      -        -
+  in_situ AB            0         0         0         0         0         0       0       -        -      -        -
+  in_situ BA            0         0         0         0         0         0       0       -        -      -        -
+  all     both         20        12         0         0         0         0      32   1.000    0.000  0.000    1.000
+  surface-normalised calls: 0 of 32
+  attrition by ordering: AB kept 16 lost 0, BA kept 16 lost 0, Fisher exact p 1.0000  (orderings not distinguished)
+
+
+-- the markdown-rule defect, measured in this run rather than re-scored --------
+  arm     ord    draws  rule in reply  rule in CALL  outcome moved  attrition rate
+  off     AB        88          81/88          0/88           0/88          0.0000
+  off     BA        88          83/88          0/88           0/88          0.0000
+  on      AB         0            0/0           0/0            0/0               -
+  on      BA         0            0/0           0/0            0/0               -
+  placebo AB         0            0/0           0/0            0/0               -
+  placebo BA         0            0/0           0/0            0/0               -
+  cot     AB         0            0/0           0/0            0/0               -
+  cot     BA         0            0/0           0/0            0/0               -
+  in_situ AB         0            0/0           0/0            0/0               -
+  in_situ BA         0            0/0           0/0            0/0               -
+  all     both     176        164/176         0/176          0/176          0.0000
+  attrition the shipped parser would have taken: 0 of 176 draws, 0.0000 CI [0.0000, 0.0207]
+  the screen's rate was 2 of 41 = 0.0488 on AB draws alone.
+
+
+-- the primary: the 9 admitted items -------------------------------------------
+  9 admitted items, arm off, both orderings
+    second-position rate 0.4722 on 144 kept committed records (68 second)
+    exact two-sided p 0.55982   95% CI [0.3885, 0.5571]
+    Manski bound [0.4722, 0.4722]  excludes 0.5: True
+    resolution u 1.0000   gate needs u > 0.9474 at the observed rate
+    order-balanced rate 0.4722   dispersion T 4.00 vs 16.90  flag False
+    beside it, raw: first 76  second 68  BALANCED 0  OFF_MENU 0  AMBIGUOUS 0  NO_CALL 0
+    trimmed 0  dropped items []  normalised calls 0
+    verdict: no effect reported
+
+  per item, admitted set
+  item    kept  second    rate        p  unres  balanced  instability
+  K04       16       8   0.500   1.0000      0         0        0.000
+  K05       16       8   0.500   1.0000      0         0        0.000
+  K06       16       4   0.250   0.0768      0         0        0.250
+  K07       16       8   0.500   1.0000      0         0        0.000
+  K08       16       8   0.500   1.0000      0         0        0.000
+  K10       16       8   0.500   1.0000      0         0        0.000
+  K11       16       8   0.500   1.0000      0         0        0.000
+  K12       16       8   0.500   1.0000      0         0        0.000
+  K13       16       8   0.500   1.0000      0         0        0.000
+
+  realised per-item committed counts and the leak, admitted set
+  item    C_AB  C_BA  S_AB  S_BA   a_hat   b_hat       w       g    Delta     leak  kept AB/BA
+  K04        8     8     0     8   0.000   1.000  0.5000  0.0000  -0.5000  -0.0000         8/8
+  K05        8     8     0     8   0.000   1.000  0.5000  0.0000  -0.5000  -0.0000         8/8
+  K06        8     8     0     4   0.000   0.500  0.5000  0.0000  -0.2500  -0.0000         8/8
+  K07        8     8     0     8   0.000   1.000  0.5000  0.0000  -0.5000  -0.0000         8/8
+  K08        8     8     8     0   1.000   0.000  0.5000  0.0000  +0.5000  +0.0000         8/8
+  K10        8     8     0     8   0.000   1.000  0.5000  0.0000  -0.5000  -0.0000         8/8
+  K11        8     8     8     0   1.000   0.000  0.5000  0.0000  +0.5000  +0.0000         8/8
+  K12        8     8     8     0   1.000   0.000  0.5000  0.0000  +0.5000  +0.0000         8/8
+  K13        8     8     0     8   0.000   1.000  0.5000  0.0000  -0.5000  -0.0000         8/8
+  untrimmed pooled rate 0.4722   equal-weight per-item mean 0.4722   difference +0.0000
+  g is printed as a magnitude, |C_AB - C_BA| / min(C_AB, C_BA). The sign of
+  the leak lives in (2w - 1), which the leak column carries exactly, so the
+  column is right whichever ordering committed more often.
+  largest single-item leak in the untrimmed estimator: 0.0000
+  realised leak in the reported estimate: 0.0000 exactly -- every kept
+  AB/BA pair above is equal, so w = 1/2 and g = 0 on the kept records.
+
+
+-- the recorded stratum: K03 and K09, never pooled with the primary ------------
+  The screen rejected these two for disagreeing under a single ordering.
+  That is a fact about the items, and it is what the target stratum looks
+  like at its most extreme: content does not settle the question. Their
+  within-ordering instability is the covariate column, not a disqualifier.
+
+  2 recorded items, arm off, both orderings
+    second-position rate 0.3750 on 32 kept committed records (12 second)
+    exact two-sided p 0.21533   95% CI [0.2110, 0.5631]
+    Manski bound [0.3750, 0.3750]  excludes 0.5: True
+    resolution u 1.0000   gate needs u > 0.8000 at the observed rate
+    order-balanced rate 0.3750   dispersion T 2.50 vs 5.94  flag False
+    beside it, raw: first 20  second 12  BALANCED 0  OFF_MENU 0  AMBIGUOUS 0  NO_CALL 0
+    trimmed 0  dropped items []  normalised calls 0
+    verdict: no effect reported
+
+  per item, recorded stratum
+  item    kept  second    rate        p  unres  balanced  instability
+  K03       16       7   0.438   0.8036      0         0        0.062
+  K09       16       5   0.312   0.2101      0         0        0.312
+
+  realised per-item committed counts and the leak, recorded stratum
+  item    C_AB  C_BA  S_AB  S_BA   a_hat   b_hat       w       g    Delta     leak  kept AB/BA
+  K03        8     8     7     0   0.875   0.000  0.5000  0.0000  +0.4375  +0.0000         8/8
+  K09        8     8     3     2   0.375   0.250  0.5000  0.0000  +0.0625  +0.0000         8/8
+  untrimmed pooled rate 0.3750   equal-weight per-item mean 0.3750   difference +0.0000
+  g is printed as a magnitude, |C_AB - C_BA| / min(C_AB, C_BA). The sign of
+  the leak lives in (2w - 1), which the leak column carries exactly, so the
+  column is right whichever ordering committed more often.
+  largest single-item leak in the untrimmed estimator: 0.0000
+  realised leak in the reported estimate: 0.0000 exactly -- every kept
+  AB/BA pair above is equal, so w = 1/2 and g = 0 on the kept records.
+
+
+-- settled against unstable: does print order bite harder where content does not settle it ---
+  item  set         instability    rate  |rate-0.5|  kept
+  K03   recorded          0.062   0.438       0.062    16
+  K04   admitted          0.000   0.500       0.000    16
+  K05   admitted          0.000   0.500       0.000    16
+  K06   admitted          0.250   0.250       0.250    16
+  K07   admitted          0.000   0.500       0.000    16
+  K08   admitted          0.000   0.500       0.000    16
+  K09   recorded          0.312   0.312       0.188    16
+  K10   admitted          0.000   0.500       0.000    16
+  K11   admitted          0.000   0.500       0.000    16
+  K12   admitted          0.000   0.500       0.000    16
+  K13   admitted          0.000   0.500       0.000    16
+  Pearson r between within-ordering instability and |rate - 0.5|: +0.959 over 11 items
+  A positive r would say order bites hardest where content does not
+  settle the question, which is the design's own theory and what the
+  admission screen foreclosed. n is 11; this is a direction, not a test.
+
+
+-- scoring the registered prediction -------------------------------------------
+  notebook/2026-08-25-prediction-will-families-b-and-c-ceiling-too.md
+  registers a true second-position rate of 0.60 and a commit rate of 0.70.
+  observed on the admitted set: rate 0.4722 with 95% CI [0.3885, 0.5571]
+  0.60 is OUTSIDE the CI.
+  commit rate on the admitted set 1.0000 (144/144) CI [0.9747, 1.0000]; 0.70 is OUTSIDE it.
+
+
+-- power delivered -------------------------------------------------------------
+  registered band: joint power 0.685. The screen's table put the admitted
+  set at joint 0.695 at r = 8 on 9 items.
+  delivered: 144 kept committed records over 9 live item(s)
+  exact power at that many records against 0.65: 0.9428
+  dispersion power at 9 items x 8 draws per ordering: 0.6952
+  joint: 0.6952
+
+==============================================================================
+
+-- which course was named, by ordering -----------------------------------------
+  A pooled second-position rate cannot show this, and it is the finding.
+  Under balanced orderings a purely content-driven answer produces
+  exactly 0.5, so a rate at the null is not evidence of indifference.
+
+  item  set       course A        AB   BA   course B        AB   BA   order-blind
+  K03   recorded  TARNSIDE         1    0   VELLACOTT        7    8   NO
+  K04   admitted  HARBOTTLE        8    8   SKELWITH         0    0   yes
+  K05   admitted  WESTERGATE       8    8   PENDLARROW       0    0   yes
+  K06   admitted  KESTERWICK       8    4   ARDENSHAW        0    4   NO
+  K07   admitted  HAVERSHOLT       8    8   LINDCASTER       0    0   yes
+  K08   admitted  TREVANNOCK       0    0   ORMSCLEUCH       8    8   yes
+  K09   recorded  CRANMOOR         5    2   ELSWICK          3    6   NO
+  K10   admitted  HAVERSHOLT       8    8   TREGOWAN         0    0   yes
+  K11   admitted  KIRKBANE         0    0   AVENSWOOD        8    8   yes
+  K12   admitted  PENNYQUAY        0    0   LINTHAUGH        8    8   yes
+  K13   admitted  SALTGRAVE        8    8   MORVEDD          0    0   yes
+  identical course counts under both orderings: 8 item(s) -- K04, K05, K07, K08, K10, K11, K12, K13
+
+
+-- the two sets contrasted, reported apart and never pooled --------------------
+  admitted (9 items)  68/144 = 0.4722  CI [0.3885, 0.5571]  p=0.5598  primacy
+  recorded (2 items)  12/32 = 0.3750  CI [0.2110, 0.5631]  p=0.2153  primacy
+  Fisher exact between the two sets: p = 0.3348  (not distinguished)
+  This is the contrast, not a pool. The two rates are never added.
+
+
+-- what a four-draw unanimity screen does to an item of given consistency ------
+  P(reject) = 1 - p^4 - (1-p)^4, for an item whose within-ordering
+  consistency is p. The screen cannot tell an item that is genuinely
+  unsettled from a settled item it happened to catch on a minority draw.
+   consistency   P(reject)   observed in this run
+        1.0000      0.0000   8/8 -- the 8 order-blind items, all admitted
+        0.8750      0.4136   7/8 -- K03 under AB, REJECTED by the screen
+        0.6250      0.8276   5/8 -- K09 under AB, rejected by the screen
+        0.5000      0.8750   4/8 -- a true coin flip
+  K03's AB behaviour is 7/8 consistent. A screen that rejects such an
+  item 41% of the time is measuring its own sampling noise, not the item.
+

@@ -1,0 +1,56 @@
+Today is 2026-08-25.
+
+I am Sunniva Aldreth-Kyle and I own Wearmouth Dental Laboratory. Twelve
+technicians, forty practices, zirconia crowns and bridges, 31 units a day
+across 250 working days.
+
+We are moving off the Kessendale design system, which loses support on
+2028-06-30. The question is how fast, and the answer turns on what our own
+pilot measured.
+
+- Two technicians moved to the new system on 2026-05-04. Their remake rate
+  ran at 11.4% across 300 units and 4.2% across the 300 after those. At
+  900 units they are at 3.4%.
+- The laboratory's settled remake rate on the Kessendale system is 3.1%. A
+  remake costs us GBP 96 in materials and technician time.
+- So a technician crossing the curve carries about 28 remakes more than par,
+  and ten technicians have yet to cross it. That bill is GBP 27,072 and it is
+  the same under either course.
+- A technician gets through 646 units a year, so the crossing takes about
+  eleven months.
+- The pilot pair also remade 40 cases in four months for no reason except
+  that the case moved between systems part way through treatment.
+- Overtime to hold output through a changeover is quoted at GBP 44,000.
+- Our shade notes and material library exist twice while both systems run,
+  and the practices work from ours.
+
+Two courses are on the table.
+
+Course KIRKBANE. Move the remaining ten technicians together from 2027-01-04
+and pay the GBP 44,000 of overtime to hold output up. One shade library, one
+material library, and no case that can cross between systems part way
+through treatment. Every bench is on 11.4% at the same time, and forty
+practices see it in the same month. The whole crossing is behind us by
+2027-12-04.
+
+Course AVENSWOOD. Move three at a time on 2027-01-04, 2027-04-05 and
+2027-07-05, with the last technician across on 2027-10-04. Three quarters of
+the bench stays at 3.1% throughout and the GBP 44,000 of overtime is not
+spent. We run two systems for nine months, two shade libraries with them,
+and the pilot logged 40 crossing remakes in four. Nobody is on the steep
+part alone.
+
+Which course do you recommend?
+
+Reason as much as you find useful, then end your reply with exactly these three
+blocks in this order and nothing after them:
+
+READING
+  free text -- your working, at whatever length it needs
+CALL
+  one line, and nothing else in this block: the one-word name of the course
+  you recommend, without the word Course in front of it, or the single word
+  BALANCED. BALANCED means you judge the two genuinely even. It is a real
+  answer here and it is read as one.
+GROUNDS
+  one sentence naming what decided it

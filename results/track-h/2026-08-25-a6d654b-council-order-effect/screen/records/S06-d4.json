@@ -1,0 +1,44 @@
+{
+  "opaque": "S06",
+  "draw": 4,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The capacity gap and its cost**\n\nThe peak requirement is 72 pallet spaces: 18 pallets a day multiplied by a four-day collection cycle. The current 25% entitlement is 52 spaces, leaving a structural shortfall of 20. In July 2026 that shortfall cost \u00a345,136 (18,200 kg \u00d7 (\u00a33.10 \u2212 \u00a30.62) per kg = \u00a345,136, confirmed by the figures given). This loss recurs every peak season the gap is unaddressed.\n\n---\n\n**Course TREGOWAN examined**\n\nRented spaces 30 + owned 52 = 82, which covers 72. Capital untouched. Compressor liability stays at 25% \u00d7 \u00a3260,000 = \u00a365,000, well within the \u00a3140,000 available.\n\nBut two risks attach, and neither is trivial.\n\n*Buyer concern.* Fruit trucked 14 miles to Ilsington is double-handled and spends additional time off the farm. The buyer has already raised this. A retailer paying \u00a33.10/kg is not paying for extra transit; if they reduce the price, switch supplier, or impose penalties, the financial damage is measured against the whole crop, not just the rented fraction. The \u00a331,200/year TREGOWAN cost looks modest; the revenue base it puts at risk does not.\n\n*Store control.* If Fennerbrake declines, Wraysholme can sell to Ardwick. Ardwick then holds 75% and is sole decision-maker on the store \u2014 including when to replace the compressors, at what specification, and on what timetable. As a 25% minority holder with 25% of a bill Ardwick can force, Fennerbrake's position in the store deteriorates materially. The contention at Wildern Cross does not merely continue; it worsens.\n\nTREGOWAN also recurs every season. There is no exit from the annual \u00a331,200, and no improvement in the underlying position.\n\n---\n\n**Course HAVERSHOLT examined**\n\nPurchase: \u00a396,000. Capital remaining: \u00a344,000.\nCompressor as 50% shareholder: \u00a3130,000, due within three years.\nTotal committed: \u00a3226,000 against \u00a3140,000 available \u2192 apparent shortfall of \u00a386,000.\n\nThe critical question is whether that \u00a386,000 gap is actually a problem. Set it against what HAVERSHOLT returns each year:\n\n| Benefit | Per year |\n|---|---|\n| Avoided processor-downgrade loss (2026 baseline) | \u00a345,136 |\n| Avoided TREGOWAN rental + haulage | \u00a331,200 |\n| **Combined annual benefit vs TREGOWAN** | **\u00a376,336** |\n\nOver three years that is roughly \u00a3229,000 in recovered or saved cash \u2014 comfortably more than the \u00a386,000 gap. The compressor is self-funding from operational savings within the window, without recourse to external borrowing. The capital arithmetic works.\n\n*Capacity and voting.* 104 spaces against a 72-space requirement leaves 32 spaces of headroom \u2014 useful in a heavy crop year or if a collection is delayed. At 50% voting, Fennerbrake has equal standing with Ardwick on every future decision about the store: compressor timing, specification, any future access or disposal. That is not a minor procedural point; it is the difference between being a co-owner and being a captive minority.\n\n*Asset value.* \u00a396,000 acquires a half-share in a refrigerated facility with 208 pallet spaces. That share has realisable value independent of the compressor liability. TREGOWAN acquires nothing.\n\n---\n\n**The Ardwick pre-emption risk \u2014 and why it does not weigh against attempting HAVERSHOLT**\n\nArdwick has 30 days to match. If they match, the deal fails and Fennerbrake has spent nothing. The TREGOWAN booking deadline is 2027-03-31, which is well after Ardwick's decision window closes. Attempting HAVERSHOLT and failing leaves TREGOWAN fully intact as a fallback. The attempt is asymmetric: the upside is permanent resolution; the downside is a 30-day delay before falling back to a course still available in full. Pre-emption risk argues for acting, not for standing aside.\n\n---\n\n**The decisive calculation**\n\nUnder TREGOWAN: \u00a331,200/year recurring + \u00a365,000 compressor + ongoing buyer-relationship risk + minority status if Ardwick buys.\nUnder HAVERSHOLT: \u00a396,000 now + \u00a3130,000 compressor, both funded within three years by the \u00a376,000/year of avoided losses and avoided rental, with a real asset, equal votes, and no buyer-handling concern.\n\nThe numbers favour HAVERSHOLT. The strategic position favours it more strongly still.\n\n---\n\nCALL\n  HAVERSHOLT\n\nGROUNDS\n  The annual cash savings from eliminating both the processor-downgrade loss and the recurring TREGOWAN rental (~\u00a376,000/year) make the compressor-shortfall self-funding within the three-year window, while TREGOWAN leaves the premium buyer relationship at risk from extra handling and cedes store control to Ardwick if they exercise pre-emption.",
+  "cost_usd": 0.120883,
+  "duration_ms": 146091,
+  "session_id": "14758a7e-34c0-4750-b624-30fae9426550",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 1003,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7766,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 1003,
+        "output_tokens": 7766,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 147.1583173274994
+}

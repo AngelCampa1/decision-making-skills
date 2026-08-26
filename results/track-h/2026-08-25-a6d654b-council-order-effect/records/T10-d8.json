@@ -1,0 +1,61 @@
+{
+  "opaque": "T10",
+  "item_id": "K11",
+  "ordering": "AB",
+  "draw": 8,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Costs that are identical under both courses**\n\nThe GBP 27,072 crossing burden (10 technicians \u00d7 ~28 excess remakes \u00d7 GBP 96) is unavoidable regardless of timing. It cancels out when comparing the two and need not affect the decision.\n\n**The one large fixed charge that is not shared: the GBP 44,000 overtime**\n\nKIRKBANE commits to this unconditionally. AVENSWOOD does not spend it. That sum becomes the effective hurdle: for AVENSWOOD to lose on cost, its incremental liabilities must collectively exceed GBP 44,000.\n\n**Estimating cross-system remake exposure under AVENSWOOD**\n\nThe pilot gives a calibration point: 2 technicians on the new system, 10 remaining on Kessendale, 4 months, 40 crossing remakes. I use the interaction model, where the risk scales with the product of technicians on each side, since a crossing remake requires one foot in each system.\n\n| Phase | Duration | New \u00d7 Old pairs | Rate (remakes/pair/month) | Remakes |\n|-------|----------|-----------------|--------------------------|---------|\n| Jan\u2013Apr 2027 | 3 months | 3 \u00d7 9 = 27 | 0.5* | 40.5 |\n| Apr\u2013Jul 2027 | 3 months | 6 \u00d7 6 = 36 | 0.5 | 54.0 |\n| Jul\u2013Oct 2027 | 3 months | 9 \u00d7 3 = 27 | 0.5 | 40.5 |\n| **Total** | | | | **~135** |\n\n*Derived from pilot: 40 remakes \u00f7 (20 pairs \u00d7 4 months) = 0.5.\n\n135 \u00d7 GBP 96 = **GBP 12,960**.\n\nA flat model (10 remakes per month \u00d7 9 months = 90 remakes) gives GBP 8,640. A pessimistic model that doubles the pilot rate gives ~GBP 25,920. All three are well below GBP 44,000. The GBP 44,000 overtime must be the deciding financial variable.\n\n**AVENSWOOD incremental costs vs. KIRKBANE savings**\n\n| Item | AVENSWOOD extra cost | KIRKBANE extra cost |\n|------|---------------------|---------------------|\n| Overtime | \u2014 | GBP 44,000 |\n| Cross-system remakes | GBP 9,000\u201326,000 | ~GBP 0 |\n| Dual library admin | Unquantified but bounded | \u2014 |\n| **Net** | **GBP 9,000\u201326,000** | **GBP 44,000** |\n\nAVENSWOOD is GBP 18,000\u201335,000 cheaper even under adverse remake assumptions.\n\n**Practice-relationship risk**\n\nUnder KIRKBANE, with 10 of 12 technicians on 11.4% simultaneously, the lab-wide remake rate visible to practices spikes to roughly:\n\n(2 \u00d7 3.4 + 10 \u00d7 11.4) / 12 \u2248 **10.1%**\n\nAll forty practices see this in the same month. That is a 3.3-fold deterioration from the 3.1% they expect, arriving without differentiation across the client base. Practices that notice it together may act together.\n\nUnder AVENSWOOD, the worst-case lab-wide rate (first wave, 3 technicians at 11.4%):\n\n(2 \u00d7 3.4 + 3 \u00d7 11.4 + 9 \u00d7 3.1) / 14 \u2248 **4.8%**\n\nA mild, partially masked rise affecting a subset of practices at any one time. Practices on the unaffected portion of the bench see nothing unusual.\n\n**Dual library period**\n\nNine months of two libraries is a real administrative burden and the shade-consistency risk is genuine. However, the pilot has already demonstrated this for four months without apparent catastrophic failure, and the 40-remake figure already captures much of the material consequence. The library overhead is bounded and temporary.\n\n**Timeline adequacy**\n\nAVENSWOOD completes the transition on 2027-10-04; KIRKBANE on 2027-12-04. Both sit roughly eight months inside the 2028-06-30 Kessendale end-of-support date. Neither course is pressured by the deadline.\n\n**Summary**\n\nKIRKBANE pays a firm GBP 44,000 to concentrate and shorten the pain. AVENSWOOD avoids that payment, spreads the quality impact thinly across the practice base, and incurs cross-system remake costs that the pilot data bounds well below GBP 44,000 even under generous assumptions. The financial and the client-relationship arguments point the same way.\n\n---\n\nCALL\nAVENSWOOD\n\nGROUNDS\nThe GBP 44,000 overtime that KIRKBANE commits unconditionally exceeds every defensible estimate of AVENSWOOD's cross-system remake liability, and AVENSWOOD also prevents all forty practices from experiencing a simultaneous quality deterioration.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-xdo4mrj_"
+  },
+  "cost_usd": 0.10973500000000001,
+  "duration_ms": 125902,
+  "session_id": "257a38ed-b271-4491-9f2a-3bd3e7d227c6",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7060,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 7060,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 127.02256298065186,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

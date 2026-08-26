@@ -1,0 +1,61 @@
+{
+  "opaque": "T08",
+  "item_id": "K05",
+  "ordering": "AB",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The grant-threshold arithmetic**\n\nThe figure of 31.8 per cent that makes PENDLARROW attractive is calculated on the year-to-March-2026 base, using last year's turnover as the denominator. The assessment, however, does not look at last year's accounts: it reads \"the annualised value of the work in force on that date\" \u2014 2027-04-30, roughly thirteen months away.\n\nOver that interval, small animal keeps growing at its four-year run rate of 11 per cent per year. Starting from \u00a31,336,000:\n\n- Year to March 2027: \u00a31,336,000 \u00d7 1.11 = \u00a31,482,960\n- Annualised rate at April 2027 \u2248 \u00a31,483,000\n\nExisting farm and equine has been flat for three years; there is no reason to expect anything other than \u00a3504,000. Ardgowrie, if taken and still active on 2027-04-30, contributes \u00a3118,000 annualised.\n\n| Item | \u00a3 |\n|---|---|\n| Farm & equine (existing) | 504,000 |\n| Ardgowrie annualised | 118,000 |\n| Farm & equine total | **622,000** |\n| Small animal (April 2027 run rate) | **1,483,000** |\n| Total annualised in force | **2,105,000** |\n| Farm & equine ratio | **29.55 %** |\n\nThe threshold is 30 per cent. As the numbers stand, PENDLARROW misses it by approximately 0.45 percentage points \u2014 about \u00a39,500 of additional farm and equine revenue needed, with no identified source. The grant is therefore probably unavailable. If the practice takes on a burdensome new contract, hires a dedicated vet, buys a vehicle, and commits to holding 900 cattle until 2030, it is doing all of that for a grant it will most likely not collect.\n\nThe 31.8 per cent figure was worked out on a static base. The small animal growth in the denominator was not carried forward to the assessment date. This is the central analytical gap in the PENDLARROW case as presented.\n\n**Cash position under each course**\n\nWESTERGATE pays \u00a3260,000 from the \u00a3310,000 deposit, leaving \u00a350,000. Not large, but workable for a practice with \u00a31.84 m of annual turnover.\n\nPENDLARROW pays \u00a3260,000 for the fit-out and \u00a334,000 for the vehicle, leaving \u00a316,000. That is dangerously thin \u2014 roughly four days of practice payroll \u2014 before a single piece of work is done at Ordsall Green. The grant, if it came through at all, would not arrive until mid-2027, well after the cash low point. There is no borrowing headroom identified.\n\n**The Ardgowrie contract on its own terms**\n\nEven setting aside the grant, the contract has a specific warning signal: the outgoing practice held it for nine years and then surrendered it. The stated reason on the handover call was the night call-out load. This is not a generic operational grumble; it is the precise reason a long-standing practice gave back a 900-head dairy contract. Dairy herds call out at night for calvings, mastitis emergencies, and metabolic crises. Kirstie Ballantyne-Rowe says she would move with the contract, which is helpful, but it also means she has been doing those nights and knows exactly what she is selling. Whether she can sustain that alone, or whether night cover falls partly on existing partners, is unresolved.\n\nIf the contract proves unsustainable and the practice tries to exit before 2030-04-30, the full \u00a3100,000 grant is repayable \u2014 assuming it was ever awarded. The lock-in is real and the exit cost is large.\n\n**The comparative return on PENDLARROW even if everything works**\n\nRevenue from Ardgowrie: \u00a3118,000\nDirect cost (dedicated vet): \u00a371,000\nNet contribution before vehicle running costs, drugs, administration, and management time: \u00a347,000 per year\n\nThe vehicle is a further \u00a334,000 capital outlay. The net cash from Ardgowrie does not cover the vehicle cost until well into the second year. The grant of \u00a3100,000, if achievable, would recover the vehicle and roughly two years of net vet cost. That is a reasonable payback \u2014 but only if the grant is paid.\n\n**Trend alignment**\n\nThe practice's natural trajectory is small animal growth (11 per cent per year, four years of evidence) alongside flat farm and equine. WESTERGATE aligns with that trajectory: the new Ordsall Green site serves the growing side of the book, and the next hire goes into the service that is actually expanding. PENDLARROW asks the practice to invest heavily in the flat side, take on a contract that a direct predecessor found unsustainable, and bet the \u00a3100,000 grant on a ratio that the arithmetic of the practice's own growth probably defeats.\n\n**Summary**\n\nPENDLARROW's financial justification rests almost entirely on the \u00a3100,000 grant. That grant requires 30 per cent farm and equine at the April 2027 assessment. Small animal growth between now and then carries the ratio to approximately 29.55 per cent \u2014 below the threshold. Without the grant, PENDLARROW takes a difficult night-rota contract, a four-year lock-in, a thin cash position, and a new hire, in exchange for \u00a347,000 per year of net contribution before overheads, with no capital recovery mechanism. WESTERGATE foregoes the grant but retains cash, avoids the rota risk, and deploys the next hire where the growth is.\n\n---\n\nREADING\nThe 31.8 per cent ratio used to justify PENDLARROW is calculated on the March 2026 base, but the April 2027 assessment will read annualised figures by which point eleven-per-cent small animal growth has pushed the farm and equine share to roughly 29.55 per cent \u2014 below the thirty-per-cent grant threshold. That makes the grant the practice would be accepting night call-outs and a four-year lock-in to capture very probably unavailable. Beyond the grant, the cash position after fit-out and vehicle purchase falls to around \u00a316,000 (dangerous for a fifteen-person practice), the contract was surrendered by its previous holder specifically because of night call-out burden, and the lock-in until 2030 removes any ability to exit without repaying in full. WESTERGATE leaves \u00a350,000 cash, no new rota risk, no lock-in, and deploys the next hire into the segment that has grown eleven per cent a year for four years.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe thirty-per-cent farm-and-equine threshold for the grant will almost certainly not be met at the April 2027 assessment once small animal growth is carried forward to that date, removing the financial case for accepting the night-call risk, the cash exposure, and the four-year lock-in that PENDLARROW requires.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-kurbxf0p"
+  },
+  "cost_usd": 0.12815390000000002,
+  "duration_ms": 153415,
+  "session_id": "47acbc69-0fd4-4c1d-a83a-75eafb8189e6",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1123,
+    "output_tokens": 8420,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 8420,
+        "cache_read_input_tokens": 1123,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 154.64779686927795,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

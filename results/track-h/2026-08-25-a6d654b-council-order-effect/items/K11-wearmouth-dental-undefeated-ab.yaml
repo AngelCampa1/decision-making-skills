@@ -1,0 +1,211 @@
+# Track H order-effect item K11, stratum: undefeated, ordering: AB.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K11
+stratum: undefeated
+stratum_alias_v1: tie
+ordering: AB
+first_course: KIRKBANE
+second_course: AVENSWOOD
+pair: K11-wearmouth-dental-undefeated-ba.yaml
+domain: dental_laboratory_system_changeover
+mechanism: learning-curve
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [KIRKBANE, AVENSWOOD, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Sunniva Aldreth-Kyle and I own Wearmouth Dental Laboratory. Twelve
+  technicians, forty practices, zirconia crowns and bridges, 31 units a day
+  across 250 working days.
+
+  We are moving off the Kessendale design system, which loses support on
+  2028-06-30. The question is how fast, and the answer turns on what our own
+  pilot measured.
+
+  - Two technicians moved to the new system on 2026-05-04. Their remake rate
+    ran at 11.4% across 300 units and 4.2% across the 300 after those. At
+    900 units they are at 3.4%.
+  - The laboratory's settled remake rate on the Kessendale system is 3.1%. A
+    remake costs us GBP 96 in materials and technician time.
+  - So a technician crossing the curve carries about 28 remakes more than par,
+    and ten technicians have yet to cross it. That bill is GBP 27,072 and it is
+    the same under either course.
+  - A technician gets through 646 units a year, so the crossing takes about
+    eleven months.
+  - The pilot pair also remade 40 cases in four months for no reason except
+    that the case moved between systems part way through treatment.
+  - Overtime to hold output through a changeover is quoted at GBP 44,000.
+  - Our shade notes and material library exist twice while both systems run,
+    and the practices work from ours.
+
+  Two courses are on the table.
+
+  Course KIRKBANE. Move the remaining ten technicians together from 2027-01-04
+  and pay the GBP 44,000 of overtime to hold output up. One shade library, one
+  material library, and no case that can cross between systems part way
+  through treatment. Every bench is on 11.4% at the same time, and forty
+  practices see it in the same month. The whole crossing is behind us by
+  2027-12-04.
+
+  Course AVENSWOOD. Move three at a time on 2027-01-04, 2027-04-05 and
+  2027-07-05, with the last technician across on 2027-10-04. Three quarters of
+  the bench stays at 3.1% throughout and the GBP 44,000 of overtime is not
+  spent. We run two systems for nine months, two shade libraries with them,
+  and the pilot logged 40 crossing remakes in four. Nobody is on the steep
+  part alone.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism_note: >-
+    Learning-curve. Output quality is a function of units accumulated on a
+    system, measured here rather than assumed: 11.4%, then 4.2%, then 3.4%
+    against a settled 3.1%. The total cost of crossing is fixed at GBP 27,072
+    because the curve is per technician and every technician crosses it, so the
+    decision is entirely about the shape of the crossing and not its size.
+  mechanism_honesty: >-
+    The capacity dip under KIRKBANE could be read as a rate problem, and it is
+    not the mechanism: the dip is a consequence of the error rate, the error
+    rate is a function of accumulated units, and nothing in the item turns on
+    throughput per hour. The figure that decides it is a remake percentage
+    against units, which is a curve.
+  why_neither_is_defeated: >-
+    The remake bill is GBP 27,072 under both courses and both finish inside the
+    2028-06-30 support date, so neither is defeated on money or on time.
+    AVENSWOOD keeps three quarters of the bench on a settled 3.1% at any
+    moment, avoids the GBP 44,000 of overtime and is the lean. Against it
+    stands nine months of two systems in one building, two shade libraries the
+    practices work from, and the pilot's own 40 cases remade for crossing
+    between systems in four months at two technicians. KIRKBANE puts the whole
+    bench on the steep part at once and is finished with it. A reader who
+    weights the depth of the dip lands on AVENSWOOD, a reader who weights
+    the cost of running two systems lands on KIRKBANE, and both readings use
+    every figure given.
+  case_for_KIRKBANE: >-
+    The GBP 27,072 is spent under either course, so what is actually being
+    chosen is how long the laboratory runs two of everything. Moving the bench
+    together buys one shade library, one material list, one set of practice
+    instructions and no case that can cross between systems mid-treatment,
+    which is the failure the pilot logged 40 times in four months with two
+    technicians on it. It also puts the crossing behind the laboratory eleven
+    months before the support date rather than three, which is the margin that
+    matters if the new system turns out to need anything. GBP 44,000 of
+    overtime is a quoted number for a known period, and a quoted number is the
+    cheapest kind of risk this decision contains.
+  case_for_AVENSWOOD: >-
+    Putting twelve technicians on an 11.4% remake rate in the same week is a
+    laboratory-wide quality event, and forty practices see it at once. Moving
+    three at a time holds three quarters of the bench at 3.1% throughout, keeps
+    every crossing inside normal hours and saves the GBP 44,000 that overtime
+    would cost to hold output up. The curve is the same length whichever way it
+    is walked and the bill is identical, so the only thing being traded is
+    concentration of risk against duration of it, and the laboratory's own
+    pilot shows the steep part is steep: 11.4% is nearly four times par. Two
+    shade libraries for nine months is a nuisance the bench manages; a fortnight
+    where every practice gets a remake is a reputation.
+  arithmetic: >-
+    Excess remakes per technician: 300 x (11.4 - 3.1)% + 300 x (4.2 - 3.1)% =
+    24.9 + 3.3 = 28.2, taken as 28. Ten technicians: 282 remakes x GBP 96 =
+    27,072. Units a year: 31 x 250 = 7,750 across 12 technicians = 646 each, so
+    600 units of curve is about eleven months. AVENSWOOD cohorts: three on
+    2027-01-04, 2027-04-05, 2027-07-05 and one on 2027-10-04, the last moved
+    twenty months before support ends on 2028-06-30.
+  internal_consistency: >-
+    Figures stated more than once, checked against each other. Technicians:
+    twelve in the opening line, two on the pilot and ten yet to cross, which
+    closes. Units: 31 a day x 250 days = 7,750, divided by twelve = 646 a
+    technician, the figure the eleven months is derived from. Remakes: 28 a
+    technician x 10 = 280, and the stated bill of GBP 27,072 is 282 x 96,
+    because 28.2 is the unrounded figure; the item states the bill and the
+    per-technician figure as "about 28", so the two do not contradict.
+    Percentages: 11.4, 4.2, 3.4 and par 3.1 each appear once. No figure is
+    stated twice with different values.
+  information_timeline: >-
+    Earliest date each course can be taken, against the date its defending
+    figures lapse. Both courses start 2027-01-04 and the Kessendale support
+    date is 2028-06-30. KIRKBANE: ten technicians cross from 2027-01-04 and
+    reach par about 2027-12-04, eighteen months before support ends. AVENSWOOD:
+    cohorts on 2027-01-04, 2027-04-05, 2027-07-05 and 2027-10-04, so the last
+    technician leaves the old system twenty months before support ends and
+    reaches par about 2028-09, which is after the support date and does not
+    matter, because support is on the system being left. The GBP 44,000
+    overtime quote and the pilot measurements are both dated 2026 and neither
+    is an offer that lapses. Nothing that defends either course expires before
+    that course can be taken.
+  why_a_reader_commits: >-
+    The bill is identical under both courses, so a reader who calls it even is
+    saying the shape of a risk does not matter, which is a position rather than
+    an abstention and one the pilot's 11.4% argues against. Both courses also
+    have to start in the same week of January, so the laboratory cannot hold
+    the question open and still have both of them.
+  authors_lean: >-
+    AVENSWOOD, printed second under AB. The lean is the GBP 44,000 avoided and
+    three quarters of the bench held at par, and it is a lean rather than a
+    defeat: nine months of two libraries and the pilot's 40 crossing remakes
+    are live arguments against it that no figure in the item settles.
+  checks:
+    dates:
+      - "2026-05-04 before 2026-08-25  # the pilot measurements predate the question"
+      - "2027-01-04 after 2026-08-25  # both courses start in the future"
+      - "2027-01-04 before 2027-04-05  # AVENSWOOD's cohorts run in order"
+      - "2027-04-05 before 2027-07-05  # and the third follows the second"
+      - "2027-07-05 before 2027-10-04  # and the last technician follows the third"
+      - "2027-12-04 before 2028-06-30  # KIRKBANE is through the crossing before Kessendale support ends"
+      - "2027-10-04 before 2028-06-30  # AVENSWOOD's last cohort moves before Kessendale support ends"
+    arithmetic:
+      - "300 * (11.4 - 3.1) / 100 + 300 * (4.2 - 3.1) / 100 == 28.2  # excess remakes across one technician's curve"
+      - "(300 * (11.4 - 3.1) / 100 + 300 * (4.2 - 3.1) / 100) * 10 * 96 == 27072  # ten technicians at GBP 96 a remake"
+      - "28 * 10 * 96 < 27072  # the rounded 28 understates the stated bill, which uses 28.2"
+      - "31 * 250 == 7750  # units a year across the laboratory"
+      - "31 * 250 / 12 < 646  # the stated 646 a technician is a round-up of this"
+      - "31 * 250 / 12 > 645  # and it rounds from here"
+      - "(300 + 300) / 646 * 12 > 11  # 600 units of curve takes about eleven months"
+      - "(300 + 300) / 646 * 12 < 12  # and under a year"
+      - "900 > 300 + 300  # the pilot's 900 units cover both measured blocks"
+      - "11.4 / 3.1 > 3.6  # the steep part of the curve is nearly four times par"
+      - "11.4 / 3.1 < 4  # nearly four times, not four"
+      - "44000 > 27072  # the overtime quote exceeds the remake bill both courses pay"
+  admissible_calls: [KIRKBANE, AVENSWOOD, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

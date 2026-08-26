@@ -1,0 +1,61 @@
+{
+  "opaque": "T14",
+  "item_id": "K04",
+  "ordering": "AB",
+  "draw": 5,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What the numbers actually say**\n\nStart with the gap. Peak-week 2031 demand is forecast at 15.4 ML/day against a rated works of 14.2 ML/day: a structural shortfall of 1.2 ML/day.\n\n*SKELWITH's adjusted yield.*\nThe Kilvaddy programme returned 1.1 against a forecast 1.3 \u2014 a delivery ratio of 84.6 %. Applying that to the 1.4 ML/day forecast gives 1.18 ML/day. That is 0.02 ML/day below the 1.2 ML/day gap. At best, on full occupation in 2031, the scheme leaves the works running at approximately 14.22 ML/day against a rated 14.2 \u2014 essentially at the hard ceiling, with no margin for any deviation in demand or outturn. Then comes drift: at 0.1 ML/day per year without further capital, by 2032 the saving is down to 1.08 ML/day and the shortfall is 0.12 ML/day; by 2033 it is 0.22 ML/day. The \u00a32.5M saved from the current envelope buys nothing structural \u2014 it would need to be recycled into a maintenance programme in the next period (settled December 2029) just to hold position.\n\n*HARBOTTLE's seasonal constraint.*\nCullivoe adds 3.0 ML/day rated, taking combined capacity to 17.2 ML/day \u2014 1.8 ML/day above the 2031 forecast in normal conditions. The hands-off flow condition is a real interruption: abstraction stops when the Vraich burn drops below 12.1 ML/day, which happened on 41 days in 2022 and 29 days in 2025, all in summer. During those periods the board runs on Ashcombe alone at 14.2 ML/day against peak demand of 15.4, a deficit of 1.2 ML/day. At that rate, 62 ML of treated storage covers approximately 51.7 days (62 \u00f7 1.2). The worst recorded year (2022) saw 41 restricted days \u2014 comfortably within that window. Furthermore, the 2022\u20132025 comparison (41 vs 29 days) does not prove a trend but neither does it suggest the condition is worsening. Even if days are clustered rather than evenly distributed, the storage buffer of nearly 52 days provides real resilience, and the shortfall only bites during the June\u2013September window when the board can manage demand-side measures alongside drawdown.\n\n**Timing**\n\nSKELWITH's early start (first tranche April 2027) is a genuine advantage: partial loss savings arrive before HARBOTTLE's June 2029 commissioning. However, the homes are also phased from 2027, so demand grows in parallel. The works has roughly 0.6 ML/day of spare rated capacity now (14.2 \u2212 13.6). If 1,900 homes occupy progressively, that buffer is consumed before mid-2028. SKELWITH's partial savings in 2027\u20132028 help offset incremental demand in that window, but the scheme never reaches adequacy even when complete.\n\nHARBOTTLE introduces a commissioning gap (no new capacity until mid-2029) but the risk in that window is modest: phased occupation and existing spare rated headroom provide a degree of cover, and the July peak in 2026 at 13.6 ML/day shows there is still room before the rated ceiling is hit.\n\n**Capital position**\n\nBoth quotations are within the \u00a311.2M envelope; the board cannot fund both. SKELWITH frees \u00a32.5M, which sounds attractive but \u2014 given drift and the residual gap \u2014 that money would be consumed by mains maintenance in the next period just to stop going backwards. HARBOTTLE spends \u00a32.5M more but delivers a permanent, licensed asset that is not subject to material degradation, and whose rated capacity (3.0 ML/day) exceeds the gap (1.2 ML/day) by a factor of 2.5, giving headroom for growth beyond 2031 and a credible story for the regulator.\n\n**The decisive asymmetry**\n\nSKELWITH does not close the gap at the Kilvaddy ratio. It never does. It gets to within 0.02 ML/day of adequacy on the day it is complete and then retreats. That is not a scheme that resolves the board's statutory supply obligation; it is a scheme that defers it. HARBOTTLE resolves it, subject to a seasonal abstraction constraint whose worst recorded manifestation (41 days) sits within the storage cover the board already holds (51 days). The risk is quantified and bounded. The insufficiency of SKELWITH is structural and continuous.\n\n---\n\nREADING\nSKELWITH's adjusted yield (1.18 ML/day) falls 0.02 ML/day short of the 1.2 ML/day structural gap on the day it is complete, then drifts back at 0.1 ML/day annually without further capital, whereas HARBOTTLE's seasonal abstraction constraint is bounded by historical data (41 days maximum) that falls within the board's existing 51-day storage cover (62 ML \u00f7 1.2 ML/day), making it the only option that actually closes the statutory supply shortfall to 2031 and beyond.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH demonstrably fails to close the 1.2 ML/day gap even at its adjusted best and then retreats further through drift, whereas HARBOTTLE's hands-off flow restriction is covered in every recorded year by the board's existing 62 ML of treated storage, making it the only course that actually discharges the supply obligation.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-jq6n5lc2"
+  },
+  "cost_usd": 0.0779173,
+  "duration_ms": 100235,
+  "session_id": "dbe0001c-bbe0-4152-a5c2-794761926611",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 5069,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5069,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 101.4586591720581,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "opaque": "S01",
+  "draw": 1,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers first**\n\nThe bequest is GBP 340,000 and must be fully spent by 2028-09-30.\n\nHAVERSHOLT: GBP 295,000 plant + GBP 45,000 conservation \u2248 180 items treated. Spend is complete and the plant is running.\n\nLINDCASTER: GBP 340,000 \u00f7 GBP 250 = 1,360 items treated. At 70 items a month, starting eight weeks after an order placed immediately (call it late October 2026), 1,360 items takes roughly nineteen and a half months, finishing around May 2028. Comfortably within the deadline.\n\nThe numerical case for LINDCASTER looks compelling at first: 1,360 vs 180 items is a ratio of 7.5 to 1. The collection is losing 62 items a year to the unusable band and 1,010 are already there. Treating 1,360 speaks directly to that emergency.\n\n**The quote and ordering window**\n\nThrelkeld's quote of GBP 295,000 is held to 2027-01-30. The order must be placed fourteen weeks before the 2027-05-29 commissioning date, which works back to approximately 2027-02-20. Ordering by 2027-01-30 satisfies both conditions simultaneously. Today is 2026-08-25, so there is five months to place the order \u2014 enough time, but not unlimited. This does not affect the recommendation materially, but it means the decision needs to be taken and acted on before the end of January 2027.\n\n**What the buffered enclosures actually do under LINDCASTER**\n\nThis is the pivotal technical point. The enclosures are described as holding \"an item's own microclimate within 3 points of its packing condition for eight to twelve years.\" The packing condition is the strongroom's current ambient: 62 per cent RH. Three points either side gives 59\u201365 per cent. The items are not being held in a correct environment; they are being held in a slightly stabilised version of the wrong environment. The conservation standard is 45\u201355 per cent. The buffered enclosures do eliminate the 11-point seasonal swing \u2014 that is genuine benefit \u2014 but they do not address the fundamental problem of chronic high humidity.\n\n**The conservator's written report**\n\nIdris Sankey-Marchmont states in writing that rehousing and aqueous treatment carried out in the strongroom as it stands will need to be repeated within a decade. This statement encompasses exactly what LINDCASTER proposes. Given that the packing condition under LINDCASTER remains around 62 per cent RH, the conservator's assessment applies directly: the GBP 340,000 of treatment is work that will need to be done again.\n\nThis is not a risk or a probability. It is the professional judgement of the conservator recorded in writing.\n\n**The 2029-30 capital programme**\n\nLINDCASTER relies on the plant being funded from the 2029-30 capital programme. The facts given are: there is an unallocated GBP 400,000 line, nothing is committed against it, and the board sets it in November 2028. Three things are true simultaneously: the money exists on paper, it is not committed, and the decision lies with a board that has not yet been asked. This is a meaningful contingency, not a near-certainty. If the board redirects or defers that line, the institute arrives in 2030 with:\n\n- No climate control\n- Conservation work approaching the end of its effective life (the enclosures' eight-to-twelve year window)\n- No remaining bequest money\n- The conservator's warning validated\n\nEven if the board does approve the plant, there is a further question of cost. The Threlkeld quote is for GBP 295,000 in 2026. By 2029-30, without a current quotation, the GBP 400,000 line may or may not cover a plant of equivalent specification. The margin exists, but so does the risk.\n\n**What happens to the 1,010 unusable items under each course**\n\nUnder LINDCASTER, prioritising the 1,360 items from the condition resurvey will reach many of the unusable items. That is a real benefit. But treatment in current conditions will need repeating, and the environment driving further deterioration in the remaining 2,840 items is unchanged.\n\nUnder HAVERSHOLT, the 180 items treated post-commissioning are a small number. The 1,010 unusable items are largely untouched. However, the fixed environment halts the environmental pressure on all 4,200 items, including the unusable cohort. The rate of items entering the unusable band (62 per year) effectively drops to near zero for environmental causes once the plant is running in May 2027 \u2014 well over a year before the bequest deadline. The 2029-30 programme's GBP 400,000, if the board approves it, would then fund conservation in correct conditions: work that the conservator confirms will not need to be repeated.\n\n**The asymmetry of risk**\n\nIf HAVERSHOLT is chosen and the 2029-30 programme does not materialise: the environment is fixed, the 180 items are treated correctly, and the institute makes future conservation cases from a stable platform. No money has been wasted.\n\nIf LINDCASTER is chosen and the 2029-30 programme does not materialise: the entire GBP 340,000 has been spent on treatment the conservator says will need repeating, the environment is still wrong, and the collection continues to deteriorate. The money is gone and the problem is unresolved.\n\nThe downside of HAVERSHOLT failing is inconvenience. The downside of LINDCASTER failing is spending the only dedicated bequest on work that cannot last.\n\n**The systemic argument**\n\nA correct environment is a prerequisite, not a luxury. Every item in the collection \u2014 all 4,200, not just the 1,360 that would be treated under LINDCASTER \u2014 benefits the moment the plant runs. Every subsequent conservation intervention, however funded, is done in conditions under which it will hold. The conservator has said as much. Fixing the environment first converts all future conservation spending, from whatever source, into durable expenditure. Not fixing it means every future pound spent faces the same caveat the conservator has already attached to LINDCASTER.\n\n**Summary of the deciding logic**\n\nLINDCASTER's scale advantage (1,360 items) is real but rests on two conditions that together constitute a significant dependency: that the buffered enclosures' protection outlasts the period before the plant is installed, and that the plant is installed. The first condition is imperfect because the packing condition is still 62 per cent RH. The second condition is not committed. The conservator has already told the institute what happens if either condition fails.\n\nHAVERSHOLT's weakness is the small treatment number (180 items). Its strength is that it resolves the root cause with money that exists, within a quote that is held, to a commissioning date that is scheduled, leaving the 2029-30 programme free to fund conservation work that will not need to be done twice.\n\n---\n\nCALL\n  HAVERSHOLT\n\nGROUNDS\n  The conservator's written finding that treatment in current conditions must be repeated within a decade, combined with the uncommitted status of the 2029-30 capital programme, means LINDCASTER risks spending the entire bequest on work that cannot be sustained, whereas HAVERSHOLT resolves the root cause within guaranteed funding and leaves future conservation \u2014 from whatever source \u2014 in conditions under which it will hold.",
+  "cost_usd": 0.100297,
+  "duration_ms": 118423,
+  "session_id": "c2106520-c05c-4c94-a72c-d19516fe1be1",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 6399,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 6399,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 119.67872881889343
+}

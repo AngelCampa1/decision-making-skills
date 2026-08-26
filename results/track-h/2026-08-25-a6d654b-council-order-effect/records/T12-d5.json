@@ -1,0 +1,61 @@
+{
+  "opaque": "T12",
+  "item_id": "K07",
+  "ordering": "BA",
+  "draw": 5,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers at face value**\n\nLINDCASTER reaches 1,360 items (GBP 340,000 \u00f7 GBP 250). HAVERSHOLT reaches 180 items (GBP 45,000 \u00f7 GBP 250) plus an environment fix for all 4,200. On raw item count, LINDCASTER looks three times more productive. The question is whether that productivity is real.\n\n**What Sankey-Marchmont's report actually says**\n\nThe conservator states in writing that rehousing and aqueous treatment carried out into the strongroom as it stands will need to be repeated within a decade. This is not a caveat or a preference \u2014 it is a professional finding about durability. LINDCASTER's entire spend of GBP 340,000 falls inside that sentence. Every item treated under LINDCASTER is an item that will need treating again. The money does not solve the problem; it defers it, and it does so at full price.\n\n**What buffered enclosures actually do**\n\nThe specification says buffered enclosures hold an item's microclimate within 3 points of its packing condition. Packing condition is the condition at the moment of packing \u2014 in a strongroom running at 62 per cent RH. Three points of buffer from 62 per cent RH is not 45\u201355 per cent RH. The enclosures do not lift items into the target environment; they slow the swings within the existing harmful one. They buy time, which is useful, but they do not change what the conservator's report is describing. Sankey-Marchmont's ten-year horizon and the enclosures' eight-to-twelve-year lifespan are telling the same story from different directions.\n\n**The deterioration rate and who it threatens**\n\nThe unusable band grew by 370 items between 2019 and 2025, roughly 62 items a year, one item about every six days. This is a rate, not a fixed event, and it is being driven by the environment. Under LINDCASTER, that rate continues after treatment because the environment continues. Under HAVERSHOLT, the commissioning of plant in May 2027 \u2014 nine months from today \u2014 begins to address the driver rather than the symptom. Approximately 46 items will cross into the unusable band in those nine months, which is a real loss, but it is against a trajectory of continued loss under either course so long as the environment is uncorrected.\n\n**The 2,900 at-risk items**\n\n2,900 items are on iron gall ink or acidic board. Iron gall is particularly sensitive to humidity: acid hydrolysis in the substrate accelerates materially above 55 per cent RH. At 62 per cent, with an 11-point annual swing, every one of those 2,900 items is degrading continuously. LINDCASTER treats 1,360 of them in a way that requires repetition. HAVERSHOLT stabilises all 2,900 from the moment of commissioning in a way that does not require repetition.\n\n**The timing and price constraints**\n\nThe Threlkeld quote is held to 2027-01-30. The order must be placed at least 14 weeks before the 2027-05-29 commissioning date, which puts the latest order date at approximately 19 February 2027. The quote expiry on 30 January is the binding constraint: an order placed by 30 January satisfies both the price lock and the lead-time requirement. Today is 25 August 2026, so roughly five months remain to make and act on the decision. This is enough time but it is not leisurely. If the board chooses HAVERSHOLT and delays into February 2027 without placing the order, the quoted price is no longer guaranteed. That risk is entirely manageable from today.\n\n**The 2029\u201330 capital line**\n\nGBP 400,000 sits in the 2029\u201330 programme, unallocated, with the board setting it in November 2028. This is not committed money. The appropriate weight to give it is therefore not zero \u2014 it exists, it is the right order of magnitude, the board will be setting it with a functioning plant in place and a clear conservation backlog \u2014 but it cannot be treated as certain. HAVERSHOLT's logic does not depend on that line materialising. The plant is justified on the permanence of what GBP 295,000 buys for all 4,200 items, independent of what happens in 2029\u201330. If the line does materialise, the arithmetic becomes compelling: 180 items treated durably now, plus up to 1,600 items (GBP 400,000 \u00f7 GBP 250) treated durably then, into an environment that makes the work last. That exceeds LINDCASTER's 1,360 items and every treatment is permanent rather than provisional.\n\n**The core asymmetry**\n\nLINDCASTER spends certain money on uncertain results. The conservator has confirmed the uncertainty in writing. HAVERSHOLT spends certain money on a certain outcome \u2014 a stable environment for all 4,200 items \u2014 and a smaller but also certain tranche of durable conservation. The residual risk under HAVERSHOLT is that the 2029\u201330 programme does not arrive, leaving a fixed environment and a treated cohort of 180 with no further conservation funded. The residual risk under LINDCASTER is that the 2029\u201330 programme does not arrive, leaving an unfixed environment, 1,360 items whose treatment is expiring, and no money left. HAVERSHOLT's downside is smaller and its upside is larger.\n\n**The irreversibility point**\n\nDocuments in the unusable band at 1,010 items represent knowledge and legal record already lost to researchers. That number rose by 58 per cent in six years. The mechanism producing that rise is the humidity. LINDCASTER does not address the mechanism. Every pound spent under LINDCASTER is spent downstream of the problem rather than at it.\n\n---\n\nREADING\nThe conservator's written finding that treatment into the current environment must be repeated within a decade means LINDCASTER spends GBP 340,000 on work explicitly described as non-durable, while HAVERSHOLT permanently stabilises the environment for all 4,200 items and ensures that every pound of conservation work \u2014 both now and from any future programme \u2014 produces a lasting result rather than a provisional one. The 2029\u201330 capital line, though not guaranteed, further favours HAVERSHOLT: if it arrives, the institute will have more durable treatments in total than LINDCASTER ever offered, and if it does not, HAVERSHOLT's downside is still better contained.\n\nCALL\nHAVERSHOLT\n\nGROUNDS\nSankey-Marchmont's written professional finding that conservation work in the current environment must be repeated within a decade renders LINDCASTER's entire GBP 340,000 spend explicitly non-durable, whereas HAVERSHOLT eliminates the causative mechanism permanently and ensures that every subsequent pound of conservation produces a lasting result.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-uegielqo"
+  },
+  "cost_usd": 0.09060700000000001,
+  "duration_ms": 112804,
+  "session_id": "9a16a6be-5bbb-47d0-84ab-a1af50d9da5c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 5753,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 5753,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 113.97707009315491,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

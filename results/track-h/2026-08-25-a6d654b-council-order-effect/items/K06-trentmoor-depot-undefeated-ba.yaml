@@ -1,0 +1,182 @@
+# Track H order-effect item K06, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K06
+block: A
+stratum: undefeated
+stratum_alias_v1: tie
+mechanism: date-chain
+ordering: BA
+first_course: ARDENSHAW
+second_course: KESTERWICK
+pair: K06-trentmoor-depot-undefeated-ab.yaml
+domain: regional_bus_operator
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [KESTERWICK, ARDENSHAW, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Aurelio Standish-Mbeki and I am managing director of Trentmoor Coaches.
+  We run 31 vehicles out of one depot at Hallowbrand: the tendered 44 and 44A
+  network for Verrancombe County, school contracts, and private hire.
+
+  The figures I have been given:
+
+  - Our Hallowbrand lease ends 2027-11-30. The landlord has offered ten years
+    from that date at GBP 214,000 a year, against GBP 141,000 now, and wants an
+    answer by 2026-12-19.
+  - The Culverstone site is available on ten years at GBP 118,000 a year,
+    the term running from the day we occupy. Faskally Estates hold it for us
+    until 2026-12-05, after which keeping the option costs a GBP 40,000
+    non-refundable deposit, and that deposit holds the site to 2028-06-30.
+  - Culverstone needs GBP 480,000 of works: hardstanding, a fuel island and a
+    two-bay workshop. Twenty-two weeks from the day consent is granted.
+  - The planning application was validated on 2026-08-14. Verrancombe's
+    published target for this class is 13 weeks. Over the last three years
+    their median on the class was 34 weeks and their slowest was 61 weeks.
+  - Nethercote Yard will take 31 vehicles on hardstanding with no workshop at
+    GBP 18,500 a month, month to month, at nine miles from Hallowbrand.
+  - Culverstone is three miles further from the 44 stand at Verrancombe Bridge
+    than Hallowbrand is. We run 22 vehicles on that network, 313 operating days
+    a year, and our cost model puts running cost at GBP 0.63 a mile.
+  - The 44 and 44A contract runs to 2028-03-31. Bids for the next term are due
+    2027-09-14, and depot cost goes into the bid as a fixed line.
+  - We hold GBP 640,000 in cash and a GBP 200,000 undrawn facility.
+
+  Two courses are on the table.
+
+  Course ARDENSHAW. Take the landlord's ten years at Hallowbrand and put
+  nothing into ground we will not own. GBP 214,000 a year is a workshop from
+  signature, no Verrancombe consent to wait on, and a depot cost priced into
+  the 2027-09-14 bid to the penny. We pay GBP 96,000 a year more than the
+  alternative and we are still Hallowbrand tenants in 2037.
+
+  Course KESTERWICK. Pay Faskally the deposit in December, let the Hallowbrand
+  offer go, and build out Culverstone. GBP 480,000 of works against GBP 96,000
+  a year of rent, less the dead mileage, is money we get back in ten years and
+  clear after that. On the slowest determination the county has recorded we
+  are on Nethercote, with no workshop, into 2028.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism: date-chain
+  mechanism_note: >-
+    The item turns on a chain of dates that must line up: an option lapsing on
+    2026-12-05, a lease answer due 2026-12-19, an application validated on
+    2026-08-14 against a 13 week target and a 34 week median, twenty-two weeks
+    of works after consent, a lease ending 2027-11-30, and a bid priced on
+    2027-09-14. Both commitment dates fall before the date that would resolve
+    the uncertainty. There is no committee and no decoy body: every date is a
+    contractual or statutory one and each one constrains the next.
+  arithmetic: >-
+    Ten years at Hallowbrand: 214,000 x 10 = 2,140,000. Ten years at
+    Culverstone: 118,000 x 10 = 1,180,000, plus 480,000 of works, plus dead
+    mileage of 22 vehicles x 6 miles x 313 days x GBP 0.63 = 26,029 a year,
+    260,290 over the term, giving 1,920,290. The gap is about GBP 220,000 in
+    Culverstone's favour over the ten years. Dates, from a validation of
+    2026-08-14: the 13 week target determines on 2026-11-13 and occupies on
+    2027-04-16; the 34 week median determines on 2027-04-09 and occupies on
+    2027-09-10, four days before the bid; the 61 week worst case determines on
+    2027-10-15 and occupies on 2028-03-17, which is 108 days past the lease
+    end and about GBP 65,700 of Nethercote hardstanding.
+  why_neither_is_defeated: >-
+    Both courses house 31 vehicles on a term the operator can afford and no
+    stated figure rules either out. KESTERWICK is about GBP 220,000 cheaper
+    across the ten years once the works and the dead mileage are both counted,
+    and the works are paid back inside the term. Against that it commits
+    GBP 40,000 and a declined lease before the determination date, and on the
+    county's worst recorded case it lands the operator on Nethercote
+    hardstanding with no workshop for 108 days, through the term the bid was
+    priced for. ARDENSHAW pays about GBP 220,000 more over ten years for a
+    working depot with a workshop, no consent to wait on, and a depot cost that
+    can be priced exactly into the 2027-09-14 bid. A reader who
+    weights the ten-year cost lands on KESTERWICK, a reader who weights the
+    consent risk against a fixed lease end and a fixed bid date lands on
+    ARDENSHAW, and both readings use every figure given.
+  information_timeline: >-
+    Read on 2026-08-25. Faskally hold Culverstone to 2026-12-05 and the GBP
+    40,000 deposit holds it to 2028-06-30, which is after the 2028-03-17
+    occupation date the county's worst recorded determination implies, so the
+    GBP 118,000 rent that defends KESTERWICK still stands on the latest date
+    the course can complete. The Hallowbrand answer is due 2026-12-19 and that
+    lease runs to 2027-11-30, so ARDENSHAW's GBP 214,000 is available at the
+    moment it must be accepted. The chain is deliberate: both commitments fall
+    before the determination that resolves them, and that is the item's
+    mechanism rather than a defect in it.
+  internal_consistency: >-
+    31 vehicles in total, 22 of them on the 44 and 44A network, and Nethercote
+    takes 31. 214,000 - 118,000 = 96,000, the figure both course paragraphs
+    name. Culverstone's ten years run from occupation, so a 2027-12-01 start
+    ends 2037-11-30, which is the 2037 the ARDENSHAW paragraph names. Every
+    date derives from the 2026-08-14 validation by a stated number of weeks. No
+    headcount, capacity or date is stated twice with different values.
+  why_a_reader_commits: >-
+    A deposit is payable on 2026-12-05 and a lease answer is due on 2026-12-19,
+    so the operator has to act before both dates whatever it concludes, and a
+    reader who has weighed GBP 220,000 across ten years against the county's
+    determination record has taken a position BALANCED does not express.
+  checks:
+    dates:
+      - "2026-08-14 before 2026-12-05  # the application was validated before the site option lapses"
+      - "2026-12-05 before 2026-12-19  # the Culverstone option lapses before the lease answer is due"
+      - "2026-12-05 after 2026-08-25  # the option deadline is in the future when the question is asked"
+      - "2028-06-30 after 2027-11-30  # the deposit holds the site past the end of the Hallowbrand lease"
+      - "2027-09-14 before 2027-11-30  # the depot cost is priced into the bid before the lease ends"
+      - "2027-09-14 before 2028-03-31  # bids fall due before the current 44 and 44A contract ends"
+    arithmetic:
+      - "214000 - 118000 == 96000  # the annual rent difference both course paragraphs name"
+      - "214000 * 10 - 118000 * 10 == 96000 * 10  # the annual rent gap taken across the ten-year term"
+      - "118000 * 10 + 480000 == 1660000  # ten years at Culverstone plus the works"
+      - "22 * 3 * 2 * 313 * 0.63 > 26029  # dead mileage a year, three miles each way on the 44 network"
+      - "(214000 * 10) - (118000 * 10 + 480000 + 22 * 3 * 2 * 313 * 0.63 * 10) > 219000  # the ten-year gap"
+      - "(214000 * 10) - (118000 * 10 + 480000 + 22 * 3 * 2 * 313 * 0.63 * 10) < 221000  # about GBP 220,000"
+      - "640000 + 200000 > 480000 + 40000  # cash and facility cover the deposit and the works"
+      - "480000 < 640000  # the works are covered by cash alone"
+      - "(13 + 22) * 7 < 473  # on the published target the depot is ready inside the 473 days to the lease end"
+      - "(34 + 22) * 7 < 473  # on the county's median it is still ready before the lease ends"
+      - "(61 + 22) * 7 > 473  # on the county's slowest recorded case the chain overruns the lease end"
+      - "(34 + 22) * 7 < 396  # on the median the depot is occupied inside the 396 days to the bid date"
+  admissible_calls: [KESTERWICK, ARDENSHAW, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

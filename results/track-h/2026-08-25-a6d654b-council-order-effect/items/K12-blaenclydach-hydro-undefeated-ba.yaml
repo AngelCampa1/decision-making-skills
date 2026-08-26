@@ -1,0 +1,223 @@
+# Track H order-effect item K12, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K12
+stratum: undefeated
+stratum_alias_v1: tie
+ordering: BA
+first_course: LINTHAUGH
+second_course: PENNYQUAY
+pair: K12-blaenclydach-hydro-undefeated-ab.yaml
+domain: micro_hydro_in_river_works_window
+mechanism: regulatory-window
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [PENNYQUAY, LINTHAUGH, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Rhoswen Tudgay-Merrick and I run Blaenclydach Hydro, a 240 kW
+  run-of-river scheme on the Afon Perrig. Two of us, one turbine, and a loan of
+  GBP 480,000 running to 2039.
+
+  Everything here follows from one permitted period:
+
+  - In-river works are lawful between 1 July and 30 September and at no other
+    time. The works take six weeks either way.
+  - Our abstraction licence expires on 2028-05-31 and the renewal must be
+    lodged twelve months out, by 2027-05-31, which falls before that period
+    opens.
+  - A renewal file counts as complete only with a fish-pass compliance
+    certificate. Our 2011 intake screen cannot earn one and the replacement
+    screen can. The certificate follows within six weeks of the screen being
+    commissioned.
+  - The Rivers Board grants works outside the period under a dry-weather
+    derogation. They granted four of eleven in 2025 and decided all eleven in
+    fourteen weeks. Every refusal they published named a scheme with no dated
+    regulatory driver. An application costs GBP 9,000.
+  - A derogation lodged on 2026-10-19 is decided on 2027-01-25. A refusal on
+    that date leaves eighteen weeks to lodge the renewal another way.
+  - Vossbeck Turbinen will hold a February slot for the screen and the bearing
+    set against a GBP 46,000 deposit, payable 2026-12-01 and not returnable
+    after that date. A July slot needs no deposit and they confirm it by
+    2027-04-30.
+  - A February outage costs us 168 MWh of export and a July outage 74 MWh. We
+    are paid 11.4 p/kWh to 2028-03-31.
+  - The Board's practice is to accept a dated undertaking in place of a
+    certificate. Cadgarth in 2024 and Nant Elwy in 2025 both filed that way and
+    both were renewed for six years rather than fifteen.
+  - Our bank wrote on 2026-06-22 that a licence term shorter than the loan
+    would put the facility under review.
+
+  Two courses are on the table.
+
+  Course LINTHAUGH. Apply for it on 2026-10-19, pay Vossbeck GBP 46,000 on
+  2026-12-01 and hold on to the February slot. Granted on 2027-01-25, the
+  screen goes in by the middle of March, the certificate follows and the
+  renewal is lodged complete. It costs GBP 9,000 to apply and GBP 19,152 in
+  winter export, and a refusal on that date leaves us the undertaking route.
+
+  Course PENNYQUAY. Lodge the renewal by 2027-05-31 with the 2011 intake
+  screen and a dated undertaking, then fit intake screen and bearing set in
+  the July window for a GBP 8,436 outage and no deposit at risk. The Rivers
+  Board has accepted undertakings before, and Cadgarth and Nant Elwy were both
+  renewed on that route for six years against a loan running to 2039.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism_note: >-
+    Regulatory-window. One action is lawful only inside a stated period, the
+    period opens after the deadline that needs the action's output, and the
+    exception to the period is discretionary and priced. The item turns on
+    whether to buy the exception or to file without what the exception would
+    have produced.
+  mechanism_honesty: >-
+    This item has a date-chain surface and block A holds date-chain, so the
+    distinction is worth stating rather than asserting. A date-chain item turns
+    on a sequence of dependent deadlines any one of which could move. This one
+    turns on a single permitted period that cannot move at all, a discretionary
+    exception to it with a published grant rate, and a deposit that has to be
+    committed before the exception is decided. Remove the July to September
+    period and there is no decision left; remove any one of the other dates and
+    there still is.
+  why_neither_is_defeated: >-
+    Both courses lodge a renewal by 2027-05-31 and both leave the scheme
+    generating, so neither is defeated on the dates. PENNYQUAY costs nothing
+    beyond the July outage the bearings needed anyway and carries no
+    forfeitable deposit, which is the lean, and it is priced: LINTHAUGH puts
+    GBP 55,000 at risk against a published grant rate of four in eleven, and
+    the winter outage costs GBP 10,716 more than the summer one. Against that
+    stands the only evidence anyone has on the undertaking route, which is two
+    schemes renewed for six years against a loan running to 2039 and a bank
+    that has written about it. A reader who weights the money at risk lands on
+    PENNYQUAY, a reader who weights the licence term against the loan lands on
+    LINTHAUGH, and both readings use every figure given.
+  case_for_PENNYQUAY: >-
+    The undertaking route is the Board's own published practice and both
+    schemes that used it were renewed. It costs nothing, forfeits nothing and
+    takes the July outage the bearings needed anyway at GBP 8,436 rather than
+    GBP 19,152. LINTHAUGH commits a GBP 46,000 deposit on 2026-12-01 against a
+    decision that does not arrive until 2027-01-25, on a route the Board
+    refused seven times in eleven, and adds GBP 9,000 of application costs
+    whichever way it goes. A six-year term is a term and a bank review is a
+    review; neither is a demand for repayment, and the scheme will have a
+    compliant screen and a certificate in hand well inside six years to take
+    to it.
+  case_for_LINTHAUGH: >-
+    The renewal is the asset. A fifteen-year term matches a loan running to
+    2039 and a six-year term does not, and the bank has already said in writing
+    what a short term does to the facility. The two schemes on record for the
+    undertaking route both came back at six years, so PENNYQUAY is the course
+    whose only precedents produced the outcome the bank warned about. The
+    published grant rate of four in eleven is drawn from applications the Board
+    refused for having no dated regulatory driver, and this scheme has one on
+    the file. GBP 55,000 at risk is a real price for lodging a complete file,
+    and it is small against refinancing GBP 480,000 nine years early.
+  arithmetic: >-
+    Export, six weeks either way: 168 MWh x 11.4p = 19,152 for a February
+    outage; 74 MWh x 11.4p = 8,436 for July; difference 10,716. Both sit under
+    the 240 kW nameplate, which caps a six-week outage at 242 MWh. LINTHAUGH
+    exposure: 9,000 application + 46,000 deposit = 55,000 at risk, plus the
+    10,716 export difference if granted. Published grant rate 4/11 = 0.364.
+    The period opens 2027-07-01 and the lodging deadline is 2027-05-31, so the
+    certificate cannot exist by the deadline without a derogation. Deposit
+    committed 2026-12-01, decision 2027-01-25, so 46,000 is committed 55 days
+    before the answer.
+  internal_consistency: >-
+    Figures stated more than once, checked against each other. The outage
+    length is six weeks and is stated once, and both export figures are derived
+    from it. Export: 168 MWh and 74 MWh appear once each in the bullets and
+    again as GBP 19,152 and GBP 8,436 in the course paragraphs, and 11.4p
+    converts each exactly. Both sit under the 240 kW nameplate, which caps a
+    six-week outage at 242 MWh, so neither figure asserts more generation than
+    the scheme can make. Derogation: four of eleven stated once, and the case
+    paragraphs use it as four granted and seven refused. Dates: 2026-10-19,
+    2027-01-25, 2026-12-01 and 2027-05-31 each appear once in the bullets and
+    are reused unchanged. No figure is stated twice with different values.
+  information_timeline: >-
+    The chain runs: derogation lodged 2026-10-19, deposit committed 2026-12-01,
+    decision 2027-01-25, February works 2027-02-01 to 2027-03-15, certificate
+    by 2027-04-26, renewal lodged by 2027-05-31, licence expiry 2028-05-31. The
+    decision lands seven days before the works it authorises, and the
+    certificate lands five weeks before the lodging deadline, so LINTHAUGH is
+    feasible on its own dates. PENNYQUAY lodges on 2027-05-31 and works
+    2027-07-01 to 2027-08-12, inside the permitted period, on a slot Vossbeck
+    confirm by 2027-04-30 without a deposit. The 11.4 p/kWh that prices both
+    outages runs to 2028-03-31, past both of them. The Vossbeck February slot
+    is held by the deposit from 2026-12-01, so it has not lapsed when the
+    decision arrives. Nothing that defends either course expires before that
+    course can be taken.
+  why_a_reader_commits: >-
+    A GBP 46,000 deposit falls due on 2026-12-01 and a derogation has to be
+    lodged on 2026-10-19 or not at all, so the decision expires whether or not
+    it is taken. Both figures are on the table and the two risks are of
+    different kinds, money at stake against a licence term, which is the sort
+    of choice a director is paid to make.
+  authors_lean: >-
+    PENNYQUAY, printed first under AB. The lean is the GBP 55,000 not at risk
+    and it is a lean rather than a defeat: two precedents at six years against
+    a loan running to 2039, with a bank letter already on file, are live
+    arguments against it that no figure in the item settles.
+  checks:
+    dates:
+      - "2026-06-22 before 2026-08-25  # the bank's letter predates the question"
+      - "2026-10-19 after 2026-08-25  # the derogation must be lodged in the future"
+      - "2026-10-19 before 2027-01-25  # the derogation is decided after it is lodged"
+      - "2026-12-01 before 2027-01-25  # the deposit is committed before the decision it depends on arrives"
+      - "2027-01-25 before 2027-05-31  # a decision arrives in time to lodge the renewal"
+      - "2027-04-30 before 2027-05-31  # Vossbeck confirm the July slot before the lodging deadline"
+      - "2027-05-31 before 2028-05-31  # the renewal is lodged twelve months before the licence expires"
+      - "2028-03-31 after 2027-05-31  # the 11.4 p/kWh price outlives the works that both outages price"
+    arithmetic:
+      - "168 * 11.4 * 10 == 19152  # the February outage priced at the export tariff"
+      - "74 * 11.4 * 10 == 8436  # the July outage priced at the same tariff"
+      - "168 * 11.4 * 10 - 74 * 11.4 * 10 == 10716  # the difference between the two outages"
+      - "240 * 24 * 42 / 1000 > 168  # a six-week outage cannot exceed nameplate output"
+      - "240 * 24 * 42 / 1000 > 74  # nor can the July one"
+      - "9000 + 46000 == 55000  # LINTHAUGH money at risk before the decision"
+      - "46000 > 9000  # the deposit is the larger part of that exposure"
+      - "9000 + 46000 < 480000  # the money at risk is small against the loan it protects"
+      - "168 * 11.4 * 10 > 74 * 11.4 * 10  # the winter outage costs more than the summer one"
+  admissible_calls: [PENNYQUAY, LINTHAUGH, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

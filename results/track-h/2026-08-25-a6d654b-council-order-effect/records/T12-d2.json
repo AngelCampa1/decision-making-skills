@@ -1,0 +1,61 @@
+{
+  "opaque": "T12",
+  "item_id": "K07",
+  "ordering": "BA",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers on each course**\n\n*LINDCASTER.* GBP 340,000 \u00f7 GBP 250 = 1,360 items. At 70 items/month, starting eight weeks after an order placed today (roughly late October 2026), the programme completes around April\u2013May 2028 \u2014 inside the September 2028 deadline. The plant question is deferred to the 2029\u201330 capital programme.\n\n*HAVERSHOLT.* GBP 295,000 plant; GBP 45,000 conservation = 180 items. Order must be placed fourteen weeks before the 29 May 2027 commissioning date, i.e. by approximately 19\u201320 February 2027. The Threlkeld quote is held only to 30 January 2027, so in practice the order needs to go in before that date to lock the price; commissioning would then fall in early May 2027 rather than the 29th \u2014 a trivial difference. From today there are five months to execute the order. The spend deadline of September 2028 is easily met. No timing obstacle exists.\n\n---\n\n**The argument for LINDCASTER, stated charitably**\n\n1. 1,360 items treated versus 180 is a very large difference in reach.\n2. At 62 items/year entering the unusable band, covering 1,360 items touches more than twenty years of projected losses.\n3. Buffered enclosures sustain a microclimate for eight to twelve years, bridging to the plant.\n4. The 2029\u201330 line is GBP 400,000 with nothing committed against it \u2014 a real prospect.\n\n---\n\n**Why each of those arguments fails under examination**\n\n*Buffered enclosures at 62 per cent RH.* The enclosures hold an item's microclimate within three points of its **packing condition**. Packing condition is the ambient strongroom condition: 62 per cent RH. Three points from 62 per cent is 59\u201365 per cent. The standard requires 45\u201355 per cent. The enclosures do not create a good environment; they preserve the existing bad one with reduced swing. After deacidification and rehousing, the items remain in a chemically hostile climate. The \"bridge\" the enclosures provide is a bridge at the wrong level.\n\n*The conservator's written report.* Idris Sankey-Marchmont states formally that rehousing and aqueous treatment carried out into the strongroom as it stands will need repeating within a decade. This is not a general caution \u2014 it is a professional finding specific to these conditions. LINDCASTER commits GBP 340,000 to work that its own conservator has already declared non-durable. In effect, the bequest buys temporary stabilisation at best, and the same money will have to be found again.\n\n*The 2029\u201330 capital programme.* Nothing is committed; the board sets it in November 2028. The institution would be choosing LINDCASTER on the assumption that a future board, with different pressures, will approve GBP 295,000+ for plant. If that board declines or reallocates, the institution is left with: (a) 1,360 items treated in conditions that require retreatment, (b) 2,840 items untreated, and (c) no route to environmental control within the foreseeable horizon. The risk is asymmetric and irreversible \u2014 deteriorated material cannot be recovered.\n\n*The reach differential.* LINDCASTER's apparent advantage of 1,360 versus 180 items dissolves once the environment problem is understood. Treatment that must be repeated is not treatment \u2014 it is a holding action with an invoice. HAVERSHOLT's 180 treated items are treated once, in stable conditions, and stay treated. More importantly, HAVERSHOLT stops the clock for all 4,200 items the moment the plant is commissioned. LINDCASTER does not stop the clock for any of them.\n\n---\n\n**The compounding deterioration argument**\n\nFrom 2019 to 2025 (six years) the unusable band grew from 640 to 1,010 items: 370 additional losses, consistent with roughly 62 items/year. Under LINDCASTER, the plant is at best commissioned in 2030\u201331 (if the 2029\u201330 programme is approved on the first attempt). From now to then is roughly four to five years: another 250\u2013310 items crossing into the unusable band, on top of the 1,010 already there. Under HAVERSHOLT, the plant commissions in May 2027 \u2014 nine months from now. The loss rate for all 4,200 items effectively stops then.\n\n---\n\n**What the 2029\u201330 programme looks like under each course**\n\nUnder HAVERSHOLT, the GBP 400,000 (if approved) funds conservation in a controlled environment \u2014 potentially 1,600 items at current rates, durable, never needing repetition. The combination of HAVERSHOLT now and 2029\u201330 conservation later is the sequentially rational programme.\n\nUnder LINDCASTER, the GBP 400,000 is consumed by plant. Nothing remains for conservation in that cycle, and the 1,360 items treated under LINDCASTER are approaching or past the point at which retreatment is needed.\n\n---\n\n**The order-deadline question**\n\nThere is no meaningful obstacle. The quote is held to 30 January 2027. Today is 25 August 2026. The institution has five months to take the decision internally, obtain any necessary board authority, and execute the order. This is normal procurement timescale for a project of this size.\n\n---\n\n**Summary**\n\nLINDCASTER's case rests on three things: scale of reach, the buffering capacity of enclosures, and confidence in the 2029\u201330 programme. All three are undermined: the enclosures do not deliver good conditions, the conservator has stated in writing that the treatment will not last, and the capital programme is uncommitted. HAVERSHOLT costs more plant and treats fewer items now, but it is the only course that (a) fixes the causative problem, (b) makes conservation work permanent, (c) protects the whole collection from ongoing loss, and (d) positions the 2029\u201330 programme for conservation rather than infrastructure.\n\nREADING\nThe conservator's professional finding that treatment in the current environment will need repeating within a decade, combined with the fact that buffered enclosures preserve the bad microclimate rather than correcting it, means LINDCASTER's GBP 340,000 buys non-durable work; HAVERSHOLT resolves the root cause, makes all treatment permanent, and is achievable within the quote window and the spend deadline.\n\nCALL\nHAVERSHOLT\n\nGROUNDS\nThe conservator's written finding that treatment in the existing environment must be repeated within a decade renders LINDCASTER's entire spend non-durable, and buffered enclosures packed at 62 per cent RH preserve a harmful microclimate rather than a safe one, so only HAVERSHOLT makes the expenditure permanent and stops deterioration across the whole collection.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-ax5opchy"
+  },
+  "cost_usd": 0.097527,
+  "duration_ms": 116461,
+  "session_id": "38dd9575-25fa-46f1-8738-c5facf6af657",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 6215,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 6215,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 117.67025566101074,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

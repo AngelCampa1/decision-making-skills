@@ -1,0 +1,44 @@
+{
+  "opaque": "S11",
+  "draw": 2,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The statutory test**\n\nThe board is statutory undertaker for the Vraich catchment and is obliged to supply 41,000 plus the consented 1,900 properties. The forecasting horizon is peak-week 2031. At that point rated capacity is 14.2 ML/day and forecast demand is 15.4, leaving a 1.2 ML/day gap. Any course of action that cannot reliably close that gap to zero fails the statutory test, irrespective of cost saving.\n\n---\n\n**Examining SKELWITH against that test**\n\n*Starting point.* The programme is forecast to save 1.4 ML/day. The Kilvaddy precedent returned 1.1 against a forecast 1.3, a ratio of 84.6 per cent. Applying that ratio to 1.4 gives 1.18 ML/day. The gap is 1.2. SKELWITH is already 0.02 ML/day short on the day the last tranche is commissioned, before any drift.\n\n*Drift.* The programme completes 31 March 2030. Peak-week demand falls in July, so the relevant peak is July 2031 \u2014 16 months after completion. At 0.1 ML/day per year of drift, that is 0.13 ML/day lost from the gain. Remaining benefit at peak-week 2031: 1.18 \u2212 0.13 = 1.05 ML/day. The unmet deficit is 0.15 ML/day.\n\nThat figure is conservative in one direction (I have applied the 0.1 ML/day/year drift only from the final completion date, not progressively from each tranche). Tranche 1, which completes around March 2028, will have been drifting for roughly 3.3 years by July 2031, losing 0.33 ML/day on its own portion (roughly a third of the total, ~0.39 ML/day), recovering perhaps only 0.06 ML/day net. Tranche 2 (~0.39 ML/day, drifting ~2.3 years): ~0.16 ML/day net. Tranche 3 (~0.39 ML/day, ~1.3 years drift): ~0.26 ML/day net. On a tranche-by-tranche reading the residual gain is nearer 0.48 ML/day, a deficit of 0.72. Even the most optimistic single-drift reading gives a gap.\n\n*Ongoing liability.* To hold the gain the board must continue spending. That requires a claim on the next capital envelope, settled December 2029, before its size is known. It is a maintenance liability that never ends.\n\n*Conclusion on SKELWITH.* On its own figures, at evidenced delivery rates, and accounting for the time between completion and the demand horizon, SKELWITH does not close the statutory gap. It is not a close call on the numbers; it is structurally insufficient.\n\n---\n\n**Examining HARBOTTLE against the same test**\n\n*Capacity margin.* Licensed at 3.0 ML/day against a 1.2 shortfall: HARBOTTLE provides 2.5 times the capacity required. Even allowing for measurement uncertainty and demand forecast error there is substantial headroom. Once built the capacity does not drift.\n\n*The hands-off flow condition.* Abstraction must cease when the Vraich gauge drops below 12.1 ML/day. That happened on 41 days in 2022 and 29 days in 2025, entirely between June and September. The worst coincides exactly with peak-week demand \u2014 the 41-day 2022 event is the stress case.\n\nDuring a hands-off period: production falls to 14.2 ML/day against 15.4 ML/day demand, a shortfall of 1.2 ML/day. Storage of 62 ML / 1.2 ML/day = 51.7 days cover. Worst observed hands-off run: 41 days. Margin: approximately 10 days.\n\nIn the hands-off period, drawdown from a full reservoir over 41 days is 41 \u00d7 1.2 = 49.2 ML, leaving 12.8 ML \u2014 roughly 0.8 days at peak demand. Storage management matters: the board must enter each summer with reservoirs at or near capacity. That is operationally routine but must be deliberate.\n\nWhen Cullivoe is running, the works and source together produce 14.2 + 3.0 = 17.2 ML/day against 15.4 ML/day demand, a 1.8 ML/day surplus, refilling 62 ML from empty in about 34 days. Provided summers follow a recognisable seasonal pattern \u2014 hands-off events clustered in June\u2013September, not continuous \u2014 storage can be managed.\n\n*Climate risk.* Forty-one days in 2022, twenty-nine in 2025: a trend is not clear but the direction of travel under climate change is toward longer dry spells. The 10-day margin above worst observed is real but not generous. This is a genuine residual risk. It does not eliminate HARBOTTLE as the recommendation; it is a risk to note for operating policy and the next capital round.\n\n*Interim supply (2027\u20132029).* Before Cullivoe commissions, demand grows. At full-occupation yield of 1.8 ML/day across 1,900 homes phased over four years, approximately 950 homes may be occupied by June 2029, adding about 0.9 ML/day. Peak demand before commission: roughly 14.5 ML/day against 14.2 rated \u2014 a 0.3 ML/day deficit during peak weeks. At 0.3 ML/day drawdown, 62 ML of storage covers over 200 days; the summer peak week is manageable. This interim period is not comfortable, but it is within the board's existing storage capability.\n\n*Commission date.* June 2029 is 25 months before peak-week 2031 \u2014 enough lead time to establish the source and verify output before the demand horizon arrives.\n\n*Capital position.* \u00a38,400,000 leaves \u00a32,800,000 in the envelope. That is not much but neither course leaves enough for the other, and this question is settled: the next envelope is decided December 2029.\n\n---\n\n**Comparison summary**\n\n| Criterion | HARBOTTLE | SKELWITH |\n|---|---|---|\n| Closes 1.2 gap at peak-week 2031? | Yes, 3.0 ML/day rated | No \u2014 ~1.05 ML/day after drift |\n| Statutory risk | Low | High |\n| Cost | \u00a38.4 M | \u00a35.9 M |\n| Earliest benefit | June 2029 | April 2027 (progressive) |\n| Reliability of gain | Permanent, bar hands-off | Drifts; needs ongoing spend |\n| Principal residual risk | Hands-off flow vs storage | Statutory gap persists |\n\nSKELWITH is cheaper and delivers earlier, but neither virtue compensates for failing to meet the need it is procured to meet. The saving of \u00a32,500,000 has no value if the board is in supply deficit at peak-week 2031.\n\nHARBOTTLE meets the statutory requirement with rated capacity that is more than double the shortfall. The hands-off flow risk is real, documented, and bounded by 62 ML of existing storage, which covers the worst observed event with approximately 10 days to spare. It is a manageable operating risk, not a structural failure.\n\n---\n\nREADING\nThe statutory gap in peak-week 2031 is 1.2 ML/day. SKELWITH, applied at the Kilvaddy performance ratio of 84.6 per cent (returning 1.18 ML/day), is already 0.02 ML/day short before drift begins. At 0.1 ML/day per year drift, the gain by July 2031 \u2014 16 months after the March 2030 completion \u2014 falls to approximately 1.05 ML/day, leaving a residual shortfall of 0.15 ML/day and a statutory supply failure. HARBOTTLE licences 3.0 ML/day of rated source capacity, 2.5 times the gap. The hands-off flow condition is the principal risk: at 1.2 ML/day net draw, 62 ML of treated storage yields 51 days of cover against a worst-observed 41-day event, leaving a 10-day operating margin that demands active reservoir management but is achievable. HARBOTTLE is the only course that can be expected to discharge the statutory supply obligation at the 2031 horizon.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH, at the Kilvaddy delivery ratio and with approximately 0.13 ML/day of drift between programme completion and peak-week 2031, cannot reliably close the 1.2 ML/day statutory gap, whereas HARBOTTLE provides 3.0 ML/day of rated licensed capacity with 51 days of storage cover against the worst-observed 41-day hands-off flow event, making it the only course that discharges the board's statutory supply obligation.",
+  "cost_usd": 0.1355673,
+  "duration_ms": 167053,
+  "session_id": "91eb2b2f-6081-457d-9b9c-6054d8ff3094",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 8912,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 8912,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 168.22832679748535
+}

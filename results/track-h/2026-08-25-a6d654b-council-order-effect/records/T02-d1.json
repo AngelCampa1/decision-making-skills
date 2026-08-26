@@ -1,0 +1,61 @@
+{
+  "opaque": "T02",
+  "item_id": "K12",
+  "ordering": "AB",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\nThe choice turns on what \"six years rather than fifteen\" does to the bank.\n\nThe bank wrote on 2026-06-22 that a licence term shorter than the loan would put the facility under review. The loan runs to 2039, thirteen years from now. The only two precedents for the undertaking route \u2014 Cadgarth (2024) and Nant Elwy (2025) \u2014 were both renewed for six years. If Blaenclydach follows PENNYQUAY and lodges with the 2011 screen and a dated undertaking, the reasonable expectation, grounded in those two precedents, is a six-year renewal running to approximately 2033. That leaves a six-year gap against the 2039 loan. The bank's stated trigger is met. The cheaper course does not look cheap once a GBP 480,000 facility is under review.\n\nPENNYQUAY's genuine advantages are the GBP 46,000 deposit that is never committed and a July outage costing GBP 8,436 against February's GBP 19,152. But those savings are secondary to the loan risk. If the bank tightens, restructures, or calls a GBP 480,000 facility because the licence term falls short, the GBP 37,000 saved against LINTHAUGH's worst case becomes irrelevant. PENNYQUAY does not have a plausible route to a fifteen-year renewal before 2027-05-31, because the new screen cannot be commissioned and certified before that deadline under normal works timing, and the undertaking precedent points clearly to six years.\n\nLINTHAUGH's central uncertainty is the derogation. The Rivers Board granted 4 of 11 applications in 2025 \u2014 a 36 per cent base rate, which on its own is discouraging. But the critical additional fact is that every published refusal named a scheme with no dated regulatory driver. Blaenclydach has the most unambiguous dated driver imaginable: a statutory abstraction licence renewal deadline of 2027-05-31, a compliance certificate that can only be earned after the replacement screen is installed and commissioned, and a normal works window that opens after that deadline passes. The derogation provision exists for exactly this situation. On the Board's own stated reasoning, a scheme with that profile would not appear in a refusal notice. The effective probability of approval is materially above 36 per cent.\n\nThe timeline under a granted derogation is tight but workable. Decision on 2027-01-25 allows works to start in February. Six weeks of installation puts commissioning around mid-March. The certificate follows within six weeks \u2014 call it late April to early May \u2014 and the renewal is lodged complete well before 2027-05-31. A complete file, with the certificate rather than an undertaking, supports a fifteen-year renewal running to approximately 2042, three years beyond the loan. The bank covenant is satisfied.\n\nThe risk to face honestly is the deposit. GBP 46,000 must be paid to Vossbeck on 2026-12-01, thirty-five days before the decision comes on 2027-01-25. If the derogation is refused, that money is gone and the application fee of GBP 9,000 is gone with it. Eighteen weeks remain from refusal to the renewal deadline \u2014 approximately 2027-05-26 \u2014 which is enough time to file with an undertaking, so the business does not lose the licence. But it loses GBP 55,000 and arrives back in exactly the same position as PENNYQUAY: six-year renewal, bank covenant triggered. The failure scenario under LINTHAUGH is PENNYQUAY plus GBP 55,000.\n\nFor LINTHAUGH's expected value to be negative, one would need to believe either that the derogation fails at high probability or that the bank review, if triggered, is harmless. Neither is credible. The Board's own stated ground for refusal is the absence of a dated driver; Blaenclydach has one. The bank's letter was explicit. The GBP 55,000 downside under failure is real but is a fraction of the GBP 480,000 facility that the six-year route puts at risk.\n\nA further note on the July slot: if LINTHAUGH fails and Blaenclydach falls back to the undertaking route, the July 2027 slot from Vossbeck is still available \u2014 confirmed by 2027-04-30 \u2014 so the screen and bearing set can still be fitted that summer for GBP 8,436. The six-year renewal problem remains, but the scheme is not left without a working screen or without the bearing maintenance.\n\nLINTHAUGH is the stronger course. It is more expensive in the success case and much more expensive in the failure case. But it is the only course with a credible path to a fifteen-year renewal, and a fifteen-year renewal is what the loan requires.\n\nREADING\nPENNYQUAY follows the Cadgarth and Nant Elwy precedents directly to a six-year renewal, which falls six years short of the 2039 loan and almost certainly triggers the bank's stated review clause, while LINTHAUGH rests on exactly the dated regulatory driver the Board has never once refused, giving a high-probability route to a complete-file fifteen-year renewal that clears the loan term; the GBP 46,000 deposit and the outage differential are real costs but secondary to the existential risk of a GBP 480,000 facility being put under review. The derogation's base rate of 36 per cent is the weakest part of the case for LINTHAUGH, but it is undermined by the Board's own published reasoning: every refusal named a scheme without a dated driver, and Blaenclydach's driver \u2014 a statutory licence deadline, a certificate that cannot be earned before the deadline under normal timing, and a confirmed works window that opens after it \u2014 is as dated and as documented as a regulatory driver can be.\n\nCALL\nLINTHAUGH\n\nGROUNDS\nThe undertaking route reliably reproduces the Cadgarth and Nant Elwy outcome of a six-year renewal, which sits six years short of the 2039 loan and almost certainly triggers the bank covenant named in the June letter, whereas the derogation route rests on precisely the dated regulatory driver the Board has never refused, giving a high-probability path to a complete-file fifteen-year renewal that outlasts the loan and keeps the facility secure.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-4ytfd738"
+  },
+  "cost_usd": 0.10019070000000001,
+  "duration_ms": 123984,
+  "session_id": "90ddf3c3-c414-4cda-bcb6-25844bcb3214",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1059,
+    "output_tokens": 6561,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6561,
+        "cache_read_input_tokens": 1059,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 125.31940484046936,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "opaque": "S10",
+  "draw": 1,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**1. Timing arithmetic**\n\nThe planning application was validated 2026-08-14. Three scenarios follow directly from the data given.\n\n| Scenario | Weeks to consent | Consent date | +22 weeks build | Ready date |\n|---|---|---|---|---|\n| Target | 13 | 2026-11-13 | +154 days | 2027-04-08 |\n| Median | 34 | 2027-04-10 | +154 days | 2027-09-03 |\n| Worst-ever | 61 | 2027-10-15 | +154 days | 2028-03-17 |\n\nHallowbrand expires 2027-11-30. In the target and median scenarios, Culverstone is ready before that date; the company moves on lease expiry with no gap. In the worst-ever scenario there is a gap of roughly 108 days\u2014call it four calendar months\u2014between lease expiry and Culverstone opening. Nethercote covers that gap.\n\nCritically, even the worst-ever outcome delivers Culverstone in mid-March 2028, a fortnight before the new 44/44A contract is scheduled to begin (2028-04-01 implied by the current term ending 2028-03-31). The deposit holds the Culverstone option until 2028-06-30, which envelops even that worst case with room to spare.\n\n---\n\n**2. Dead mileage**\n\nCulverstone is 3 miles further from the 44 stand at Verrancombe Bridge. Each of the 22 network vehicles makes that 3-mile extra leg outbound and inbound every operating day.\n\n22 vehicles \u00d7 6 miles \u00d7 313 days \u00d7 \u00a30.63/mile = **\u00a326,029 per year**\n\n---\n\n**3. Ten-year cost comparison**\n\n*ARDENSHAW*\n\n| Item | Amount |\n|---|---|\n| Rent (\u00a3214,000 \u00d7 10) | \u00a32,140,000 |\n| Capital | \u00a30 |\n| **Total** | **\u00a32,140,000** |\n\n*KESTERWICK*\n\n| Item | Best case | Worst case |\n|---|---|---|\n| Deposit | \u00a340,000 | \u00a340,000 |\n| Works | \u00a3480,000 | \u00a3480,000 |\n| Rent (\u00a3118,000 \u00d7 10) | \u00a31,180,000 | \u00a31,180,000 |\n| Dead mileage (\u00a326,029 \u00d7 10) | \u00a3260,290 | \u00a3260,290 |\n| Nethercote (4 months \u00d7 \u00a318,500) | \u2014 | \u00a374,000 |\n| **Total** | **\u00a31,960,290** | **\u00a32,034,290** |\n\nNet advantage of KESTERWICK over ARDENSHAW:\n- Best case: **\u00a3179,710**\n- Worst case (all-time slowest planning + full Nethercote): **\u00a3105,710**\n\nThe arithmetic is positive for KESTERWICK in every scenario that ends in planning consent.\n\n---\n\n**4. Liquidity check**\n\nCash available: \u00a3640,000 + \u00a3200,000 facility = \u00a3840,000 total.\n\nKESTERWICK requires: \u00a340,000 deposit (December 2026) + \u00a3480,000 works = \u00a3520,000 in total. Construction payments are staged across 22 weeks, so peak exposure at any one moment is considerably below \u00a3520,000. After full disbursement, residual headroom is approximately \u00a3320,000 against committed obligations\u2014tight but workable for an operation of this scale, and the facility is available if cash timing is awkward.\n\nARDENSHAW requires nothing upfront. It is the more liquid option, but liquidity is not the binding constraint here.\n\n---\n\n**5. The September 2027 bid**\n\nThis is the most operationally significant variable. Depot cost goes into the bid as a fixed line; bids close 2027-09-14.\n\nUnder ARDENSHAW the depot cost is \u00a3214,000, known to the penny from the moment the lease is signed.\n\nUnder KESTERWICK:\n- *Target or median scenarios*: Culverstone is operational before or around the bid date. Depot cost is approximately \u00a3144,029 (\u00a3118,000 rent + \u00a326,029 dead mileage). Bid is equally clean.\n- *Worst-ever scenario*: On 2027-09-14, 56 of the 61 worst-ever weeks have elapsed. Planning consent is not yet in hand. However, the new contract does not start until April 2028, and Culverstone completes by mid-March 2028 even on the 61-week determination. The company can bid with Culverstone costs and demonstrate that the depot will be operational at contract commencement. That requires a credible cover note, not perfect certainty; it is manageable but is the genuine weak point in the worst-case version of KESTERWICK.\n\nThe substantive point is that KESTERWICK enters the bid at roughly \u00a370,000 per year less in depot cost than ARDENSHAW. On a tendered network, that margin can be the difference between a winning and a losing price.\n\n---\n\n**6. Risks that weigh against KESTERWICK**\n\n*Planning refusal.* This is the only scenario in which KESTERWICK becomes clearly worse than ARDENSHAW. If consent is refused and the Hallowbrand offer has been let go, the company exits its lease in November 2027 with no built depot, a non-refundable \u00a340,000 deposit spent, and \u00a3480,000 of works still unspent but uncommittable. The fallback is Nethercote at \u00a3222,000 a year with no workshop\u2014marginally worse than the ARDENSHAW rent\u2014while either appealing, resubmitting, or renegotiating with the Hallowbrand landlord. None of those outcomes are fatal, but they are damaging and operationally disruptive.\n\nThe brief does not indicate particular planning objections; the statistics given concern timing, not outcomes. A commercial depot on a site that has attracted a Faskally Estates offer-to-hold does not obviously present a high-refusal-risk profile, but the company should not proceed without its planning consultant's honest assessment of refusal probability. That said, planning refusal on a depot application with no stated material objection is less likely than delay, and delay is quantified and bounded by the analysis above.\n\n*Workshop gap.* In the worst-case scenario, approximately four months at Nethercote without a workshop means maintenance must be outsourced or relocated. This adds direct cost (not quantified in the brief) and operational complexity. It is a real but time-limited burden.\n\n*Bid uncertainty.* In the worst-ever planning scenario, the September 2027 bid is written before consent arrives. As noted above, this is the weakest point\u2014but the timing alignment between Culverstone completion and contract start means the bid can still be costed correctly if framed carefully.\n\n---\n\n**7. Summary judgement**\n\nARDENSHAW offers certainty at a price. The price is \u00a370,000 per year for ten years\u2014\u00a3700,000 in rent above the Culverstone alternative\u2014and it locks depot cost into the 2027 bid at the higher figure. It asks for nothing in capital and carries no execution risk.\n\nKESTERWICK offers the better economics in every scenario that ends in planning consent, which is the base expectation. The cash position supports the works. The deposit covers the site through every plausible timeline. The gap to Nethercote in the worst case is bounded and affordable. The bid is cleaner in all but the tail of the planning distribution, and even there the contract-start alignment provides a route through.\n\nThe one genuine asymmetry is planning refusal: KESTERWICK with a refused application is meaningfully worse than ARDENSHAW. That risk deserves respect. It is, however, not the modal outcome and it does not render the company unoperational\u2014it renders it more expensive for a period and requires emergency renegotiation.\n\nOn balance, the financial case for KESTERWICK is robust across the realistic range of planning outcomes, the bid advantage is strategically material, and the execution risks are bounded in both time and severity.\n\n---\n\nCALL\n  KESTERWICK\n\nGROUNDS\n  The net ten-year financial advantage of between \u00a3106,000 and \u00a3180,000 across all planning-timing scenarios, together with the \u00a370,000-per-year lower depot line that strengthens the September 2027 contract bid, outweigh execution risks that are bounded in time by the deposit option running to June 2028 and bounded in severity by the alignment of Culverstone's worst-ever completion date with the April 2028 contract start.",
+  "cost_usd": 0.24829425,
+  "duration_ms": 297802,
+  "session_id": "72768980-f997-4774-ac95-c3da7bb14d23",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1039,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 16197,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1039,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 16197,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 1039,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1039
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 298.9440670013428
+}

@@ -1,0 +1,53 @@
+{
+  "opaque": "T10",
+  "item_id": "K11",
+  "ordering": "AB",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Establishing what is genuinely fixed**\n\nBoth courses carry the same learning-curve remake bill. Ten technicians, 28 extra remakes each, GBP 96 apiece: GBP 26,880 (the figure quoted is GBP 27,072, a rounding difference that changes nothing). This sum does not enter the comparison.\n\n---\n\n**What actually differs between the two courses**\n\nThe live variables are:\n1. The GBP 44,000 overtime cost (KIRKBANE only).\n2. Mid-treatment crossing remakes caused by running two systems in parallel (AVENSWOOD only).\n3. The dual shade-library and material-library overhead (AVENSWOOD only, for nine months).\n4. The concentration and visibility of quality impact across forty practices.\n\n---\n\n**Estimating AVENSWOOD's crossing-remake exposure**\n\nThe pilot generated 40 crossing remakes in four months of dual-system operation with two technicians on the new platform. That is GBP 3,840 (40 \u00d7 GBP 96).\n\nUnder AVENSWOOD the dual-system window is nine months rather than four. The mix of technicians across systems shifts wave by wave (3/7 \u2192 6/4 \u2192 9/1), meaning the crossing-risk pool is at its largest in the middle of the period. A conservative linear scaling would give (9 \u00f7 4) \u00d7 40 = 90 remakes, but recognising that the middle waves involve more technicians on each side I would expect something between 80 and 120 crossing remakes total: GBP 7,680\u2013GBP 11,520. Call it roughly GBP 9,000 as a working figure.\n\nTo make AVENSWOOD financially worse than KIRKBANE, crossing remakes would need to reach GBP 44,000 \u00f7 GBP 96 = 458 units. Given that two technicians produced 40 in four months, reaching 458 would require the crossing-remake rate to be roughly six to seven times the pilot observation over an extended period. There is no evidence in the data to support that.\n\n---\n\n**Dual-library overhead**\n\nRunning duplicate shade notes and a split material library for nine months creates coordination work and some risk of discrepancy, but the practices work from the laboratory's records, not their own. The pilot already demonstrated the lab can manage this; the question is duration and scale. It is a real cost, but it is a staff-time and error-risk cost, not a large cash outlay, and AVENSWOOD completes by 2027-10-04 \u2014 two months before KIRKBANE.\n\n---\n\n**Quantified cost comparison**\n\n| | KIRKBANE | AVENSWOOD |\n|---|---|---|\n| Learning-curve remakes | GBP 27,072 | GBP 27,072 |\n| Overtime | GBP 44,000 | \u2014 |\n| Crossing remakes | \u2014 | ~GBP 9,000 |\n| **Identifiable total** | **~GBP 71,000** | **~GBP 36,000** |\n\nAVENSWOOD is cheaper by roughly GBP 35,000 on the numbers that can be estimated. That gap would have to be entirely wrong \u2014 crossing remakes ten times the pilot rate \u2014 before KIRKBANE broke even financially.\n\n---\n\n**Practice-facing quality impact**\n\nKIRKBANE puts all ten remaining technicians onto the 11.4% remake rate simultaneously. Even with output held up by overtime, the *quality* signal reaching forty practices is concentrated: every practice receives elevated error rates in the same months. A single bad spell, visible to all forty clients at once, carries more reputational weight than a smaller persistent signal that most practices never notice against the noise of normal variation.\n\nAVENSWOOD keeps three-quarters of the bench at 3.1% throughout. At most three technicians are on the steep part of the curve at any time. The laboratory's blended remake rate moves modestly, not dramatically. No individual practice is likely to see a statistically unusual run unless they happen to be drawing heavily on the transitioning cohort. That risk exists but is much narrower than under KIRKBANE.\n\n---\n\n**Operational manageability**\n\nMoving ten technicians at once onto an unfamiliar platform is a larger operational event in every dimension: training resources, supervision demand, error-catching capacity. Waves of three are individually manageable and allow lessons from the first wave to inform the second and third. The pilot pair already serves as a mentor resource, which AVENSWOOD exploits and KIRKBANE somewhat wastes.\n\n---\n\n**Deadline headroom**\n\nKessendale support ends 2028-06-30. AVENSWOOD completes 2027-10-04; KIRKBANE 2027-12-04. Both give ample margin. Deadline pressure does not favour KIRKBANE.\n\n---\n\n**What KIRKBANE does genuinely offer**\n\nA single shade library and material library from day one of the transition. No possibility of a case crossing between systems. A clean, known end-date. These are real advantages, but they are process-tidiness advantages rather than financial or client-protection advantages that are large enough to justify a GBP 44,000 cash outlay and a concentrated quality dip across all forty practices simultaneously.\n\n---\n\n**Verdict**\n\nAVENSWOOD is financially superior by a margin that the crossing-remake risk cannot plausibly close. It limits simultaneous quality exposure, is operationally more manageable, and finishes two months earlier. The dual-library burden is manageable and temporary. The GBP 44,000 overtime is real money being spent to solve a problem that the staged approach avoids by design.\n\nREADING\n  The learning-curve remake cost (GBP 27,072) is identical under both courses and cancels. The live comparison is GBP 44,000 overtime against crossing-remake exposure under AVENSWOOD. Scaling the pilot's 40 crossing remakes / 4 months across AVENSWOOD's 9-month dual-system window, with a shifting technician split, gives a plausible crossing cost of roughly GBP 7,680\u2013GBP 11,520 \u2014 less than a quarter of the overtime spend. To break even, crossing remakes would need to run at roughly six times the observed pilot rate, for which there is no evidence. AVENSWOOD also limits simultaneous quality impact on forty practices, keeps three-quarters of the bench at 3.1% at all times, is operationally more manageable wave by wave, and completes two months earlier (2027-10-04 vs 2027-12-04). Both courses clear the 2028-06-30 Kessendale deadline with ease. The dual shade-library overhead is real but bounded and temporary; it does not approach the value of the overtime saving. No factor in the data plausibly reverses the roughly GBP 35,000 financial advantage of AVENSWOOD, nor does any qualitative consideration \u2014 reputational, operational, or staff-facing \u2014 favour KIRKBANE strongly enough to matter.\n\nCALL\n  AVENSWOOD\n\nGROUNDS\n  The GBP 44,000 overtime cost exceeds the credible upper bound of AVENSWOOD's crossing-remake exposure by a factor of roughly three to four, and the staged approach simultaneously reduces the quality impact any single practice experiences, making AVENSWOOD the better course on both financial and client-relationship grounds.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-r2h11r_g"
+  },
+  "cost_usd": 0.07444,
+  "duration_ms": 91544,
+  "session_id": "91b15a88-6cd5-4042-b6c6-d0447c42ad5c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 4707,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 4707,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 92.60146808624268
+}

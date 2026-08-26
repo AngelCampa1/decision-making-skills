@@ -1,0 +1,44 @@
+{
+  "opaque": "S08",
+  "draw": 3,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The grant eligibility arithmetic**\n\nThe practice's calculation of 31.8% is built on last year's turnover (year ended 2026-03-31) and simply adds the Ardgowrie contract value to that static base. The grant assessment, however, reads the annualised value of work *in force on 2027-04-30* \u2014 a date thirteen months after the accounts that underpin the 31.8% figure. Small animal has been compounding at 11% a year for four years and there is no stated reason to expect it to stop.\n\nWorking through what the assessment date actually sees:\n\n- Small animal at 2026-03-31: \u00a31,336,000\n- After 13 months at 11% per annum: \u00a31,336,000 \u00d7 1.11^(13/12) \u2248 \u00a31,336,000 \u00d7 1.1197 \u2248 **\u00a31,496,000**\n- Farm and equine (existing, flat) + Ardgowrie in force from November 2026: \u00a3504,000 + \u00a3118,000 = **\u00a3622,000**\n- Projected total at assessment: \u00a32,118,000\n- Farm and equine share: \u00a3622,000 / \u00a32,118,000 = **29.4%**\n\nThat is below the 30% floor. The 30% threshold requires farm and equine to represent at least \u00a3635,000 of the total, but at that assessment date it would stand at \u00a3622,000 \u2014 roughly \u00a313,000 short on an annualised basis. The direction of risk is adverse: small animal will only continue to grow, and farm and equine has been flat for three years. The margin between the projected ratio and the qualifying threshold is about 0.6 percentage points, and it is narrowing, not widening. The \u00a3100,000 grant \u2014 the central financial premise of PENDLARROW \u2014 is therefore not reliably available.\n\n**Cash position under each course**\n\nUnder WESTERGATE, the fit-out of \u00a3260,000 drawn from the \u00a3310,000 deposit leaves \u00a350,000 on hand. Thin, but workable: it is roughly 2.7% of turnover and the new small animal premises should begin generating revenue.\n\nUnder PENDLARROW, the fit-out is \u00a3260,000 and the vehicle is \u00a334,000, totalling \u00a3294,000 out of \u00a3310,000. That leaves \u00a316,000 on deposit before the first month's operating costs of the new premises land. Even if the grant were paid after the April 2027 assessment, it would not arrive until mid-2027 at the earliest, meaning the practice runs for eight or nine months with almost no financial cushion while simultaneously staffing a new site and absorbing a farm vet hire. There is no borrowing in place, and the problem does not mention an agreed facility. A single adverse event \u2014 a late payment from a large client, an equipment failure, a recruitment gap \u2014 tips the practice into difficulty.\n\n**The Ardgowrie operating risk**\n\nThe reason the outgoing practice surrendered a nine-year contract was explicitly the night call-out load from this herd. That is a significant signal: a well-established practice with a relationship of nearly a decade decided the call-out burden was not sustainable. The outgoing vet, Kirstie Ballantyne-Rowe, offers continuity of herd knowledge, which reduces the clinical risk and shortens the settling-in period. It does not resolve the structural problem. Kirstie is one vet. A 900-head dairy herd generates unpredictable out-of-hours calls that a single person cannot absorb indefinitely. If she burns out, departs, or becomes unavailable, the practice faces a simultaneous loss of herd expertise, a potential service failure to Ardgowrie, and a consequent threat of losing the contract. If the grant has been claimed and the herd health contract falls below 700 cattle before 30 April 2030, the full \u00a3100,000 is repayable. The clawback risk and the single-point-of-failure risk are the same risk.\n\n**Strategic direction**\n\nThe practice's own numbers describe its trajectory clearly. Small animal has grown at 11% per year for four years; farm and equine has been flat for three. The Ordsall Green premises is a small animal surgery. The next hire under WESTERGATE is earmarked for small animal. Tying the practice to a mandatory herd health holding until April 2030 in order to protect a grant that the growth trajectory probably prevents qualifying for is strategically backwards: it commits scarce capital and staff capacity to the flat segment in order to subsidise the already-funded expansion of the growing one.\n\n**What PENDLARROW would actually need to work**\n\nFor PENDLARROW to deliver its claimed outcome, all of the following would have to hold simultaneously: small animal growth would have to slow from 11% to under roughly 8% between now and April 2027 so that the ratio clears 30% at assessment; Kirstie would have to remain available and resilient through to at least April 2030; Ardgowrie would have to stay above 700 head through the same period; and the practice would have to navigate the intervening months with \u00a316,000 in the bank. None of these individually is impossible, but the conjunction of all four is fragile.\n\n**The net arithmetic, conservatively stated**\n\nIf the grant is not paid, PENDLARROW costs \u00a3294,000 in capital and adds a farm vet at \u00a371,000 per year against Ardgowrie revenue of \u00a3118,000 per year \u2014 a running contribution of \u00a347,000. Recovering the extra \u00a334,000 of capital outlay (vehicle, over WESTERGATE) at \u00a347,000 per year takes less than a year, so the contract itself is financially positive in isolation. But the financial case for PENDLARROW rests almost entirely on the \u00a3100,000 grant, and that grant is unlikely to be payable given the growth dynamics. Without the grant, PENDLARROW is a modestly positive farm contract plus a severely stressed cash position plus a four-year clawback obligation \u2014 bought at the cost of \u00a334,000 more capital and the night-rota risk that already broke one practice.\n\nWESTERGATE depletes cash to \u00a350,000, which is uncomfortable, foregoes \u00a3100,000 in grant that was probably not attainable anyway, and puts the next hire into the segment that has been growing at 11% a year. It carries no clawback exposure and no night-rota dependency.\n\n---\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe farm and equine ratio projected forward to the April 2027 assessment date \u2014 allowing for eleven per cent annual small animal growth that the practice's own calculation ignores \u2014 reaches approximately 29.4 per cent, below the 30 per cent qualifying floor, so the grant on which PENDLARROW's financial case depends is not reliably available, and without it the course offers only a modestly positive running contract, near-zero cash reserves, and a four-year clawback exposure tied to the same night-call burden that ended a nine-year relationship at the outgoing practice.",
+  "cost_usd": 0.16241390000000003,
+  "duration_ms": 194219,
+  "session_id": "555914bb-9007-49f5-83ef-0109ba52fe3d",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1123,
+    "output_tokens": 10704,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 10704,
+        "cache_read_input_tokens": 1123,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 195.36472392082214
+}

@@ -1,0 +1,61 @@
+{
+  "opaque": "T16",
+  "item_id": "K13",
+  "ordering": "BA",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**1. The numbers as given**\n\nCurrent book: GBP 2.1m on 148 t. Four jigs at 41 t each = 164 t hard ceiling.\n\nUnder MORVEDD the two dedicated jigs must each run at 48 t to produce the contracted 96 t (above their current 41 t average). That is not impossible on dedicated work \u2014 no changeover losses \u2014 but it is a standing assumption that needs to be met every year of the term. The two free jigs handle Marchgate's 65 t, using 79% of the remaining 82 t capacity; the 17 t slack is useful but belongs to Marchgate's jigs, not to Thurlmere's.\n\nRevenue crosscheck:\n- Thurlmere new: 96 \u00d7 \u00a315.40 = \u00a31,478,400\n- Marchgate retained: 65 \u00d7 \u00a314.19 = \u00a3922,350\n- MORVEDD total: ~\u00a32,400,750/yr\n- SALTGRAVE total: 65 \u00d7 \u00a314.19 + 46 \u00d7 \u00a314.19 + 37 \u00d7 \u00a314.60 = \u00a3922,350 + \u00a3652,740 + \u00a3540,200 = ~\u00a32,115,290/yr\n- Spread: \u00a3285,460/yr (the \u00a3302,400 figure in the brief rounds Thurlmere's current contribution using slightly different assumptions; order of magnitude is the same)\n- Over three years, before capex, the gap is roughly \u00a3856,000\u2013\u00a3907,000. After the \u00a396,000 capex it is \u00a3760,000\u2013\u00a3811,000. That is real money for a \u00a32.1m business.\n\nSo the financial case for MORVEDD is genuine. The question is whether it is actually available.\n\n---\n\n**2. What the change-of-control clause actually says about MORVEDD**\n\nVennerdale acquired Thurlmere in 2025 \u2014 one year ago. The draft contract gives *either* side six months' notice on a change of control. Crucially, Gallowfield does not trigger that clause; only a corporate event at Thurlmere/Vennerdale does, and that event is entirely outside Gallowfield's control.\n\nAsk what kinds of event would trigger it:\n- Vennerdale sells Thurlmere on (it is already in acquisition mode)\n- Vennerdale is itself acquired or merges\n- Thurlmere is carved out into a joint venture, spun off, or restructured\n\nAny of these constitutes a change of control of the contracting party, and any of them entitles the new owner to walk away on six months' notice. An M&A-active conglomerate that completed its Thurlmere purchase only last year is not a stable counterparty for a three-year dedicated-infrastructure commitment.\n\nThe phrase \"three-year commitment\" therefore describes the nominal term, not the actual exposure. What MORVEDD actually offers is: a three-year opportunity, terminable at six months' notice for reasons that have nothing to do with the quality of Gallowfield's dyeing. The headline revenue of \u00a3907,200 across the term is a ceiling, not a floor.\n\n---\n\n**3. What the capex does and does not protect**\n\nThe \u00a396,000 buys pumps and a separate liquor circuit. The brief correctly says the jigs stay Gallowfield's throughout. But a separate liquor circuit configured for Thurlmere's wool types and dyestuffs is not a general-purpose asset; it will need to be recommissioned or reversed if Thurlmere exits. The resale value of bespoke process plumbing is low. So although the jig hardware is retained, a material portion of the \u00a396,000 is operationally stranded the moment Thurlmere leaves. Against a cash holding of \u00a3180,000, spending \u00a396,000 on an asset whose useful life depends entirely on Thurlmere's corporate stability is a large single bet.\n\n---\n\n**4. The Ostrey decision is irreversible; the Thurlmere decision is not**\n\nMORVEDD requires releasing Ostrey. Ostrey will not wait; they will find another commission dyer and the 22-year relationship ends. The Ostrey slot (37 t) cannot be quietly kept on the back burner while Gallowfield tests the Thurlmere waters \u2014 Thurlmere's condition is precisely that those two jigs dye nothing else.\n\nIf MORVEDD runs for, say, 18 months before a Vennerdale change-of-control notice arrives, Gallowfield then finds itself:\n- With two freshly-plumbed dedicated jigs and no Thurlmere to fill them\n- With Ostrey firmly embedded at a rival dyer\n- With Marchgate \u2014 which has signed nothing \u2014 as the only surviving customer\n- Carrying a revenue run-rate of roughly \u00a3922,000 against a cost base built for \u00a32.4m\n\nThat is a path to insolvency or severe restructuring for a 19-person business. No single-scenario analysis of SALTGRAVE produces an equivalent catastrophe; even losing Marchgate (the worst plausible SALTGRAVE event) leaves Ostrey's 37 t contractually locked for three years, providing a floor.\n\n---\n\n**5. Concentration**\n\nUnder MORVEDD, Thurlmere controls 62% of Gallowfield's revenue and can sever it in six months. That is a dependency ratio that most trade credit insurers would flag and that any sensible banker would probe on the annual review. Under SALTGRAVE the largest single customer (Marchgate, no contract) is 44%, which is meaningful but not unusual for a niche commission processor.\n\nMore importantly, SALTGRAVE still has three names on the book. Losing any one of them is painful but leaves two others. Under MORVEDD, losing Thurlmere is existential. Concentration at 62% in a contract with a six-month exit provision is the most dangerous position in the set of outcomes.\n\n---\n\n**6. The Marchgate risk is common to both courses but hits harder under MORVEDD**\n\nMarchgate is 44% of the book with no contract under either course. That is an acknowledged structural weakness. Under SALTGRAVE, losing Marchgate leaves Gallowfield with Thurlmere (46 t, no new contract) + Ostrey (37 t, locked for three years) = 83 t, revenue roughly \u00a31.19m. Survivable with adjustment. Under MORVEDD, losing Marchgate leaves only Thurlmere (96 t, terminable by change of control) = revenue \u00a31.48m, with two jigs fully dedicated and two jigs idle, cost base not materially reduced. Precarious, and entirely dependent on Vennerdale's plans.\n\n---\n\n**7. SALTGRAVE's own merits**\n\n- Ostrey at \u00a314.60/kg for three years is a modest price improvement (\u00a30.41/kg) on a stable long-term relationship. It adds roughly \u00a315,000/yr to Ostrey's line.\n- The book remains diversified at roughly 44/31/25.\n- No capital at risk.\n- The Thurlmere relationship continues on existing terms; Gallowfield has not burned it. Should Vennerdale's ownership stabilise and a better-drafted Thurlmere contract emerge in, say, 2029, that conversation is still possible.\n- The decision preserves \u00a3180,000 cash and the bank facility intact, which is a meaningful operational buffer.\n\n---\n\n**8. Could MORVEDD be modified to make it acceptable?**\n\nYes \u2014 if Gallowfield could negotiate: (a) removal or substantial weakening of the change-of-control exit clause, replacing it with a break fee that fully compensates the capex plus 12 months' margin; (b) a parent guarantee from Vennerdale; or (c) a contribution from Thurlmere to the \u00a396,000 capex. None of those modifications are on the table as the problem is set. The brief presents two courses.\n\n---\n\n**9. Verdict**\n\nThe financial premium of MORVEDD is genuine but available only if the three-year contract runs its course. The change-of-control clause, combined with Vennerdale's demonstrated M&A activity, means that running the full course is a contingency, not a plan. SALTGRAVE trades roughly \u00a3285,000\u2013\u00a3302,000/year in incremental revenue for a book that cannot be dismantled by a single corporate event outside Gallowfield's control, retains a 22-year customer relationship that is irreplaceable once released, and commits no capital to a counterparty whose ownership stability is uncertain. For a business of this size, with this cash position and these staff numbers, the asymmetry of downside under MORVEDD outweighs the revenue upside.\n\n---\n\nCALL\n  SALTGRAVE\n\nGROUNDS\n  The change-of-control clause means Thurlmere's nominal three-year commitment can become six months' notice through any Vennerdale corporate action, stranding the \u00a396,000 capex and severing Ostrey's irreplaceable 22-year relationship, so the certain costs of MORVEDD are locked in while its revenues remain contingent on the stability of a conglomerate that completed its acquisition only last year.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-1nfppiqm"
+  },
+  "cost_usd": 0.13624799999999998,
+  "duration_ms": 165508,
+  "session_id": "e0102b60-cdb5-43f9-9c21-8da18ff3df87",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 973,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 8797,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 973,
+        "output_tokens": 8797,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 166.92827987670898,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "opaque": "T06",
+  "item_id": "K04",
+  "ordering": "BA",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The shortfall and what each scheme must do**\n\nThe board faces a firm 1.2 ML/day deficit at 2031 peak-week demand (15.4 against a rated 14.2). That gap must be closed before full occupation, and it must stay closed. Both schemes are within the \u00a311.2 M envelope; neither needs an order before December 2026; both quotations hold to June 2027. The question is which scheme actually works.\n\n---\n\n**SKELWITH examined**\n\nThe headline appeal is real: \u00a32.5 M cheaper, benefits arrive from 2027, saved water is never pumped, and the programme is simpler to govern than a new source works.\n\nThe problem is that the board already has a calibration figure. At Kilvaddy the same programme returned 1.1 ML/day against a 1.3 ML/day forecast\u2014a 15.4 % shortfall. Applying that ratio to the 1.4 ML/day forecast here gives 1.18 ML/day. The gap to close is 1.2 ML/day. SKELWITH, judged on its own precedent, falls 0.02 ML/day short at the moment the last tranche completes in March 2030.\n\nThe board then faces drift. Distribution loss on renewed mains recovers at 0.1 ML/day a year. One year on from completion\u2014that is, at the 2031 demand horizon\u2014the net saving has fallen to 1.08 ML/day, leaving a residual deficit of 0.12 ML/day. That deficit will widen further unless additional capital is committed in the next regulatory period.\n\nThe next envelope is settled in December 2029. The board would be entering that negotiation already short, having spent \u00a35.9 M of a \u00a311.2 M current envelope on a scheme that demonstrably did not close the gap. The remaining \u00a35.3 M in the current envelope cannot legally fund HARBOTTLE as well; the problem statement is explicit that the envelope covers one scheme and not both.\n\nThere is also a structural point about what SKELWITH is solving. Current distribution loss is 3.1 ML/day. Cutting it to roughly 1.92 ML/day is valuable, but it does not add a single litre of licensed capacity. If demand grows faster than forecast\u2014new occupation rates, climate-driven per-capita increases, or a poor Kilvaddy ratio recurring\u2014there is no headroom at all, because rated output stays at 14.2 ML/day.\n\n**Summary on SKELWITH:** At the Kilvaddy ratio, it misses the gap at completion and drifts further away through 2031. It does not meet the statutory obligation to serve 1,900 consented properties.\n\n---\n\n**HARBOTTLE examined**\n\nAt \u00a38.4 M, HARBOTTLE consumes 75 % of the capital envelope and leaves \u00a32.8 M for other works. It is commissioned June 2029, so it provides no relief in 2027 or 2028; new homes arriving in those years must be served from the existing 14.2 ML/day rated output plus whatever residual distribution savings are achievable without a formal programme.\n\nThe licensed yield is 3.0 ML/day against a 1.2 ML/day shortfall\u2014a 2.5\u00d7 margin. That margin is rated, not forecast: it arises from a licence and a constructed headwork, not from an engineering estimate subject to Kilvaddy-type slippage. Whatever happens to the mains, that capacity stands.\n\nThe hands-off flow (HOF) condition is the scheme's principal risk. When the Vraich burn drops below 12.1 ML/day, Cullivoe stops. In 2022 that happened on 41 days; in 2025 on 29 days; all occurrences fell between June and September. During those days the board runs 14.2 ML/day against a 15.4 ML/day demand, drawing on stored water to cover the 1.2 ML/day deficit.\n\nStorage is 62 ML across four service reservoirs. At 1.2 ML/day net draw-down, that covers 51.7 days\u2014approximately 51 days as stated. The worst observed restriction period (2022) was 41 days. The buffer is therefore 10 days above the worst on record.\n\nThere are legitimate uncertainties here. Climate trajectories could lengthen dry periods; the 2022 and 2025 figures may not capture a once-in-twenty-year event; and the calculation assumes storage begins the dry season full, which operational practice should but does not automatically guarantee. Against that, the HOF restriction is self-limiting to June\u2013September\u2014the board has the rest of the year to recharge reservoirs\u2014and the 10-day surplus, while not extravagant, is consistent with the way the scheme has been presented and accepted by the licensing authority.\n\nThe 2022 precedent is also the worse of the two data points; 2025 was 29 days, well inside the buffer. There is no strong directional trend in the two years cited.\n\nOne further consideration: the December 2029 regulatory settlement falls before SKELWITH completes but after HARBOTTLE is commissioned. If HARBOTTLE is in service, the board approaches that negotiation from a position of supply adequacy, able to frame the next envelope around distribution efficiency rather than emergency capacity procurement.\n\n**Summary on HARBOTTLE:** It closes the gap with rated rather than forecast capacity, the HOF risk is covered by storage on historical data, and it positions the board soundly for the next regulatory period.\n\n---\n\n**The decisive comparison**\n\nSKELWITH's cost advantage and earlier delivery are genuine, but they do not rescue a scheme that, on its own precedent, cannot reach 1.2 ML/day and then loses ground year on year. A scheme that falls short is not 90 % of a solution; it is a failure to discharge a statutory duty to 1,900 consented properties.\n\nHARBOTTLE costs \u00a32.5 M more and carries an HOF risk, but 51 days of storage covers 41 days of worst-observed restriction, the capacity is rated and permanent, and the board is a statutory undertaker with no discretion about whether those homes are served. The HOF gap is a risk to manage operationally; the SKELWITH arithmetic gap is a structural failure.\n\nREADING ends.\n\nCALL\n  HARBOTTLE\n\nGROUNDS\n  SKELWITH, at the Kilvaddy performance ratio and accounting for annual drift, yields only 1.08 ML/day by 2031 against a 1.2 ML/day shortfall and therefore fails the statutory supply obligation, whereas HARBOTTLE delivers 3.0 ML/day of rated licensed capacity with 51 days of storage cover against a worst-observed 41-day hands-off-flow restriction, reliably closing the gap within the current capital envelope.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-cz6losed"
+  },
+  "cost_usd": 0.08182730000000002,
+  "duration_ms": 102274,
+  "session_id": "7292ba78-8ffd-4dcc-80be-a5dee4b4faa4",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 5328,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5328,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 103.38707661628723
+}

@@ -1,0 +1,53 @@
+{
+  "opaque": "T06",
+  "item_id": "K04",
+  "ordering": "BA",
+  "draw": 6,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What the numbers actually say**\n\nThe shortfall is 1.2 Ml/day in 2031. Both courses are assessed against that figure.\n\n*SKELWITH*\n\nThe Kilvaddy outturn was 1.1 against a forecast of 1.3: a delivery ratio of 84.6 %. Applied to the 1.4 Ml/day forecast, the realistic expectation is 1.18 Ml/day \u2014 already 0.02 Ml/day short of the 1.2 required, before drift enters the picture.\n\nThe programme completes March 2030. Peak week 2031 is approximately 15\u201316 months later. At 0.1 Ml/day per year drift-back, that erodes a further ~0.125 Ml/day, giving a net saving by July 2031 of roughly 1.055 Ml/day. The residual shortfall by the year of reckoning is therefore around 0.145 Ml/day, and it widens every subsequent year without further spend.\n\nPut plainly: SKELWITH does not close the statutory supply gap. It nearly closes it on day one of completion and then retreats from that position. The board would have spent \u00a35.9 m to reach a condition of structural under-supply.\n\nThere is a financial attraction \u2014 \u00a32.5 m under the HARBOTTLE price \u2014 and there is a real argument that a litre saved is cheaper to run than a litre pumped. Those arguments hold when the saving is sufficient. Here it is not.\n\n*HARBOTTLE*\n\n3.0 Ml/day of licensed, rated capacity against a 1.2 Ml/day shortfall is 1.8 Ml/day of headroom. That headroom matters because the 1.2 figure is itself a forecast: it assumes full occupation of all 1,900 consented homes by 2031, which is the worst plausible case.\n\nThe hands-off flow condition is the principal risk. The Vraich gauge fell below 12.1 Ml/day on 41 days in 2022 and 29 days in 2025. All exceedances were June\u2013September \u2014 the very months when peak demand applies.\n\nWhen the borehole is off, the works runs at 14.2 against 15.4 demand: a deficit of 1.2 Ml/day. Storage at 62 Ml covers 62 \u00f7 1.2 = 51.7 days at that deficit rate. The worst observed event was 41 days \u2014 ten days inside the buffer. This is not comfortable, but it is within existing infrastructure on historical data. An operator who knows the risk period in advance (June\u2013September) can enter it with storage at or near full.\n\nThere are conditions under which this buffer is tested further \u2014 an extreme drought year worse than 2022, storage below full at the onset, or demand in 2031 running above the central forecast. None of those is implausible. But the margin is roughly 25 % above the worst observed case, and the alternative (SKELWITH) leaves the board structurally short with no buffer at all.\n\nHARBOTTLE is commissioned June 2029. The new homes are phased 2027\u20132031, so demand in 2029 will be below the 2031 peak; the source is available before the supply position reaches its worst. SKELWITH completes March 2030, offering less lead time against the peak demand year.\n\n*Capital position*\n\nHARBOTTLE at \u00a38.4 m leaves \u00a32.8 m in the current envelope. That is insufficient to fund SKELWITH in full, but it could fund partial pressure management or other efficiency work. Critically, the regulatory settlement lands December 2029 \u2014 before the 2030\u201331 peak demand risk materialises \u2014 and a board that has rated supply capacity in place is better placed to argue for distribution investment in the next period than one that is already under-delivering on supply.\n\n*The deciding factor*\n\nSKELWITH fails the fundamental test: at the evidence-based (Kilvaddy-adjusted) delivery rate it does not meet the shortfall in its own target year, and it deteriorates thereafter. HARBOTTLE meets the shortfall with margin, on rated rather than forecast terms, with intermittent abstraction risk that existing storage covers on historical precedent.\n\n---\n\nREADING\n  SKELWITH cannot close the 1.2 Ml/day gap: the Kilvaddy-adjusted yield of 1.18 Ml/day falls short on day one of completion, retreats by roughly 0.1 Ml/day per year through drift-back, and produces no rated capacity \u2014 leaving the board structurally non-compliant with its supply duty by 2031 and thereafter.\n\n  HARBOTTLE delivers 3.0 Ml/day of permanent, rated supply, exceeding the shortfall by 1.8 Ml/day, commissioned before the worst demand year, with hands-off flow risk covered by 51 days of storage buffer against a 41-day historical maximum.\n\nCALL\n  HARBOTTLE\n\nGROUNDS\n  SKELWITH's evidence-adjusted yield (1.18 Ml/day, degrading at 0.1 Ml/day per year) does not meet the 1.2 Ml/day statutory shortfall even at completion, whereas HARBOTTLE provides 3.0 Ml/day of rated permanent capacity with the intermittent abstraction risk demonstrably within the 51-day storage buffer on historical data.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-5t5r017p"
+  },
+  "cost_usd": 0.0818673,
+  "duration_ms": 101123,
+  "session_id": "41f001ad-28c4-4510-8c0e-4ba8999a5de6",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 5333,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5333,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 102.32821273803711
+}

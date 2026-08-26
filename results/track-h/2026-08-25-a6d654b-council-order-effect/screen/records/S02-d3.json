@@ -1,0 +1,44 @@
+{
+  "opaque": "S02",
+  "draw": 3,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Mapping the numbers**\n\nUnder SALTGRAVE the revenue base stays roughly where it is: Marchgate \u00a3922k, Thurlmere \u00a3653k (46 t at the current average), Ostrey \u00a3540k at the new \u00a314.60 rate, total ~\u00a32.115m. No cash goes out.\n\nUnder MORVEDD: Marchgate \u00a3922k, Thurlmere \u00a31,478k (96 t \u00d7 \u00a315.40), Ostrey nil, total ~\u00a32.400m. The uplift is ~\u00a3285-302k a year before the \u00a396k capex. On the raw arithmetic MORVEDD wins easily \u2014 payback on the capex is roughly four months of incremental revenue and the three-year term yields ~\u00a3800k net of the investment.\n\nSo the question is not whether the numbers are good. They are. The question is whether the numbers can be trusted to materialise.\n\n**The concentration problem**\n\nSALTGRAVE leaves Marchgate at 44% with no contract. That is a real vulnerability and has always been one. Under MORVEDD, Thurlmere rises to 62% and Marchgate sits at 38%, also with no contract. So MORVEDD does not fix the Marchgate problem; it adds a second, larger problem on top of it. Combined, two customers with no durable commitment hold the entire revenue base. That is a structurally more fragile book than the one being replaced.\n\n**The Vennerdale clause is not boilerplate**\n\nThurlmere was acquired by Vennerdale in 2025 \u2014 one year ago. Vennerdale is demonstrably acquisitive. The change-of-control clause in the draft contract lets either side walk on six months' notice if control changes again. This clause exists because both parties know the risk is live. Vennerdale buying Thurlmere may well be a step in a larger consolidation: a trade sale of Vennerdale itself, a merger, or a vertically-integrated dyer absorbing Thurlmere's dyeing requirements in-house would all plausibly trigger it.\n\nSix months' notice from a 62% customer, in a business with 19 staff and a \u00a32.1m cost structure, is not a recoverable position without an alternative book ready to fill the space. There is none. Ostrey will have been released. Marchgate has nothing signed. The two dedicated jigs \u2014 physically modified with a separate liquor circuit \u2014 would take time and money to return to general use.\n\n**Worst-case stress test**\n\nUnder SALTGRAVE worst case, Thurlmere consolidates with a larger dyer and Marchgate follows: Ostrey's contracted 37 t at \u00a314.60 = \u00a3540k. Painful, but a floor \u2014 enough to service 19 staff in a survival configuration while rebuilding. The bank facility is untouched, cash is \u00a3180k.\n\nUnder MORVEDD worst case, Vennerdale is absorbed by a group with captive dyeing capability and triggers the six-month clause: Gallowfield's revenue falls from \u00a32.4m to Marchgate's \u00a3922k \u2014 a 62% collapse in one notice period, with dedicated infrastructure sunk into the departed customer's specification, Ostrey gone and unlikely to return quickly after being released, and a cost base built for a \u00a32.4m business. The \u00a3180k cash and the bank facility become the entire buffer against 19 redundancies or worse. That scenario is existential.\n\nThe incremental \u00a3302k a year is attractive precisely because the risk premium is real. The market is pricing that risk into the offer.\n\n**The Ostrey exchange**\n\nReleasing a customer of twenty-two years is not a neutral act. Ostrey's 37 tonnes is secured at \u00a314.60 under SALTGRAVE \u2014 a small but real uplift from the average, contracted for three years, available now. Swapping that for Thurlmere's 96 tonnes under a holding-company owner who has been in place for twelve months trades proven relationship capital for uncertain institutional commitment. If MORVEDD goes wrong, Ostrey may have moved on or signed with a competitor during the notice period. That bridge, once burned, is slow to rebuild.\n\n**The jig dedication**\n\nTwo jigs with a separate liquor circuit permanently reduce Gallowfield's operational flexibility. Even if Thurlmere honours the full three years, the business has, in effect, sold half its productive capacity to a single counterparty. Every future contract negotiation with Thurlmere at renewal is weaker for it.\n\n**On BALANCED**\n\nI do not score this as genuinely even. The revenue arithmetic favours MORVEDD on paper, but the risk architecture makes it the fragile choice for a 19-person business with a single-site, capacity-constrained model and no other three-year anchor in the book. The asymmetry between upside (better numbers for three years if everything holds) and downside (business-threatening collapse on six months' notice) tips the judgement clearly.\n\n**Conclusion**\n\nSALTGRAVE is less profitable in the optimistic scenario. It is survivable in every realistic downside. MORVEDD is more profitable in the optimistic scenario and potentially fatal in a downside that is not remote given Vennerdale's recent acquisition history and the explicit change-of-control clause. For a privately-held, 19-staff, single-site dyeworks, preserving solvency and rebuilding capacity to grow from a stable base outweighs a three-year revenue premium secured against concentrated, contractually fragile risk.\n\nSign Ostrey before 2026-11-28 and decline Thurlmere before 2026-10-31. Then turn full attention to getting something in writing with Marchgate.\n\n---\n\nREADING\n  SALTGRAVE preserves a three-name, diversified book, locks in the 22-year Ostrey relationship at an improved rate, and avoids an arrangement where a single customer acquired twelve months ago by an acquisitive group holds 62% of turnover on six months' change-of-control notice \u2014 a downside scenario that is not remote and that no level of premium revenue adequately compensates a 19-person single-site business for accepting.\n\nCALL\n  SALTGRAVE\n\nGROUNDS\n  Thurlmere's 62% concentration coupled with Vennerdale's recent acquisition of them and the contractual six-month change-of-control exit creates an existential downside risk \u2014 a revenue collapse from \u00a32.4m to \u00a3922k on one notice period, with Ostrey gone and Marchgate still unsigned \u2014 that the \u00a3302,400 annual premium does not justify for a business of this size and structure.",
+  "cost_usd": 0.11646800000000002,
+  "duration_ms": 143497,
+  "session_id": "a4386f78-b493-4d8e-a642-8ff4f6f9de6c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 973,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7479,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 973,
+        "output_tokens": 7479,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 144.59516954421997
+}

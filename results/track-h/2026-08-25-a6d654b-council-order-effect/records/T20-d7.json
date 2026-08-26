@@ -1,0 +1,61 @@
+{
+  "opaque": "T20",
+  "item_id": "K12",
+  "ordering": "BA",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The structural problem both courses face**\n\nThe normal works window opens 1 July. The renewal must be lodged by 2027-05-31. Even if the screen is commissioned on the first day of the window, the certificate takes a further six weeks, landing in mid-August \u2014 nearly eleven weeks after the renewal deadline. The July window cannot, by itself, produce a timely certificate. So PENNYQUAY cannot file with a certificate and must rely on an undertaking. That is the starting point for the whole comparison.\n\n**What PENNYQUAY actually delivers**\n\nPENNYQUAY substitutes an undertaking for a certificate and installs the screen and bearing set in July. The only published precedents for renewals filed with an undertaking are Cadgarth (2024) and Nant Elwy (2025). Both received six-year renewals. A six-year renewal from the 2028 expiry date runs to 2034 \u2014 five years short of the 2039 loan. The bank's letter of 2026-06-22 is unambiguous: a licence term shorter than the loan puts the facility under review. PENNYQUAY therefore leads, with near-certainty, to a bank facility review. For a two-person operation with a GBP 480,000 facility, a review is not an administrative inconvenience; it is a potential threat to the scheme's financial viability. The outage saving of GBP 10,716 (GBP 19,152 minus GBP 8,436) and the absence of a deposit at risk do not come close to offsetting that.\n\n**What the derogation approval pattern actually says about LINTHAUGH**\n\nThe Board decided 11 applications in 2025 in 14 weeks and granted 4. Taken alone, a 36% approval rate looks poor. But the Board published every refusal, and every refusal named a scheme with no dated regulatory driver. Blaenclydach has the most concrete dated driver possible: a statutory renewal deadline of 2027-05-31, a certificate that is a mandatory component of a complete file, and a licence expiry of 2028-05-31 visible in the public register. The dated-driver criterion appears to be binary \u2014 the refusals share one trait, which Blaenclydach does not share. The 36% figure is the rate across all applicants; the rate among applicants who can point to a dated statutory deadline is, on the published evidence, materially higher \u2014 possibly close to the approval rate for that subset, which the record does not contradict being very high.\n\n**The deposit risk under LINTHAUGH**\n\nThe GBP 46,000 deposit is payable 2026-12-01, before the 2027-01-25 decision. If the derogation is refused, it is lost. That is a real risk, but it should be sized correctly. Even if one assigns a 20% chance of refusal (which I think overstates it given the dated-driver argument), the expected loss from the deposit is GBP 9,200. The incremental cost of LINTHAUGH over PENNYQUAY in a grant scenario is GBP 9,000 (application) plus GBP 10,716 (extra export loss from February outage) = GBP 19,716. In a refusal scenario the extra cost is GBP 9,000 + GBP 46,000 = GBP 55,000 and the outcome converges to undertaking-route (same bank risk as PENNYQUAY). On a 20% refusal assumption the expected extra cost of LINTHAUGH is roughly 0.8 \u00d7 GBP 19,716 + 0.2 \u00d7 GBP 55,000 = GBP 15,773 + GBP 11,000 = GBP 26,773. Against that sits the near-certain avoidance of a bank facility review on a GBP 480,000 loan.\n\n**The fallback is real but suboptimal**\n\nLINTHAUGH's designers correctly note that a refusal on 2027-01-25 leaves eighteen weeks to lodge via undertaking \u2014 enough time before the 2027-05-31 deadline. So refusal is not terminal; it is costly (GBP 55,000 down) and sends the scheme back to the PENNYQUAY outcome including the bank risk. That fallback is genuine insurance. But it reinforces the point: PENNYQUAY voluntarily accepts the downside of a refusal without first testing whether the derogation can be won on a strong dated-driver argument.\n\n**The 15-year versus 6-year renewal question**\n\nA complete file earns a 15-year renewal (to approximately 2043), comfortably clearing the 2039 loan. A file with an undertaking earns \u2014 on two data points that are the only published precedents \u2014 six years. The bank has named the shorter-than-loan scenario explicitly. The upside of LINTHAUGH (15-year term, loan not put at risk) is categorical, not marginal.\n\n**Relative weight of the considerations**\n\n| Factor | LINTHAUGH | PENNYQUAY |\n|---|---|---|\n| Expected renewal term | 15 years (to ~2043) | 6 years (to ~2034) |\n| Bank facility risk | Avoided if derogation granted | Near-certain |\n| Incremental cost vs baseline | ~GBP 27k expected (including deposit risk) | GBP 8,436 (outage only) |\n| Deposit at risk | GBP 46,000 if refused | None |\n| Probability of a good outcome | High (dated driver removes stated refusal ground) | Low (bank review near-certain on 6-yr precedent) |\n\nThe savings on PENNYQUAY \u2014 roughly GBP 20k lower expected outage cost and no deposit risk \u2014 are real but small in comparison with the financial exposure of a bank facility review on a GBP 480,000 loan. Conversely, the derogation is applied for with the strongest possible regulatory argument (a statutory filing deadline with certificate as a mandatory element), precisely the argument that distinguishes the granted applications from every published refusal.\n\n**Recommendation**\n\nLINTHAUGH, applied for on 2026-10-19 with a clear submission that the 2027-05-31 certificate-complete renewal deadline constitutes a dated regulatory driver.\n\n---\n\nREADING\nThe dated-driver test distinguishes every published refusal from Blaenclydach's position; winning the derogation delivers a 15-year renewal that clears the 2039 loan, while PENNYQUAY's undertaking route follows two precedents (Cadgarth, Nant Elwy) that both produced 6-year renewals, a term the bank has explicitly said would put the facility under review; the expected cost of the deposit risk is modest against the near-certain financial threat of a facility review on a GBP 480,000 loan.\n\nCALL\nLINTHAUGH\n\nGROUNDS\nEvery published refusal named a scheme without a dated regulatory driver, and Blaenclydach's statutory 2027-05-31 certificate-complete filing deadline is exactly such a driver, making the derogation highly likely to succeed and deliver a 15-year renewal that keeps the loan secure, whereas PENNYQUAY's undertaking route follows two precedents that both produced 6-year renewals falling short of the 2039 loan term, a shortfall the bank has already warned would put the facility under review.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-f8kbx94z"
+  },
+  "cost_usd": 0.08370570000000001,
+  "duration_ms": 102478,
+  "session_id": "9674eac5-2b23-4a6c-b632-8425e0a77a2f",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1059,
+    "output_tokens": 5462,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5462,
+        "cache_read_input_tokens": 1059,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 103.53548312187195,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

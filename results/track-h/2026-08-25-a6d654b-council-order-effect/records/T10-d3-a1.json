@@ -1,0 +1,53 @@
+{
+  "opaque": "T10",
+  "item_id": "K11",
+  "ordering": "AB",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The fixed cost that doesn't count**\n\nBoth courses carry the same GBP 27,072 learning-curve bill (10 technicians \u00d7 ~28 excess remakes \u00d7 GBP 96). That figure belongs in the background; it doesn't discriminate between the two options and I will set it aside.\n\n---\n\n**The two variable costs that do count**\n\n*KIRKBANE's hard cost: GBP 44,000 overtime.*\nThis is not an estimate. It is a quoted, certain figure paid entirely in cash to hold output volume while quality is temporarily low. It does not reduce the remake rate\u2014it only keeps unit count up. The practices still see the elevated remake rate; they just receive the same volume of work while seeing it.\n\n*AVENSWOOD's variable cost: crossing remakes.*\nThe pilot produced 40 crossing remakes over 4 months with 2 technicians split across systems. I need to project that onto nine months of dual running with up to 9:1 splits at various stages.\n\nThe crossing-remake rate is most plausibly tied to the number of in-flight cases that span a system boundary. Each technician who crosses carries roughly 20 crossing remakes in the pilot (40 \u00f7 2 technicians). Ten technicians crossing under AVENSWAVE would, on that basis, produce about 200 crossing remakes: 200 \u00d7 GBP 96 = GBP 19,200.\n\nThat is the *pessimistic* end. In practice AVENSWOOD's waves are structured: wave 1 completes its 900-unit curve while wave 2 is onboarding, so the window in which a given practice has technicians on both systems simultaneously narrows as each wave matures. A mid-range estimate of 80\u2013120 crossing remakes (GBP 7,680\u2013GBP 11,520) is more probable, but I will use the pessimistic figure of GBP 19,200 to stress-test the case.\n\n**Even under the pessimistic crossing-remake assumption, AVENSWOOD costs roughly GBP 25,000 less in direct variable outlay than KIRKBANE.**\n\n| | KIRKBANE | AVENSWOOD (pessimistic) |\n|---|---|---|\n| Overtime | GBP 44,000 | GBP 0 |\n| Crossing remakes | GBP 0 | GBP 19,200 |\n| **Variable total** | **GBP 44,000** | **GBP 19,200** |\n\n---\n\n**The quality exposure to practices**\n\nThe financial gap already favours AVENSWOOD, but the quality picture reinforces it.\n\nUnder KIRKBANE all ten remaining technicians enter the steep part of the curve simultaneously. The blended lab-wide remake rate in the opening months calculates to roughly:\n\n(2 technicians \u00d7 3.4%) + (10 technicians \u00d7 11.4%) \u00f7 12 \u2248 **10%**\n\nThat is more than three times the settled rate of 3.1%, and it hits all forty practices in the same month. Overtime preserves unit volume but it cannot hide a trebling of the remake rate from practices whose patients have booked appointments around expected delivery dates. A practice experiencing two or three consecutive remakes on different cases in the same month has no signal that this is temporary; from their side it looks like a lab-wide deterioration.\n\nUnder AVENSWOOD the worst-case blended rate (wave 1, three technicians at 11.4%, remainder at 3.1%) is:\n\n(2 \u00d7 3.4%) + (3 \u00d7 11.4%) + (7 \u00d7 3.1%) \u00f7 12 \u2248 **5.2%**\n\nThat is a 2-percentage-point elevation, distributed unevenly across practices rather than landing on all forty simultaneously. A practice handling a single remake knows it is an isolated event, not a lab-wide signal.\n\n---\n\n**Dual libraries: the real management burden**\n\nRunning two shade libraries and two material libraries for nine months is real overhead. The pilot already proved the lab can do it for four months. Extending to nine requires discipline\u2014version control on shade notes, clear assignment of which practice communicates with which system technicians\u2014but it is not a structural impossibility. The lab has already built the muscle.\n\nUnder KIRKBANE the single-library benefit is real but is purchased at a price of GBP 44,000 plus the reputational exposure of simultaneous quality deterioration across all forty practices.\n\n---\n\n**Timeline adequacy**\n\nAVENSWOOD completes on 2027-10-04. Kessendale loses support on 2028-06-30. That is nearly nine months of clean buffer. There is no timeline argument for KIRKBANE's speed.\n\n---\n\n**Risk asymmetry**\n\nKIRKBANE concentrates risk: cost, quality, and practice impact all peak in the same window. If anything goes wrong (a technician struggles unusually, a key practice complains loudly, sickness among the ten at a critical month), the damage is widespread and synchronised.\n\nAVENSWOOD distributes risk: at any point three-quarters of the bench is at par, providing a visible quality backstop and giving experienced technicians the capacity to support newer converts. Waves also act as a learning-improvement loop\u2014if wave 1 surfaces unexpected problems (tool gaps, training gaps), wave 2 benefits from that discovery before it starts.\n\n---\n\n**Verdict**\n\nAVENSWOOD saves at minimum GBP 25,000 in direct cost over the pessimistic scenario, shields forty practices from a simultaneous quality shock, maintains operational continuity with three-quarters of the bench at settled quality throughout, and finishes nine months before the hard deadline. The dual-library burden is real but manageable, and the crossing-remake risk is bounded and well under the cost of overtime.\n\nCALL\n  AVENSWOOD\n\nGROUNDS\n  The GBP 44,000 certain overtime cost of KIRKBANE exceeds even the most pessimistic estimate of AVENSWOOD's crossing-remake exposure by roughly GBP 25,000, and KIRKBANE additionally risks all forty practices simultaneously experiencing a trebling of the remake rate in the same month\u2014a reputational concentration of harm that the graduated approach structurally avoids.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-vl9_ozyp"
+  },
+  "cost_usd": 0.10663,
+  "duration_ms": 126397,
+  "session_id": "5d2c7fce-e709-4efd-a1a1-10239ef8b02b",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 6853,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 6853,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 127.56183671951294
+}

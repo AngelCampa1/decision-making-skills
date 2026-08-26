@@ -1,0 +1,53 @@
+{
+  "opaque": "T01",
+  "item_id": "K05",
+  "ordering": "BA",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The load-bearing assumption in PENDLARROW**\n\nThe entire financial case for PENDLARROW rests on one number: the \u00a3100,000 grant. Everything else\u2014the night-call obligation, the \u00a3294,000 cash draw, the four-year retention commitment\u2014is justified by that receipt. So the first thing to test is whether the grant actually triggers.\n\n**Running the April 2027 assessment correctly**\n\nThe grant body assesses the annualised value of work in force on 2027-04-30. That date is thirteen months after the year-end from which the 31.8% figure is drawn. Small animal has been growing at eleven per cent a year.\n\n*Farm and equine in force on 2027-04-30:*\n- Existing farm and equine (flat for three years): \u00a3504,000\n- Ardgowrie contract (in force since November 2026): \u00a3118,000\n- Total farm and equine: \u00a3622,000\n\n*Small animal in force on 2027-04-30:*\n- \u00a31,336,000 \u00d7 1.11 = \u00a31,483,000\n\n*Assessment totals:*\n- Total annualised turnover: \u00a3622,000 + \u00a31,483,000 = \u00a32,105,000\n- Farm and equine share: \u00a3622,000 \u00f7 \u00a32,105,000 = **29.55 per cent**\n\nThe threshold is 30 per cent. PENDLARROW misses it by approximately half a point.\n\nThe 31.8% figure in the brief is a static calculation that adds Ardgowrie to last year's total (\u00a31,840,000 + \u00a3118,000 = \u00a31,958,000) without growing the small animal line to its April 2027 level. Ardgowrie adds \u00a3118,000 to the numerator; eleven per cent growth on \u00a31,336,000 adds approximately \u00a3147,000 to the denominator. The net movement is downward, not upward.\n\n**Sensitivity check**\n\nFor the ratio to reach exactly 30%, farm and equine would need to be at least \u00a3635,600 at assessment (= \u00a31,483,000 \u00d7 3/7). The available farm and equine in force is \u00a3622,000: a gap of roughly \u00a313,600. The grant would only become reachable if small animal growth had slowed to about 8\u00bd per cent per year\u2014a meaningful deceleration from a consistent four-year run of eleven per cent, with a new small animal surgery being opened to meet demand. There is no basis in the given figures for assuming that deceleration.\n\n**What PENDLARROW looks like without the grant**\n\nWithout the grant, the course commits:\n\n*Cash:* \u00a3260,000 fit-out plus \u00a334,000 vehicle = \u00a3294,000 drawn from a \u00a3310,000 deposit, leaving \u00a316,000. A practice turning over \u00a31.84 million would ordinarily want materially more than \u00a316,000 in unencumbered reserve. No borrowing is in place, and arranging it under time pressure would be costly.\n\n*Revenue against cost:* Ardgowrie at \u00a3118,000 less a dedicated vet at \u00a371,000 leaves \u00a347,000 gross before vehicle depreciation or any overhead attribution. That is adequate but not compelling compensation for what is being accepted.\n\n*Night call-outs:* The outgoing practice surrendered a contract they held for nine years, and they named the night call-out load as their reason. This is a specific, operational, practice-wide problem, not a personal preference of one vet. Kirstie Ballantyne-Rowe moving with the contract helps with continuity and recruitment, but the outgoing practice presumably also had a dedicated farm vet and still found the load unsustainable. The signal here is clear and should be taken at face value.\n\n*Four-year retention:* The grant (even if awarded) is fully repayable if the practice ceases to hold a herd health contract of 700 cattle or more before 2030-04-30. If night calls prove untenable and the practice has to hand Ardgowrie back\u2014precisely the sequence the outgoing practice went through\u2014the grant converts into a \u00a3100,000 liability. This risk is not remote: it is the documented outcome at the only comparable data point available.\n\n**What WESTERGATE actually costs**\n\nWESTERGATE foregoes the grant. Since the grant does not trigger under PENDLARROW anyway, this forfeiture is notional rather than real. The practice funds the fit-out from deposit (\u00a3260,000), retaining \u00a350,000 in reserve\u2014thin, but three times the PENDLARROW buffer and without the vehicle draw. The next hire goes into small animal, where growth has run at eleven per cent for four years, and where clinical capacity at Ordsall Green is the obvious need. Farm and equine stays flat, as it has, with no new obligations attached to it.\n\n**Strategic direction**\n\nThe practice is opening a small animal surgery. Small animal has grown consistently. Farm and equine has been flat for three years. Under PENDLARROW, the next hire and the primary new contract obligation go into the flat segment, and the new surgery is left to be staffed later. Under WESTERGATE, the new hire goes where the growth is, and the new surgery can open with adequate clinical cover.\n\n**Conclusion**\n\nPENDLARROW's single financial argument is the \u00a3100,000 grant. The grant does not trigger, because eleven per cent small animal growth pushes the denominator past the point where \u00a3622,000 of farm and equine can reach 30% of total annualised turnover. Without the grant, PENDLARROW asks the practice to take on night calls, a \u00a3294,000 cash draw, and a four-year retention obligation for a contract whose previous holder surrendered it under exactly those conditions. WESTERGATE is the correct course.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe April 2027 grant assessment will return approximately 29.5 per cent farm and equine\u2014not 31.8 per cent\u2014because eleven per cent small animal growth adds more to the denominator than Ardgowrie adds to the numerator, so PENDLARROW delivers the night-call obligation and a \u00a316,000 cash position without the \u00a3100,000 that is its only distinctive financial argument.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-_9r4_tt0"
+  },
+  "cost_usd": 0.23366390000000004,
+  "duration_ms": 267973,
+  "session_id": "3c043766-b9ea-4beb-ae7e-8c042e93a9c4",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1123,
+    "output_tokens": 15454,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 15454,
+        "cache_read_input_tokens": 1123,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 269.1143834590912
+}

@@ -1,0 +1,174 @@
+# Track H order-effect item K08, stratum: undefeated, ordering: AB.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K08
+block: A
+stratum: undefeated
+stratum_alias_v1: tie
+mechanism: sunk-cost-versus-option
+ordering: AB
+first_course: TREVANNOCK
+second_course: ORMSCLEUCH
+pair: K08-thistledown-bees-undefeated-ba.yaml
+domain: commercial_beekeeping
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [TREVANNOCK, ORMSCLEUCH, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Fenella Okonkwo-Brayde and I run Thistledown Apiaries. We keep 640
+  production colonies on fourteen sites across the Wrackleton uplands and we
+  sell heather and borage honey. The migratory side has stood idle since the
+  2025 season.
+
+  In 2024 we spent GBP 187,000 on that side of it: a hundred pallets, a Hiab
+  lorry and a queen rearing shed. Of the three pollination contracts that paid
+  for it, none has renewed.
+
+  The figures I have been given:
+
+  - Vantwyn Orchards offer three seasons of apple and pear pollination, 400
+    colonies from 2027-04-01, at GBP 168 a colony a season. The seasons are
+    2027, 2028 and 2029, and they want an answer by 2026-10-31.
+  - Those 400 colonies come out of the orchards too late for the Kirkhallow
+    borage, which returned GBP 71 a colony last season.
+  - Vantwyn spray to a programme they will not vary. A grower on the same
+    programme cost Whinnerdale Bees 9 per cent of the colonies they placed in
+    2025, and a replacement colony costs us GBP 210 to raise.
+  - Moving 400 colonies down to the orchards and back costs GBP 6,900 a season
+    in haulage and labour.
+  - Ravensgate Machinery will pay GBP 96,000 for the pallets and the lorry, and
+    the offer is open until 2026-11-28.
+  - The lorry loses its permit for the vale low emission zone on 2030-01-01.
+    Ravensgate price it at about GBP 20,000 as a farm vehicle after that.
+  - Coldharbour and Nyefield, both in the vale, have asked what we would charge
+    them for 2028.
+  - Heather and borage on our own sites returned GBP 143,000 across 640
+    colonies last season and needed no haulage.
+
+  Two courses are on the table.
+
+  Course TREVANNOCK. Take the three Vantwyn seasons and keep the migratory kit
+  running. GBP 67,200 a season, against the borage those colonies give up, the
+  9 per cent the spray programme takes and the haulage, and we stay in a vale
+  where two more growers are already asking our rate. The kit is worth about
+  GBP 20,000 by the time the permit goes.
+
+  Course ORMSCLEUCH. Sell the pallets and the lorry to Ravensgate before the
+  offer closes and run all 640 colonies on our own heather and borage.
+  GBP 96,000 in hand now, no spray losses, no haulage, and one business
+  instead of two. We are out of pollination for good, and the vale growers
+  asking our rate for 2028 will be asking somebody else.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism: sunk-cost-versus-option
+  mechanism_note: >-
+    The item turns on GBP 187,000 already spent, which is irrecoverable and
+    bears on neither course, set against a live option: a dealer's GBP 96,000
+    taken now, or three contracted seasons plus an open horizon in a market two
+    more growers are asking about. The 2024 spend is stated as history and is
+    never invoked as a reason. A reader who spends it again has made the error
+    the item is built around, and that error favours neither print position.
+  arithmetic: >-
+    400 x 168 = 67,200 a season. Borage forgone: 400 x 71 = 28,400. Spray
+    losses: 0.09 x 400 x 210 = 7,560. Haulage: 6,900. Net 24,340 a season, so
+    73,020 across the three seasons, plus a residual of about 20,000 once the
+    permit goes, giving about 93,020 against Ravensgate's 96,000 today.
+  why_neither_is_defeated: >-
+    The money is level and the strategy is not, and no stated figure rules
+    either course out. Over the three contracted seasons TREVANNOCK returns
+    about GBP 93,020 counting the residual, against GBP 96,000 in hand from
+    ORMSCLEUCH, a gap small enough that neither wins on arithmetic. What
+    separates them is what happens after 2029: TREVANNOCK holds a pollination
+    business in a vale where Coldharbour and Nyefield are already asking a
+    rate, at the cost of running two operations, losing 9 per cent of 400
+    colonies a season and hauling them twice a year. ORMSCLEUCH takes certain
+    money now and puts all 640 colonies on sites that returned GBP 143,000
+    without haulage, at the cost of closing pollination while the demand for it
+    is being expressed. A reader who weights the open horizon lands on
+    TREVANNOCK, a reader who weights certainty and a single operation lands on
+    ORMSCLEUCH, and both readings use every figure given.
+  information_timeline: >-
+    Read on 2026-08-25. Vantwyn want an answer by 2026-10-31 and Ravensgate's
+    GBP 96,000 is open to 2026-11-28, so the pollination decision resolves 28
+    days before the sale window closes and declining one still leaves the other
+    available. That ordering is checked deliberately: the figure defending
+    ORMSCLEUCH outlives the date on which TREVANNOCK must be accepted or
+    refused. The three contracted seasons are 2027, 2028 and 2029, all of them
+    ahead of the 2030-01-01 permit loss, so the lorry can serve every season it
+    is contracted for, and the GBP 20,000 residual is a valuation of what
+    follows rather than an offer that expires.
+  internal_consistency: >-
+    A hundred pallets carry the 400 colonies the contract asks for. 400 x 168 =
+    67,200, the figure the course paragraph names. 400 x 71 = 28,400 of borage
+    forgone sits inside the GBP 143,000 the 640 colonies returned. 0.09 x 400 x
+    210 = 7,560. 67,200 - 28,400 - 7,560 - 6,900 = 24,340 a season and 73,020
+    across three. The migratory side is idle and none of the three contracts
+    renewed, which is stated once and is consistent with the kit being free for
+    Vantwyn.
+  why_a_reader_commits: >-
+    The money is near level and the two courses point opposite ways on whether
+    the business stays in pollination at all, so the reader is being asked
+    which business to run rather than which number is larger, and Vantwyn need
+    an answer on 2026-10-31 that BALANCED does not give them.
+  checks:
+    dates:
+      - "2026-10-31 before 2026-11-28  # Vantwyn must be answered before the Ravensgate offer closes"
+      - "2026-10-31 after 2026-08-25  # the Vantwyn answer is in the future when the question is asked"
+      - "2026-11-28 after 2026-08-25  # the sale price is still open when the question is asked"
+      - "2027-04-01 after 2026-10-31  # the first contracted season starts after the answer is due"
+      - "2027-04-01 before 2030-01-01  # the first contracted season falls inside the lorry's permit"
+    arithmetic:
+      - "400 * 168 == 67200  # the pollination gross a season"
+      - "400 * 71 == 28400  # the Kirkhallow borage those colonies give up"
+      - "9 / 100 * 400 * 210 == 7560  # colonies lost to the spray programme, at the cost of raising one"
+      - "400 * 168 - 400 * 71 - 9 / 100 * 400 * 210 - 6900 == 24340  # TREVANNOCK net a season"
+      - "(400 * 168 - 400 * 71 - 9 / 100 * 400 * 210 - 6900) * 3 + 20000 < 96000  # three seasons plus residual"
+      - "(400 * 168 - 400 * 71 - 9 / 100 * 400 * 210 - 6900) * 3 + 20000 > 93000  # about GBP 93,020 against 96,000"
+      - "400 < 640  # the contracted colonies come out of the standing stock"
+      - "400 * 71 < 143000  # the borage forgone sits inside last season's own-site return"
+  admissible_calls: [TREVANNOCK, ORMSCLEUCH, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

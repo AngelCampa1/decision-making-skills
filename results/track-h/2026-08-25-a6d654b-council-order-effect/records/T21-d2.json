@@ -1,0 +1,61 @@
+{
+  "opaque": "T21",
+  "item_id": "K09",
+  "ordering": "AB",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The hours gap and what each course actually does with it**\n\nMarsh Head needs five more originated hours a week in the 07:00\u201319:00 window, measured across the four weeks ending 2027-02-28. There is also a ceiling: commissioned material cannot exceed half the originated total. Neither course can be read without those two constraints in view simultaneously.\n\nELSWICK: nine existing hours plus six from Halverston gives fifteen total, one hour above the floor. Commissioned share is 6/15 = 40 per cent, comfortably inside the 50 per cent ceiling. February clearance is as close to certain as a contract can make it.\n\nCRANMOOR: the coordinator is in post from 2026-10-01, which gives roughly four months before the assessed four-week window opens around 1 February. The station's own estimate is that fifteen new contributors are needed to reach fourteen hours. In all of 2025, nine joined without a coordinator. A dedicated coordinator should accelerate that rate, but fifteen in four months against a twelve-month baseline of nine is a genuine stretch. February clearance with CRANMOOR is uncertain.\n\n**What the August fallback changes**\n\nThe reassessment on 2027-08-31 is not a consolation prize that shrinks the grant. The four-year term runs from 2027-04-01 either way; it is the payment start date that shifts. By August the coordinator will have been in post for ten months. At 1.5 times the unassisted 2025 recruitment rate that implies roughly eleven new contributors; at twice the rate, roughly fifteen. August clearance is realistic.\n\n**The financial gap if February is missed**\n\nFixed costs while waiting: \u00a358,000 \u00d7 5/12 \u2248 \u00a324,200\nCoordinator cost over the same five months: \u00a321,000 \u00d7 5/12 \u2248 \u00a38,750\nTotal drawn from reserve: approximately \u00a333,000\nReserve remaining: approximately \u00a329,000\n\nThe station stays solvent. Grant income foregone by missing February (five months at \u00a38,000 per month) is \u00a340,000 \u2014 a real cost, but the coordinator is still working across that period and the content it generates is owned in perpetuity.\n\n**The annual cost comparison is not the decision**\n\nCRANMOOR costs \u00a321,000 a year. ELSWICK costs \u00a320,280. The difference is \u00a3720 a year, or \u00a32,880 across the four-year term. That is not a number that should drive a strategic choice.\n\n**The structural problem ELSWICK leaves intact**\n\nThe contributor register stands at 34, down from 41 in 2024 \u2014 a loss of seven in roughly two years. Commissioned producers do not enter the register. ELSWICK does nothing whatsoever for the register, which sits just four above the 30-person Local Voice threshold.\n\nMore critically, the commissioned-content ceiling creates a compounding fragility. If the uncommissioned base continues to erode \u2014 say, from nine hours to six \u2014 the station must buy more from Halverston to stay above fourteen hours total. But at that point: 8 hours commissioned against 14 total = 57 per cent, above the ceiling. ELSWICK cannot be the remedy for its own structural failure. The station would breach Local Voice compliance through no fault of the contract, because the uncommissioned foundation beneath it kept shrinking.\n\nCRANMOOR addresses the root cause. The coordinator builds originated hours and manages the register. What the roster produces is owned; it can be scheduled again, used in compilations, and cited as institutional capacity in every future funding application. Halverston hours cannot.\n\n**After Local Voice ends in 2031**\n\nWith ELSWICK the station arrives at the next funding round with a smaller contributor base than today, content it does not own, and a supplier dependency it cannot quickly unwind. With CRANMOOR it arrives with a larger register, a body of owned programming, and a coordinator whose role can be sustained from the Local Voice surplus (approximately \u00a317,000 a year).\n\n**Summary of the trade**\n\nCRANMOOR trades February certainty for structural health and long-term resilience. The downside scenario \u2014 missing February and clearing in August \u2014 draws \u00a333,000 from a \u00a362,000 reserve and foregoes \u00a340,000 in grant timing, but leaves the station architecturally stronger than ELSWICK ever could. ELSWICK trades away that structural health for certainty of a single assessment date, then locks the station into an annual payment for content it does not own while the volunteer base quietly falls below the threshold the same contract was supposed to help it meet.\n\n---\n\nCALL\nCRANMOOR\n\nGROUNDS\nAt effectively identical annual cost, CRANMOOR builds the originated hours and contributor register the station needs to sustain Local Voice compliance across all four years, whereas ELSWICK's commissioned-content dependency grows more dangerous with every volunteer lost, and the \u00a362,000 reserve is sufficient to absorb the gap if February is missed.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-9097_cmf"
+  },
+  "cost_usd": 0.151565,
+  "duration_ms": 193378,
+  "session_id": "6977220e-03f4-473e-a558-ebcddfecdc2c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 941,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 9827,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 941,
+        "output_tokens": 9827,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 194.4363374710083,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "opaque": "T21",
+  "item_id": "K09",
+  "ordering": "AB",
+  "draw": 8,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What the assessment actually tests**\n\nTwo conditions must both be met on 2027-02-28: fourteen origination hours a week (measured across the four weeks to that date) and thirty registered contributors. The station holds nine hours and thirty-four contributors. The hours gap is the live problem. The contributor count has a four-person buffer, but the trend is downward and commissioned producers do not swell the register.\n\nMissing February is not fatal \u2013 there is a second look on 2027-08-31 \u2013 but the four-year Local Voice term runs from 2027-04-01 either way. Every month of delay between April and whenever the station clears the mark is a month of GBP 8,000 grant income (GBP 96,000 \u00f7 12) that is simply not received. Five months of that is GBP 40,000. During the same gap the station runs on reserve: fixed costs alone are GBP 4,833 per month; adding either course's recurring cost puts the monthly burn at roughly GBP 6,500, so five months consumes about GBP 32,500 from a GBP 62,000 reserve. That halves the cushion without actually threatening closure, but the board's cap language \u2013 \"until the successor grant is in payment\" \u2013 implies the reserve is meant to bridge the transition cleanly, not absorb a preventable delay.\n\n**Commissioned-production cap: ELSWICK passes**\n\nLocal Voice allows commissioned content up to half the originated total. Against a fourteen-hour total the ceiling is seven hours; Halverston would supply six, one hour below it. ELSWICK also sits one hour clear of the overall threshold (fifteen against fourteen required). Both margins are thin but real, and they are backed by a signed contract rather than a recruitment forecast.\n\n**Can CRANMOOR reach fourteen hours by February 2027?**\n\nThe coordinator posts on 2026-10-01. The measurement window ends 2027-02-28. The usable build period \u2013 time to recruit, train and schedule contributors before the four counted weeks \u2013 is approximately four months, with February itself as the live test.\n\nThe problem states that fourteen hours requires about fifteen more contributors. The historical net recruitment rate, without a coordinator, was nine in all of 2025, call it 0.75 a month. Against that, the register has been contracting: forty-one in 2024 to thirty-four now, a loss of seven over roughly two years, so three to four departures a year. A coordinator would accelerate recruitment; even at triple the historical gross rate \u2013 an optimistic reading \u2013 that is about 2.25 new contributors per month. Over four months: roughly nine recruited, minus two to three who leave in the same period, a net gain of six or seven. That puts the register at about forty-one and, if hours scale with contributors, produces roughly eleven hours a week. Still three hours short.\n\nTo hit fourteen hours by February, the coordinator would need to quintuples gross recruitment and hold churn near zero simultaneously, over a five-month window. The hours could in principle come partly from re-activating dormant registered contributors rather than new faces, which softens the argument a little, but there is no indication how many of the thirty-four are dormant versus active, and the problem's own framing points to fifteen additional contributors as the requirement. On the available evidence, CRANMOOR clearing the February mark is more likely to fail than to succeed \u2013 perhaps a 30\u201340 per cent chance at best.\n\n**Contributor register risk under ELSWICK**\n\nELSWICK adds no contributors; the register stays wherever natural attrition leaves it. At a loss rate of three to four a year, the station might drop one to two by February 2027, arriving somewhere around thirty-two. That stays clear of thirty. For an August 2027 second look, the margin would erode to one or two, which is uncomfortably tight, but ELSWICK's hours are contracted and the hours check is the harder one to fail. The register decline is a genuine medium-term problem regardless of which course is chosen.\n\n**The long-term case for CRANMOOR**\n\nCRANMOOR is the structurally better answer once the station is securely funded. Hours built by roster volunteers cost nothing to repeat; Halverston's hours must be rebought every year at a rate that is only locked until 2026-12-31. The coordinator directly addresses the contributor decline, protecting the register for future grant cycles. And the post-grant budget arithmetic is cleaner: at GBP 21,000 the coordinator leaves GBP 17,000 headroom over fixed costs within the GBP 96,000 grant, whereas ELSWICK plus a future coordinator would absorb GBP 41,280 against an GBP 38,000 surplus \u2013 leaving virtually nothing for anything else. CRANMOOR is the right subsequent strategy once Local Voice is flowing and the board cap lifts.\n\n**The deciding constraint**\n\nCRANMOOR is the better long-term instrument for the wrong short-term deadline. The February 2027 check is a hard threshold with a hard date, and the recruitment maths make CRANMOOR's probability of clearing it uncomfortably low. ELSWICK converts a contracted relationship into a near-certain pass and preserves the reserve intact going into the new grant. The ongoing cost is real and the dependency is genuine, but both are manageable against GBP 96,000 income, and neither forecloses building organic capacity later.\n\n---\n\nREADING\nThe commissioned-production cap does not block ELSWICK (six hours against a seven-hour ceiling). The contributor register is safe under ELSWICK for both assessment dates. The February deadline is hard, and CRANMOOR's probability of clearing it \u2013 given that reaching fourteen hours needs roughly fifteen net new contributors in five months against a historical net recruitment rate less than a third of that \u2013 is too low to justify the GBP 40,000-plus exposure from a gap period. ELSWICK delivers certainty on the critical date at a cost the Local Voice grant can absorb; CRANMOOR should be the coordinator strategy that follows once the funding is secured.\n\nCALL\nELSWICK\n\nGROUNDS\nELSWICK delivers contracted hours that clear the February 2027 threshold with near certainty, whereas CRANMOOR depends on recruiting roughly fifteen net new contributors in five months against a historical net rate of fewer than five, making a costly gap period more probable than not.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-jo0d451z"
+  },
+  "cost_usd": 0.15983999999999998,
+  "duration_ms": 204937,
+  "session_id": "b6905f9c-e446-4d11-a198-98418c01959f",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 941,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 10379,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 941,
+        "output_tokens": 10379,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 206.07385301589966,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

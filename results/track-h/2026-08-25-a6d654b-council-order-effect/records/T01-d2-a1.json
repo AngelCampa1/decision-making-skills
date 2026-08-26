@@ -1,0 +1,53 @@
+{
+  "opaque": "T01",
+  "item_id": "K05",
+  "ordering": "BA",
+  "draw": 2,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The fit-out**\nBoth courses build Ordsall Green. The \u00a3260,000 fit-out is fixed and the order deadline is settled. The decision is purely about Ardgowrie and the grant.\n\n---\n\n**Checking the grant arithmetic**\n\nThe 31.8 per cent figure Nkem is working from is constructed by adding Ardgowrie's \u00a3118,000 to last year's farm-and-equine base and dividing by last year's total turnover plus \u00a3118,000:\n\n> \u00a3622,000 / \u00a31,958,000 = 31.8 %\n\nThe problem is the denominator. The grant assessment at 2027-04-30 reads *the annualised value of the work in force on that date*, not the prior year's accounts. That language is specifically designed to give Ardgowrie full credit from its November 2026 start \u2014 but it equally requires the small animal side to be assessed at its current run rate, not the March 2026 figure.\n\nSmall animal has grown at 11 per cent a year. The year to 2026-03-31 produced \u00a31,336,000. Thirteen months later, at the assessment date, the annualised run rate will be approximately:\n\n> \u00a31,336,000 \u00d7 1.11^(13/12) \u2248 \u00a31,496,000\n\nFarm and equine (annualised, with Ardgowrie in force): \u00a3622,000  \nTotal: \u00a3622,000 + \u00a31,496,000 = **\u00a32,118,000**  \nFarm-and-equine share: \u00a3622,000 / \u00a32,118,000 = **29.4 per cent**\n\nRounding generously \u2014 using the year-to-March-2027 small animal figure of \u00a31,336,000 \u00d7 1.11 = \u00a31,483,000 instead \u2014 gives \u00a3622,000 / \u00a32,105,000 = **29.6 per cent**. Either way the number sits below the 30 per cent threshold. The practice misses the grant on the arithmetic Nkem has been given.\n\nThe only route to 31.8 per cent is if the assessors read last year's filed accounts rather than current run rates. That interpretation conflicts with the \"in force on that date\" wording, whose evident purpose is to measure what is happening now, not twelve months ago. It would be imprudent to commit \u00a3105,000 of annual expenditure and a four-year lock-in on the assumption that the assessors adopt the less natural reading.\n\n---\n\n**If, counter to the above, the grant were obtained**\n\nEven in the scenario where the assessment methodology is lenient and the grant comes through, PENDLARROW carries a second structural weakness: the repayment clause. The grant is repayable in full \u2014 \u00a3100,000 \u2014 if the practice drops below 700 cattle before 2030-04-30. Wrentham Cross would hold Ardgowrie from November 2026 to that date, roughly 3\u00bd years.\n\nThe outgoing practice held the Ardgowrie contract for nine years before surrendering it. Their stated reason on the handover call was night call-out load. That is precisely the operational pressure PENDLARROW proposes to absorb. Kirstie Ballantyne-Rowe following the contract reduces the staffing problem materially but does not eliminate the rota burden on the existing team or the cultural impact on a practice whose growth engine is small animal. If the night-call load later proves unsustainable and the practice exits the contract before 2030, the \u00a3100,000 repayment falls due, cancelling not just the grant benefit but making the whole exercise a net negative.\n\n---\n\n**Net financial contribution from Ardgowrie**\n\nRevenue: \u00a3118,000  \nDedicated vet (on-costs included): \u00a371,000  \nNet annual contribution before vehicle: **\u00a347,000**\n\nThe vehicle is a \u00a334,000 one-off capital item (annualised over a reasonable working life, call it \u00a38,500\u2013\u00a311,000/year). True annual net: roughly **\u00a336,000\u2013\u00a338,000**. That is a real positive, but it is not transformational on a practice turning \u00a31.84 million, and it carries the operational complexity and lock-in described above.\n\n---\n\n**Cash position**\n\nDeposit: \u00a3310,000  \nFit-out: \u00a3260,000 \u2192 remaining \u00a350,000 (WESTERGATE) or \u00a350,000 before vehicle  \nVehicle under PENDLARROW: \u00a334,000 \u2192 **\u00a316,000 remaining cash reserve**\n\n\u00a316,000 is a thin emergency buffer for a fifteen-person practice across three premises, especially while waiting for a grant that, on the numbers, will probably not arrive. The grant is claimed after the assessment and against invoices, so any reimbursement comes months after the spending. WESTERGATE leaves \u00a350,000 in reserve and avoids the vehicle outlay.\n\n---\n\n**The small animal trajectory**\n\nSmall animal revenue has compounded at 11 per cent for four years. Farm and equine has been flat for three. Ordsall Green is a small animal surgery. The practice's growth is clearly in small animal. WESTERGATE positions the next hire \u2014 who will be a small animal vet for the new premises \u2014 squarely behind the business's strongest growth vector. There is no strategic argument for constraining that by subsidising the farm-and-equine denominator, especially when the subsidy tool (the grant) is mathematically unlikely to trigger.\n\n---\n\n**Summary**\n\n| | PENDLARROW | WESTERGATE |\n|---|---|---|\n| Fit-out funded | Yes (deposit) | Yes (deposit) |\n| Grant probable | No (\u224829.5%, below 30%) | N/A |\n| Annual net from Ardgowrie | +\u00a336\u201338k | \u00a30 |\n| Cash reserve after commitments | \u00a316,000 | \u00a350,000 |\n| Night rota obligation | Yes, to 2030 | No |\n| Repayment exposure | \u00a3100,000 if exit before 2030 | None |\n| Aligns with growth direction | Partially | Yes |\n\nPENDLARROW's financial case rests almost entirely on the grant. The grant almost certainly fails. Without it, the course takes on significant operational risk and a thin cash buffer for a modest annual contribution.\n\nWESTERGATE is the cleaner course.\n\n---\n\nREADING\nThe 31.8 per cent figure rests on last year's small animal base, but the assessment will read the annualised run rate in force on 2027-04-30; eleven-per-cent annual small animal growth takes that run rate to roughly \u00a31,496,000, diluting farm and equine's share to approximately 29.4 per cent and failing the 30 per cent threshold, so the \u00a3100,000 grant on which PENDLARROW is built almost certainly does not arrive; even if the assessors read it leniently and the grant were paid, the repayment clause then locks the practice into sustaining the same night call-out load that the outgoing nine-year operator cited when it handed the contract back; WESTERGATE funds the Ordsall Green fit-out cleanly from deposit, leaves a \u00a350,000 cash reserve, avoids the lock-in entirely, and directs the next hire into the arm of the business that has grown at eleven per cent for four consecutive years.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe 31.8 per cent figure Nkem is relying on uses the prior-year small animal base; by the April 2027 assessment, eleven-per-cent annual small animal growth dilutes the farm-and-equine share to roughly 29.5 per cent \u2014 below the 30 per cent threshold \u2014 making the \u00a3100,000 grant that is PENDLARROW's sole financial justification almost certainly unachievable, and even if secured the practice would be locked into exactly the night-call-out burden that caused the outgoing nine-year operator to surrender the contract.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-9s_hxldc"
+  },
+  "cost_usd": 0.20903825,
+  "duration_ms": 243752,
+  "session_id": "75257c8d-7a6f-4b06-a1e7-ec52d5d6ab81",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 1123,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 13554,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 1123,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 13554,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 1123,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1123
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 244.7923674583435
+}

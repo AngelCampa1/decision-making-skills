@@ -1,0 +1,1774 @@
+{
+  "set_version": 2,
+  "set_version_source": "items/*.yaml; the runner did not stamp it into records",
+  "draws": 176,
+  "items": 11,
+  "orderings": [
+    "AB",
+    "BA"
+  ],
+  "failed": 0,
+  "note": "An index over records/, not a RunRecord checkpoint. council has its own record shape and no answer key; the replies are in records/ verbatim.",
+  "index": [
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d1.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d2.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d3.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d4.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d5.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d6.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d7.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T01",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T01-d8.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d1.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d2.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d3.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d4.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d5.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d6.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d7.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T02",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T02-d8.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d1.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d2.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d3.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d4.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d5.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d6.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d7.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T03",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T03-d8.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d1.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d2.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d3.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d4.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d5.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d6.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d7.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T04",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T04-d8.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d1.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d2.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d3.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d4.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d5.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d6.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d7.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T05",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T05-d8.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d1.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d2.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d3.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d4.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d5.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d6.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d7.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T06",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T06-d8.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d1.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d2.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d3.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d4.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d5.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d6.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d7.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T07",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T07-d8.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d1.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d2.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d3.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d4.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d5.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d6.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d7.json"
+    },
+    {
+      "item_id": "K05",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T08",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T08-d8.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d1.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d2.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d3.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d4.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d5.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d6.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d7.json"
+    },
+    {
+      "item_id": "K10",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T09",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T09-d8.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d1.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d2.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d3.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d4.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d5.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d6.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d7.json"
+    },
+    {
+      "item_id": "K11",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T10",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T10-d8.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d1.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d2.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d3.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d4.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d5.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d6.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d7.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T11",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T11-d8.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d1.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d2.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d3.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d4.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d5.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d6.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d7.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T12",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T12-d8.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d1.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d2.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d3.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d4.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d5.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d6.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d7.json"
+    },
+    {
+      "item_id": "K07",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T13",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T13-d8.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d1.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d2.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d3.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d4.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d5.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d6.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d7.json"
+    },
+    {
+      "item_id": "K04",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T14",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T14-d8.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d1.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d2.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d3.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d4.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d5.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d6.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d7.json"
+    },
+    {
+      "item_id": "K03",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T15",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T15-d8.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d1.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d2.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d3.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d4.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d5.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d6.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d7.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T16",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T16-d8.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d1.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d2.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d3.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d4.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d5.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d6.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d7.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T17",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T17-d8.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d1.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d2.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d3.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d4.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d5.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d6.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d7.json"
+    },
+    {
+      "item_id": "K13",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T18",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T18-d8.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d1.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d2.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d3.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d4.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d5.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d6.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d7.json"
+    },
+    {
+      "item_id": "K08",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T19",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T19-d8.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 1,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d1.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 2,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d2.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 3,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d3.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 4,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d4.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 5,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d5.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 6,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d6.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 7,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d7.json"
+    },
+    {
+      "item_id": "K12",
+      "ordering": "BA",
+      "draw": 8,
+      "opaque": "T20",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T20-d8.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d1.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d2.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d3.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d4.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d5.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d6.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d7.json"
+    },
+    {
+      "item_id": "K09",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T21",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T21-d8.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 1,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d1.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 2,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d2.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 3,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d3.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 4,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d4.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 5,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d5.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 6,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d6.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 7,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d7.json"
+    },
+    {
+      "item_id": "K06",
+      "ordering": "AB",
+      "draw": 8,
+      "opaque": "T22",
+      "arm": "off",
+      "ok": true,
+      "model": "sonnet",
+      "record": "T22-d8.json"
+    }
+  ]
+}

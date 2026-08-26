@@ -1,0 +1,506 @@
+[
+  {
+    "item_id": "K07",
+    "opaque": "S01",
+    "first_course": "HAVERSHOLT",
+    "second_course": "LINDCASTER",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S01.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.100297
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.125577
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.074822
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.089027
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K13",
+    "opaque": "S02",
+    "first_course": "SALTGRAVE",
+    "second_course": "MORVEDD",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S02.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "SALTGRAVE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.127008
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "SALTGRAVE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.181568
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "SALTGRAVE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.11646800000000002
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "SALTGRAVE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.16900300000000001
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K11",
+    "opaque": "S03",
+    "first_course": "KIRKBANE",
+    "second_course": "AVENSWOOD",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S03.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "second",
+        "detail": "AVENSWOOD printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.181205
+      },
+      {
+        "draw": 2,
+        "outcome": "second",
+        "detail": "AVENSWOOD printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.16119
+      },
+      {
+        "draw": 3,
+        "outcome": "second",
+        "detail": "AVENSWOOD printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.12118999999999999
+      },
+      {
+        "draw": 4,
+        "outcome": "second",
+        "detail": "AVENSWOOD printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.15517
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "second",
+      "second",
+      "second",
+      "second"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K08",
+    "opaque": "S04",
+    "first_course": "TREVANNOCK",
+    "second_course": "ORMSCLEUCH",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S04.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "second",
+        "detail": "ORMSCLEUCH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.100721
+      },
+      {
+        "draw": 2,
+        "outcome": "second",
+        "detail": "ORMSCLEUCH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.16466599999999998
+      },
+      {
+        "draw": 3,
+        "outcome": "second",
+        "detail": "ORMSCLEUCH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.09818600000000001
+      },
+      {
+        "draw": 4,
+        "outcome": "second",
+        "detail": "ORMSCLEUCH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.07878099999999999
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "second",
+      "second",
+      "second",
+      "second"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K12",
+    "opaque": "S05",
+    "first_course": "PENNYQUAY",
+    "second_course": "LINTHAUGH",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S05.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "second",
+        "detail": "LINTHAUGH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.11960425000000001
+      },
+      {
+        "draw": 2,
+        "outcome": "second",
+        "detail": "LINTHAUGH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.1084107
+      },
+      {
+        "draw": 3,
+        "outcome": "second",
+        "detail": "LINTHAUGH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.1109257
+      },
+      {
+        "draw": 4,
+        "outcome": "second",
+        "detail": "LINTHAUGH printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.1001757
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "second",
+      "second",
+      "second",
+      "second"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K10",
+    "opaque": "S06",
+    "first_course": "HAVERSHOLT",
+    "second_course": "TREGOWAN",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S06.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.133888
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.12182799999999998
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.09085299999999999
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "HAVERSHOLT printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.120883
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K09",
+    "opaque": "S07",
+    "first_course": "CRANMOOR",
+    "second_course": "ELSWICK",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S07.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "no_call",
+        "detail": "CALL block carried more than the call",
+        "surface": "exact",
+        "cost_usd": 0.17668999999999999
+      },
+      {
+        "draw": 2,
+        "outcome": "no_call",
+        "detail": "CALL block carried more than the call",
+        "surface": "exact",
+        "cost_usd": 0.258465
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "CRANMOOR printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.28893
+      }
+    ],
+    "failures": [],
+    "calls_spent": 3,
+    "outcomes": [
+      "no_call",
+      "no_call",
+      "first"
+    ],
+    "verdict": "reject",
+    "disagreeing_draw": 3
+  },
+  {
+    "item_id": "K05",
+    "opaque": "S08",
+    "first_course": "WESTERGATE",
+    "second_course": "PENDLARROW",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S08.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "WESTERGATE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.19568825
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "WESTERGATE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.23045390000000002
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "WESTERGATE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.16241390000000003
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "WESTERGATE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.2297489
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K03",
+    "opaque": "S09",
+    "first_course": "TARNSIDE",
+    "second_course": "VELLACOTT",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S09.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "second",
+        "detail": "VELLACOTT printed second under AB",
+        "surface": "exact",
+        "cost_usd": 0.09062950000000002
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "TARNSIDE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.0896854
+      }
+    ],
+    "failures": [],
+    "calls_spent": 2,
+    "outcomes": [
+      "second",
+      "first"
+    ],
+    "verdict": "reject",
+    "disagreeing_draw": 2
+  },
+  {
+    "item_id": "K06",
+    "opaque": "S10",
+    "first_course": "KESTERWICK",
+    "second_course": "ARDENSHAW",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S10.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "KESTERWICK printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.24829425
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "KESTERWICK printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.14228470000000001
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "KESTERWICK printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.1292197
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "KESTERWICK printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.2180397
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  },
+  {
+    "item_id": "K04",
+    "opaque": "S11",
+    "first_course": "HARBOTTLE",
+    "second_course": "SKELWITH",
+    "stratum": "undefeated",
+    "prompt_path": "C:\\Users\\Angel\\AppData\\Local\\Temp\\claude\\D--code-decision-making\\b48b4cd8-57cc-4ae3-9847-7f46306dc97b\\scratchpad\\council-v2\\screen-run\\prompts\\S11.txt",
+    "draws": [
+      {
+        "draw": 1,
+        "outcome": "first",
+        "detail": "HARBOTTLE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.09761874999999999
+      },
+      {
+        "draw": 2,
+        "outcome": "first",
+        "detail": "HARBOTTLE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.1355673
+      },
+      {
+        "draw": 3,
+        "outcome": "first",
+        "detail": "HARBOTTLE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.06644230000000001
+      },
+      {
+        "draw": 4,
+        "outcome": "first",
+        "detail": "HARBOTTLE printed first under AB",
+        "surface": "exact",
+        "cost_usd": 0.10446730000000001
+      }
+    ],
+    "failures": [],
+    "calls_spent": 4,
+    "outcomes": [
+      "first",
+      "first",
+      "first",
+      "first"
+    ],
+    "verdict": "admit",
+    "disagreeing_draw": null
+  }
+]

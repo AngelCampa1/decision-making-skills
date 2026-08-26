@@ -1,0 +1,61 @@
+{
+  "opaque": "T08",
+  "item_id": "K05",
+  "ordering": "AB",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The grant arithmetic is the load-bearing question. Everything else follows from it.**\n\nThe briefing presents 31.8 per cent as the ratio at the April 2027 assessment if Ardgowrie is taken. That figure is calculated by adding Ardgowrie revenue to last year's base and leaving the small animal number unchanged:\n\n> \u00a3622,000 farm/equine \u00f7 \u00a31,958,000 total = 31.8 per cent\n\nBut the assessment does not read last year's accounts. It reads the annualised value of the work in force on 2027-04-30 \u2014 a current run-rate test. The small animal book has grown 11 per cent a year for four years. There is no reason to freeze it at its 2026-03-31 level for the assessment. By April 2027, roughly one year of 11 per cent growth will have run through the small animal revenues.\n\n**Assessment-date projection under PENDLARROW**\n\n| Line | Calculation | Amount |\n|---|---|---|\n| Small animal (grown 11%) | \u00a31,336,000 \u00d7 1.11 | \u00a31,483,000 |\n| Existing farm/equine (flat three years) | unchanged | \u00a3504,000 |\n| Ardgowrie (in force from Nov 2026) | annualised | \u00a3118,000 |\n| Farm/equine total | | \u00a3622,000 |\n| Practice total | | \u00a32,105,000 |\n| **Ratio** | \u00a3622,000 \u00f7 \u00a32,105,000 | **29.55 per cent** |\n\nThe threshold is 30 per cent. The ratio misses it. The \u00a3100,000 grant is not paid.\n\nThere is a further compression risk on top of this. The Ordsall Green surgery is a new small animal unit. Once it is trading, it will add revenue that the 11 per cent trend line does not yet include. That pushes the ratio lower still. The 30 per cent bar recedes as the practice grows.\n\n**What PENDLARROW costs without the grant**\n\nCash position after fit-out and vehicle:\n\n| Movement | Amount | Running total |\n|---|---|---|\n| Deposit | | \u00a3310,000 |\n| Fit-out | (\u00a3260,000) | \u00a350,000 |\n| Fitted vehicle | (\u00a334,000) | \u00a316,000 |\n\nThe practice opens Ordsall Green with \u00a316,000 in reserve and no credit facility. That is the thinnest of margins against a new premises, a new staff complement, and a farm vet salary beginning in month one.\n\nThe Ardgowrie contract itself: \u00a3118,000 revenue less \u00a371,000 farm vet cost gives \u00a347,000 gross contribution annually before vehicle running costs, depreciation, and any share of practice overhead. That is a reasonable return in normal circumstances. But the outgoing practice of nine years handed this contract back specifically because of the night call-out load. Their farm vet Kirstie Ballantyne-Rowe is willing to transfer, which is a genuine operational positive \u2014 she knows the herd and the land. But she is one person, and a farm vet who moves with a contract can also move on; if she departs before 2030, the practice inherits the night rota with no resident specialist.\n\nThe grant repayment clause (full repayment if the practice drops below 700 cattle before 2030-04-30) would not bite if the grant is never paid \u2014 but the commercial obligation to hold the contract remains. Returning it after two or three years would have its own costs in professional standing and client relationships.\n\n**What WESTERGATE actually gives up**\n\nThe briefing frames WESTERGATE as forgoing \u00a3100,000. But that grant was almost certainly unattainable. The correct framing is that WESTERGATE forfeits a grant the practice probably cannot qualify for under the trajectory of its own business. It is not a live \u00a3100,000 on the table; it is a conditional \u00a3100,000 tied to a ratio test the growing small animal book will undercut by the assessment date.\n\nCash after WESTERGATE fit-out: \u00a350,000. That is still tight, but it is \u00a334,000 better than PENDLARROW and there is no farm vet salary beginning immediately, no night rota to staff, and no capital vehicle expenditure.\n\nThe next hire goes into small animal, which is where the growth is. The new Ordsall Green premises feeds that same growth. Farm and equine stays flat as a book and shrinks as a percentage, but that is the honest trajectory of the practice.\n\n**Summary**\n\nPENDLARROW's financial case rests almost entirely on the grant. The grant fails the ratio test at assessment by a margin of roughly half a percentage point, and the margin gets wider, not narrower, as Ordsall Green starts trading. Without the grant, PENDLARROW is a demanding night-call commitment producing \u00a347,000 gross margin, launched with \u00a316,000 in reserve, for a contract the incumbent practice chose to surrender. WESTERGATE foregoes a grant that was not genuinely available, preserves better cash, and concentrates effort where the practice is actually growing.\n\n---\n\nREADING\nThe 31.8 per cent ratio used to justify the grant is calculated on frozen small-animal revenues; the assessment reads current run-rate, and at eleven per cent annual small-animal growth the ratio at 2027-04-30 is approximately 29.6 per cent, below the qualifying threshold, so the grant falls away, leaving PENDLARROW as a night-call-heavy cattle commitment entered with \u00a316,000 cash reserve for a gross annual margin of under \u00a350,000.\n\nCALL\nWESTERGATE\n\nGROUNDS\nThe grant that makes PENDLARROW's numbers work will not be paid, because eleven per cent annual small-animal growth brings the farm-and-equine share to roughly 29.6 per cent at the April 2027 assessment, short of the 30 per cent threshold, and without it PENDLARROW commits the practice to the night-call burden that drove away the outgoing contractor while leaving only \u00a316,000 in reserve.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-dr5w0c1o"
+  },
+  "cost_usd": 0.13092890000000001,
+  "duration_ms": 161385,
+  "session_id": "db0cde4c-5d95-4678-bde8-1dbfb27cefc0",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1123,
+    "output_tokens": 8605,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 8605,
+        "cache_read_input_tokens": 1123,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 162.67223405838013,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

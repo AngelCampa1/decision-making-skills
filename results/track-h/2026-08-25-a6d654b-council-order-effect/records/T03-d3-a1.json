@@ -1,0 +1,53 @@
+{
+  "opaque": "T03",
+  "item_id": "K11",
+  "ordering": "BA",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**What the two courses actually cost**\n\nThe GBP 27,072 crossing cost (10 technicians \u00d7 28 extra remakes \u00d7 GBP 96) is identical under both courses and therefore drops out of the comparison. The relevant difference is between:\n\n- the GBP 44,000 overtime bill that KIRKBANE requires and AVENSWOOD avoids, and\n- the cross-system remake cost that AVENSWOOD incurs and KIRKBANE avoids.\n\nEverything else follows from those two numbers.\n\n---\n\n**Estimating AVENSWOOD's cross-system remake exposure**\n\nThe pilot gives us a measured rate. Two technicians moved to the new system; over four months, with two techs on the new system and ten on the old, 40 cases were remade because a case crossed between systems. I will use a mixing-product model: the cross-system remake rate is proportional to (techs on new) \u00d7 (techs on old), since that product represents the combinatorial exposure \u2014 the more balanced the split, the more opportunities for a case to touch both sides.\n\nPilot baseline: 2 \u00d7 10 = 20 mixing-units over 4 months \u2192 40 remakes \u2192 **0.5 remakes per mixing-unit-month**.\n\nUnder AVENSWOOD the dual-system window runs from 2027-01-04 to 2027-10-04, nine months, with the two settled pilot technicians already on the new system throughout:\n\n| Period | On new | On old | Product | Months | Unit-months |\n|---|---|---|---|---|---|\n| Jan \u2013 Mar 2027 | 2 (pilot) + 3 (batch 1) = 5 | 7 | 35 | 3 | 105 |\n| Apr \u2013 Jun 2027 | 5 + 3 (batch 2) = 8 | 4 | 32 | 3 | 96 |\n| Jul \u2013 Sep 2027 | 8 + 3 (batch 3) = 11 | 1 | 11 | 3 | 33 |\n| **Total** | | | | | **234** |\n\n234 unit-months \u00d7 0.5 = **117 estimated cross-system remakes** \u2192 117 \u00d7 GBP 96 = **GBP 11,232**.\n\nThis estimate could reasonably be doubled for uncertainty (poor case routing, practices with longer treatment spans): that gives GBP 22,464. Even at three times the point estimate the figure is GBP 33,696 \u2014 still below GBP 44,000.\n\n---\n\n**Net financial position**\n\n| Item | KIRKBANE | AVENSWOOD |\n|---|---|---|\n| Crossing remakes (shared) | GBP 27,072 | GBP 27,072 |\n| Overtime | GBP 44,000 | \u2013 |\n| Cross-system remakes | \u2013 | GBP 11,232 (est.) |\n| **Total** | **GBP 71,072** | **GBP 38,304** |\n\nAVENSWOOD is cheaper by roughly GBP 30,000\u201335,000 at any plausible estimate of cross-system remakes.\n\n---\n\n**Non-financial factors, KIRKBANE**\n\nThe 11.4% opening remake rate is 3.7\u00d7 the settled rate. Under KIRKBANE every one of the forty practices sees that rate simultaneously, in the same month, across all the work they send. A practice that notices a sudden quality deterioration \u2014 and they will, because they see our shade notes and material library too \u2014 has no context that it is temporary or confined. Practices that defect during the peak period do not return easily; long-run revenue loss from even two or three lost accounts would dwarf the GBP 44,000 overtime saving.\n\nThere is also the staff dimension. Under KIRKBANE all ten technicians are on the steep part of the curve at the same time, with no senior colleague on the new system to consult. The pilot pair had each other; ten people all struggling simultaneously have no internal resource.\n\n---\n\n**Non-financial factors, AVENSWOOD**\n\nThe dual shade library and material library create genuine ongoing work. Practices routing cases may receive inconsistent guidance if their account manager is unsure which library applies. This is a real cost in administrative time and potential miscommunication, but it is a management problem with known mitigations (clear case-routing rules, single practice-facing contact who knows the split). It is not a surprise: the firm already ran the pilot in exactly this configuration.\n\nThe nine-month dual-system window also means the old system must remain maintained through October 2027. That has a cost in licence fees and IT overhead not quantified here. Even so, Kessendale's support end-date is 2028-06-30; AVENSWOOD's last switch in October 2027 retires the old system eight months before that deadline, which is comfortable.\n\n---\n\n**The KIRKBANE timing claim**\n\nKIRKBANE's stated advantage is that \"the whole crossing is behind us by 2027-12-04.\" But the crossing takes eleven months from the start date, so the last technician finishes in late November or December 2027. Under AVENSWOOD the last technician begins in October 2027 and finishes crossing around September 2028 \u2014 but Kessendale is already retired from October 2027. The learning curve still runs, but it runs on the new system only, causing no dual-system complexity. The meaningful deadline is when Kessendale is switched off, not when the last technician reaches 3.1%; on that measure both courses are safe.\n\n---\n\n**Summary**\n\nAVENSWOOD saves roughly GBP 30,000\u201335,000 in direct costs, exposes no more than a quarter of the bench to the high remake rate at any moment, and limits the quality signal visible to each of the forty practices to a fraction of what KIRKBANE would show them. Its costs \u2014 cross-system remakes and dual-system complexity \u2014 are quantifiable, manageable, and in aggregate materially smaller than GBP 44,000. KIRKBANE's overtime saving is real but insufficient to offset its financial, reputational, and staff costs.\n\nREADING\nThe net financial advantage to AVENSWOOD is approximately GBP 30,000\u201335,000 (GBP 44,000 overtime avoided against roughly GBP 11,000 in estimated cross-system remakes), and AVENSWOOD also caps the visible remake rate at a fraction of KIRKBANE's simultaneous-peak exposure across all forty practices.\n\nCALL\nAVENSWOOD\n\nGROUNDS\nThe GBP 44,000 overtime saving under AVENSWOOD exceeds the modelled cross-system remake cost by a margin that survives even pessimistic assumptions, and keeping three-quarters of the bench at settled rates throughout protects the forty practice relationships that KIRKBANE would put at risk all at once.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-82r8tz_7"
+  },
+  "cost_usd": 0.146095,
+  "duration_ms": 176600,
+  "session_id": "7bb22af8-57dd-4be8-b089-d20a81fffc2e",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 9484,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 9484,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 177.71157884597778
+}

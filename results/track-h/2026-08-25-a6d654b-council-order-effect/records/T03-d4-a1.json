@@ -1,0 +1,53 @@
+{
+  "opaque": "T03",
+  "item_id": "K11",
+  "ordering": "BA",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The fixed cost that does not change the decision**\n\nBoth courses carry the same GBP 27,072 in above-par remakes from the ten technicians crossing the learning curve. That cancels out and need not be weighed again.\n\n---\n\n**What KIRKBANE actually costs versus what it buys**\n\nKIRKBANE spends GBP 44,000 in overtime. In return it buys three things: a single shade and material library from day one, no cases stranded between systems, and a faster finish (all crossing complete by 2027-12-04, roughly nineteen months before the 2028-06-30 deadline).\n\nThe single-library and no-stranded-cases benefits are real. The question is what they are worth against GBP 44,000 plus the quality-shock risk described below.\n\n---\n\n**What AVENSWOOD actually costs versus what it buys**\n\nAVENSWOOD saves the GBP 44,000 and keeps three-quarters of the bench at 3.1% throughout. It costs two things: nine months of dual-library operation, and cross-system remakes during the overlap.\n\nThe pilot gives us a rate for cross-system remakes: 40 cases in four months with two technicians straddling the boundary. Under AVENSWOOD the boundary exists for nine months and the number of technician-pairs spanning both systems is higher \u2014 peaking at 6 \u00d7 6 = 36 pairs in the middle tranche versus the pilot's 2 \u00d7 10 = 20. A rough scaling on interface-size and duration gives somewhere between 90 and 135 extra cross-system remakes, costing GBP 8,640 \u2013 12,960. Call it GBP 11,000 in the middle. Dual-library maintenance adds unquantified but modest administrative load. So AVENSWOOD's extra cost compared with a clean single-system world is roughly GBP 11,000, against a saving of GBP 44,000, for a net financial advantage of roughly GBP 33,000 before any quality or commercial considerations.\n\n---\n\n**The decisive asymmetry: where the quality shock lands**\n\nUnder KIRKBANE, every technician starts at 11.4% on 2027-01-04. The laboratory's settled rate is 3.1%. That is an almost fourfold spike. All forty practices see it simultaneously, in the same month. A practice receiving remade crowns at nearly four times the rate it expects has every reason to start a conversation with a competing laboratory \u2014 and, critically, all forty have that conversation at the same time, which is also the time when the laboratory is least able to respond because every bench is simultaneously on the worst part of the curve.\n\nUnder AVENSWOOD, at no point does more than one tranche of three technicians sit on the 11.4% phase at the same time, and three-quarters of the bench never leaves 3.1%. A practice whose cases go to a transitioning technician sees a quality dip; a practice whose cases go to settled technicians sees nothing unusual. Problems are distributed across time and across the practice base rather than concentrated into a single sharp event. The laboratory can redirect difficult cases to settled technicians while the new cohort is on the steep section \u2014 an option KIRKBANE forecloses entirely.\n\n---\n\n**The deadline**\n\nThe Kessendale support deadline is 2028-06-30. Under AVENSWOOD the last technician moves to the new system on 2027-10-04, nine months before that date. The learning curve will still be running but the technician will be on the new system. The deadline is met comfortably. KIRKBANE is faster to a finished crossing (end of 2027) but the extra speed delivers no compliance benefit \u2014 both courses clear the deadline by a comfortable margin.\n\n---\n\n**Peer support and the pilot pair's experience**\n\nTwo technicians have already crossed the curve. Under AVENSWOOD early movers get the benefit of those two experienced colleagues, then become the experienced colleagues for subsequent tranches. The learning compounds in a structured way. Under KIRKBANE all ten start simultaneously; the two experienced technicians face ten learners at once and the peer support benefit is diluted.\n\n---\n\n**Summary table**\n\n| | AVENSWOOD | KIRKBANE |\n|---|---|---|\n| Overtime | Saved: +GBP 44,000 | \u2013GBP 44,000 |\n| Cross-system remakes | Est. \u2013GBP 11,000 | Nil |\n| Dual library burden | 9 months (modest) | Nil |\n| Net financial position | ~GBP 33,000 better | Baseline |\n| Max remake rate visible to practices | ~11.4%, one tranche at a time | 11.4%, all 40 practices, same month |\n| Deadline compliance | \u2713 (Oct 2027 start, comfortable margin) | \u2713 (Dec 2027 finish) |\n| Pace of completion | Last starts Oct 2027 | All done Dec 2027 |\n\nThe financial case alone (roughly GBP 33,000 net in AVENSWOOD's favour) would be enough. The practice-relationship argument adds a further asymmetry that is harder to quantify but potentially much larger: losing a single loyal practice permanently would cost more than GBP 44,000 per year in revenue, and KIRKBANE puts all forty at risk in the same window.\n\nAVENSWOOD is the stronger course.\n\n---\n\nREADING\n  The learning-curve remake cost is identical under both courses and cancels from the comparison. KIRKBANE's GBP 44,000 overtime outlay buys operational cleanliness and a faster finish, but the finish is still nine months inside the 2028-06-30 deadline, so the speed gains nothing on compliance. What KIRKBANE cannot buy back is the concentrated quality shock it delivers: every technician at 11.4% on the same day means all forty practices experience a near-fourfold spike in their remake rate simultaneously, precisely when the laboratory has least capacity to compensate. AVENSWOOD costs roughly GBP 11,000 in cross-system remakes and nine months of dual-library overhead against a GBP 44,000 overtime saving, for a net financial advantage of approximately GBP 33,000, and it keeps three-quarters of the bench at 3.1% throughout, limiting practice exposure to one transitioning tranche at a time. The commercial risk of all forty practices reconsidering their supplier in the same month dwarfs the operational inconvenience of running two systems for nine months.\n\nCALL\n  AVENSWOOD\n\nGROUNDS\n  Concentrating all ten technicians on the steep part of the curve in the same month exposes every one of the forty practices to a simultaneous near-fourfold spike in remake rates, a commercial risk that exceeds the GBP 44,000 overtime cost KIRKBANE avoids paying, while AVENSWOOD's cross-system remake penalty is roughly GBP 11,000 \u2014 leaving a net financial and relational advantage firmly with the staggered course.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-drhd303b"
+  },
+  "cost_usd": 0.09742500000000001,
+  "duration_ms": 121853,
+  "session_id": "93a367fd-8dd8-4bb1-b330-5b64c43c5b2c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 861,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 6240,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 861,
+        "output_tokens": 6240,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 123.0448477268219
+}

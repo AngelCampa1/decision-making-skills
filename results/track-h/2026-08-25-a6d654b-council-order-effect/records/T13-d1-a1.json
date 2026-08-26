@@ -1,0 +1,53 @@
+{
+  "opaque": "T13",
+  "item_id": "K07",
+  "ordering": "AB",
+  "draw": 1,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers as they stand**\n\nThe grant is GBP 340,000 with a hard stop of 2028-09-30. The two courses exhaust it in different directions: GBP 295,000 plant + GBP 45,000 conservation (180 items) versus GBP 340,000 conservation (1,360 items). The surface reading is that LINDCASTER treats nearly eight times as many items immediately, which looks decisive until you examine what \"treated\" actually means in an uncontrolled environment.\n\n**What the conservator's report does to LINDCASTER**\n\nIdris Sankey-Marchmont's written finding is not a caveat; it is a technical condemnation of LINDCASTER as a conservation strategy. Rehousing and aqueous treatment carried out into the strongroom as it stands will need to be repeated within a decade. That means the 1,360 items treated under LINDCASTER are not conserved\u2014they are temporarily stabilised. You would be spending GBP 340,000 to buy roughly ten years of partial protection on 1,360 items, after which the spend must be made again. LINDCASTER does not treat 1,360 items; it defers their deterioration for one cycle.\n\n**What the buffered enclosures do and do not do**\n\nLINDCASTER's case rests heavily on the enclosures holding an item's microclimate within 3 points of its packing condition for 8\u201312 years. That is worth taking seriously, but only if packing condition is already safe. These items would be packed in a strongroom running at 62 per cent RH with an 11-point swing. Packed at 62 %, the enclosure holds them within 3 points\u2014call it 59\u201365 %. The standard is 45\u201355 %. The enclosures reduce fluctuation, which is a real gain, but they do not correct the absolute humidity. The conservator's report covers exactly this scenario: the problem is the ambient environment, and the enclosures do not replace it. The 8\u201312 year protection figure therefore applies to items already held at a safe packing humidity, not to items packed at 62 % and then enclosed.\n\n**The 2029-30 capital line**\n\nLINDCASTER asks the board to commit to GBP 295,000-plus of plant from an unallocated line that does not yet exist as a commitment and will be set in November 2028 by a board that may face competing demands. The Threlkeld quote will have lapsed; a new quote in 2029 will be higher. If the GBP 400,000 line is allocated in full at 2029 costs, the plant may consume most or all of it, leaving little for conservation. If it is not allocated, LINDCASTER's conservation spend will have been made into an environment that is never corrected\u2014and the treatment will need to be repeated from a fund that does not exist. That is a structural risk, not a planning contingency.\n\n**What HAVERSHOLT does with the same 2029-30 line**\n\nUnder HAVERSHOLT, the plant is funded by the Hesketh-Ravenna bequest. The 2029-30 GBP 400,000 line remains entirely available for conservation in a controlled environment. At GBP 250 per item, that is up to 1,600 further items treated permanently\u2014treatments that will not need to be repeated because the environment is correct. The combined programme (180 now + up to 1,600 post-2029) reaches approximately 1,780 items with permanent outcomes. LINDCASTER's 1,360 items require a second round and consume the capital line in plant, leaving far fewer items with permanent outcomes.\n\n**The deterioration rate during the gap**\n\nAt 62 items per year entering the unusable band, the delay between now and HAVERSHOLT commissioning (May 2027\u2014roughly nine months) costs approximately 46 further items. That is a real loss and must be acknowledged. LINDCASTER avoids it. However, if LINDCASTER defers plant to 2030, an additional ~250 items enter the unusable band over the four-year gap, and the treatment those 1,360 received is now due for a repeat. HAVERSHOLT front-loads a smaller loss in exchange for stopping the clock entirely for all 4,200 items from mid-2027 onward.\n\n**Timing and quote validity**\n\nThe Threlkeld quote runs to 2027-01-30; the order is needed fourteen weeks before the 2027-05-29 commissioning date, which falls around 19 February 2027. The quote expiry (30 January) is the binding constraint, giving approximately five months to place the order. This is manageable and the price is locked. Acting on HAVERSHOLT now secures the plant at known cost inside a valid quote.\n\n**The conservator's report as the deciding instrument**\n\nIn any dispute between the two courses, the written professional opinion of the conservator is the authoritative technical evidence. That opinion does not say the environment is suboptimal or that treatment is harder here than elsewhere. It says treatment will need to be repeated. That is a binary finding: money spent on conservation in the current environment is not durable. HAVERSHOLT accepts the finding and resolves it. LINDCASTER proceeds as if the finding either does not apply or will be addressed later by a fund that is not yet committed.\n\n**Summary**\n\nHAVERSHOLT fixes the underlying cause for all 4,200 items, renders every future treatment permanent, keeps the 2029-30 capital line available for conservation rather than plant, and proceeds on the authority of the conservator's own written report. LINDCASTER spends the grant on a round of treatment the conservator has already said must be repeated, relies on a capital programme that is not committed, and leaves the environment unfixed for the duration.\n\n---\n\nREADING\n  The conservator's written report that treatment in the current environment must be repeated within a decade structurally undermines LINDCASTER: the GBP 340,000 conservation spend would not produce durable outcomes, whereas HAVERSHOLT fixes the cause for all 4,200 items and leaves the 2029-30 unallocated line free for permanent conservation work rather than deferred plant.\n\nCALL\n  HAVERSHOLT\n\nGROUNDS\n  The conservator's written finding that treatment carried out in the uncorrected environment must be repeated within a decade means LINDCASTER's entire conservation spend is structurally temporary, whereas HAVERSHOLT corrects the cause permanently, renders any future treatment durable, and frees the 2029-30 capital line for conservation rather than plant.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-ys8pgxw4"
+  },
+  "cost_usd": 0.086182,
+  "duration_ms": 105550,
+  "session_id": "a5b53ae2-db4c-4f55-b03c-25a599909e30",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 979,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 5459,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 979,
+        "output_tokens": 5459,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 106.74925065040588
+}

@@ -1,0 +1,53 @@
+{
+  "opaque": "T05",
+  "item_id": "K10",
+  "ordering": "BA",
+  "draw": 7,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The baseline problem**\nFennerbrake's peak requirement is 72 pallet spaces. Its entitlement under the shareholders' agreement is 52. The gap is 20 spaces, which in July 2026 caused 18.2 tonnes to go to the processor and cost \u00a345,136 in lost margin. Both courses fix that shortfall. The question is which fix is better across the full picture.\n\n---\n\n**Course TREGOWAN \u2013 annual cost structure**\n\n- Ilsington rental: \u00a324,000\n- Haulage: \u00a37,200\n- Seasonal total: \u00a331,200 every year, indefinitely\n- Capital spent: nil\n- Compressor share stays at 25% of \u00a3260,000 = **\u00a365,000** due within three years\n- Wildern Cross entitlement unchanged at 52 spaces\n- Buyer's handling concern unresolved\n\nOver five seasons: \u00a3156,000 in rental and haulage, plus \u00a365,000 compressor = **\u00a3221,000** in non-recoverable expenditure, and \u00a331,200 continues beyond that.\n\n---\n\n**Course HAVERSHOLT \u2013 capital and cost structure**\n\n- Purchase: \u00a396,000 (buys a real asset \u2013 a 25% share in a 208-space cold store)\n- Resulting entitlement: 104 spaces, against a requirement of 72 \u2013 a 32-space margin\n- Annual rental/haulage: nil\n- Compressor share doubles to 50% of \u00a3260,000 = **\u00a3130,000** within three years\n- Capital needed in total: \u00a396,000 + \u00a3130,000 = **\u00a3226,000** against \u00a3140,000 available now\n\nThe capital gap looks alarming at first glance. Let me test whether it is survivable.\n\nBuying Wraysholme's share immediately costs \u00a396,000, leaving \u00a344,000. TREGOWAN would have cost \u00a331,200 per season; HAVERSHOLT saves that every year. Over three years that is \u00a393,600 recovered, which together with the \u00a344,000 remaining gives approximately \u00a3137,600 by the time the compressor falls due \u2013 just covering the \u00a3130,000 liability. The arithmetic is tight but it closes, and it does so without relying on any exceptional income, because the saving is mechanical: Ilsington simply stops being paid.\n\nAcross the same five-year horizon, HAVERSHOLT spends roughly \u00a3226,000 in total cash, of which \u00a396,000 is an asset that can be sold. Net non-recoverable cost is nearer \u00a3130,000 \u2013 some \u00a390,000 less than TREGOWAN over the same period, and the gap widens every additional season.\n\n---\n\n**Comparing the incremental capital of the two courses**\n\nHAVERSHOLT costs \u00a365,000 more in compressor liability than TREGOWAN (\u00a3130,000 vs \u00a365,000), and \u00a396,000 upfront. So it requires \u00a3161,000 more in total capital.\n\nIt saves \u00a331,200 every year.\n\nPayback on the incremental capital: \u00a3161,000 \u00f7 \u00a331,200 \u2248 **5.2 years**. After that, every season HAVERSHOLT runs ahead by the full \u00a331,200. For a perennial fruit enterprise with a twenty-plus-year horizon that is a straightforward investment.\n\n---\n\n**The governance dimension**\n\nIf Fennerbrake does not buy, Ardwick may well exercise their pre-emption right and reach 75%. At that point Ardwick can out-vote Fennerbrake on every store decision \u2013 timing and specification of the compressor replacement, any amendments to the peak-allocation terms, future capital calls, anything. Fennerbrake at 25% facing a 75% counterpart is in a structurally exposed position even if the current shareholders' agreement protects the pro-rata peak allocation, because agreements can be amended and the balance of leverage is gone.\n\nHAVERSHOLT creates a 50/50 deadlock arrangement. Ardwick cannot move unilaterally. Fennerbrake has real voting weight on the compressor decision, which means they can influence timing (important when managing the cash outflow) and specification.\n\nThe pre-emption risk itself is not catastrophic: if Ardwick matches, the deal falls through, no money changes hands, and TREGOWAN is still bookable until 2027-03-31. Attempting HAVERSHOLT therefore carries little downside beyond losing the option if Ardwick matches; the upside is a materially better long-term position.\n\n---\n\n**Quality and commercial risk**\n\nThe buyer has already queried the extra handling that TREGOWAN entails \u2013 fruit moved fourteen miles to Ilsington, held there, collected there. Everbearers and raspberries are fragile; the question is whether a buyer comment becomes a buyer requirement. HAVERSHOLT removes that risk entirely; fruit never leaves the on-farm and Wildern Cross circuit.\n\n---\n\n**What TREGOWAN does not fix**\n\nTREGOWAN is a workaround, not a solution. The contention at Wildern Cross is unchanged: Fennerbrake still holds only 52 spaces and relies on Ilsington being available, affordable, and acceptable to buyers every season. It is a recurring liability that builds no equity and resolves nothing structurally.\n\n---\n\n**Summary verdict**\n\nHAVERSHOLT is the better course. It is a heavier capital commitment, and the compressor timing means cash management needs attention, but the annual saving fully services the incremental capital inside five years, the shares are a real asset unlike rental payments, the governance position is transformed, and the buyer's quality concern disappears. TREGOWAN is cheaper today and costs more every subsequent year while leaving every structural problem intact.\n\n---\n\nCALL\n  HAVERSHOLT\n\nGROUNDS\n  The \u00a331,200 annual saving repays HAVERSHOLT's incremental capital over TREGOWAN in roughly five years, after which every season runs ahead; the shares hold residual value that the rental never does; the buyer's handling concern is eliminated; and holding 50% rather than 25% prevents Ardwick from gaining the 75% governance dominance that would leave Fennerbrake structurally exposed on every future store decision, including the imminent compressor replacement.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-l3lswbw3"
+  },
+  "cost_usd": 0.10996299999999999,
+  "duration_ms": 134791,
+  "session_id": "ac4e7419-5e4d-4d1e-9ded-d1ad0b282f59",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 1003,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7038,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 1003,
+        "output_tokens": 7038,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 135.91478037834167
+}

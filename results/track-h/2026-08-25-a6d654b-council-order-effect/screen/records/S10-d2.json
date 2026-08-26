@@ -1,0 +1,44 @@
+{
+  "opaque": "S10",
+  "draw": 2,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**1. The rent arithmetic**\n\nThe raw rent gap is \u00a3214,000 \u2212 \u00a3118,000 = \u00a396,000 a year. Dead mileage reduces that saving.\n\nCulverstone is 3 miles further each way from the 44 stand, so every vehicle on that network runs an extra 6 dead miles a day.\n\n22 vehicles \u00d7 6 miles \u00d7 313 days \u00d7 \u00a30.63 = **\u00a326,029/year** additional running cost.\n\nEffective annual saving under KESTERWICK: \u00a396,000 \u2212 \u00a326,029 = **\u00a369,971/year**.\n\nOver the ten-year term: \u00a3699,710 in combined rent and mileage savings.\n\nCapital committed under KESTERWICK: \u00a3480,000 build + \u00a340,000 deposit = **\u00a3520,000**.\n\nNet financial advantage of KESTERWICK over the decade: approximately **\u00a3179,700**. The capital is recovered in about 7.4 years; every year after that is clear saving.\n\n---\n\n**2. Planning timeline \u2014 what the dates actually say**\n\nApplication validated: **2026-08-14**.\n\n| Scenario | Consent | +22 weeks works | Occupation |\n|---|---|---|---|\n| Target (13 wks) | 2026-11-13 | \u2014 | ~2027-04-09 |\n| Median (34 wks) | ~2027-04-07 | \u2014 | ~2027-09-02 |\n| Slowest on record (61 wks) | ~2027-10-15 | \u2014 | ~2028-03-07 |\n\nHallowbrand lease expires **2027-11-30**.\n\nAt the **target** and **median** outcomes Culverstone is operational before the lease expires; there is no gap and no Nethercote at all. Those two scenarios together account for at least half the probability mass on any reasonable reading of the distribution.\n\nAt the **slowest-ever** outcome there is a gap of roughly fourteen weeks (late November 2027 to early March 2028) during which the fleet must sit at Nethercote.\n\nNethercote cost in that gap: ~3.5 months \u00d7 \u00a318,500 = **~\u00a365,000**.\n\nAdding that to the capital outlay: \u00a3520,000 + \u00a365,000 = \u00a3585,000. The ten-year saving of \u00a3699,710 still clears it by roughly \u00a3115,000. KESTERWICK is financially superior to ARDENSHAW even in the worst planning outcome the authority has ever produced.\n\n---\n\n**3. The workshop absence under the worst case**\n\nNethercote offers no workshop. Fourteen weeks of sub-contracted maintenance or mobile servicing will cost something and add friction, but it is a finite, bounded disruption to a fleet that is presumably already carrying a maintenance schedule. It is not a reason to pay an extra \u00a396,000 a year for ten years.\n\n---\n\n**4. Cash and liquidity**\n\nAvailable now: \u00a3640,000 cash + \u00a3200,000 undrawn facility = \u00a3840,000.\n\nThe \u00a340,000 Faskally deposit falls in December 2026. The \u00a3480,000 build cost falls when consent is granted \u2014 at median, April 2027; at worst case, October 2027. In neither scenario does all of the capital land at once.\n\nHallowbrand rent continues until November 2027 regardless of which course is taken; it is not a differential cost between the options.\n\nEven taking the worst-case timing \u2014 deposit paid December 2026, build funds committed October 2027 \u2014 the combined outlay of \u00a3520,000 sits comfortably inside the \u00a3840,000 envelope, with operating cash flows continuing throughout. Liquidity is stretched but not broken.\n\n---\n\n**5. The Faskally deadline and option duration**\n\nThe free hold expires **2026-12-05**; the Hallowbrand landlord's deadline is **2026-12-19**. To pursue KESTERWICK the deposit must be paid two weeks before the Hallowbrand decision is formally required, which is a minor practical irritant but not an obstacle: by 5 December the planning timeline and cash position are both already knowable.\n\nThe deposit holds the site until **2028-06-30**. Even the worst-case occupation (early March 2028) is safely inside that window. There is no scenario on the recorded data where the option lapses before works complete.\n\n---\n\n**6. The 44/44A contract bid (due 2027-09-14)**\n\nThe new contract term runs from **2028-04-01**. Bids are due **2027-09-14**.\n\nAt median determination, Culverstone is already operational by September 2027 and the depot cost goes into the bid as a fact. At worst-case determination, consent will have been granted roughly a week before bid day (October 2027 vs September 2027 bid \u2014 actually the worst case consent falls *after* the bid date by a matter of weeks). This is the one place where worst-case planning genuinely creates a bid-day problem: at the September 2027 submission the works would not yet be consented.\n\nHowever, three points limit the damage. First, the bid is for a contract that starts April 2028; at that point even the worst-case scenario has Culverstone open for a month. The cost is therefore real and defensible to the authority, even if it must be presented prospectively. Second, in the median and better scenarios \u2014 which cover more than half of all determinations \u2014 there is no problem at all. Third, the alternative (ARDENSHAW) locks in \u00a3214,000/year, which is a structurally weaker competitive position for every rebid over the next decade.\n\n---\n\n**7. What ARDENSHAW actually offers**\n\nARDENSHAW eliminates planning risk and delivers a workshop from day one of the new lease. Those are real advantages. But the price is \u00a396,000 a year for ten years above the Culverstone rent, plus the lost dead-mileage differential. That is \u00a3960,000 more in rent over the term before dead mileage is counted. The certainty premium is very expensive.\n\nARDENSHAW also leaves the business as a higher-cost operator in every future tender. Depot cost is a fixed line in the bid; competitors with better-value premises will hold a structural edge.\n\n---\n\n**8. Summary balance**\n\n| | KESTERWICK | ARDENSHAW |\n|---|---|---|\n| 10-year rent + mileage | \u00a31,440,290 | \u00a32,140,000 |\n| Capital outlay | \u00a3520,000 | nil |\n| Worst-case Nethercote gap | ~\u00a365,000 | nil |\n| Total 10-year cost (worst case) | ~\u00a32,025,290 | \u00a32,140,000 |\n| Net advantage KESTERWICK | ~\u00a3115,000 | \u2014 |\n| Workshop risk | 14 weeks max | nil |\n| Bid-day clarity | conditional | absolute |\n\nKESTERWICK costs less under every scenario the data supports, preserves competitive bid positioning, and the planning tail risk \u2014 though real \u2014 is bounded and affordable.\n\n---\n\nCALL\n  KESTERWICK\n\nGROUNDS\n  The combined rent and dead-mileage saving over ten years exceeds the full build cost even in the worst planning outcome the authority has ever recorded, and that worst case still puts Culverstone in operation before the new 44 contract period opens in April 2028.",
+  "cost_usd": 0.14228470000000001,
+  "duration_ms": 177598,
+  "session_id": "ed32bd89-6bdc-478e-bca2-9a40bfa1a834",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1039,
+    "output_tokens": 9369,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 9369,
+        "cache_read_input_tokens": 1039,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 178.74021339416504
+}

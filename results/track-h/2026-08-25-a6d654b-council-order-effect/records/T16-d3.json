@@ -1,0 +1,61 @@
+{
+  "opaque": "T16",
+  "item_id": "K13",
+  "ordering": "BA",
+  "draw": 3,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The numbers in full**\n\n*Current baseline*\nFour jigs at 41 t/year = 164 t capacity; 148 t running = 90.2 % utilisation.\nRevenue: 148 t \u00d7 \u00a314.19 = \u00a32,100,120 (checks to \u00a32.1 m). The three customers each sit at roughly the blended rate since Marchgate \"buys at the average\" and the weighted average across all three comes to \u00a314.19.\n\n*MORVEDD revenue*\nThurlmere: 96 t \u00d7 \u00a315.40 = \u00a31,478,400\nMarchgate: 65 t \u00d7 \u00a314.19 = \u00a3922,350\nOstrey: released = \u00a30\nTotal: \u00a32,400,750 against current \u00a32,100,120; net uplift \u2248 \u00a3300,630/year before capital.\nCapital: \u00a396,000 one-time for pumps and liquor circuit, which over three years is \u00a332,000/year amortised, leaving a clean annual gain of roughly \u00a3268,000\u2013\u00a3302,000 depending on which comparator you use. The jig infrastructure stays on Gallowfield's books throughout.\nCapacity check: 96 t on two dedicated jigs (82 t of rated capacity) plus overflow managed on the remaining two jigs alongside Marchgate's 65 t \u2192 total 161 t, inside the 164 t ceiling. Workable.\n\n*SALTGRAVE revenue*\nMarchgate: 65 t \u00d7 \u00a314.19 = \u00a3922,350\nThurlmere at current terms (if retained, assuming the relationship survives the decline): 46 t \u00d7 \u00a314.19 = \u00a3653,740\nOstrey on contract: 37 t \u00d7 \u00a314.60 = \u00a3540,200\nTotal: \u00a32,116,290 \u2014 almost flat to current, with the small gain from Ostrey's marginally higher contracted rate.\nEven if Thurlmere walks entirely after the decline, the book is Marchgate (65 t) plus Ostrey (37 t) = 102 t at 62 % utilisation; stretched but operable.\n\n**Breaking down the five decisive factors**\n\n*1. Concentration after MORVEDD*\nThurlmere moves from 31 % to 62 % of Gallowfield's turnover. That is a single name controlling the majority of revenue for a nineteen-person business. Standard commercial practice treats any customer above 25\u201330 % as requiring scrutiny; 62 % on one counter-party is governance-level exposure. And Marchgate \u2014 still at 44 % under SALTGRAVE, still 38 % of the post-MORVEDD book \u2014 has signed nothing. So after MORVEDD, the two remaining names together represent roughly 100 % of revenue, and neither is contractually locked beyond the Thurlmere deal itself.\n\n*2. The Vennerdale change-of-control clause \u2014 the hinge point*\nThis is the clause that transforms MORVEDD from a stretched but viable bet into an unacceptable risk.\n\nVennerdale acquired Thurlmere in 2025 \u2014 one year ago. They are demonstrably active in M&A. The draft contract lets **either side** exit on six months' notice on a change of control. This means:\n\n- If Vennerdale acquires another entity or is itself acquired, either party can walk.\n- If Vennerdale restructures its textile portfolio, they can exit with six months' notice.\n- Gallowfield's own management can also exit under that clause, but Gallowfield has no economic incentive to do so if Thurlmere is profitable. Thurlmere/Vennerdale, however, might have multiple reasons: in-sourcing dyeing, switching supplier, renegotiating at lower terms once the dedicated jigs are sunk.\n\nThe effective duration of the Thurlmere commitment is therefore not three years \u2014 it is \"three years unless Vennerdale does anything involving a change of ownership of any entity in the chain.\" Given that Vennerdale bought Thurlmere just twelve months ago, that horizon is genuinely unpredictable and likely to be short.\n\nScenario: Thurlmere exits after one year, six months' notice given. Gallowfield receives roughly eighteen months of the contracted revenue (\u00a31,478,400 \u00d7 1.5 = \u00a32,217,600), then loses 62 % of its book overnight. Ostrey is gone. \u00a396,000 has been spent on infrastructure serving nobody. The remaining book is Marchgate at 65 t \u2014 no contract, one name, 40 % utilisation. Nineteen staff, fixed overhead, and a bank facility that now looks very necessary.\n\nThat is not a managed downside. It is a near-extinction scenario for the business.\n\n*3. The irreversibility of releasing Ostrey*\nOstrey has been on the book for twenty-two years. That relationship is almost certainly rooted in personal trust, shared quality standards, and a long history of problem-solving together. Once you release a client who has been with you twenty-two years to take a more lucrative deal from someone else, you do not get them back. Their capacity will be absorbed by another dyer. The goodwill from two decades evaporates the moment the letter goes out.\n\nOstrey's offer \u2014 37 t at \u00a314.60 for three years \u2014 is actually a small improvement on the current blended rate (\u00a314.60 vs \u00a314.19), and it is a genuine three-year commitment from a stable, long-tenured client. That is more valuable than its face price suggests, because stable clients underwrite fixed cost recovery.\n\n*4. Capital and cash*\n\u00a396,000 represents 53 % of the \u00a3180,000 cash holding. The bank facility is untouched, so Gallowfield can cover it, but spending more than half of available cash on infrastructure dedicated to a single customer with a change-of-control escape clause is imprudent capital allocation. Under SALTGRAVE, the \u00a3180,000 cash stays intact, the facility stays dry, and Gallowfield retains the financial resilience to weather a Thurlmere departure or a Marchgate renegotiation.\n\n*5. The Marchgate problem \u2014 identical under both courses but worse under MORVEDD*\nMarchgate at 44 % (currently) and 38 % (post-MORVEDD) has no contract. This should be a top-priority action regardless of which course is chosen. Under SALTGRAVE, the urgency is heightened by declining Thurlmere's offer, which is exactly the pressure that may finally get Marchgate to the table. Under MORVEDD, the Marchgate risk sits on top of the Thurlmere concentration risk, compounding it. If both Marchgate and Thurlmere were to leave in the same twelve-month window (not inconceivable if the textile sector tightens), MORVEDD leaves Gallowfield with virtually no book.\n\n**The revenue sacrifice under SALTGRAVE**\n\nThe sacrifice is real and should not be minimised. \u00a3302,400 a year is a 14 % uplift on current turnover. Over three years without any change-of-control event, MORVEDD outperforms SALTGRAVE by approximately \u00a3900,000 in gross revenue (less the \u00a396,000 capital). For a \u00a32.1 m business, that is material.\n\nBut the value of an uncertain stream is not its face value. A three-year contract with a bilateral change-of-control exit clause held by a 2025 acquirer is not a three-year contract; it is something shorter, with an uncertain terminal date. The expected value of the MORVEDD revenue stream \u2014 adjusted for the realistic probability that Vennerdale triggers the exit clause before year three \u2014 is substantially less than \u00a3907,200. The expected cost of MORVEDD in the downside scenario \u2014 stranded capacity, Ostrey gone, Marchgate uncontracted, \u00a396,000 sunk \u2014 is severe enough to threaten the business's solvency.\n\nSALTGRAVE accepts a lower but more certain revenue trajectory. The three-customer diversity is preserved. The Ostrey relationship is secured. The capital is retained. The jigs remain uncommitted and can absorb new work if Thurlmere's decline creates a vacancy.\n\n**What SALTGRAVE should look like in practice**\n\nDeclining Thurlmere's contract offer is the decision; managing the consequences is the next task.\n\n1. Accept Ostrey's offer before 2026-11-28 \u2014 straightforward, low cost.\n2. Begin an immediate conversation with Marchgate about contracting. The Thurlmere episode demonstrates the value of contractual certainty; use it. Even a two-year heads-of-terms with Marchgate would remove the most significant latent risk in the SALTGRAVE book.\n3. If Thurlmere walks after the decline, the 46 t that becomes available should be offered to known prospects. The existing jig capacity and workforce capability remain intact; the sales process simply needs acceleration.\n4. The \u00a396,000 not spent on dedicated infrastructure can be earmarked for productive investment \u2014 energy efficiency on the jigs, a smaller quality-control upgrade, or simply held as buffer against a weakening Thurlmere relationship.\n\n**Summary of the balance**\n\n| Factor | MORVEDD | SALTGRAVE |\n|---|---|---|\n| Annual revenue | +\u00a3302,400 | Baseline |\n| 3-year revenue (stated) | \u00a3907,200 | \u2014 |\n| Capital outlay | \u00a396,000 | \u00a30 |\n| Largest customer share | 62% (Thurlmere) | 44% (Marchgate) |\n| Change-of-control exit risk | Critical \u2014 Vennerdale, 2025 acquirer | Not applicable |\n| Ostrey (22-yr relationship) | Released, permanent | Secured 3 years |\n| Jig flexibility | Two jigs locked | All four open |\n| Downside scenario | Near-existential | Manageable |\n\nThe revenue case for MORVEDD is genuine. The risk case against it \u2014 driven primarily by the combination of 62 % concentration and a change-of-control clause held by a recently active acquirer \u2014 is decisive.\n\n---\n\nREADING\n\nThe analysis above fully describes my working.\n\n---\n\nCALL\nSALTGRAVE\n\nGROUNDS\nA 62 % revenue dependency on a single customer owned by a 2025 acquirer, under a contract terminable on six months' change-of-control notice, creates an existential risk to the business that the \u00a3302,400 annual uplift does not come close to compensating.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-th15pcn4"
+  },
+  "cost_usd": 0.149163,
+  "duration_ms": 174270,
+  "session_id": "c00b061a-1c33-4e4a-a5aa-cd1fc4ebd8dc",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 973,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 9658,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 973,
+        "output_tokens": 9658,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 175.52127051353455,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

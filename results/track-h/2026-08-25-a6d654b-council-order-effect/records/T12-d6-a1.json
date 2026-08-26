@@ -1,0 +1,41 @@
+{
+  "opaque": "T12",
+  "item_id": "K07",
+  "ordering": "BA",
+  "draw": 6,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The spending envelope**\nGBP 340,000, hard deadline 2028-09-30. LINDCASTER puts all of it into conservation (1,360 items at GBP 250). HAVERSHOLT puts GBP 295,000 into plant and GBP 45,000 into conservation (180 items). The numerical gap\u20141,360 versus 180\u2014is the obvious case for LINDCASTER and it is the first thing to interrogate.\n\n**What the conservator's report actually means**\nIdris Sankey-Marchmont's written finding is the hinge of the whole analysis. He says that rehousing and aqueous treatment carried out in the strongroom as it stands will need to be repeated within a decade. This is not a marginal caveat; it is a professional certification that conservation work done under LINDCASTER is time-limited to roughly ten years. The GBP 340,000 therefore does not purchase permanent preservation for 1,360 items. It purchases approximately one decade of protection, after which the institution must find another GBP 340,000 or equivalent and do it all again. The apparent advantage of 1,360 items over 180 is partly illusory because the unit cost of LINDCASTER preservation, properly calculated, is not GBP 250 per item but GBP 250 per item per decade.\n\n**What the buffered enclosures actually do**\nThe enclosures hold a microclimate within 3 points of packing condition for eight to twelve years. This is important: they buffer against swing, not against the absolute level. If items are packed in the existing strongroom at, say, 62% RH, the enclosure holds them near 62% \u00b1 3 for eight to twelve years before equilibrating to ambient. The standard target is 45\u201355%. Buffering swings around an already-elevated humidity level does not replicate a properly conditioned environment. Deacidification chemistry is undermined by sustained high moisture. The enclosure protection therefore reinforces rather than contradicts Sankey-Marchmont's conclusion.\n\n**The deterioration rate and what LINDCASTER does for it**\nThe unusable band grew from 640 to 1,010 between 2019 and 2025, a net addition of 370 items in six years, or about 62 a year. LINDCASTER treats 1,360 of the 2,900 at-risk items. Even taking the 8\u201312 year microclimate window at face value, it defers the problem for those items\u2014it does not stop the clock on the other 1,540 at-risk items, nor on the ~1,300 non-acidic items that still sit in a bad environment. HAVERSHOLT's plant, by contrast, stabilises the environment for all 4,200 items. The 62-per-year deterioration rate is a product of the environment; bringing the environment inside the 45\u201355% band with a sub-5-point swing is the intervention most likely to reduce that rate, not to manage its consequences item by item.\n\n**The 2029-30 capital line**\nLINDCASTER depends on the plant being funded from the 2029-30 programme. The GBP 400,000 line is unallocated and the board sets it in November 2028\u2014two years away, nothing committed, subject to the board's priorities at that moment. The building has been occupied since 1911 and presumably competed for capital before; there is no contractual guarantee. Under HAVERSHOLT the plant is ordered within the existing quote (held to 2027-01-30) and commissioned in May 2027. Under LINDCASTER the plant is a reasonable hope. If the 2029-30 allocation does not materialise, LINDCASTER's conservation work will need repeating in a decade and there will be no plant to prevent it.\n\nConversely, if HAVERSHOLT is chosen and the 2029-30 line is approved, the GBP 400,000 could fund approximately 1,600 items of conservation in a properly conditioned environment\u2014work that, unlike LINDCASTER's treatment, would not carry a ten-year expiry. The two-stage approach (plant now, conservation later from capital) yields more durable preservation than one large conservation push in a bad environment.\n\n**The quote and order timing**\nThrelkeld's quote is held to 2027-01-30 and they require the order fourteen weeks before the 2027-05-29 commissioning date, which puts the drop-dead order date at approximately 19 February 2027. Ordering by 30 January 2027\u2014within the quote window\u2014leaves about a week of margin before the fourteen-week lead time would push commissioning past May 29. This is tight but achievable from today (2026-08-25); the institution has approximately five months to confirm the order. If action is not taken until after January 2027, the quote will need to be renegotiated and the price may rise. This is a planning constraint rather than a reason to abandon the course.\n\n**The asymmetry of risk**\nUnder LINDCASTER the downside is: conservation work expires in a decade, the plant is not funded in 2029-30, and the institution has spent GBP 340,000 on temporary measures with nothing structurally improved. Under HAVERSHOLT the downside is: plant installed, 180 items treated properly, 2,029-30 capital not secured, and 2,720 at-risk items are untreated but in a stable environment\u2014stabilised, not deteriorating at the current rate, and available for proper conservation from whatever future funding arrives.\n\nHAVERSHOLT's worst case is a substantially better outcome than LINDCASTER's worst case.\n\n**Summary of the decisive logic**\nLINDCASTER's appeal rests on 1,360 versus 180. But those 1,360 treatments are not permanent; the conservator says so in writing. The underlying environment continues to damage all 4,200 items, and the plant remains a contingency rather than a plan. HAVERSHOLT uses the Hesketh-Ravenna money to do the one thing that stops ongoing damage to the entire collection and ensures that any future conservation spend is not wasted.\n\n---\n\nREADING\nThe conservator's written finding that conservation in the current environment must be repeated within a decade is the operative constraint. It converts LINDCASTER's numerical advantage\u20141,360 items versus 180\u2014into a temporary deferral rather than a lasting gain. HAVERSHOLT's GBP 295,000 plant stabilises conditions for all 4,200 items and ensures that both the 180 items treated now and whatever items are treated from the 2029-30 capital programme are done once, correctly, permanently. The 2029-30 unallocated GBP 400,000 line becomes far more valuable as a conservation fund in a proper environment than the same sum spent renegotiating and repeating work that should not have needed repeating.\n\nCALL\nHAVERSHOLT\n\nGROUNDS\nThe conservator's written professional judgment that conservation work done in the current environment must be repeated within a decade converts LINDCASTER's apparent advantage of 1,360 treated items into a time-limited deferral, whereas HAVERSHOLT's plant stabilises conditions for all 4,200 items and ensures that every pound spent on conservation\u2014now and from the 2029-30 programme\u2014achieves permanent rather than temporary preservation.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-4vcbuvh_"
+  },
+  "cost_usd": 0.095082,
+  "duration_ms": 137706,
+  "session_id": "106e5540-7e7a-4d87-a81c-5179819c1d5c",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard"
+  },
+  "elapsed_s": 138.92221188545227
+}

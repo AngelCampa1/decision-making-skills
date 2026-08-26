@@ -1,0 +1,208 @@
+# Track H order-effect item K09, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K09
+stratum: undefeated
+stratum_alias_v1: tie
+ordering: BA
+first_course: ELSWICK
+second_course: CRANMOOR
+pair: K09-marshhead-radio-undefeated-ab.yaml
+domain: community_radio_volunteer_workforce
+mechanism: staffing-continuity
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [CRANMOOR, ELSWICK, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Ottoline Bregg-Naismith and I manage Marsh Head Radio, the community
+  station for Culverstrand and the shore villages. We have three paid staff
+  across 1.6 posts, 34 registered volunteer contributors, and we broadcast
+  eighteen hours a day on a community licence that runs to 2031.
+
+  Our core funding is a grant of GBP 71,000 a year from the Estuary Communities
+  Fund, and it ends on 2027-03-31. The Fund is ending that scheme and putting a
+  Local Voice tier in its place, paying GBP 96,000 a year for four years from
+  2027-04-01.
+
+  What the Local Voice tier asks for, and where we stand against it:
+
+  - Fourteen hours a week of originated speech in the 07:00 to 19:00 schedule,
+    counted across the four weeks ending 2027-02-28. We carry nine.
+  - Commissioned production may be no more than half of that originated total.
+  - Thirty registered contributors on the same date. We hold 34, down from 41
+    in 2024. Commissioned producers do not join the contributor register.
+  - A station short of the mark in February is assessed once more on
+    2027-08-31, with payment starting the month it clears. The four years run
+    from 2027-04-01 either way.
+  - Transmission, premises and licence cost GBP 58,000 a year and do not move.
+    Our reserve is GBP 62,000.
+  - Halverston hold their GBP 65 an hour to 2026-12-31 and a coordinator can be
+    in post by 2026-10-01, so either course can start this autumn.
+  - The board resolved on 2026-07-14 that new recurring commitments may not
+    exceed GBP 22,000 a year until the successor grant is in payment, which
+    lets us do one of these two things and not both.
+
+  Two courses are on the table.
+
+  Course ELSWICK. Commission six hours a week from Halverston Audio
+  Co-operative at GBP 65 an hour, GBP 20,280 a year, on a rolling twelve-month
+  term starting 2026-10-05. Fifteen hours across the four weeks ending
+  2027-02-28, an hour clear of the mark and on a contract. We buy those hours
+  again every year and nobody joins the register because of them.
+
+  Course CRANMOOR. Hire a half-time programmes coordinator from 2026-10-01 at
+  GBP 21,000 a year with on-costs and build the hours out of the roster. What
+  the roster makes we own and never buy again, and the coordinator works the
+  register too. We added nine contributors across all of 2025 without one, and
+  fourteen hours needs about fifteen more of them.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism_note: >-
+    Staffing-continuity. The station's production capacity is a volunteer
+    roster that has gone 41, then 34, and one course rebuilds it while the
+    other buys finished output from outside it. The eligibility floors are the
+    forcing device rather than the mechanism: what the item turns on is whether
+    a workforce that is shrinking gets rebuilt or replaced, and the register
+    rule that commissioned producers do not join it is the fact that keeps the
+    two courses from being the same course.
+  mechanism_honesty: >-
+    Called threshold-eligibility in an earlier draft. That named the setting.
+    Both courses clear the hours floor, so the floor separates nothing; what
+    separates them is that one adds people to the register and the other cannot.
+  why_neither_is_defeated: >-
+    Both courses sit inside the GBP 22,000 board cap, GBP 21,000 against
+    GBP 20,280, so money does not separate them. ELSWICK clears the hours limb
+    on a contract with an hour of margin and adds nobody to the register.
+    CRANMOOR is the only course that works the register, and the station's own
+    rate of recruitment says it clears the hours limb in August rather than
+    February. A reader who weights a dated eligibility test lands on ELSWICK, a
+    reader who weights the falling roster and the half cap lands on CRANMOOR,
+    and both readings use every figure given.
+  case_for_CRANMOOR: >-
+    The tier has two floors and the half cap ties them together. Bought hours
+    may never exceed the station's own, so a roster that has gone 41, then 34,
+    is what actually caps eligibility for four years, and the contributor floor
+    of thirty is four people away. ELSWICK buys hours that leave the station
+    exactly where it stands on both counts and costs GBP 81,120 across the tier
+    for output it never owns. A coordinator is the only post in this plan that
+    touches recruitment, scheduling and the register, and hours built out of the
+    roster are held rather than rented. Five months of grant is a real price,
+    and it is paid once against a four-year tier that CRANMOOR is the only
+    course capable of holding.
+  case_for_ELSWICK: >-
+    Eligibility is decided across the four weeks ending 2027-02-28 and the
+    station carries nine hours today. Commissioning six from Halverston puts
+    fifteen on air from any week the station names, an hour clear of the mark
+    and inside the half cap. CRANMOOR asks a roster that added nine
+    contributors in a year to produce roughly fifteen more in five months, and
+    the station's own record is the only evidence on the point. Missing
+    February costs GBP 40,000 of grant that is never recovered and drops
+    GBP 24,167 of fixed cost onto a GBP 62,000 reserve, with the contributor
+    floor still to be held at the August date. Securing the tier is what pays
+    for everything a coordinator would later do.
+  arithmetic: >-
+    Hours: 9 own + 6 commissioned = 15 against a floor of 14, and 6 is under
+    half of 15. Contributors: 34 against a floor of 30, down 7 since 2024.
+    Cost: CRANMOOR 21,000 and ELSWICK 6 x 65 x 52 = 20,280 against a 22,000
+    cap; both together 41,280, over it. Missing February: 96,000 x 5/12 =
+    40,000 of grant forgone, and 58,000 x 5/12 = 24,167 of fixed cost against a
+    62,000 reserve. ELSWICK across the tier: 20,280 x 4 = 81,120, which is
+    21.1% of 384,000.
+  internal_consistency: >-
+    Figures stated more than once, checked against each other. Contributors: 34
+    in the opening paragraph and 34 in the floor bullet, against 41 in 2024 and
+    a stated fall of 7. Originated hours: nine carried, six commissioned,
+    fifteen in the ELSWICK paragraph. Broadcast hours: eighteen a day total
+    against a 07:00 to 19:00 daytime window of twelve, so the fourteen-hour
+    floor sits inside a window that can hold it. Money: GBP 21,000 and
+    GBP 20,280 in the course paragraphs, both under the GBP 22,000 cap and
+    over it together. No figure is stated twice with different values.
+  information_timeline: >-
+    Earliest date each course can be taken, against the date its defending
+    figures lapse. CRANMOOR: a coordinator in post 2026-10-01, at GBP 21,000
+    under a board cap that runs until the successor grant is in payment, so no
+    lapse. ELSWICK: Halverston's GBP 65 an hour holds to 2026-12-31 and the
+    course starts 2026-10-05, eighty-seven days inside it. The gate is read
+    2027-02-01 to 2027-02-28, five months after the earliest start, and the
+    re-assessment sits on 2027-08-31. The GBP 96,000 tier runs from 2027-04-01
+    for four years either way, so the five months forgone under CRANMOOR is a
+    loss and not a deferral. Nothing that defends either course expires before
+    that course can be taken.
+  why_a_reader_commits: >-
+    The two courses cost the same to within GBP 720, so the usual reason to
+    call a pair even is absent, and they answer different limbs of a gate that
+    is read on a stated date. Declining to choose leaves the station with nine
+    hours in February, which is the one outcome both courses exist to prevent.
+  authors_lean: >-
+    ELSWICK, printed second under AB. The lean is the dated GBP 40,000 and it
+    is a lean rather than a defeat: the half cap and the register trend are
+    live arguments against it that no figure in the item settles.
+  checks:
+    dates:
+      - "2026-07-14 before 2026-08-25  # the board resolution predates the question"
+      - "2026-10-01 after 2026-08-25  # the earliest coordinator start is in the future"
+      - "2026-10-05 before 2026-12-31  # ELSWICK starts inside Halverston's price hold"
+      - "2026-10-01 before 2027-02-28  # CRANMOOR's coordinator is in post before the gate is read"
+      - "2026-10-05 before 2027-02-28  # ELSWICK's commissioned hours are running before the gate is read"
+      - "2027-03-31 before 2027-04-01  # the old grant ends the day the new tier starts"
+      - "2027-08-31 after 2027-02-28  # the re-assessment falls after the February gate"
+    arithmetic:
+      - "6 * 65 * 52 == 20280  # six commissioned hours a week at the held rate"
+      - "21000 < 22000  # the coordinator sits inside the board's recurring cap"
+      - "20280 < 22000  # the commission sits inside the board's recurring cap"
+      - "21000 + 20280 > 22000  # together they breach it, so it is one course or the other"
+      - "21000 - 20280 == 720  # the two courses cost the same to within this"
+      - "96000 > 71000  # the successor tier pays more than the grant it replaces"
+      - "96000 - 71000 == 25000  # the step up in annual funding"
+      - "58000 < 71000  # fixed cost sits inside the grant that currently carries it"
+      - "58000 * 5 / 12 < 62000  # five months of fixed cost sits inside the reserve"
+      - "96000 * 5 / 12 - 58000 * 5 / 12 > 0  # missing February forgoes more grant than it saves cost"
+      - "20280 * 4 / (96000 * 4) < 0.25  # commissioning takes under a quarter of the four-year tier"
+      - "41 - 34 == 7  # the contributor register has fallen by seven since 2024"
+      - "(19 - 7) * 7 > 14  # the 07:00 to 19:00 window holds the fourteen-hour originated floor"
+  admissible_calls: [CRANMOOR, ELSWICK, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true

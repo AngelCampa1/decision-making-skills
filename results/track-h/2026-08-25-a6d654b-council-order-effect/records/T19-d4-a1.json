@@ -1,0 +1,53 @@
+{
+  "opaque": "T19",
+  "item_id": "K08",
+  "ordering": "BA",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**Setting up the comparison**\n\nI need a consistent basis, so I will work out what each of the 640 colonies earns per colony on the own-site programme, then isolate what changes under Vantwyn.\n\nOwn-site income: GBP 143,000 \u00f7 640 = GBP 223.44 per colony (heather + borage combined).\nBorage per colony: GBP 71.\nImplied heather per colony: GBP 152.44.\n\nApple and pear pollination runs from April. UK heather runs August\u2013September. The colonies come back from Vantwyn too late for Kirkhallow borage but in time for heather \u2014 the problem identifies borage as the specific loss and says nothing about heather. I will treat heather income for the 400 migratory colonies as preserved.\n\n---\n\n**Annual income under ORMSCLEUCH**\n\nAll 640 colonies on heather and borage: GBP 143,000.\nOne-time Ravensgate receipt (late 2026): GBP 96,000.\nNo haulage, no spray losses.\n\n---\n\n**Annual income under TREVANNOCK (each of the three seasons)**\n\n*400 migratory colonies:*\n\n| Item | GBP |\n|---|---|\n| Pollination (400 \u00d7 168) | +67,200 |\n| Heather income (400 \u00d7 152.44) | +60,975 |\n| Borage foregone (400 \u00d7 71) | \u221228,400 |\n| Spray losses: 9% \u00d7 400 = 36 colonies \u00d7 GBP 210 | \u22127,560 |\n| Haulage and labour | \u22126,900 |\n| **Net from 400 migratory** | **+85,315** |\n\n*240 colonies on own sites:*\n240 \u00d7 GBP 223.44 = GBP 53,625.\n\n**Total TREVANNOCK annual income: GBP 138,940**\n\nWait \u2014 let me reconcile. The net from the 400 migratory colonies under TREVANNOCK versus what those same colonies would earn sitting at home:\n\nHome earnings, 400 colonies: 400 \u00d7 GBP 223.44 = GBP 89,375.\nMigratory net from those same 400: GBP 85,315.\n\nSo the 400 colonies actually earn *less* on the Vantwyn programme than they would at home (GBP 85,315 vs GBP 89,375). The pollination fee of GBP 67,200 does not compensate for lost borage (GBP 28,400), spray losses (GBP 7,560), and haulage (GBP 6,900).\n\nShortfall per season from those 400 going to Vantwyn: GBP 4,060.\n\nTotal annual income under TREVANNOCK: GBP 143,000 \u2212 GBP 4,060 = **GBP 138,940**.\n\nThis is GBP 4,060 *below* the ORMSCLEUCH annual figure, not above it.\n\n---\n\n**Checking my arithmetic on the migratory net**\n\nVantwyn gross: 400 \u00d7 168 = 67,200\nCosts and forgone income: 28,400 + 7,560 + 6,900 = 42,860\nNet from Vantwyn: 67,200 \u2212 42,860 = **24,340**\n\nHome income those 400 colonies would have earned: 400 \u00d7 223.44 = 89,375\nBut they still earn heather: 400 \u00d7 152.44 = 60,975\n\nSo Vantwyn adds 24,340 *on top of* heather income of 60,975 = 85,315.\nAt home they would have earned 89,375 (heather + borage).\nDifference: 89,375 \u2212 85,315 = **GBP 4,060 worse per season under TREVANNOCK** versus ORMSCLEUCH, all else being equal.\n\n---\n\n**Three-year operating totals (undiscounted, from 2027\u20132029)**\n\n| | 3-year operating income | Equipment at end |\n|---|---|---|\n| ORMSCLEUCH | 3 \u00d7 143,000 = 429,000 | 0 (sold 2026) |\n| TREVANNOCK | 3 \u00d7 138,940 = 416,820 | ~20,000 (post-permit) |\n\nORMSCLEUCH operating advantage: GBP 12,180 over the three seasons.\nTREVANNOCK recovers GBP 20,000 from kit at end.\n\nNet three-year position (operating + terminal equipment):\nORMSCLEUCH: 429,000\nTREVANNOCK: 416,820 + 20,000 = 436,820\n\nThat puts TREVANNOCK ahead by GBP 7,820 in three-year operations + kit residual \u2014 but only because I am ignoring the GBP 96,000 Ravensgate payment already banked under ORMSCLEUCH.\n\n---\n\n**Including the Ravensgate receipt**\n\nORMSCLEUCH total cash over the period: 96,000 + 429,000 = **GBP 525,000**\nTREVANNOCK total: 416,820 + 20,000 = **GBP 436,820**\n\nORMSCLEUCH ahead by **GBP 88,180** over the same three years once the upfront Ravensgate sale is included.\n\nThis is the correct framing. TREVANNOCK does not provide GBP 96,000 now; it provides GBP 20,000 in 2030 and GBP 7,820 less in three-year operations along the way. The equipment loss alone (GBP 96,000 vs GBP 20,000 = GBP 76,000 gap) is the primary driver, reinforced by ORMSCLEUCH's slight operating superiority.\n\n---\n\n**Discounting**\n\nThe GBP 96,000 is received late 2026, essentially immediately. At a modest 5% discount rate:\n\nORMSCLEUCH NPV (2026 terms):\n96,000 + 143,000/1.05 + 143,000/1.1025 + 143,000/1.1576\n= 96,000 + 136,190 + 129,705 + 123,529 = **GBP 485,424**\n\nTREVANNOCK NPV:\n138,940/1.05 + 138,940/1.1025 + 138,940/1.1576 + 20,000/1.1576\n= 132,324 + 126,023 + 120,022 + 17,277 = **GBP 395,646**\n\nORMSCLEUCH ahead by roughly GBP 89,800 on a discounted basis. Even at 0% discount the lead is GBP 88,180. The conclusion is robust to the choice of discount rate.\n\n---\n\n**The spray-loss risk**\n\nThe 9% figure is a single observed datapoint from Whinnerdale on the same spray programme. It could be higher. My calculation treats it as fixed at 9% and assumes full replacement colonies are ready for heather season. If losses ran at 12\u201315%, the cost climbs GBP 2,520\u2013GBP 5,040 per season \u2014 in each case making TREVANNOCK worse. Under ORMSCLEUCH this risk does not exist.\n\n---\n\n**The Coldharbour/Nyefield opportunity**\n\nThis is real upside for TREVANNOCK. Two additional growers are already asking for 2028 rates. At GBP 168 a colony and, say, 100 additional colonies each, that is potentially GBP 33,600 more per season in 2028 and 2029 \u2014 but:\n\n- These are uninstructed enquiries, not offers.\n- Under TREVANNOCK, Thistledown has only 240 colonies not committed to Vantwyn; sending any of them to the vale cuts own-site income further.\n- The lorry loses its vale LEZ permit on 2030-01-01, so any vale expansion would be structurally limited from 2030 regardless.\n- All three previous pollination contracts that were supposed to pay for this kit failed to renew. The track record on turning pollination interest into reliable, multi-year contracts is poor.\n\nEven if Coldharbour and Nyefield both contracted in 2028 for 100 colonies each at GBP 168, netting (say) GBP 20,000 after haulage and spray losses, two seasons of that is GBP 40,000 \u2014 which does not close the GBP 88,000 gap.\n\n---\n\n**The lorry permit cliff**\n\nUnder TREVANNOCK, the lorry is worth GBP 96,000 today and GBP 20,000 in just over three years. The permit expiry is structural \u2014 Thistledown cannot control it. Taking TREVANNOCK is accepting a GBP 76,000 capital erosion in exchange for a migratory operation whose three-year operating income is actually GBP 12,180 *worse* than staying at home (before accounting for the capital loss). Only the Coldharbour/Nyefield upside and the strategic option value are on the other side of the ledger, and neither is contracted.\n\n---\n\n**Strategic exit cost**\n\nORMSCLEUCH is described as permanent exit from pollination. That is a real cost if the vale pollination market grows. But the business has already been effectively out of it since 2025 and lost no income it had expected; the sunk GBP 187,000 is already gone. Staying in TREVANNOCK to preserve optionality costs GBP 76,000 in foregone Ravensgate value, and the optionality itself expires when the lorry's permit does.\n\n---\n\n**Summary verdict**\n\nOn every quantitative measure ORMSCLEUCH is materially superior:\n- GBP 96,000 in hand now vs GBP 20,000 residual in 2030 (GBP 76,000 gap)\n- Three-year operating income GBP 12,180 *higher* under ORMSCLEUCH (Vantwyn does not cover what the borage, spray losses and haulage cost)\n- No spray-loss risk\n- No operational complexity\n\nTREVANNOCK's only genuine upside is the Coldharbour/Nyefield potential and continued market presence \u2014 neither quantifiable nor contracted, and both constrained by the permit expiry.\n\nREADING\nThe equipment premium (GBP 96,000 now vs GBP 20,000 in 2030) is GBP 76,000; the Vantwyn contract, far from bridging that gap, actually generates GBP 12,180 *less* in three-year operating income than running all 640 colonies on heather and borage, because the pollination fee is consumed by lost borage, spray losses and haulage. On both capital and operating lines, ORMSCLEUCH leads by a combined GBP 88,000 over the contract period, the spray-loss risk adds uncapped downside to TREVANNOCK, and the lorry's permit expiry makes any vale presence structurally temporary regardless.\n\nCALL\nORMSCLEUCH\n\nGROUNDS\nThe Ravensgate offer locks in GBP 76,000 more in equipment value than the lorry will be worth after its permit expires, and Vantwyn's pollination fee, once borage foregone, spray losses, and haulage are deducted, yields less per season than leaving all 640 colonies on heather and borage\u2014so TREVANNOCK loses on both the capital and the operating account simultaneously.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-r3pyanga"
+  },
+  "cost_usd": 0.241941,
+  "duration_ms": 273800,
+  "session_id": "476dd324-dd56-425e-8038-7c2986bd99a9",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 990,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 15839,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 990,
+        "output_tokens": 15839,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 274.9266436100006
+}

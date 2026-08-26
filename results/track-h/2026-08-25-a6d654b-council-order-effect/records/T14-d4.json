@@ -1,0 +1,61 @@
+{
+  "opaque": "T14",
+  "item_id": "K04",
+  "ordering": "AB",
+  "draw": 4,
+  "attempt": 1,
+  "model": "sonnet",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The arithmetic of the shortfall**\n\nThe 2031 peak-week demand is 15.4 ML/day against a rated 14.2 ML/day. The shortfall is 1.2 ML/day. That is the number both schemes must answer.\n\n---\n\n**Testing SKELWITH against that number**\n\nThe forecast reduction in distribution loss is 1.4 ML/day. The Kilvaddy programme returned 1.1 against a forecast of 1.3, a ratio of 84.6 %. Applying that ratio: 1.4 \u00d7 0.846 = **1.18 ML/day**. That is already 0.02 ML/day below the 1.2 ML/day requirement, before a single day of drift.\n\nDrift-back is the next problem. The programme completes in March 2030. The 2031 peak demand will arrive in July\u2013August 2031, roughly 16\u201317 months later. At 0.1 ML/day per year, that is approximately 0.13\u20130.14 ML/day of drift, reducing the real saving to around **1.04\u20131.05 ML/day** at the moment it is most needed. The shortfall on that estimate is roughly 0.15 ML/day \u2014 not catastrophic in absolute terms but entirely outside the scheme's own numbers and with no margin for error.\n\nDrift is also structural. The problem does not go away: without further capital spend after 2031 it continues. The next regulatory envelope settles in December 2029 and there is no guarantee of funding a follow-on programme, particularly if the board has already spent its AMP envelope on Skelwith and arrives at that negotiation with a scheme that is already decaying.\n\nSKELWITH is cheaper and starts earlier \u2014 both real advantages \u2014 but on its own published numbers and at the demonstrated underperformance ratio it does not actually close the 1.2 ML/day gap by the day that gap bites.\n\n---\n\n**Testing HARBOTTLE against the hands-off condition**\n\nThe Cullivoe licence stops abstraction when the Vraich gauge drops below 12.1 ML/day. This happened on 41 days in 2022 and 29 days in 2025, all June to September. June\u2013September is also peak demand season. That is a real, recurring vulnerability and it must not be minimised.\n\nWhen abstraction stops, the works runs on existing sources at the rated 14.2 ML/day against a demand of 15.4 ML/day. The shortfall reverts to the same 1.2 ML/day it was before HARBOTTLE was built. Against that deficit, 62 ML of treated storage yields: 62 \u00f7 1.2 = **51.7 days** of cover \u2014 call it 51 days.\n\nThe worst recent restriction was 41 days (2022). 41 < 51, so even that year would have been managed within the existing storage buffer, provided storage enters the restriction period substantially full. There is a real question about whether 2022-style frequency could increase under climate change, but the board has only observed data to work from. On observed data, storage is adequate.\n\nAdditionally, the Cullivoe source provides 3.0 ML/day against a 1.2 ML/day shortfall: a headroom factor of 2.5\u00d7. During the roughly 320 days per year when the burn is above threshold, the works would be running well inside its rated output, which allows storage to be kept full and provides resilience for other operational contingencies. The hands-off risk is real but bounded and coverable.\n\nHARBOTTLE is commissioned 2029-06-30. The housing is phased from 2027 to 2031. There is a 2027\u20132029 window when incremental demand begins to eat into the existing 0.6 ML/day headroom (14.2 \u2212 13.6). At roughly 0.36 ML/day per year of new housing demand, the works hits its rated ceiling around mid-2028. That two-year window has to be managed operationally (demand management, storage drawdown on peak days), but it is not an unusual position for an undertaker to be in during a capital programme and the works is not yet consented for a replacement source in any case until HARBOTTLE comes online.\n\n---\n\n**Capital and regulatory position**\n\n- HARBOTTLE: \u00a38,400,000 against an envelope of \u00a311,200,000. Residual: \u00a32,800,000.\n- SKELWITH: \u00a35,900,000 against the same envelope. Residual: \u00a35,300,000.\n\nThe \u00a32,500,000 difference is significant. However, if SKELWITH does not solve the problem \u2014 and the numbers show it does not \u2014 the savings are illusory: the board arrives at the December 2029 regulatory settlement having spent \u00a35,900,000 and still carrying a net shortfall of ~0.15 ML/day that it must then finance in the next envelope. The total cost over two periods will be higher than committing to HARBOTTLE now.\n\nThe regulatory cycle also matters. HARBOTTLE commissioned in June 2029 is on the record and demonstrably operational before the December 2029 settlement. That is a stronger position than presenting a pressure management programme that is barely complete and already drifting.\n\n---\n\n**Why not BALANCED?**\n\nBALANCED is a legitimate answer where the cases are genuinely even. They are not even here. SKELWITH fails on its own adjusted arithmetic (1.18 ML/day < 1.2 ML/day before drift) and the failure widens over time without further spend. HARBOTTLE has a real conditional risk \u2014 the hands-off flow \u2014 but that risk is quantified, its worst observed occurrence (41 days) fits within the storage buffer (51 days), and it does not compound year-on-year the way mains drift does. The two schemes are not comparable on reliability of outcome.\n\n---\n\nREADING\nSKELWITH at the Kilvaddy underperformance ratio delivers only 1.18 ML/day before drift-back begins eroding further, leaving the board short of the 1.2 ML/day gap on its own numbers at the critical 2031 demand peak, whereas HARBOTTLE's hands-off flow condition is bounded at 41 observed days against a 51-day storage cover, giving a quantified and manageable risk against a reliably closed shortfall.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH cannot demonstrably close the 1.2 ML/day shortfall \u2014 the Kilvaddy-adjusted yield of 1.18 ML/day falls short before drift-back, and drift will widen that gap by 2031 without further capital \u2014 whereas HARBOTTLE's hands-off flow risk is covered by the 51-day storage buffer against an observed maximum restriction of 41 days.",
+  "receipt": {
+    "tools": [],
+    "skills": [],
+    "slash_commands": 0,
+    "model": "claude-sonnet-4-6",
+    "cwd": "C:\\Users\\Angel\\AppData\\Local\\Temp\\council-primary-jlsz3c92"
+  },
+  "cost_usd": 0.09422230000000001,
+  "duration_ms": 119890,
+  "session_id": "f393de4e-5fea-4a13-a648-6bdb998ed663",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 6156,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6156,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 121.13897800445557,
+  "attempts": [
+    {
+      "attempt": 1,
+      "ok": true,
+      "failure": null,
+      "transport": null
+    }
+  ]
+}

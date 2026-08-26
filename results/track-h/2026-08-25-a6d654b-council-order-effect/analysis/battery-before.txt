@@ -1,0 +1,220 @@
+==============================================================================
+COUNCIL ORDER-EFFECT PRIMARY: second-position rate
+==============================================================================
+
+-- extraction, both orderings of the same text ---------------------------------
+  case                                             AB        BA
+  commits to the course printed first under AB     first     second    
+  commits to the course printed second under AB    second    first     
+  declares an explicit tie                         balanced  balanced  
+  commits to something not on offer                off_menu  off_menu  
+  no extractable commitment                        no_call   no_call   
+  inline call of the superseded contract           no_call   no_call   
+  call block naming both courses                   ambiguous ambiguous 
+  call block carrying a sentence as well           no_call   no_call   
+  the Course prefix the prompt itself prints       second    first     
+  blocks restated, the last standing               second    first     
+  a recommendation the grounds line qualifies away second    first     
+  the call in markdown emphasis                    first     second    
+  the call in title case                           first     second      <- normalised
+  the call with a trailing gloss                   first     second    
+  emphasis around a course that is still not on offer off_menu  off_menu  
+
+-- branch one: an effect that is there must be reported ------------------------
+  recency effect present                    rate=0.667 n=144  p=0.00008 -> recency
+                                             reported
+  primacy effect present                    rate=0.333 n=144  p=0.00008 -> primacy
+                                             reported
+  heavy abstention over a real effect       rate=0.625 n=192  p=0.00066 -> recency
+                                             reported
+  the trim carries the weight               rate=0.750 n=64   p=0.00008 -> recency
+                                             reported
+  heterogeneous items with a net direction  rate=0.625 n=144  p=0.00339 -> recency
+                                             reported, and per-item effects are heterogeneous
+
+-- branch two: an effect that is not there must not be -------------------------
+  content-driven answer, no effect          rate=0.500 n=144  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  coin-flip noise, no effect                rate=0.500 n=144  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  strong content preference, no effect      rate=0.500 n=144  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  heavy abstention, no effect               rate=0.500 n=96   p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  unresolved records could carry it         rate=0.650 n=60   p=0.02734 bound=[0.36,0.81] u=0.56 T ok  
+                                             conditional only: unresolved records could account for it
+  differential commitment, no effect        rate=0.500 n=192  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  departure too small for the sample        rate=0.583 n=24   p=0.54126 bound=[0.58,0.58] u=1.00 T ok  
+                                             no effect reported
+  opposing effects cancelling across items  rate=0.500 n=144  p=1.00000 bound=[0.50,0.50] u=1.00 T FLAG
+                                             order dependence present, direction cancels across items
+  ordinary scatter around the null          rate=0.500 n=144  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+  blocked draw order, no effect             rate=0.500 n=192  p=1.00000 bound=[0.50,0.50] u=1.00 T ok  
+                                             no effect reported
+
+-- attrition by arm and ordering, on the case that turns on it -----------------
+  arm    ord     first   second balanced off_menu ambiguou  no_call  commit abstain resolve
+  on     AB         24       72       96        0        0        0   0.500   0.500   1.000
+  on     BA         48       48       96        0        0        0   0.500   0.500   1.000
+  trimmed=0  dropped_items=[]  normalised_calls=0  order_balanced_rate=0.6250
+  the resolution rate is the one the gate uses. BALANCED is in neither half of it.
+
+-- the same stratum under two arms, and the contrast between them --------------
+  arm on       rate=0.667 n=96   p=0.00142  commit AB/BA 1.00/1.00  -> reported
+  arm off      rate=0.500 n=96   p=1.00000  commit AB/BA 1.00/1.00  -> no effect reported
+  contrast on - off = +0.167, Fisher exact p=0.02782  (arms differ)
+  each arm is tested against the design null of 0.5; the contrast assumes
+  nothing about where either arm sits and is the on-against-off question.
+
+-- the honest scorer against the whole battery ---------------------------------
+  54 checks, 0 failures
+
+-- the same code path, one decision flipped at a time --------------------------
+  caught    BALANCED treated as missing data
+            by 4 case(s), 2 of which catch it alone
+            alone by aggregate/heavy abstention over a real effect
+  caught    per-item AB/BA balance skipped
+            by 3 case(s), 2 of which catch it alone
+            alone by aggregate/the trim carries the weight
+  caught    position read from the course name
+            by 14 case(s), 7 of which catch it alone
+            alone by aggregate/primacy effect present
+  caught    Manski bound ignored
+            by 1 case(s), 1 of which catch it alone
+            alone by aggregate/unresolved records could carry it
+  caught    no significance test
+            by 9 case(s), 4 of which catch it alone
+            alone by aggregate/blocked draw order, no effect
+  caught    per-item dispersion never looked at
+            by 2 case(s), 1 of which catch it alone
+            alone by aggregate/heterogeneous items with a net direction
+  caught    surface form never normalised
+            by 8 case(s), 5 of which catch it alone
+            alone by extraction/emphasis around a course that is still not on offer under AB
+
+-- what a directional claim costs, as a resolution rate ------------------------
+  the bound runs from rho*u to rho*u + 1 - u and the gate needs it to
+  exclude 0.5, so reporting needs u > 1 / (1 + 2*|rho - 0.5|).
+    true rho   direction    min resolution u    max unresolved
+        0.10     primacy              0.5556            0.4444
+        0.20     primacy              0.6250            0.3750
+        0.35     primacy              0.7692            0.2308
+        0.55     recency              0.9091            0.0909
+        0.60     recency              0.8333            0.1667
+        0.65     recency              0.7692            0.2308
+        0.70     recency              0.7143            0.2857
+        0.75     recency              0.6667            0.3333
+        0.80     recency              0.6250            0.3750
+        0.90     recency              0.5556            0.4444
+  the cost depends on the size of the departure and not its direction:
+  0.35 and 0.65 are the same row. An earlier version of this table read
+  only the lower endpoint, printed u > 1.43 at rho = 0.35, and a negative
+  unresolved share below that. It was right for every row it shipped with
+  and wrong for every row it did not, which is why the rows now span 0.5.
+  a subtler true effect demands a more resolvable run. At the registered
+  alternative of 0.65 the run needs u > 0.769 whatever the sample size.
+
+-- sizing ----------------------------------------------------------------------
+  detect a second-position rate of 0.65 against the 0.5 null
+  two-sided alpha 0.05, power 0.8
+  normal approximation      85 committed records
+  exact binomial, stable    97 committed records
+  power at that size        0.8338
+
+  the trim keeps min(C_AB, C_BA) per item, so the yield is
+  2 * sum_k P(Bin(r,c) >= k)^2 per item and not 2 * r * c. Issued draws
+  divided by the commit rate overstates it at every commit rate below one.
+    commit   r  items  issued   E[kept]  naive items/issued
+      100%   3     17     102     102.0  17/97
+      100%   4     13     104     104.0  13/97
+      100%   6      9     108     108.0  9/97
+      100%   8      7     112     112.0  7/97
+
+       95%   3     18     108      97.9  18/103
+       95%   4     14     112     101.8  13/103
+       95%   6      9     108      98.5  9/103
+       95%   8      7     112     102.4  7/103
+
+       90%   3     20     120      99.0  18/108
+       90%   4     15     120      99.6  14/108
+       90%   6     10     120     100.7  9/108
+       90%   8      8     128     108.2  7/108
+
+       80%   3     24     144      98.4  21/122
+       80%   4     18     144     100.2  16/122
+       80%   6     12     144     102.6  11/122
+       80%   8      9     144     104.1  8/122
+
+
+-- choosing the grid on joint power, at the registered effect size -------------
+  primary power is on a uniform effect at rho=0.65 over the delivered
+  records. dispersion power is on a corpus split half at 0.65 and half at
+  0.35, which pools to exactly 0.5 and which the primary cannot see.
+  every row is sized to deliver 97 kept records at a 95% commit rate.
+     r  items  issued  E[kept]   primary  dispersion    joint  one item
+     3     18     108     97.9     0.834       0.324    0.324      5.6%
+     4     14     112    101.8     0.858       0.419    0.419      7.1%
+     6      9     108     98.5     0.814       0.528    0.528     11.1%
+     8      7     112    102.4     0.841       0.600    0.600     14.3%
+    10      6     120    110.0     0.884       0.685    0.685     16.7%
+  the grid to register is 6 items x 10 draws per ordering, chosen on the weaker of the two powers.
+  the last column is the cost: one item carries 16.7% of the stratum there against 7.1% at 14 items.
+  A mislabelled item is that much of the headline, and the blind
+  adjudication's 20% kill reads against the same denominator.
+  Registering the grid registers that trade with it.
+  exact null size of the dispersion flag at that grid: 0.0484 against a nominal 0.05
+
+  the rows above are the fewest items that deliver the band. The corpus on
+  disk is larger, so here is what it can run, by the stratum it belongs to:
+  undefeated: 11 measured item(s) -- K03, K04, K05, K06, K07, K08, K09, K10, K11, K12, K13
+         r  issued  E[kept]   primary  dispersion    joint
+         4      88     80.0     0.751       0.357    0.357
+         6     132    120.4     0.892       0.598    0.598
+         8     176    161.0     0.970       0.763    0.763
+        10     220    201.7     0.991       0.873    0.873
+  The specificity stratum, asymmetric, has no measured item.
+  It is registered, it is never pooled with the primary, and it is
+  a separate authoring unit with its own screen. Nothing is reported
+  from it until it has items.
+
+-- the corpus: pairs, language, contract and computed checks -------------------
+  a defect the checker finds has to be declared in the item's known_defects.
+  an undeclared defect fails the run and so does a stale declaration.
+  an item in the measured corpus has to carry no defects at all.
+  item  rebuild  words       delta   contract   cue   checks   corpus
+  K01   True     70/64       9.0%    OLD        HIT   none     withdrawn
+  K02   True     53/62       15.7%   OLD        HIT   none     withdrawn
+  K03   True     70/66       5.9%    registered clean computed measured
+  K04   True     61/62       1.6%    registered clean computed measured
+  K05   True     62/62       0.0%    registered clean computed measured
+  K06   True     61/63       3.2%    registered clean computed measured
+  K07   True     60/59       1.7%    registered clean computed measured
+  K08   True     63/62       1.6%    registered clean computed measured
+  K09   True     60/60       0.0%    registered clean computed measured
+  K10   True     61/61       0.0%    registered clean computed measured
+  K11   True     65/65       0.0%    registered clean computed measured
+  K12   True     64/64       0.0%    registered clean computed measured
+  K13   True     64/64       0.0%    registered clean computed measured
+  11 item(s) in the measured corpus: K03, K04, K05, K06, K07, K08, K09, K10, K11, K12, K13
+  2 withdrawn and not corpus: K01, K02
+  11 of 11 measured item(s) declare dated and arithmetic checks the instrument computes:
+  K03, K04, K05, K06, K07, K08, K09, K10, K11, K12, K13. The rest carry their timeline as prose in the
+  authoring record. Two defects in this corpus survived prose that asserted the check
+  and died to something that computed it, so the remaining items are work outstanding.
+
+-- the pilot's own K02 records, scored -----------------------------------------
+  rate 0.500 on 4 committed records
+  exact p 1.000, 95% CI [0.068, 0.932]
+  reading: no effect reported
+  4 of the 97 records the registered band needs, and they do not count toward it:
+  they were collected under K01's and K02's contract, which reads
+  "written exactly as it is written above". That is a positional word in
+  the contract of an instrument whose primary is a position effect, so the
+  four records are contaminated for this purpose and are not pooled with
+  anything run since. The count problem is real and it is the smaller one.
+
+==============================================================================
+BATTERY PASSED
+==============================================================================

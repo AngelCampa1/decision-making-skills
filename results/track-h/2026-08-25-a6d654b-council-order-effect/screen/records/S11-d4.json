@@ -1,0 +1,44 @@
+{
+  "opaque": "S11",
+  "draw": 4,
+  "model": "sonnet",
+  "ordering": "AB",
+  "arm": "off",
+  "ok": true,
+  "response": "READING\n\n**The demand arithmetic**\n\nCurrent peak-week output is 13.6 ML/day, of which 3.1 ML/day is lost in distribution. Net consumption is therefore about 10.5 ML/day. Adding 1.8 ML/day for 1,900 new homes at full occupation gives a 2031 peak-week requirement of 15.4 ML/day against a rated works of 14.2 ML/day, a structural shortfall of 1.2 ML/day. Both courses are trying to close exactly that gap.\n\n---\n\n**Examining SKELWITH**\n\nThe headline saving is 1.4 ML/day. The Kilvaddy precedent \u2014 1.1 delivered against 1.3 forecast, an 84.6 % outturn \u2014 adjusts that to 1.18 ML/day. That figure already falls 0.02 ML/day short of the 1.2 ML/day needed before a single day of drift is counted.\n\nDrift is material. The mains programme completes by 31 March 2030. The 2031 peak season is roughly fifteen months later. At 0.1 ML/day per year, the effective saving by the summer 2031 peak is approximately 1.18 \u2212 0.125 = 1.055 ML/day, leaving a residual structural shortfall of about 0.15 ML/day. That shortfall is not seasonal; it is permanently in the system and grows every year without further capital injection.\n\nThe \u00a35.3 M of headroom that SKELWITH leaves in the envelope cannot fill that gap: the regulator's next settlement is December 2029, but Cullivoe's quotation lapses in June 2027. By the time a new regulatory allowance arrives, the quotation is dead, a new procurement would be needed at an unknown (almost certainly higher) price, and the board would face a live supply shortfall across 41,000+ properties. SKELWITH is cheaper and earlier, but it is an incomplete solution that closes no door on the shortfall and forecloses the one alternative that does.\n\n---\n\n**Examining HARBOTTLE**\n\nThe Cullivoe borehole adds 3.0 ML/day of licensed rated capacity against a 1.2 ML/day shortfall. Once commissioned (30 June 2029) the rated works plus Cullivoe stand at 17.2 ML/day against a 2031 peak of 15.4 ML/day \u2014 a 1.8 ML/day surplus that generates storage recovery at roughly 1.8 ML/day during normal operation. There is no drift mechanism. The asset is permanent.\n\nThe hands-off flow condition is the decisive risk to examine carefully. Abstraction at Cullivoe ceases when the Vraich gauge falls below 12.1 ML/day. In those periods the board reverts to 14.2 ML/day rated output against 15.4 ML/day demand: the same 1.2 ML/day shortfall that exists today if nothing is done. The 62 ML of treated storage bridges that at 1.2 ML/day for approximately 51.7 days (62 \u00f7 1.2).\n\nThe worst recorded hands-off period is 41 days (2022). That consumes 49.2 ML of the 62 ML storage, leaving a 12.8 ML safety margin \u2014 about ten and a half days of additional cover beyond the historical worst case. The 2025 event was 29 days. Both occurrences are wholly within June\u2013September, which is also when, outside the dry period, surplus rated capacity (17.2 \u2212 15.4 = 1.8 ML/day) is actively refilling storage. Good operational practice \u2014 treating the approach of low-flow conditions as a trigger to maximise storage \u2014 can in normal years ensure storage enters the dry period near full. A spring refill of 62 ML from a 1.8 ML/day surplus takes approximately 34 days.\n\nTwo genuine residual risks remain. First, climate change could extend dry-period duration beyond the 41-day historical maximum; if hands-off ever exceeded approximately 51 days with storage already partly depleted, the board would face a shortfall it cannot cover from treatment alone. Second, the source commissions in June 2029, meaning the summers of 2027 and 2028 \u2014 with growing housing completions \u2014 are bridged only by the existing 14.2 ML/day works. However, full occupation of all 1,900 homes is explicitly a 2031 horizon, and the early development phases will not drive peak demand to 15.4 ML/day. The works is only 1.2 ML/day short at full occupation in 2031; in 2027\u20132028 the gap will be materially smaller or non-existent depending on phasing.\n\nThe climate tail risk is real but bounded by storage for every historically observed event. It is a risk to be managed through reservoir draw-down rules and demand-side drought plans \u2014 standard tools for a statutory undertaker \u2014 rather than a reason to reject the only scheme that permanently closes the gap.\n\n---\n\n**Head-to-head summary**\n\n| Dimension | HARBOTTLE | SKELWITH |\n|---|---|---|\n| Cost | \u00a38.4 M | \u00a35.9 M |\n| Closes 1.2 ML/day gap? | Yes, with 1.8 ML/day to spare | No \u2014 1.18 ML/day at Kilvaddy ratio, ~1.05 ML/day by 2031 |\n| Drift-back? | None | 0.1 ML/day/year |\n| Delivery date | June 2029 | Phased to March 2030 |\n| Key risk | Hands-off flow (June\u2013Sep); covered by 62 ML storage to 51 days vs 41-day historical worst | Structural residual shortfall from day one, widening annually |\n| Capital remaining | \u00a32.8 M | \u00a35.3 M (cannot fund Cullivoe; quote lapses 2027) |\n\nSKELWITH costs less and arrives earlier, but those advantages are rendered academic by the arithmetic: it does not close the gap it is tasked with closing, and the gap widens from the moment the work is complete. The board would face a 2031 peak season with a statutory supply obligation and a confirmed, growing shortfall with no funded remedy in the envelope and no live quotation for the alternative.\n\nHARBOTTLE is more expensive and arrives later, but it is the only course that demonstrably closes the gap. The hands-off condition is the material counter-argument, yet 62 ML of storage covers 51 days against a 41-day worst case \u2014 a real but manageable operational risk, not an existential one.\n\n---\n\nREADING\nThe two schemes must each be tested against whether they actually solve the problem. SKELWITH, adjusted for the Kilvaddy outturn ratio, delivers 1.18 ML/day against a 1.2 ML/day requirement before any drift is counted; once drift is applied, the residual shortfall by the 2031 peak is approximately 0.15 ML/day and growing, with no funded remedy available because the Cullivoe quotation will have lapsed. HARBOTTLE closes the gap with 1.8 ML/day of headroom, carries no drift mechanism, and its primary operating risk \u2014 loss of abstraction on the burn \u2014 is covered by 62 ML of treated storage for approximately 51 days against a 41-day worst case in the historical record.\n\nCALL\nHARBOTTLE\n\nGROUNDS\nSKELWITH cannot close the 1.2 ML/day gap even on its own terms \u2014 the Kilvaddy ratio gives 1.18 ML/day before drift reduces it further \u2014 whereas HARBOTTLE delivers rated physical capacity whose only conditional risk, hands-off abstraction during summer low flows, is demonstrably covered by 62 ML of treated storage for eleven days beyond the worst historically recorded curtailment period.",
+  "cost_usd": 0.10446730000000001,
+  "duration_ms": 128925,
+  "session_id": "56bf4082-cf6c-4e9e-837d-51d3f01f75ab",
+  "num_turns": 1,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1141,
+    "output_tokens": 6840,
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 6840,
+        "cache_read_input_tokens": 1141,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "elapsed_s": 130.09251856803894
+}

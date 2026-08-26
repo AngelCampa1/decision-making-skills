@@ -1,0 +1,219 @@
+# Track H order-effect item K10, stratum: undefeated, ordering: BA.
+# Council construct, Family C. No answer key decides this item: the two
+# orderings are scored against each other.
+#
+# ONLY `prompt` and `format_contract` are model-visible. Everything under `key`
+# and `meta` is authoring record and must never reach a generation or
+# extraction call.
+set_version: 2
+construct: council
+family: C
+item: K10
+stratum: undefeated
+stratum_alias_v1: tie
+ordering: BA
+first_course: TREGOWAN
+second_course: HAVERSHOLT
+pair: K10-fennerbrake-coldstore-undefeated-ab.yaml
+domain: soft_fruit_shared_cold_store
+mechanism: shared-asset-contention
+elicited:
+  question: which of the two named courses to recommend
+  kind: categorical
+  admissible: [HAVERSHOLT, TREGOWAN, BALANCED]
+prompt: |
+  Today is 2026-08-25.
+
+  I am Marged Quennell-Harrow and I grow soft fruit at Fennerbrake, near Wildern
+  Cross. Fourteen acres of everbearer strawberries and six of raspberries, all
+  under tunnels, picked by a gang of seventy-four and packed on site.
+
+  Our packing is fine. Our chilling is not, and the reason is that we do not
+  chill alone.
+
+  - Wildern Cross Cold Store holds 208 pallet spaces and is owned by three
+    growers. We hold 25% of it, which is 52 spaces. Wraysholme hold 25% and
+    Ardwick hold half.
+  - Outside the peak the store runs on arrival order. Inside it, the
+    shareholders' agreement switches to pro rata, and our peak is the same
+    fortnight as theirs: 2027-07-05 to 2027-07-18.
+  - Our own peak requirement is 72 spaces, because collections are every fourth
+    day and we pack eighteen pallets a day.
+  - Punnetted fruit sells at GBP 3.10 a kg. Fruit that is not chilled within two
+    hours of picking loses a day of shelf life and goes to the processor at
+    GBP 0.62.
+  - In July 2026 we ran out of our entitlement three days in and sent
+    18.2 tonnes to the processor across the rest of the fortnight. That cost us
+    GBP 45,136.
+  - Wraysholme, who hold the other 25%, are retiring and have offered us their
+    shareholding for GBP 96,000, open until 2026-11-30. Ardwick have a
+    pre-emption right and thirty days to match us, and matching would take
+    them to 75%.
+  - The store's compressors date from 2009. The store's engineer put a
+    replacement at GBP 260,000 and said it falls due within three years. That
+    cost lands on shareholders pro rata.
+  - We have GBP 140,000 of capital available now.
+
+  Two courses are on the table.
+
+  Course TREGOWAN. Rent 30 spaces from Ilsington Chilled, fourteen miles away,
+  booked by 2027-03-31. That is GBP 24,000 for the season and GBP 7,200 of
+  haulage, no capital and no share of anyone else's compressor. We pay it
+  again every season, the contention at Wildern Cross stands, and the buyer
+  has queried the extra handling. Nothing at the store changes hands.
+
+  Course HAVERSHOLT. Buy Wraysholme's 25% for GBP 96,000 and hold half of
+  Wildern Cross Cold Store. That is 104 spaces against a requirement of 72,
+  ours throughout July, and half the votes on the store's future. Ardwick have
+  thirty days to match us, and our share of the GBP 260,000 compressor doubles
+  to GBP 130,000. Wraysholme want their answer before 2026-11-30.
+
+  Which course do you recommend?
+format_contract: |
+  Reason as much as you find useful, then end your reply with exactly these three
+  blocks in this order and nothing after them:
+
+  READING
+    free text -- your working, at whatever length it needs
+  CALL
+    one line, and nothing else in this block: the one-word name of the course
+    you recommend, without the word Course in front of it, or the single word
+    BALANCED. BALANCED means you judge the two genuinely even. It is a real
+    answer here and it is read as one.
+  GROUNDS
+    one sentence naming what decided it
+key:
+  defeated_course: none
+  defeating_fact: none
+  mechanism_note: >-
+    Shared-asset-contention. One cold store serves three growers whose peaks
+    fall in the same fortnight, and the agreement switches from arrival order
+    to pro rata exactly when demand exceeds it. The binding quantity is a share
+    of a contended asset rather than a rate: the store is large enough in total
+    and the entitlement is not, so one course enlarges the share and the other
+    leaves the contention alone and goes elsewhere.
+  why_neither_is_defeated: >-
+    The shortfall is 20 spaces and both courses cover it: HAVERSHOLT takes the
+    entitlement to 104 and TREGOWAN adds 30 off site for 82. HAVERSHOLT costs
+    GBP 96,000 once against a loss of GBP 45,136 a season, which is a little
+    over two seasons and is the lean, and it buys half the store and a say in
+    what happens to it. Against that stands GBP 130,000 of compressor liability
+    that doubles with the shareholding and an engineer's date inside three
+    years, and Ardwick's pre-emption right, which can take the course away
+    after it is chosen and leave them holding 75%. TREGOWAN costs GBP 31,200 a
+    season, forever, and puts four hours of haulage into a chain the buyer has
+    already queried. A reader who weights
+    ownership of the asset the business depends on lands on HAVERSHOLT, a
+    reader who weights the compressor and the pre-emption lands on TREGOWAN,
+    and both readings use every figure given.
+  case_for_HAVERSHOLT: >-
+    The store is the constraint and the shortfall is structural: three growers
+    peak in the same fortnight every year, so pro rata will bind every July for
+    as long as the shareholding stands at 25%. GBP 96,000 removes it for good,
+    takes the entitlement to 104 against a requirement of 72, and pays for
+    itself against a GBP 45,136 loss inside two seasons and a fortnight. It
+    also buys half the votes on a store whose compressors decide the next
+    decade, which is the difference between being told what the GBP 260,000
+    costs and deciding when it is spent. Renting 30 spaces fourteen miles away
+    leaves the same contention in place, adds haulage to a chain the buyer has
+    queried, and buys nothing that survives the season.
+  case_for_TREGOWAN: >-
+    Buying a second quarter of the store doubles the exposure to a compressor
+    replacement the store's own engineer has put at GBP 260,000 within three
+    years, so the real price of HAVERSHOLT is GBP 96,000 now and GBP 130,000
+    the business does not control the timing of. The pre-emption right means
+    the course may not even be available: Ardwick have thirty days to match,
+    and a farm that has planned around owning half the store can find itself
+    owning a quarter of it in December with the fortnight still coming.
+    GBP 31,200 buys 30 spaces, ten more than the shortfall, against a
+    GBP 45,136 loss, with no capital committed and no exposure to somebody
+    else's plant. The haulage is inside the retail specification as written.
+  arithmetic: >-
+    Entitlement: 25% of 208 = 52 spaces. Requirement: 18 pallets a day x 4 days
+    between collections = 72. Shortfall 72 - 52 = 20. HAVERSHOLT: 50% of 208 =
+    104, spare 32. TREGOWAN: 52 + 30 = 82, spare 10. Loss: 18,200 kg x
+    (3.10 - 0.62) = 45,136. HAVERSHOLT payback: 96,000 / 45,136 = 2.13 seasons.
+    Compressor exposure: 25% of 260,000 = 65,000 today, 50% = 130,000 after.
+    TREGOWAN: 24,000 rent + 7,200 haulage = 31,200 a season.
+  internal_consistency: >-
+    Figures stated more than once, checked against each other. Shareholding: 25%
+    stated once and used as 52 of 208 spaces, with Wraysholme's 25% the same
+    size, so 50% is 104 and the arithmetic closes exactly with no rounding.
+    Spaces: 52 entitlement, 72 requirement, 20 short, and both courses stated
+    with their resulting totals. Prices: GBP 3.10 and GBP 0.62 appear once each
+    and reappear only inside the GBP 45,136, which is 18,200 x 2.48 exactly.
+    Capital: GBP 140,000 available against GBP 96,000 asked, so neither course
+    is closed by cash. Dates: one fortnight, 2027-07-05 to 2027-07-18, stated
+    once. Shareholdings: Fennerbrake 25%, Wraysholme 25% and Ardwick 50%, which
+    sums to 100, and Ardwick matching the pre-emption takes them to 75, which
+    is 50 plus Wraysholme's 25. No figure is stated twice with different
+    values.
+  information_timeline: >-
+    Earliest date each course can be taken, against the date its defending
+    figures lapse. HAVERSHOLT: Wraysholme's GBP 96,000 is open to 2026-11-30
+    and the pre-emption period is thirty days, so an offer accepted on
+    2026-08-26 clears pre-emption by 2026-09-25 and an offer accepted on the
+    last day clears by 2026-12-30, both more than six months before the
+    fortnight opens on 2027-07-05. TREGOWAN: Ilsington Chilled book the season
+    to 2027-03-31, three months ahead of the same fortnight. The GBP 45,136
+    that defends both courses is a 2026 measurement and is not an offer that
+    can lapse. The compressor date is inside three years of 2026-08-25, so it
+    falls after either course is taken and is a consequence rather than a
+    constraint. Nothing that defends either course expires before that course
+    can be taken.
+  why_a_reader_commits: >-
+    The Wraysholme offer closes on 2026-11-30 and the pre-emption clock runs
+    from acceptance, so declining to choose decides the question for
+    HAVERSHOLT by expiry. The two courses also carry different kinds of
+    exposure, a share of somebody else's plant against a rent that never ends,
+    and a grower who has sat on a co-operative board has a view on which of
+    those is worse.
+  authors_lean: >-
+    HAVERSHOLT, printed first under AB. The lean is the 2.13-season payback and
+    it is a lean rather than a defeat: GBP 130,000 of compressor liability on
+    an engineer's three-year date and a pre-emption right that can remove the
+    course are live arguments against it that no figure in the item settles.
+  checks:
+    dates:
+      - "2026-11-30 after 2026-08-25  # the Wraysholme offer is still open when the question is asked"
+      - "2026-11-30 before 2027-07-05  # the offer closes, and pre-emption runs, before the contended fortnight"
+      - "2027-03-31 before 2027-07-05  # Ilsington must be booked before the same fortnight opens"
+      - "2027-03-31 after 2026-08-25  # the booking deadline is in the future"
+      - "2027-07-05 before 2027-07-18  # the contended fortnight runs forward"
+    arithmetic:
+      - "25 / 100 * 208 == 52  # the current entitlement in pallet spaces"
+      - "52 + 52 == 104  # buying Wraysholme's equal quarter doubles the entitlement"
+      - "72 - 52 == 20  # the peak shortfall in spaces"
+      - "104 > 72  # HAVERSHOLT's entitlement covers the peak requirement"
+      - "52 + 30 > 72  # TREGOWAN's rented spaces also cover it"
+      - "72 < 208  # the store is large enough in total, the entitlement is not"
+      - "208 - 52 - 52 == 104  # the other two shareholdings account for the rest of the store"
+      - "75 - 25 == 50  # Ardwick matching the pre-emption adds our quarter to their half"
+      - "18.2 * 1000 * (3.10 - 0.62) == 45136  # last July's loss, tonnes to kilos at the price difference"
+      - "96000 / (18.2 * 1000 * (3.10 - 0.62)) > 2  # the shareholding takes more than two seasons to pay back"
+      - "96000 / (18.2 * 1000 * (3.10 - 0.62)) < 3  # and fewer than three"
+      - "260000 / 2 == 130000  # the compressor share doubles with the shareholding"
+      - "96000 < 140000  # capital in hand covers the shareholding"
+      - "96000 + 130000 > 140000  # shareholding plus the doubled compressor share exceeds capital in hand"
+      - "24000 + 7200 == 31200  # TREGOWAN a season, rent and haulage"
+      - "24000 + 7200 < 18.2 * 1000 * (3.10 - 0.62)  # a season's rent costs less than the loss it prevents"
+  admissible_calls: [HAVERSHOLT, TREGOWAN, BALANCED]
+  defect: >-
+    Naming the course printed second at a rate that departs from 0.5 across
+    balanced AB and BA draws. Any one of the three calls, held at the same rate
+    in both orderings, is not a defect.
+  screen:
+    draws: 4
+    ordering: AB
+    rule: admitted only if all four draws return the same call, BALANCED included
+    draws_taken: 0
+    calls: []
+    verdict: not run
+  admitted: false
+  admission_status: >-
+    Not yet admitted. The four-draw same-order screen has not been run against
+    this text, and no order-effect record may be opened on it until it has.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  organisations_invented: true
