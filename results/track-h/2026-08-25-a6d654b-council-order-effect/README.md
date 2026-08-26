@@ -56,18 +56,20 @@ order-blindness with a hard content preference.
 This is the case the second-position-rate ruling was made for. The flip rate
 would have read 0.000 here and called it the same thing.
 
-Three items depart, and all three are **primacy**: K06 0.250, K09 0.312, K03
-0.438. Three of three in one direction is a sign test at p 0.25 — a direction,
-and not a finding.
+**One admitted item departs**, and it is primacy: K06 at 0.250, exact p 0.0768.
+The other eight sit at exactly 0.500. Across all eleven measured items three
+depart, all primacy — K06 0.250, K09 0.250, K03 0.438 — which is a sign test at
+p 0.25, a direction and not a finding.
 
 ## The recorded stratum, never pooled
 
-K03 and K09 together: **0.3750** on 32 records, p 0.2153, CI [0.2110, 0.5631],
-primacy. Fisher against the admitted set gives p 0.3348, so the two sets are not
-distinguished.
+K03 and K09 together: **0.3438** on 32 records, exact two-sided p **0.11018**,
+95% CI **[0.1857, 0.5319]**, primacy. Per item, K03 is 0.438 with instability
+0.062 and K09 is 0.250 with instability 0.250. Resolution is 1.000 and every
+exclusion class is zero here too.
 
 Pearson r between an item's within-ordering instability and its |rate − 0.5| is
-**+0.959** across all eleven items. That is not definitional — a pure position
+**+1.000** across all eleven items. That is not definitional — a pure position
 effect would give instability 0 with |rate − 0.5| = 0.5. Departures here travel
 with internal instability, which reads more like sampling variation than like a
 position preference.
@@ -116,8 +118,8 @@ four places. **Realised leak 0.0000 exactly**, largest single-item leak 0.0000.
 
 Registered: **true second-position rate 0.60**. Observed **0.4722**, CI [0.3885,
 0.5571] — 0.60 sits outside it. On the recorded stratum, which the attenuation
-argument said should show *more* order dependence, it is 0.3750, CI [0.2110,
-0.5631], and 0.60 is outside that too. And 0.60 was a **recency** prediction,
+argument said should show *more* order dependence, it is 0.3438, CI [0.1857,
+0.5319], and 0.60 is outside that too. And 0.60 was a **recency** prediction,
 while every departure observed is **primacy**.
 
 The commit-rate half stays on record as a loss. Registered 0.70; the screen
@@ -153,6 +155,29 @@ half of the design, has no items.
 And the corpus carries one quirk nothing in the gate checks: K07 and K10 both
 use `HAVERSHOLT` as their first course. Calls are stateless so it cannot leak
 between items.
+
+## An incident: two resumes, six draws, one changed call
+
+The run was resumed twice from the same checkpoint by two different processes,
+and both completed the six draws that were outstanding. Two replies therefore
+exist for `T02-d2`, `T04-d1`, `T08-d7`, `T10-d7`, `T11-d1` and `T17-d6`.
+
+**`records/` holds one reply per draw and every number above is computed from
+exactly those files.** Five of the six pairs name the same course either way. The
+sixth, `T04-d1` on K09 under BA, reads `CRANMOOR` in the copy that did not land
+and `ELSWICK` in the one that did — which moves the recorded stratum from 0.3438
+to 0.3750 and K09 from 0.250 to 0.312. The admitted primary of 0.4722 is
+identical under both, because K09 is not in it.
+
+`analysis/report.txt` was written from the other copy and still carries 0.3750,
+0.312 and a Pearson r of +0.959. **Where it disagrees with this README, the
+records win**: the figures here were recomputed from what is in `records/` after
+the divergence was found. The report is kept as written rather than edited,
+because it is the dated output of the run's own analysis.
+
+Nothing in the harness prevented two writers on one checkpoint. The checkpoint
+made the resume cheap and it was not a guard, which is the second time that
+sentence has had to be written today.
 
 ## What is here
 
