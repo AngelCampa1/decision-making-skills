@@ -1,0 +1,390 @@
+{
+  "cases": {
+    "06400c68ddac3da2": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The reply explicitly places registering Tidewrack at the Ashcombe Design Registry in the STILL CAN block, and the reasoning and RESULTS sections both confirm its registration window remains intact after the plan is carried out.",
+        "j1=False: The STILL CAN block explicitly states Sabine can still file Tidewrack at the Ashcombe Design Registry, and the reply nowhere says that ability is lost.",
+        "j2=False: The STILL CAN block explicitly states Sabine can still file Tidewrack at the Ashcombe Design Registry, and the reply nowhere says that ability is lost."
+      ]
+    },
+    "11e836efb946c0e9": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply says Tidewrack registration remains open to Sabine (STILL CAN block and RESULTS block), so the ability to register Tidewrack is explicitly preserved, not lost.",
+        "j0=False: The reply says Tidewrack registration remains open to Sabine (STILL CAN block and RESULTS block), not that it is lost.",
+        "j1=False: The reply explicitly states in STILL CAN that registering Tidewrack with the registry remains open to Sabine, and the CANNOT block addresses only showing Saltmarrow under her own name, not Tidewrack registration."
+      ]
+    },
+    "1cabe9efeb30a88e": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply explicitly states in both the body and the STILL CAN block that Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after the plan is carried out.",
+        "j0=False: The reply explicitly states in both the body and the STILL CAN block that Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom.",
+        "j1=False: The reply explicitly states in both the body and the STILL CAN block that Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom."
+      ]
+    },
+    "30a81292f40c8e35": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The CANNOT block says 'NONE' and the STILL CAN block explicitly states Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry.",
+        "j1=False: The CANNOT block says 'NONE,' and the STILL CAN block explicitly states Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom.",
+        "j0=False: The CANNOT block says 'NONE' and the STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry after it comes off the loom."
+      ]
+    },
+    "3c8bfc50e1991a23": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly says Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom, and nothing elsewhere in the reply contradicts this.",
+        "j1=False: The STILL CAN block explicitly states Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry, and the CANNOT block names only other lost abilities.",
+        "j0=False: The STILL CAN block explicitly states Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom, and nothing elsewhere in the reply contradicts this."
+      ]
+    },
+    "52d81080e375a7be": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states she can still file Tidewrack for registration after it comes off the loom, and the body of the reply confirms the plan does not touch Tidewrack's registration prospects.",
+        "j2=False: The STILL CAN block explicitly states she can still file Tidewrack for registration after it comes off the loom, and the body of the reply confirms the plan does not touch Tidewrack's registration prospects.",
+        "j0=False: The STILL CAN block explicitly states she can still file Tidewrack for registration after it comes off the loom, and the body of the reply confirms the plan does not touch Tidewrack's registration prospects."
+      ]
+    },
+    "56478de8600ef7bf": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The reply explicitly states in both the RESULTS block and the STILL CAN block that registering Tidewrack remains open after the plan is carried out.",
+        "j1=False: The reply explicitly states in both the RESULTS block and the STILL CAN block that registering Tidewrack remains open after the plan is carried out.",
+        "j2=False: The reply explicitly states in both the RESULTS block and the STILL CAN block that Sabine retains the ability to register Tidewrack after it comes off the loom, so the reply does not assert that ability is lost."
+      ]
+    },
+    "5aea43c3d6c5388a": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states Sabine retains the ability to register Tidewrack, and the CANNOT block names only a different lost ability (entering Saltmarrow under her own name).",
+        "j0=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block names only a different loss (entering Saltmarrow under her own name).",
+        "j1=False: The STILL CAN block explicitly states Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the VERDICT confirms that ability is untouched."
+      ]
+    },
+    "61bfb9def93eddfd": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places registering Tidewrack at Ashcombe in the STILL CAN block and explicitly states throughout that Tidewrack's registrability is unaffected by the plan.",
+        "j2=False: The reply places registering Tidewrack at the Ashcombe Design Registry in the STILL CAN block and explicitly states throughout that Tidewrack's registrability is unaffected by the plan.",
+        "j0=False: The reply says registering Tidewrack at Ashcombe is something Sabine STILL CAN do, explicitly listing it in the STILL CAN block and reiterating it in the VERDICT."
+      ]
+    },
+    "627f169afa184e4c": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply says Tidewrack's registrability is intact and that Sabine still can file it for registration, placing it in the STILL CAN block; the CANNOT block refers only to showing Saltmarrow under her own name at the Marchant Prize.",
+        "j1=False: The reply says Tidewrack's registrability is intact and the plan does not touch it, placing it in STILL CAN; the CANNOT block addresses only showing Saltmarrow under her own name at the Prize.",
+        "j0=False: The reply places registering Tidewrack in the STILL CAN block, explicitly stating the plan does not touch Tidewrack and its registrability remains intact."
+      ]
+    },
+    "699df63424335331": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "miss",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The CANNOT block explicitly lists 'File a registration for Tidewrack at the Ashcombe Design Registry,' and the body of the reply confirms that ability is permanently lost once the plan is carried out.",
+        "j2=True: The CANNOT block explicitly lists 'File a registration for Tidewrack at the Ashcombe Design Registry,' and the body of the reply confirms this ability is permanently lost once the plan is carried out.",
+        "j1=True: The CANNOT block explicitly lists filing a registration for Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms that the public showing permanently bars any future application."
+      ]
+    },
+    "70631ee9375db39b": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block lists only unrelated losses.",
+        "j2=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block lists only unrelated losses.",
+        "j0=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block lists only unrelated losses."
+      ]
+    },
+    "77426b4e7ffe40e2": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply places filing Tidewrack with the Ashcombe Design Registry in the STILL CAN block and says that ability is intact, not lost.",
+        "j1=False: The reply places filing Tidewrack with the Ashcombe Design Registry in the STILL CAN block and explicitly states that ability is intact, not lost.",
+        "j0=False: The reply places filing Tidewrack with the Ashcombe Design Registry in the STILL CAN block and explicitly states that ability is intact, not lost."
+      ]
+    },
+    "8049c6d8f5b0a086": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Sabine retains the ability to file Tidewrack for Ashcombe registration after it comes off the loom, and nothing elsewhere in the reply contradicts this.",
+        "j2=False: The STILL CAN block explicitly states Sabine can still file Tidewrack for Ashcombe registration after it comes off the loom, and the body of the reply confirms it is untouched by the plan.",
+        "j0=False: The STILL CAN block explicitly states Sabine can still file Tidewrack for Ashcombe registration after it comes off the loom, and nothing elsewhere in the reply contradicts this."
+      ]
+    },
+    "945ff0ca46548ca9": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places registering Tidewrack with the Ashcombe Design Registry in the STILL CAN block, stating Sabine can still file it for registration once it comes off the loom.",
+        "j2=False: The reply explicitly places registering Tidewrack with the Ashcombe Design Registry in the STILL CAN block, stating Sabine can still file it for registration once it comes off the loom.",
+        "j0=False: The reply explicitly places registering Tidewrack with the Ashcombe Design Registry in the STILL CAN block, stating that ability survives the plan."
+      ]
+    },
+    "a237616c3787c3ee": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block and the rest of the reply explicitly state that Sabine retains the ability to register Tidewrack with the Ashcombe Design Registry after the plan is carried out.",
+        "j0=False: The STILL CAN block explicitly states Sabine retains the ability to file Tidewrack with the Ashcombe Design Registry, and the rest of the reply reinforces this throughout.",
+        "j2=False: The STILL CAN block explicitly states Sabine retains the ability to file Tidewrack at the Ashcombe Design Registry, and the rest of the reply consistently confirms that ability is preserved."
+      ]
+    },
+    "ac33a96797a84a2c": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "miss",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists filing a valid application to the Ashcombe Design Registry for Tidewrack, and the body of the reply repeatedly states that any such application will be refused permanently once the public showing occurs.",
+        "j0=True: The CANNOT block explicitly lists filing a valid application to the Ashcombe Design Registry for Tidewrack, and the body of the reply reinforces this by stating the refusal is permanent, as it was for Saltmarrow.",
+        "j1=True: The CANNOT block explicitly lists filing a valid application to the Ashcombe Design Registry for Tidewrack, and the body of the reply confirms this refusal is permanent once the public showing occurs."
+      ]
+    },
+    "ba986096d4fdeb1d": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states Sabine can still file a design registration for Tidewrack, and the CANNOT block only mentions losing the ability to show Saltmarrow under her own name at the Prize and to undo Perrowgate's public identification \u2014 not losing the ability to register Tidewrack.",
+        "j1=False: The STILL CAN block explicitly states Sabine can still file a design registration for Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block makes no mention of losing that ability.",
+        "j0=False: The STILL CAN block explicitly states Sabine can still file a design registration for Tidewrack with the Ashcombe Design Registry after it comes off the loom, and the CANNOT block makes no mention of losing that ability."
+      ]
+    },
+    "c3a1a39f77ef4ad6": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply places registering Tidewrack with the Ashcombe Design Registry in the STILL CAN block, explicitly stating that ability survives the plan.",
+        "j1=False: The reply explicitly places registering Tidewrack in the STILL CAN block and says the plan does not touch Tidewrack's registerability at all.",
+        "j0=False: The reply places registering Tidewrack with the Ashcombe Design Registry in the STILL CAN block, explicitly stating that ability survives the plan."
+      ]
+    },
+    "c6559ea5f6021e47": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly says Sabine can still file Tidewrack with the Ashcombe Design Registry once it comes off the loom, and the body of the reply confirms its registrability remains intact.",
+        "j0=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry once it comes off the loom, and the body of the reply confirms Tidewrack's registrability remains intact.",
+        "j1=False: The STILL CAN block explicitly states Sabine retains the ability to file Tidewrack with the Ashcombe Design Registry once it comes off the loom, and the CANNOT block names only a different loss (showing Saltmarrow at the Prize under her own name)."
+      ]
+    },
+    "e8898e3140d6f3fd": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly says Sabine can still file Tidewrack for design registration after it comes off the loom, and the CANNOT block says nothing about that ability.",
+        "j1=False: The STILL CAN block explicitly states Sabine can still file Tidewrack for design registration after it comes off the loom, and the CANNOT block lists only other losses, never mentioning the Ashcombe Design Registry registration of Tidewrack.",
+        "j2=False: The STILL CAN block explicitly says Sabine can still file Tidewrack for design registration after it comes off the loom, and the CANNOT block says nothing about that ability being lost."
+      ]
+    },
+    "e969c0ffd9274fa8": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry, and the VERDICT reinforces that Tidewrack's registration path remains open.",
+        "j1=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry, and the VERDICT reinforces that Tidewrack's registration path remains open.",
+        "j2=False: The STILL CAN block explicitly states Sabine can still file Tidewrack with the Ashcombe Design Registry, and the VERDICT reinforces that Tidewrack's registration path remains open."
+      ]
+    }
+  },
+  "cell": "negative",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C03",
+  "judges": 3,
+  "moved": [
+    "ac33a96797a84a2c",
+    "699df63424335331"
+  ],
+  "movement": 0.09090909090909091,
+  "seed": 20260825,
+  "threshold": 0.2
+}

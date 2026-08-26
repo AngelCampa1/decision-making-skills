@@ -1,0 +1,46 @@
+== 1. bullet markers and entry collapse ==
+C01  answer blocks 80   carrying a bullet marker 0   collapsed to one entry 67
+C02  answer blocks 80   carrying a bullet marker 0   collapsed to one entry 72
+C03  answer blocks 80   carrying a bullet marker 0   collapsed to one entry 61
+
+== 2. how much of J rests on the STILL CAN exclusion set ==
+C01  with its own exclusions (11): sens 20/20  J +1.000
+C01  with no exclusions:              sens 13/20  J +0.650
+C02  with its own exclusions (20): sens 20/20  J +1.000
+C02  with no exclusions:              sens 19/20  J +0.950
+C03  with its own exclusions (19): sens 17/20  J +0.850
+C03  with no exclusions:              sens 17/20  J +0.850
+
+== 3. treatment replies naming an accepted string inside STILL CAN ==
+  780bd5004538026b EXCLUDED: ...ctise as an architectural blacksmith from any new premises she finds pursue the workshop continuity grant in the 2030 round if she establishes three years of unbroken occupation a...
+  06a5e26a1b70568b EXCLUDED: ...'s services through 2027-12-31 (if she secures new premises) apply for the 2030 grant round at a new address, provided she is established there by early 2027...
+  f64599053c5d9fec EXCLUDED: ...trade as an architectural blacksmith from any new premises she finds pursue the workshop continuity grant in 2030 if she has held new premises continuously for three years by then...
+  e60e1db9b913977c EXCLUDED: ...the £12,600 hearth repair grant with no repayment obligation apply for the 2030 workshop continuity grant if she is three continuous years into a new premises by then practise as ...
+  87e2c68e8ba505da EXCLUDED: ... hold halvard quillon-rees to his booking through 2027-12-31 apply for the 2030 grant round if you establish and hold new premises continuously for three years before then...
+  ca1faef9fea2482e EXCLUDED: ...s she finds work with halvard once new premises are in place apply for the 2030 workshop continuity grant if she holds new premises continuously for three years by then...
+  e8bd66d5ef531911 EXCLUDED: ... practise as an architectural blacksmith from other premises apply for the 2030 workshop continuity grant if she establishes three continuous years at a new workshop before that r...
+C01  treatment replies with an accept inside STILL CAN: 7
+  a2b152fdabc39db6 EXCLUDED: ...as before accept the hallowmarsh basin berth offer before 19 december 2026 (the spring contract ends 30 may 2027, before that berth opens on 1 june 2027) take on other carryin...
+C02  treatment replies with an accept inside STILL CAN: 1
+  57df316426dea391 EXCLUDED: ...accept the perrowgate standing order before the offer closes on 2026-12-19 file tidewrack for registration after it comes off the loom on 2026-10-20, provided you have n...
+C03  treatment replies with an accept inside STILL CAN: 1
+
+== 4. judge independence ==
+C01  cases 40   all three rationales share their first 40 characters on 17   mean pairwise rationale similarity 0.806
+C02  cases 40   all three rationales share their first 40 characters on 22   mean pairwise rationale similarity 0.689
+C03  cases 40   all three rationales share their first 40 characters on 19   mean pairwise rationale similarity 0.729
+
+== 5. verdict shape against outcome ==
+C01
+  ('effect', 'go ahead', 'correct_rejection')  20
+  ('foreclosing', 'do something else instead', 'hit')  6
+  ('foreclosing', 'go ahead', 'hit')  14
+C02
+  ('effect', 'go ahead', 'correct_rejection')  20
+  ('foreclosing', 'do something else instead', 'hit')  2
+  ('foreclosing', 'go ahead', 'hit')  18
+C03
+  ('effect', 'go ahead', 'correct_rejection')  20
+  ('foreclosing', 'do something else instead', 'hit')  6
+  ('foreclosing', 'go ahead', 'hit')  12
+  ('foreclosing', 'go ahead', 'miss')  2

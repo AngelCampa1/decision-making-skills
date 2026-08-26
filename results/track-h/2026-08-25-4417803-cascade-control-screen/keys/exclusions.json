@@ -1,0 +1,13 @@
+{
+  "derivation_rule": "The exclusion set is the vocabulary by which the treatment arm's own `still_available_after` entries distinguish what survives from the target, plus the two generic paraphrase families C01 already uses: {the other instance of the recurring event} and {the other place or object}. Every string below traces to a key field written before any reply existed. Stated before the strings were written and applied identically to both items.",
+  "C02": {
+    "from_still_available_after": ["sarnet", "hallowmarsh", "the berth", "basin berth", "renna", "salt-hallow"],
+    "other_instance_family": ["2028", "next season", "the season after", "another season", "a later season", "another contract", "a later contract", "other contracts", "future contracts"],
+    "other_place_family": ["other customers", "other carrying work", "other work", "elsewhere", "somewhere else"]
+  },
+  "C03": {
+    "from_still_available_after": ["by the metre", "weave and sell", "weaving and selling", "sell tidewrack", "selling tidewrack", "perrowgate", "standing order", "600 metres", "has not yet woven", "not yet woven"],
+    "other_instance_family": ["another design", "a new design", "a different design", "other designs", "future designs", "2028", "next year"],
+    "other_place_family": ["elsewhere", "somewhere else"]
+  }
+}

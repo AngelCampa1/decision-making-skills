@@ -1,0 +1,51 @@
+===== C01 =====
+  C01: accepts 15  guards 22  exclusions 11  chain 3  extra engagement 8
+  readings 40   adjudicated verdicts applied 20
+  foreclosing  N 20  hits 20  misses 0  violations 0  sensitivity 1.000
+  effect       N 20  false alarms 0  correct rejections 20  violations 0  FAR 0.000
+  violation gap +0.000   dual containers 0
+  engagement   treatment 20/20 (1.000)   effect 20/20 (1.000)
+  adjudication queue 20  adjudicated 20  fraction 1.000
+  PRIMARY  J  +1.000   95% Newcombe [+0.772, +1.000]
+    alternate reading: chain strings in +1.000
+    alternate reading: alternate guard list +1.000
+    NOT an error bracket. Two lists by one author bound their disagreement with each other, never their error.
+    version 2's gated figure +1.000 (SENSITIVITY ANALYSIS, never the primary)
+  secondaries: explicit survival 20  STILL CAN vetoes 0  hedges 0  engaged misses 0 (ratio 0.000, threshold 0.20)
+               guard-disagreement 0  chain-only 0  skill containers 0
+  exposure: blocks collapsed to one entry 67/80   treatment replies with an accepted string inside STILL CAN 7/20
+
+===== C02 =====
+  C02: accepts 15  guards 26  exclusions 20  chain 0  extra engagement 0   <-- accepts_list_gap CANNOT FIRE
+  readings 40   adjudicated verdicts applied 20
+  foreclosing  N 20  hits 20  misses 0  violations 0  sensitivity 1.000
+  effect       N 20  false alarms 0  correct rejections 20  violations 0  FAR 0.000
+  violation gap +0.000   dual containers 0
+  engagement   treatment 20/20 (1.000)   effect 19/20 (0.950)
+  adjudication queue 20  adjudicated 20  fraction 1.000
+  PRIMARY  J  +1.000   95% Newcombe [+0.772, +1.000]
+    alternate reading: chain strings in +1.000
+    alternate reading: alternate guard list +1.000
+    NOT an error bracket. Two lists by one author bound their disagreement with each other, never their error.
+    version 2's gated figure +1.000 (SENSITIVITY ANALYSIS, never the primary)
+  secondaries: explicit survival 6  STILL CAN vetoes 0  hedges 0  engaged misses 0 (ratio 0.000, threshold 0.20)
+               guard-disagreement 0  chain-only 0  skill containers 0
+  exposure: blocks collapsed to one entry 72/80   treatment replies with an accepted string inside STILL CAN 1/20
+
+===== C03 =====
+  C03: accepts 14  guards 26  exclusions 19  chain 0  extra engagement 0   <-- accepts_list_gap CANNOT FIRE
+  readings 40   adjudicated verdicts applied 18
+  foreclosing  N 20  hits 17  misses 3  violations 0  sensitivity 0.850
+  effect       N 20  false alarms 0  correct rejections 20  violations 0  FAR 0.000
+  violation gap +0.000   dual containers 0
+  engagement   treatment 18/20 (0.900)   effect 18/20 (0.900)
+  adjudication queue 18  adjudicated 18  fraction 1.000
+  PRIMARY  J  +0.850   95% Newcombe [+0.585, +0.948]
+    alternate reading: chain strings in +0.850
+    alternate reading: alternate guard list +0.850
+    NOT an error bracket. Two lists by one author bound their disagreement with each other, never their error.
+    version 2's gated figure +0.850 (SENSITIVITY ANALYSIS, never the primary)
+  secondaries: explicit survival 10  STILL CAN vetoes 0  hedges 0  engaged misses 1 (ratio 0.050, threshold 0.20)
+               guard-disagreement 0  chain-only 0  skill containers 0
+  exposure: blocks collapsed to one entry 61/80   treatment replies with an accepted string inside STILL CAN 1/20
+

@@ -144,6 +144,21 @@ forty.** Counted by line from the `.jsonl` beside the run's `README.md`:
 Dispatched directly rather than through `scripts/run_triggers.py`, so no
 checkpoint, and the $4.0639 it reports is notional cost on a subscription.
 
+**Correction, 2026-08-25, appended a fourth time. The `cascade` control screen
+adds five hundred**, which the entry below reserved for this lane to add.
+Counted by line from the `.jsonl` files beside that run's `README.md`:
+
+| run | calls | from |
+|---|---|---|
+| `cascade` readings, C01 + C02 + C03 | 120 | `2026-08-25-4417803-cascade-control-screen/readings-C0*.jsonl`, 40 each |
+| `cascade` adjudication, both cells × 3 items | 360 | `adjudication/judge-calls*.jsonl` |
+| `cascade` re-adjudication after the key fix | 20 | same files |
+| **new total** | **~13,113** | 12,613 + 500 |
+
+Also dispatched directly, so no checkpoint, and the $10.33 is notional. The 19
+parked duplicates from the race are in `readings-C03-parked.jsonl` and are **not**
+counted here, because they were issued and discarded rather than scored.
+
 **The one-line version's count was checked against the table under it this time
 and has not drifted.** It reads "eleven results" with a correction below saying
 the count is twelve, and *Results in hand* still holds twelve rows: M4, L5, M5,
@@ -168,6 +183,7 @@ they were easy to miss.
 | `ledger` triplets (Track H, volume dial) | **closed — ceiling** | unaided J = 1.000 over 45 blind readings; both registered kills fired, yield at 2 of 5 |
 | **Family A entire** (scalar triplet: `ledger`, `timing`, `fit`) | **closed — ceiling** | 18 arms, 99 blind readings, every arm unanimous and equal to key, across six domains and three difficulty dials |
 | `hinge` H01 (Track H, set-membership) | **closed — ceiling** | crossed primary **+0.850** [+0.725, +0.975] over 40 unaided blind readings, **+0.950** [+0.850, +1.000] hand-adjudicated, against a registered kill of 0.70 |
+| `cascade` C01–C03 (Track H, set-membership) | **closed — ceiling** | J **+1.000**, **+1.000** and **+0.850** over 40 unaided blind readings each, both adjudication cells on all three items, against a registered kill of 0.70. C01's machine figure falls to +0.650 without one guard list; the adjudicated figure does not move |
 
 **2026-08-25, `ledger`.** The sixth venue and the first closed before its corpus
 was built. Five triplets were authored in parallel to test whether difficulty
@@ -290,6 +306,21 @@ over 40 blind readings, format-violation gap 0.000, adjudication coverage 1.000
 with zero movement. That run is landing from another lane and its record is not
 in the repository yet, so the venue table above does not carry a row for it and
 the call ledger above does not count its calls. Both are its lane's to add.
+
+**Appended by that lane, 2026-08-25. The record is now in the repository** at
+[`results/track-h/2026-08-25-4417803-cascade-control-screen/`](../results/track-h/2026-08-25-4417803-cascade-control-screen/README.md),
+the venue row and the call-ledger correction are above, and three things in it
+were not visible when the paragraph above was written. C02 and C03 ran to the
+same denominator and came in at **+1.000** and **+0.850**, so the ceiling is
+three items rather than one. C01's **+1.000 rests on a single author-written
+guard list** — remove `ROUND_EXCLUSIONS` and the machine figure is +0.650 and
+the kill does not fire, while the blind judges ratify all seven affected
+readings and the adjudicated figure stays at +1.000. And two of the five
+registered validity thresholds produced no reading at all, while a third,
+`accepts_list_gap`, is **arithmetically incapable of firing** on C02 or C03
+because two scoring parameters were module globals rather than `Rules` fields.
+No gate could see that, and C03's own two misses are exactly what the threshold
+was built to size.
 
 Family A at unaided J = 1.000 over 99 readings, `hinge` at +0.950
 hand-adjudicated, `cascade` at +1.000. **Three independent constructs, six

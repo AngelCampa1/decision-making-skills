@@ -1,0 +1,8 @@
+denominator: 19 prompts sampled twice   by arm {'foreclosing': 9, 'effect': 10}
+numerator:   2 whose scored outcome differs
+RESAMPLE INSTABILITY  2/19 = 0.105   95% Wilson [0.029, 0.314]
+  ac33a96797a84a2c  foreclosing: miss vs hit
+  145a7c36aec6ccb8  foreclosing: hit vs miss
+
+Item C03 only. Unplanned, unstratified, arms unbalanced. Not a
+reliability study and must not be cited as one.

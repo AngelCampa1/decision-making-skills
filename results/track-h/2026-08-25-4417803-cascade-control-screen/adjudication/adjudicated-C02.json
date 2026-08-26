@@ -1,0 +1,353 @@
+{
+  "cases": {
+    "055e0467c444cd14": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists 'Deliver the 5,600 tonnes required by the Culvery Aggregates 2027 contract,' and the RESULTS and working sections reinforce that the plan makes full performance of that contract impossible.",
+        "j1=True: The CANNOT block explicitly states Ottoline will be unable to deliver the 5,600 tonnes required by the Culvery Aggregates 2027 contract, and the RESULTS and working sections confirm this capacity is permanently lost once the plan is carried out.",
+        "j0=True: The CANNOT block explicitly lists inability to deliver the 5,600 tonnes required by the Culvery 2027 contract, and the RESULTS section confirms the shortfall makes full performance impossible once the plan is carried out."
+      ]
+    },
+    "20a4bc9e2148e5a9": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states Ottoline will not be able to deliver the full 5,600 tonnes under the 2027 Culvery contract, and this is reinforced throughout the reply including the RESULTS section and VERDICT.",
+        "j2=True: The CANNOT block explicitly states Ottoline cannot deliver the full 5,600 tonnes under the 2027 Culvery contract, and the rest of the reply consistently confirms the Sarnet alone is physically incapable of meeting that obligation after the Wrenlode is sold.",
+        "j0=True: The CANNOT block explicitly states Ottoline will be unable to deliver the full 5,600 tonnes under the spring 2027 Culvery contract, and the rest of the reply consistently supports this \u2014 nowhere does it say the ability survives."
+      ]
+    },
+    "3190bee4fe47ca4d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required by the Culvery 2027 contract, and the body of the reply confirms the single remaining boat falls 2,480 tonnes short with no contractual escape.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required by the Culvery 2027 contract, and the body of the reply confirms the single remaining boat can only carry 3,120 tonnes, leaving her in breach.",
+        "j2=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required by the Culvery 2027 contract, and the body of the reply confirms the single remaining boat falls 2,480 tonnes short with no contractual escape."
+      ]
+    },
+    "31bc4c5731eddc3d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Ottoline cannot deliver 5,600 tonnes under the Culvery Aggregates spring 2027 contract, and the body of the reply confirms the Sarnet alone can only deliver 3,120 tonnes, making fulfilment mathematically impossible after the plan is carried out.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required under the Culvery Aggregates spring 2027 contract, and the body of the reply confirms the Sarnet alone can only deliver 3,120 tonnes, making fulfilment mathematically impossible after the plan is carried out.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot deliver 5,600 tonnes under the Culvery Aggregates spring 2027 contract, and the body of the reply confirms the Sarnet alone can only deliver 3,120 tonnes, making fulfilment mathematically impossible."
+      ]
+    },
+    "5139f5fe16f768cb": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot carry more than 3,120 tonnes in the Culvery contract period, making full performance impossible, and the body confirms the Wrenlode is gone before a single tonne moves.",
+        "j0=True: The CANNOT block explicitly states she cannot carry more than 3,120 tonnes in the Culvery contract period, making full performance impossible, and the working-through and VERDICT confirm the plan makes the contract physically impossible to perform.",
+        "j2=True: The CANNOT block explicitly states she cannot carry more than 3,120 tonnes in the Culvery contract period, making full performance impossible, and the working-out and VERDICT reinforce that the plan destroys her ability to perform the 2027 Culvery Aggregates ballast contract."
+      ]
+    },
+    "6c895e93db232f05": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists inability to fulfil the 5,600-tonne Culvery Aggregates spring 2027 contract, and the RESULTS and VERDICT blocks reinforce this by stating she will be in unresolvable breach of that contract; the STILL CAN block mentions carrying ballast only within the Sarnet's reduced capacity, not fulfilment of the Culvery obligation.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot fulfil the 5,600-tonne Culvery Aggregates spring 2027 contract, and the body of the reply confirms she will be in breach with no way to make up the shortfall.",
+        "j0=True: The CANNOT block explicitly states she cannot fulfil the 5,600-tonne Culvery Aggregates spring 2027 contract, and the STILL CAN block's reference to carrying ballast is qualified to within the Sarnet's (insufficient) capacity, not to fulfilling that specific contract."
+      ]
+    },
+    "70bac4c63794683b": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Ottoline will be unable to deliver the 5,600 tonnes owed under the Culvery contract, and the RESULTS block explains she will be 2,480 tonnes short and in breach.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes owed under the Culvery contract, and the rest of the reply consistently supports that conclusion with no hedge or counterstatement in STILL CAN.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes owed under the Culvery contract, and the body of the reply calculates the shortfall in detail, with nothing in STILL CAN contradicting this."
+      ]
+    },
+    "7ab51b868f6f8ae0": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot fulfil the Culvery Aggregates spring 2027 contract, and the working and RESULTS sections both confirm the Sarnet alone cannot meet the 5,600-tonne requirement, making the contract impossible to perform.",
+        "j2=True: The CANNOT block explicitly states she cannot fulfil the Culvery Aggregates spring 2027 contract, and the body of the reply explains in detail why the plan makes that contract impossible to perform.",
+        "j0=True: The CANNOT block explicitly states she cannot fulfil the Culvery Aggregates spring 2027 contract, and the body of the reply confirms the Sarnet alone cannot deliver the required 5,600 tonnes, making the contract impossible to perform."
+      ]
+    },
+    "83ade3b2e0a0f510": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The CANNOT block explicitly states Ottoline cannot fulfill the Culvery Aggregates contract because the Sarnet alone cannot cover 5,600 tonnes in the contracted window, and the body of the reply reinforces this throughout.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot fulfill the Culvery Aggregates contract without defaulting, and the entire reply explains that selling the Wrenlode permanently removes the capacity needed to meet the 5,600-tonne obligation.",
+        "j2=True: The CANNOT block explicitly states Ottoline cannot fulfill the Culvery Aggregates contract without defaulting, and the reply repeatedly makes clear that selling the Wrenlode permanently removes the capacity needed to carry the contracted 5,600 tonnes."
+      ]
+    },
+    "8cb0902c72884d60": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists delivering the 5,600 tonnes required by the Culvery Aggregates 2027 contract, and the RESULTS block confirms the Sarnet alone cannot meet that tonnage, meaning the reply asserts that ability is lost.",
+        "j2=True: The CANNOT block explicitly lists delivering the 5,600 tonnes required by the Culvery Aggregates 2027 contract as something Ottoline will no longer be able to do, and the RESULTS block reinforces this.",
+        "j0=True: The CANNOT block explicitly lists 'Deliver the 5,600 tonnes required by the Culvery Aggregates 2027 contract' as something Ottoline will no longer be able to do, and the RESULTS block reinforces this."
+      ]
+    },
+    "8fa6ca8f5528cc31": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Ottoline cannot carry the 5,600 tonnes required by the Culvery Aggregates spring 2027 contract, and the working and RESULTS sections confirm this inability follows directly from the plan.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot carry the 5,600 tonnes required by the Culvery Aggregates spring 2027 contract, and the working and RESULTS sections confirm the plan makes it physically impossible to meet that obligation.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot carry the 5,600 tonnes required by the Culvery Aggregates spring 2027 contract, and the working and RESULTS sections confirm one boat can only move 3,120 of the required 5,600 tonnes, making performance of that contract impossible."
+      ]
+    },
+    "a2b152fdabc39db6": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists fulfilling the Culvery 2027 contract as something Ottoline will no longer be able to do, and the rest of the reply consistently supports this conclusion without hedging.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot fulfill the Culvery 2027 contract, and the body of the reply reinforces that she will be in breach with no means to remedy it.",
+        "j2=True: The CANNOT block explicitly states Ottoline cannot fulfill the Culvery 2027 contract, and this is reinforced throughout the reply including the opening section and RESULTS block."
+      ]
+    },
+    "b65745fff97945a1": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Ottoline cannot move 5,600 tonnes to meet the Culvery contract, and the RESULTS block confirms she will fall 2,480 tonnes short and be in breach, meaning the ability to carry the full contract is lost.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot move 5,600 tonnes in thirteen weeks to meet the Culvery contract, and the body of the reply explains the Sarnet alone falls 2,480 tonnes short with no contractual let-out, meaning the ability to carry out that contract is lost.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot move 5,600 tonnes to meet the Culvery contract, and the RESULTS block confirms she will fall 2,480 tonnes short and be in breach, meaning the ability to carry the full contract is lost."
+      ]
+    },
+    "bfc82e8e551da9b0": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required under the Culvery Aggregates contract, and the RESULTS and body text reinforce that this ability is lost once the plan is carried out.",
+        "j2=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required under the Culvery Aggregates contract, and the RESULTS block confirms she will not be able to meet it, meaning the reply asserts that ability is lost.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot deliver the 5,600 tonnes required under the Culvery Aggregates contract, and the full reply consistently supports that the plan removes that ability."
+      ]
+    },
+    "cd6ad00512b7e0e1": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists 'Fulfil the Culvery Aggregates 2027 spring contract in full' as something Ottoline will no longer be able to do, and the body of the reply reinforces this conclusion.",
+        "j1=True: The CANNOT block explicitly lists 'Fulfil the Culvery Aggregates 2027 spring contract in full' as something lost, and the body of the reply reinforces this by showing the tonnage shortfall makes the contract impossible to fulfil.",
+        "j0=True: The CANNOT block explicitly lists 'Fulfil the Culvery Aggregates 2027 spring contract in full' as something lost, and the body of the reply confirms the Sarnet alone cannot meet the 5,600-tonne obligation."
+      ]
+    },
+    "d126c38a2e71d3f7": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot deliver the 5,600 tonnes required by the Culvery 2027 spring contract; while the STILL CAN block says she can still carry ballast generally, the reply treats fulfilling that specific contract as a lost ability.",
+        "j2=True: The CANNOT block explicitly states she cannot deliver the 5,600 tonnes required by the Culvery 2027 spring contract, and the body of the reply confirms this is an unavoidable breach; the STILL CAN block preserves only the general ability to carry ballast on the Sarnet, not the ability to fulfil that specific contract.",
+        "j0=True: The CANNOT block explicitly states she cannot deliver the 5,600 tonnes required by the Culvery 2027 spring contract, and the body of the reply describes this as an unavoidable breach; the STILL CAN block refers only to carrying ballast generally on the Sarnet, not to fulfilling that specific contract."
+      ]
+    },
+    "e1e209e2d6ced35a": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The CANNOT block explicitly lists 'Deliver the 5,600 tonnes owed to Culvery Aggregates in spring 2027' as something Ottoline will no longer be able to do, and the rest of the reply reinforces this conclusion.",
+        "j1=True: The CANNOT block explicitly lists 'Deliver the 5,600 tonnes owed to Culvery Aggregates in spring 2027,' and the RESULTS and VERDICT sections reinforce that the plan makes the Culvery contract impossible to perform.",
+        "j2=True: The CANNOT block explicitly lists 'Deliver the 5,600 tonnes owed to Culvery Aggregates in spring 2027,' and the rest of the reply reinforces that the plan makes the Culvery contract impossible to fulfil."
+      ]
+    },
+    "f4e73f751333ecf6": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states Ottoline will be unable to 'Deliver 5,600 tonnes to Culvery Aggregates in the spring 2027 window using only the Sarnet,' and the rest of the reply consistently reinforces that the plan makes the Culvery contract physically impossible to fulfil.",
+        "j0=True: The CANNOT block explicitly states Ottoline will be unable to 'Deliver 5,600 tonnes to Culvery Aggregates in the spring 2027 window using only the Sarnet,' and the VERDICT and RESULTS sections reinforce that the contract becomes physically impossible to fulfil.",
+        "j2=True: The CANNOT block explicitly lists 'Deliver 5,600 tonnes to Culvery Aggregates in the spring 2027 window using only the Sarnet,' and the VERDICT reinforces that selling the Wrenlode makes the contract 'physically impossible to fulfil.'"
+      ]
+    },
+    "f5f8d86238cf80d8": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot deliver the full 5,600 tonnes contracted to Culvery Aggregates for spring 2027, and the RESULTS block confirms she will be in breach for the 2,480-tonne shortfall, meaning the reply asserts she loses the ability to perform that contract.",
+        "j2=True: The CANNOT block explicitly states Ottoline will be unable to deliver the full 5,600 tonnes contracted to Culvery Aggregates for spring 2027, and the reply consistently treats this as a permanent incapacity created by the plan.",
+        "j0=True: The CANNOT block explicitly states she cannot deliver the full 5,600 tonnes contracted to Culvery Aggregates for spring 2027, and the body of the reply confirms the shortfall is certain and unremediable once the Wrenlode is sold."
+      ]
+    },
+    "ff28629b6aec942d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Ottoline cannot carry the full 5,600 tonnes required by the Culvery Aggregates 2027 spring contract once the plan is carried out, and the body of the reply reinforces this throughout.",
+        "j0=True: The CANNOT block explicitly states Ottoline cannot carry the full 5,600 tonnes required by the Culvery contract, and the reply consistently explains throughout that the Sarnet alone can only move 3,120 tonnes, making full performance impossible after the plan is carried out.",
+        "j1=True: The CANNOT block explicitly states Ottoline cannot carry the full 5,600 tonnes required by the Culvery Aggregates 2027 spring contract, and the body of the reply confirms the Sarnet alone falls 2,480 tonnes short with no contractual let-out."
+      ]
+    }
+  },
+  "cell": "positive",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C02",
+  "judges": 3,
+  "moved": [],
+  "movement": 0.0,
+  "seed": 20260825,
+  "threshold": 0.2
+}

@@ -1,0 +1,8 @@
+sensitivity  20/20 = 1.000   Wilson (0.8388748419471808, 1.0)
+false alarms 0/20 = 0.000   Wilson (1.3877787807814457e-17, 0.16112515805281935)
+J = +1.000
+
+95% Newcombe score interval for J: [+0.772, +1.000]
+95% bootstrap within arm, 20000 draws, seed 20260825: [+1.000, +1.000]
+  Degenerate: both cells are on their boundary, so every replicate draws the same value.
+  Reported so nobody re-derives it and reads zero width as precision.

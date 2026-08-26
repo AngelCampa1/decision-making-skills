@@ -1,0 +1,13 @@
+SCORER SENSITIVITY GRID (adjudicated verdicts applied where the cell exists)
+  LIVE (registered)                  sens 20/20  FA 0/20  viol 0/0  J +1.000
+  scope=line                         sens 20/20  FA 0/20  viol 0/0  J +1.000
+  scope=block                        sens 20/20  FA 0/20  viol 0/0  J +1.000
+  still_veto=False (guards only)     sens 20/20  FA 0/20  viol 0/0  J +1.000
+  word_boundary=False                sens 20/20  FA 0/20  viol 0/0  J +1.000
+  accept_skill_container=False       sens 20/20  FA 0/20  viol 0/0  J +1.000
+  accept_inline_header=False         sens 20/20  FA 0/20  viol 0/0  J +1.000
+  none_empties=False                 sens 20/20  FA 0/20  viol 0/0  J +1.000
+  container precedence FORECLOSES first sens 20/20  FA 0/20  viol 0/0  J +1.000
+  ALTERNATE_GUARDS                   sens 20/20  FA 0/20  viol 0/0  J +1.000
+  no exclusions in STILL CAN         sens 13/20  FA 0/20  viol 0/0  J +0.650
+  accepts + chain                    sens 20/20  FA 0/20  viol 0/0  J +1.000

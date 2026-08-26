@@ -1,0 +1,323 @@
+{
+  "cases": {
+    "03fbe8ee59c8f031": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists filing a registration application for Tidewrack at the Ashcombe Design Registry as something Sabine will no longer be able to do, and the body of the reply confirms this is permanent once the plan is carried out.",
+        "j2=True: The CANNOT block explicitly lists filing a registration application for Tidewrack at the Ashcombe Design Registry as something Sabine will no longer be able to do, and the body of the reply confirms this is a permanent bar resulting from the plan.",
+        "j0=True: The CANNOT block explicitly lists filing a registration application for Tidewrack at the Ashcombe Design Registry as something Sabine will no longer be able to do, and the body of the reply reinforces this by stating registration is 'permanently barred' once the public showing occurs."
+      ]
+    },
+    "07309330300f589c": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states that the public showing permanently forecloses filing Tidewrack with the Ashcombe Design Registry, and the body of the reply reinforces this conclusion consistently.",
+        "j0=True: The CANNOT block explicitly states that the public showing permanently forecloses filing Tidewrack with the Ashcombe Design Registry, and the rest of the reply consistently supports that conclusion.",
+        "j2=True: The CANNOT block explicitly states that the public showing permanently forecloses filing Tidewrack with the Ashcombe Design Registry, and this is consistent throughout the rest of the reply."
+      ]
+    },
+    "145a7c36aec6ccb8": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block lists registering with the Ashcombe Design Registry, and the RESULTS block reinforces this by stating Tidewrack becomes 'unregistrable' once shown publicly, with no contradicting statement anywhere in the reply.",
+        "j1=True: Both the RESULTS block and the CANNOT block explicitly state that once Tidewrack is shown publicly the design becomes unregistrable with the Ashcombe Design Registry, with no hedge or counterpoint in STILL CAN.",
+        "j0=True: The CANNOT block explicitly lists registering with the Ashcombe Design Registry, and the RESULTS block explains that once Tidewrack is shown publicly the design becomes unregistrable and any application would be refused and cannot be refiled."
+      ]
+    },
+    "29d3e17fa8c0fa76": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The CANNOT block explicitly lists filing Tidewrack for registration at the Ashcombe Design Registry as something Sabine will no longer be able to do, and the RESULTS block reinforces this by stating the registry must refuse any application and it cannot be filed again.",
+        "j1=True: The CANNOT block explicitly states that Sabine will no longer be able to file Tidewrack for registration at the Ashcombe Design Registry, and the RESULTS block confirms this is a permanent consequence of the plan.",
+        "j2=True: The CANNOT block explicitly states Sabine will not be able to file Tidewrack for registration at the Ashcombe Design Registry, and the RESULTS block confirms this is a permanent consequence of the plan."
+      ]
+    },
+    "3aa27ea77cfe78b4": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states she cannot file Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms the design becomes 'permanently unregistrable' once hung on the Prize floor.",
+        "j0=True: The CANNOT block explicitly states she cannot file Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms the design becomes 'permanently unregistrable' once hung on the Prize floor.",
+        "j1=True: The CANNOT block explicitly states she will be unable to file Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms this loss is permanent once the plan is carried out."
+      ]
+    },
+    "44e188a3fcf77e87": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as something Sabine loses, and the RESULTS block explains that the public showing 'permanently bars Tidewrack from registration at the Ashcombe Design Registry.'",
+        "j0=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as something Sabine will no longer be able to do, and the RESULTS block reinforces this by stating the public showing 'permanently bars Tidewrack from registration at the Ashcombe Design Registry.'",
+        "j1=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as something Sabine will no longer be able to do, and the RESULTS block reinforces this by stating the public showing 'permanently bars Tidewrack from registration at the Ashcombe Design Registry.'"
+      ]
+    },
+    "46408e5a5000188d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as lost, and the body of the reply confirms this is permanent once the cloth is publicly shown.",
+        "j2=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry,' and the body of the reply confirms that once the cloth is shown publicly the right to register is permanently forfeited.",
+        "j0=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as something Sabine loses, and the body of the reply confirms this is permanent once the cloth is publicly shown.",
+        "j0=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry,' and the body of the reply confirms this loss is permanent once the cloth is publicly shown."
+      ]
+    },
+    "57df316426dea391": {
+      "arm": "foreclosing",
+      "resolved": false,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states she can still file Tidewrack for registration after 2026-10-20 provided she has not shown it publicly first, so the reply preserves that ability rather than asserting it is lost.",
+        "j1=False: The STILL CAN block explicitly states Sabine can still file Tidewrack for registration after 2026-10-20 provided she has not shown it publicly first, and the VERDICT reinforces this by recommending she do exactly that before agreeing any revised showing date.",
+        "j0=False: The STILL CAN block explicitly preserves Sabine's ability to register Tidewrack with the Ashcombe Design Registry, provided she files before any public showing, and the CANNOT block only bars registration after a public showing has already occurred."
+      ]
+    },
+    "5c808963986ba718": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists filing Tidewrack for registration at the Ashcombe Design Registry as something lost, and the RESULTS section confirms any application will be refused and cannot be refiled after the public showing.",
+        "j1=True: The CANNOT block explicitly lists 'File Tidewrack for registration at the Ashcombe Design Registry,' and the RESULTS block confirms that after the public showing any application will be refused and cannot be refiled, clearly asserting that ability is lost.",
+        "j0=True: The CANNOT block explicitly lists filing Tidewrack for registration at the Ashcombe Design Registry as something Sabine will no longer be able to do, and the RESULTS section reinforces this by stating any application will be refused and cannot be refiled."
+      ]
+    },
+    "5d9bfa5c1fea2326": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists filing Tidewrack with the Ashcombe Design Registry as something Sabine will no longer be able to do, and the RESULTS section reinforces this by stating the Registry will refuse any application and it cannot be filed again.",
+        "j0=True: The CANNOT block explicitly lists filing Tidewrack with the Ashcombe Design Registry as something Sabine will no longer be able to do, and the RESULTS section reinforces this by stating the Registry will refuse any application and it cannot be filed again.",
+        "j1=True: The CANNOT block explicitly lists filing with the Ashcombe Design Registry as something Sabine will no longer be able to do, and the RESULTS section reinforces this by stating the Registry will refuse any application and it cannot be filed again."
+      ]
+    },
+    "80b4e6281953dc07": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she will be unable to file Tidewrack with the Ashcombe Design Registry, and the body of the reply confirms this door is 'closed permanently' once the design is publicly shown.",
+        "j0=True: The CANNOT block explicitly states she cannot file Tidewrack with the Ashcombe Design Registry, and the rest of the reply confirms this ability is permanently lost once the plan is carried out.",
+        "j2=True: The CANNOT block explicitly states she will lose the ability to file Tidewrack with the Ashcombe Design Registry, and the body of the reply confirms this door is 'closed permanently' once the design is publicly shown."
+      ]
+    },
+    "8f3e78b29616f1c1": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states that registering Tidewrack at the Ashcombe Design Registry will be impossible after the plan is carried out, because the public showing causes the application to be refused and it cannot be re-filed.",
+        "j0=True: The CANNOT block explicitly states Sabine cannot file Tidewrack at the Ashcombe Design Registry because it will be shown publicly first, the application will be refused, and cannot be re-filed.",
+        "j2=True: The CANNOT block explicitly states that filing Tidewrack at the Ashcombe Design Registry will be lost because it will be shown publicly first, the application will be refused, and cannot be re-filed."
+      ]
+    },
+    "93dd78bb773b3056": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists registering Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms the ability is permanently lost once the plan is carried out.",
+        "j0=True: The CANNOT block explicitly lists registering Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms this ability is permanently lost once the plan is carried out.",
+        "j2=True: The CANNOT block explicitly lists registering Tidewrack at the Ashcombe Design Registry, and the body of the reply confirms the ability is permanently lost once the plan is carried out."
+      ]
+    },
+    "9af2169c97af9303": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly lists 'File Tidewrack with the Ashcombe Design Registry' as something Sabine will no longer be able to do, and the RESULTS section reinforces this by stating the Registry will refuse any application once the cloth is publicly shown.",
+        "j0=True: The CANNOT block explicitly states Sabine will be unable to file Tidewrack with the Ashcombe Design Registry after the plan is carried out, and the RESULTS section reinforces this by saying the Registry will refuse any application and it cannot be filed again.",
+        "j2=True: The CANNOT block explicitly states Sabine will be unable to file Tidewrack with the Ashcombe Design Registry after the plan is carried out, and the RESULTS block reinforces this by saying the Registry will refuse any application and it cannot be filed again."
+      ]
+    },
+    "b64f9dfce399600d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly lists 'File Tidewrack at the Ashcombe Design Registry' as something Sabine will no longer be able to do, and the RESULTS section confirms registration becomes 'permanently impossible' once the plan is carried out.",
+        "j0=True: The CANNOT block explicitly lists 'File Tidewrack at the Ashcombe Design Registry' as something Sabine loses, and the RESULTS section reinforces this by calling registration 'permanently impossible' after the plan is carried out.",
+        "j1=True: The CANNOT block explicitly lists 'File Tidewrack at the Ashcombe Design Registry' as something lost, and the RESULTS section confirms registration is 'permanently impossible' once the plan is carried out."
+      ]
+    },
+    "bdacb81d0e0dec18": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block and the body of the reply both explicitly state that once Tidewrack is publicly shown under this plan, registering it with the Ashcombe Design Registry becomes permanently impossible.",
+        "j0=True: The CANNOT block explicitly states that registering Tidewrack at the Ashcombe Design Registry becomes permanently impossible once the plan is carried out, and the rest of the reply consistently reinforces this.",
+        "j2=True: The CANNOT block explicitly states registering Tidewrack at the Ashcombe Design Registry is lost once the plan is carried out, and the rest of the reply consistently reinforces this."
+      ]
+    },
+    "c02472ce88aa7d8d": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states that the plan closes the registration window, and the reply consistently says the public showing bars registration permanently, so Sabine loses the ability to register Tidewrack.",
+        "j2=True: The CANNOT block explicitly states she will be unable to file Tidewrack with the Ashcombe Design Registry, and the rest of the reply consistently confirms this loss is permanent.",
+        "j0=True: The CANNOT block explicitly states she will be unable to file Tidewrack with the Ashcombe Design Registry, and the rest of the reply consistently confirms that the public showing permanently bars registration."
+      ]
+    },
+    "febf1beb621f57fa": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The CANNOT block explicitly states Sabine loses the ability to file Tidewrack for registration at the Ashcombe Design Registry, and the RESULTS block reinforces this by saying the Registry will refuse any application and it cannot be filed again.",
+        "j0=True: The CANNOT block explicitly states Sabine loses the ability to file Tidewrack for registration at the Ashcombe Design Registry, and the RESULTS block reinforces this by saying it cannot be filed again \u2014 now or ever.",
+        "j1=True: The CANNOT block explicitly states Sabine will not be able to file Tidewrack for registration at the Ashcombe Design Registry, and the RESULTS block reinforces this by saying the Registry will refuse any application and 'it cannot be filed again \u2014 so the design carries no registration, now or ever.'"
+      ]
+    }
+  },
+  "cell": "positive",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C03",
+  "judges": 3,
+  "moved": [
+    "57df316426dea391"
+  ],
+  "movement": 0.05555555555555555,
+  "seed": 20260825,
+  "threshold": 0.2
+}

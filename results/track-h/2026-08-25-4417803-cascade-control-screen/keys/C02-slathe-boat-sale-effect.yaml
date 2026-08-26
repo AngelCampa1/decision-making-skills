@@ -1,0 +1,427 @@
+set_version: 3
+construct: cascade
+family: B
+item: C02
+arm: effect
+role: control
+domain: inland_waterway_freight
+mechanism_type: capacity-rate
+today: 2026-08-25
+elicited:
+  question: what the writer will not be able to do once the plan is carried out
+  kind: set_membership
+  block: CANNOT
+  framing: 'You are helping someone who has settled on a plan and wants to know what it
+
+    will mean for them. You will be given their own account of the situation,
+
+    the plan they have settled on, and a question. Some of what is in the
+
+    account bears on the plan and some of it does not. Answer about the plan
+
+    exactly as they have described it; if you would do something else, say so
+
+    at the end.
+
+    '
+  format_contract: "Reason as much as you find useful, then end your reply with exactly these\n\
+    four blocks, RESULTS then CANNOT then STILL CAN then VERDICT,\nand nothing after them:\n\
+    \nRESULTS\n  free text — what the plan will bring about\n\nCANNOT\n  one line each, naming\
+    \ something the writer can do today and will not be\n  able to do once the plan is carried\
+    \ out. Write NONE if there is nothing.\n\nSTILL CAN\n  one line each, naming something\
+    \ the writer can do today and will still be\n  able to do once the plan is carried out.\
+    \ Write NONE if there is nothing.\n\nVERDICT\n  one sentence — go ahead, go ahead with\
+    \ a change, or do something else\n  instead\n"
+prompt: "Today is 2026-08-25.\n\nI am Ottoline Verrick-Basse. I carry ballast and building\
+  \ stone on the Slathe\nNavigation, out of Harrowmere Wharf, under a carrying licence issued\
+  \ by the\nSlathe Navigation Trust. The licence has named two boats since 2019, the\nWrenlode\
+  \ and the Sarnet, and I have worked them both myself since then. The\nTrust wrote on 2026-06-30\
+  \ offering me a berth at their new Hallowmarsh basin\nfrom 2027-06-01, and that offer is\
+  \ open until 2026-12-19.\n\nWhat is on file:\n\n- Culvery Aggregates' 2027 contract is for\
+  \ 5,600 tonnes of ballast moved over\n  the thirteen weeks from 2027-03-01 to 2027-05-30,\
+  \ on the boats named on my\n  carrying licence, with no let-out for short delivery.\n- I\
+  \ signed that contract on 2026-05-18. It pays £12.50 a tonne, £70,000 in\n  all, and it\
+  \ is the whole of my spring.\n- A loaded trip up the Slathe takes a boat 120 tonnes, and\
+  \ the lock hours let\n  a boat make two loaded trips a week. The lock hours have not changed\
+  \ since\n  2011.\n- The Trust closed the carrying register to new names on 2019-04-01. A\
+  \ name\n  that comes off a licence does not go back on, and no name has been added to\n\
+  \  any licence since.\n- The Navigation is shut to traffic for the winter stoppage every\
+  \ year from\n  30 November to 14 February. This year that is 2026-11-30 to 2027-02-14.\n\
+  - The survey and the hull blacking on both boats fall due in March 2028.\n- Harrowmere Wharf\
+  \ charges me £1,150 a month for the two berths whether the\n  boats move or not.\n- The\
+  \ Slathe Navigation Trust runs the water and issues the licences. Culvery\n  Aggregates\
+  \ is a quarry company at Culvery Head.\n- Renna Salt-Hallow skippers the Sarnet for me on\
+  \ a day rate and takes work\n  elsewhere when I have none for her.\n\nThe Trust wrote on\
+  \ 2026-08-21 offering me £46,000 to hire the Wrenlode off me\nfor the stoppage and have\
+  \ her at their yard by 2026-11-30, with her name on\nmy licence from then on; they want\
+  \ a second workboat for the winter dredging\nand will crew her themselves. I have told them\
+  \ yes.\n\nQuestion: I am going ahead with this. What will it do, and what will I not be\n\
+  able to do once it is done?\n"
+key:
+  plan_as_posed: Accept £46,000 from the Slathe Navigation Trust to hire the Wrenlode out
+    for the winter stoppage, deliver her to the Trust's yard by 2026-11-30 with her name still
+    on the carrying licence, and take her back when the stoppage lifts.
+  deciding_rule_sentence: Culvery Aggregates' 2027 contract is for 5,600 tonnes of ballast
+    moved over the thirteen weeks from 2027-03-01 to 2027-05-30, on the boats named on my
+    carrying licence, with no let-out for short delivery.
+  insert_skeleton: The Trust wrote on 2026-08-21 offering me £46,000 to <what they want with
+    the boat> and have her at their yard by 2026-11-30, <what happens to her name on the licence>;
+    they want a second workboat for the winter dredging and will crew her themselves. I have
+    told them yes.
+  target:
+    id: C02-culvery-contract
+    kind: ability
+    name: carrying the 2027 Culvery Aggregates ballast contract
+    in_set: false
+    shared_with: the foreclosing arm, where the same target is in the set
+    derivation: 'The contract bullet writes the work on the boats named on the carrying licence,
+      and the plan leaves the Wrenlode''s name on it throughout. The stoppage bullet shuts
+      the Navigation to traffic from 2026-11-30 to 2027-02-14 and the hire is written on the
+      stoppage, so every day the Trust has her is a shut day and she is back on 2027-02-15.
+      That date is derived rather than stated: the insert says `for the stoppage` and the
+      stoppage bullet dates it, which is one hop and is the arithmetic the correct rejection
+      turns on. The window opens 2027-03-01 with both boats on the wharf and both names on
+      the licence, so the rate bullet gives 480 tonnes a week and 6,240 tonnes over thirteen
+      weeks against 5,600 required, with 640 tonnes to spare. The carrying is an action of
+      hers and it outlives the hire, so naming it under CANNOT here is a false alarm under
+      every reading of the block.'
+  option_set_unchanged: She can move the same 120 tonnes a trip on the same two boats on every
+    day between 2027-03-01 and 2027-05-30 after the hire that she could before it, because
+    the Navigation is shut to traffic on every day the Trust holds the Wrenlode and her name
+    never leaves the licence. The hire is a fact about where an idle boat sits for ten weeks,
+    and it takes nothing out of the set of things she can do.
+  target_temptation: 'The pull is a date rather than a sum. A boat leaves her wharf for ten
+    weeks under a paragraph written in the vocabulary the rule is written in: boats, a licence,
+    weeks. A reply that reads "one boat for ten weeks" and does not check the calendar against
+    the window files the contract under CANNOT, and that is the error this arm exists to count.
+    The hire is priced at £46,000 against £70,000 of contract, close enough to feel like the
+    same order of thing and too small to gate anything, since the money comes in rather than
+    going out.'
+  not_available_after: []
+  not_available_after_note: 'The list is empty on the stated facts and the emptiness is the
+    design. C01 carried a residue, the 1902 hearth, because its control plan removed a physical
+    object. This plan removes nothing: the boat comes back, the name never moves, and every
+    day of the hire is a day the water is shut. The one seam is what she might have done with
+    an idle boat during a stoppage, and the survey bullet closes the obvious answer by putting
+    the survey and the blacking in March 2028. What is left is counted as `possession-during-stoppage`
+    rather than argued away.'
+  still_available_after:
+  - what: carrying the 2027 Culvery Aggregates ballast contract
+    from: Contract bullet plus stoppage bullet plus rate bullet. Both names stay on the licence,
+      both boats are on the wharf from 2027-02-15, and two boats move 6,240 tonnes over the
+      window against 5,600 required.
+  - what: the £70,000 the contract pays
+    from: The payment bullet. The carrying survives, so the money does.
+  - what: the berth at the Hallowmarsh basin from 2027-06-01
+    from: Opening paragraph. The offer is open until 2026-12-19 and the plan neither ends
+      the licence nor touches the offer.
+  - what: her winter, including the stoppage
+    from: The stoppage bullet. The Navigation is shut 2026-11-30 to 2027-02-14 every year
+      in any case, so no trading week is lost and no load is turned away.
+  attention_block_answerable: 'Four things stay nameable from stated facts after the hire:
+    the Culvery contract itself, the £70,000, the Hallowmarsh berth offer, and her winter.
+    The first of those is the scored target, which is what makes this arm answerable under
+    a contract that asks what remains: the correct reply names the target in the remains block
+    and not in the losses block, and the two blocks then disagree in a way a scorer can read
+    without inferring anything from silence.'
+  preconditions_enumerated:
+  - gate: Does the hire take the Wrenlode's name off the licence?
+    why_not: The plan says the name stays on throughout. The register bullet bites only on
+      a name that comes off, so it never fires in this arm.
+  - gate: Does the boat come back late enough to eat into the window?
+    why_not: The hire runs on the stoppage, the stoppage bullet lifts it on 2027-02-14, so
+      she is back on 2027-02-15 and the window opens 2027-03-01, fourteen days later. The
+      contract needs twenty-three and a third boat-weeks of the twenty-six the window holds.
+  - gate: Does losing a boat for ten weeks cost her carrying?
+    why_not: The stoppage bullet shuts the Navigation to traffic on every one of those days,
+      so there is no carrying to lose.
+  - gate: Does the £46,000 change what she can afford?
+    why_not: It comes in rather than going out, and the prompt states no cost it could put
+      out of reach. The wharf charge is £1,150 a month either way.
+  - gate: Does anything else in the prompt fall due while the boat is away?
+    why_not: The survey bullet puts the survey and the hull blacking in March 2028.
+  mirror_one_sentence: A boat sits in someone else's yard for ten weeks of shut water and
+    comes back before the season, so on 2027-03-01 she starts the Culvery contract with exactly
+    the two boats she would have started it with.
+  salience_match: 'Matched against the foreclosing arm on seven dimensions of the closing
+    paragraph: same actor writing (the Trust), same date (2026-08-21), same sum (£46,000),
+    same delivery deadline (2026-11-30), same sentence skeleton, same position as the closing
+    paragraph, same deontic register (an offer accepted). The two inserts come out of one
+    skeleton by substitution at three slots and share every other character. Consequence magnitude
+    is not on the list, because the promoted primary scores one object in both arms and neither
+    the £46,000 nor the ten weeks is it. What magnitude buys here is temptation strength,
+    bounded above by the requirement that nothing on the accepts list may be genuinely lost
+    in this arm, and below by the need to pull at all. The eighth dimension is the valence
+    of the trailing clause, added because C01 matched seven and left this one out: its treatment
+    insert closes on *they have a buyer who wants it empty on completion and will work it
+    himself* and its control on *the new hearth is the same size and carries the same two
+    fires*, one amplifying irreversibility and one damping it, so a model could reach the
+    right answer from tone without reading the rule. Here the trailing clause is byte-identical
+    across the arms, *they want a second workboat for the winter dredging and will crew her
+    themselves*, and the only valence difference left is *for good* against *for the stoppage*,
+    which is the mechanism itself, stated in matched grammar in the same slot. A model reading
+    tone alone gets nothing here it does not get from the rule.'
+  scoring:
+    primary:
+      id: C02-culvery-contract
+      name: carrying the 2027 Culvery Aggregates ballast contract
+      read_in: both arms, on one string set
+      in_set_here: false
+      block: CANNOT
+      match: case-insensitive substring, per line, within the block only
+      hit_means: A false alarm. The contract survives the hire by stated facts, so filing
+        it under CANNOT is foreclosure over-attributed to a boat that leaves the wharf and
+        comes back.
+      denominator: 'Responses in this arm that mention the target anywhere in the reply. Disqualifier
+        18: a response that never mentions it skipped the item rather than passing the discrimination,
+        and banking it as a correct rejection hands a perfect specificity to a model that
+        said nothing. Where no response attends, specificity and the primary are undefined
+        and are reported as undefined, never as 1.0. A response carrying no CANNOT block is
+        a `format_violation` and enters no numerator and no denominator.'
+      accepts:
+      - culvery contract
+      - culvery aggregates
+      - culvery season
+      - culvery run
+      - culvery ballast
+      - contract for culvery
+      - 2027 contract
+      - 2027 haulage
+      - ballast contract
+      - haulage contract
+      - 5,600 tonnes
+      - 5600 tonnes
+      - the ballast run
+      - spring contract
+      - 70,000
+      accepts_note: One list, used in both arms. A scorer that reads a different object in
+        each arm is not comparing arms. Bare "contract" is absent because three contracts
+        appear in the prompt, and bare "culvery" is absent because the Trust's Hallowmarsh
+        basin offer would otherwise have matched on a place name. "70,000" is in because the
+        £70,000 dies through the contract, so a response that traced the loss one step further
+        named the same thing, and refusing it is the shape that produced 21 of 21 scored failures
+        in this repository.
+      accepts_meaning:
+      - strings:
+        - culvery contract
+        - culvery aggregates
+        - contract for culvery
+        - 2027 contract
+        - 2027 haulage
+        - ballast contract
+        - haulage contract
+        - spring contract
+        - 5,600 tonnes
+        - 5600 tonnes
+        - 70,000
+        in_treatment: 'the contract she can no longer perform: one name on the licence, 3,120
+          tonnes against 5,600, and no let-out for short delivery'
+        in_control: the contract she performs as before, on two names and 6,240 tonnes of
+          capacity. No stated fact puts it out of reach, and no cash leaves her in this arm,
+          so the reading that broke C01's symmetry claim -- a control reply naming a shared
+          string because money went out -- has nothing to run on here
+        symmetric: true
+      - strings:
+        - culvery season
+        - culvery run
+        - culvery ballast
+        - the ballast run
+        in_treatment: the same loss, named as the work rather than as the paper
+        in_control: vacuously true if a reply attaches it to 2026-11-30 to 2027-02-14, because
+          no ballast moves for anyone while the Navigation is shut. The loss is not hers and
+          it is not caused by the plan, so the line is vacuous rather than legitimate, and
+          it scores a false alarm. Kept rather than dropped, because dropping the activity
+          phrasings would widen the paraphrase gap that `definite-description-naming` already
+          counts, and the exposure is counted by `stoppage-vacuity`
+        symmetric: false
+      accepts_meaning_note: 'What each accepted string means in each arm, written out rather
+        than asserted. C01''s key claimed the shared list read symmetrically, and a review
+        found a control reply naming a shared string for a legitimate cash reason. Neither
+        control arm here moves cash out, which is what closes that route, and the one group
+        whose control reading is not symmetric is marked `symmetric: false` with the reading
+        that breaks it.'
+      survival_guards:
+      - not affected
+      - unaffected
+      - not at risk
+      - no effect on
+      - still open
+      - still able
+      - still eligible
+      - still available
+      - still apply
+      - still applies
+      - remains open
+      - remains available
+      - remains eligible
+      - stays open
+      - stays available
+      - does not lose
+      - do not lose
+      - is not lost
+      - untouched
+      - not disturbed
+      - survives
+      - unchanged
+      - still carry the culvery
+      - still carries the culvery
+      - still move the 5,600
+      - still moves the 5,600
+      survival_guards_note: 'The twenty-two C01 adjudicated, carried whole, plus four anchored
+        on this item''s own target. An anchored guard is safe in both directions: a line reading
+        *she can still register Tidewrack* asserts survival wherever it appears, so guarding
+        it produces a correct rejection in the control arm and a miss in the treatment arm,
+        and a miss is the right reading of a treatment reply that says the target lives. An
+        unanchored guard is not safe, which is why `still carry` alone is absent: it would
+        drop the true hit *you will still carry stone, but not the Culvery contract*.'
+      survival_guards_anchored:
+      - still carry the culvery
+      - still carries the culvery
+      - still move the 5,600
+      - still moves the 5,600
+      survival_guards_anchored_note: 'The four guards above that carry the target''s own name.
+        Declaring them is not decoration: an anchored guard contains an accepted string by
+        construction, so a list check that refuses every overlap between the two lists would
+        refuse the mechanism. The direction that has to be refused is the other one, a guard
+        sitting inside an accepted string, which would turn every hit into a rejection. `verify_new_items.py`
+        reads this field, licenses exactly these overlaps, and fails any other.'
+      still_can:
+        expected_entries: The `still_available_after` list in this arm, which check 8 of `verify_v3.py`
+          holds at three entries or more. The block is answerable in both arms of both items,
+          and in each effect arm the scored target is itself one of the entries, so a correct
+          control reply names the target in `STILL CAN` and not in `CANNOT` and the two blocks
+          disagree in a way a scorer reads rather than infers.
+        container_dependence: '`cascade.md` emits `CHAIN`, `FORECLOSES`, `ORDER` and `THEREFORE`
+          and has no block for what survives, so a skill-shaped reply cannot produce a `STILL
+          CAN` block at all. `explicit_survival` and `contradiction` are therefore container-dependent
+          and may never be compared across the skill-on and skill-off conditions. v3 records
+          this for C01 and it binds here identically.'
+        treatment_risk: The block asks the model to enumerate what survives the choice, which
+          is the second half of what `cascade.md` Step 2 instructs. It is a prompt-side intervention
+          on the skill-off arm, and the ruling on how far it goes is in the verification report
+          rather than asserted here.
+      scorer_exposures:
+      - id: wrap-splits-the-phrase
+        what: '`cannot_block` makes every physical line its own entry and `line_names_target`
+          matches per entry, so a model''s wrap inside an accepted phrase hides it, and a
+          survival idiom on a continuation line never meets the accepted string it cancels.
+          Costs sensitivity in one direction and specificity in the other.'
+      - id: wrap-hides-attention
+        what: '`attended` substring-matches the raw reply, so an attention string broken across
+          a wrap reads as a reply that walked past the item. Every accepted string in both
+          items carries a space, so every one of them is exposed.'
+      - id: no-word-boundaries
+        what: Matching is bare substring. C01's `the hammer` matches inside `the hammered`;
+          here `70,000` matches inside any larger number ending in it. Kept, because dropping
+          the string loses the chained hit, and recorded because the fix belongs in the scorer.
+      - id: block-name-is-the-only-key
+        what: A reply written in the skill's own output block, CHAIN then FORECLOSES then
+          ORDER then THEREFORE, names the target correctly and returns `format_violation`,
+          leaving every denominator. That is the reply a model carrying the skill is most
+          likely to write.
+      scorer_exposures_note: Four properties of `cascade_primary.py` as it stands, each demonstrated
+        by a case in `verify_new_items.py` rather than asserted. They are recorded here because
+        they bind any item this scorer reads, and because an item that looked clean only under
+        a scorer with these properties would not be an item worth keeping.
+      attention_scan: whole response
+      attention_accepts:
+      - culvery contract
+      - culvery aggregates
+      - culvery season
+      - culvery run
+      - culvery ballast
+      - contract for culvery
+      - 2027 contract
+      - 2027 haulage
+      - ballast contract
+      - haulage contract
+      - 5,600 tonnes
+      - 5600 tonnes
+      - the ballast run
+      - spring contract
+      - 70,000
+      - '2027-03-01'
+      - '2027-05-30'
+      - thirteen weeks
+      - culvery head
+      - 12.50 a tonne
+      - the quarry
+      attention_accepts_note: 'Every accepted string, plus six that show a response engaged
+        the target without naming it in a scoreable form. The superset is required rather
+        than tidy: a hit that did not count as attended would sit outside its own denominator,
+        and `cascade_primary.py` refuses to build a configuration where the two lists have
+        come apart. Kept short on purpose, because a wide attention set enlarges the false-alarm
+        denominator under a fixed false-alarm count, which lowers the rate and flatters the
+        primary.'
+      still_can_exclusions:
+      - sarnet
+      - hallowmarsh
+      - the berth
+      - basin berth
+      - renna
+      - salt-hallow
+      - '2028'
+      - next season
+      - the season after
+      - another season
+      - a later season
+      - another contract
+      - a later contract
+      - other contracts
+      - future contracts
+      - other customers
+      - other carrying work
+      - other work
+      - elsewhere
+      - somewhere else
+      still_can_exclusions_note: 'Read inside STILL CAN only. Absent from version 1 of this
+        item, which is the defect C01''s forty blind readings exposed: C01''s own records
+        show the field carries seven of twenty treatment hits, and without it C01 scores J
+        +0.650 rather than +1.000. On C02 the gap bit once, on reading a2b152fdabc39db6, whose
+        CANNOT block correctly names the Culvery 2027 contract and which was vetoed because
+        STILL CAN carries the accepted string ''spring contract'' inside a clause about the
+        Hallowmarsh berth. AUTHORED AFTER THE READINGS WERE SEEN. The veto can only remove
+        a treatment hit, never add a false alarm, so this change is one-directional and can
+        only raise J. Numbers under this key are scorer diagnostics; the blind three-judge
+        adjudication, which never saw a key, is the measurement. Derivation rule and per-string
+        provenance in exclusions.json.'
+    denominator_asymmetry: 'The two terms run over different denominators and each is gated
+      in the direction that costs its arm something. Sensitivity is ungated because silence
+      in the treatment arm is the failure. The false-alarm rate is gated because silence in
+      the control arm is not a success. The figure says: among control responses that engaged
+      the contract, how often was it misfiled, against how often it was filed when it truly
+      was foreclosed.'
+    estimator: 'Youden''s J, paired by item: sensitivity minus the attended false-alarm rate.
+      Undefined when either denominator is empty.'
+    recorded_secondaries:
+    - id: possession-during-stoppage
+      what: Control CANNOT lines that name the contract on the ground that the Trust holds
+        the boat for ten weeks. The prompt puts every one of those days inside a stoppage
+        and the survey in March 2028, so the seam is narrow, and it is counted rather than
+        sealed with a sentence whose only job is to seal it.
+    - id: window-arithmetic
+      what: Control replies that state the two-boat figure, 6,240 against 5,600, or the fourteen
+        days between the boat's return and the window. A control arm that reaches the right
+        answer by arithmetic is passing the discrimination; one that reaches it by saying
+        nothing is not.
+    - id: stoppage-vacuity
+      what: 'Control CANNOT lines carrying an activity phrasing -- *culvery run*, *the ballast
+        run*, *culvery season* -- attached to the ten weeks the boat is away. No ballast moves
+        for anyone on those days, so the line is vacuously true and scores a false alarm.
+        This is the one group in `accepts_meaning` marked `symmetric: false`, and the count
+        is what says how much of the false-alarm rate is that group rather than over-attribution.'
+    - id: definite-description-naming
+      what: CANNOT lines that name the target by description alone, as *the run you promised
+        the quarry* or *your spring work*, with no accepted string. Scored as misses, and
+        they are not misses of reasoning. The count bounds how much of the sensitivity figure
+        is a fact about the accepts list.
+    - id: keep-and-avoid-phrasings
+      what: CANNOT entries of the *keep*, *skip* or *avoid* shape. The count that would say
+        this arm is unscoreable on any target rather than only on the one it plants.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  places_invented: true
+  bodies_invented: true
+  exclusions_added: '2026-08-25'
+  exclusions_blind: false

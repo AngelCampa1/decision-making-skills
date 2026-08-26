@@ -1,0 +1,353 @@
+{
+  "cases": {
+    "2174abc288713843": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The reply places the 2027 Workshop Continuity Grant in the STILL CAN block and explicitly states Ines's tenure remains unbroken, so the ability to apply is preserved, not lost.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and explains throughout that Ines's tenure remains unbroken, so she retains the ability to apply.",
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block, stating Ines's tenure is unbroken and she still qualifies to apply in January 2027."
+      ]
+    },
+    "29b3016b83ec5f77": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states her eligibility is intact throughout.",
+        "j2=False: The reply places the 2027 Workshop Continuity Grant in the STILL CAN block and explicitly states her eligibility is intact.",
+        "j0=False: The reply places the 2027 Workshop Continuity Grant in the STILL CAN block and explicitly states her eligibility is intact."
+      ]
+    },
+    "4d00c700bf54180d": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant application in the STILL CAN block and states in the body that her eligibility is not damaged.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant application in the STILL CAN block and states throughout that her eligibility is unaffected.",
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant application in the STILL CAN block and states throughout that her eligibility is unaffected."
+      ]
+    },
+    "4f297f709eb511be": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant application in the STILL CAN block and states in the body that Ines 'should still be able to apply in the 2027 round.'",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that Ines should still be able to apply in that round.",
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant application in the STILL CAN block and states throughout that Ines's tenure remains continuous and unbroken, meaning she retains eligibility."
+      ]
+    },
+    "639d7f62838a5b19": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states she can still apply for the 2027 Workshop Continuity Grant, and the body of the reply explains why her continuity is intact.",
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and confirms in the body that continuity is intact, meaning the ability to apply is preserved, not lost.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and explains in the body that continuity is intact, meaning the reply asserts Ines retains eligibility."
+      ]
+    },
+    "9ef43a97e5626487": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 grant round in the STILL CAN block and states her tenure is unbroken, meaning she retains eligibility.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant round in the STILL CAN block and states her tenure is unbroken, affirming she retains eligibility.",
+        "j2=False: The reply explicitly places the 2027 grant round in the STILL CAN block and states her tenure is unbroken, meaning she retains eligibility."
+      ]
+    },
+    "9f00802b26a05fa9": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Continuity Grant in the STILL CAN block and states her eligibility is intact because her occupation runs unbroken through the shutdown.",
+        "j2=False: The reply explicitly places the 2027 Continuity Grant application in the STILL CAN block and states in the body that her eligibility for the January 2027 round is intact.",
+        "j0=False: The reply explicitly places the 2027 Continuity Grant in the STILL CAN block and states in the body that her eligibility for the January 2027 round is intact."
+      ]
+    },
+    "a1f08a2bdc1bc40d": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant round in the STILL CAN block and states throughout that eligibility is unaffected by the plan.",
+        "j0=False: The reply explicitly states in both the body text and the STILL CAN block that the 2027 Workshop Continuity Grant round remains open to Ines, not that she loses eligibility.",
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant round in the STILL CAN block and states throughout that eligibility is unaffected by the plan."
+      ]
+    },
+    "a98beeab289dac43": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that grant eligibility survives the plan intact.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that grant eligibility survives the plan intact.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states that grant eligibility survives the plan intact."
+      ]
+    },
+    "af5e181596ecadc3": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that her eligibility for that round is preserved.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant round in the STILL CAN block and states throughout that her eligibility is preserved.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant round in the STILL CAN block and states throughout that her eligibility is preserved."
+      ]
+    },
+    "c393ffa50d4cba7d": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places the 2027 Workshop Continuity Grant application in the STILL CAN block and explicitly states her eligibility is unaffected, so the ability survives the plan.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility is unaffected.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility is unaffected."
+      ]
+    },
+    "cdf26eea446aa7d9": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places the 2027 Workshop Continuity Grant in the STILL CAN block and explicitly states throughout that grant eligibility is intact.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that grant eligibility is intact.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that grant eligibility is intact."
+      ]
+    },
+    "d0052922a5900b39": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that grant eligibility is preserved, not lost.",
+        "j2=False: The reply explicitly states in STILL CAN and throughout that Ines's eligibility for the 2027 Workshop Continuity Grant is preserved, not lost.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that lease continuity is unbroken and eligibility is preserved."
+      ]
+    },
+    "ddb69cd486f8a8dd": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places the 2027 grant round in the STILL CAN block and explicitly states her continuous occupation is unbroken, meaning she retains eligibility.",
+        "j2=False: The reply explicitly places the 2027 round in the STILL CAN block and states throughout that continuous occupation is unbroken, preserving her eligibility.",
+        "j0=False: The reply places the 2027 round in the STILL CAN block and states throughout that continuous occupation is unbroken, so eligibility is preserved, not lost."
+      ]
+    },
+    "def065c1b2996677": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly states in both the body and the STILL CAN block that the 2027 Workshop Continuity Grant eligibility is unaffected and that Ines can still apply.",
+        "j2=False: The reply explicitly states in both the body and the STILL CAN block that Ines's Workshop Continuity Grant eligibility is unaffected and she can still apply in the 2027 round.",
+        "j0=False: The reply explicitly states in both the body and the STILL CAN block that Ines's Workshop Continuity Grant eligibility is unaffected and that she can still apply in the January 2027 round."
+      ]
+    },
+    "e532997714809582": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states her unbroken occupation is intact, meaning she retains eligibility.",
+        "j0=False: The reply places the 2027 Workshop Continuity Grant round in the STILL CAN block and explicitly states Ines's unbroken occupation keeps her eligible for it.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states her unbroken occupation since 2023-05-02 keeps her eligible for that round."
+      ]
+    },
+    "ecbfd43555cc5d32": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that eligibility is intact.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that eligibility is intact.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that her eligibility is intact."
+      ]
+    },
+    "f8f5a01402451ec8": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places the 2027 Workshop Continuity Grant round in the STILL CAN block and states explicitly that Ines's tenure is unbroken and her eligibility intact.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states in the body that her eligibility is intact because her tenure is unbroken.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's tenure is unbroken and her eligibility is intact."
+      ]
+    },
+    "fe178818e1d5612f": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility is intact because her continuous occupation is unbroken.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that continuous occupation is maintained, preserving her eligibility.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility is intact because her continuous occupation is unbroken."
+      ]
+    },
+    "fe4d766e267f33ea": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility for that round is preserved.",
+        "j0=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility for that round is preserved.",
+        "j2=False: The reply explicitly places the 2027 Workshop Continuity Grant in the STILL CAN block and states throughout that Ines's eligibility for that round is preserved."
+      ]
+    }
+  },
+  "cell": "negative",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C01",
+  "judges": 3,
+  "moved": [],
+  "movement": 0.0,
+  "seed": 20260825,
+  "threshold": 0.2
+}

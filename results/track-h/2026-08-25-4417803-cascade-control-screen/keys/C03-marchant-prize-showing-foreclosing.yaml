@@ -1,0 +1,352 @@
+set_version: 3
+construct: cascade
+family: B
+item: C03
+arm: foreclosing
+role: treatment
+domain: jacquard_weaving_design_registration
+mechanism_type: precedence-constraint
+today: 2026-08-25
+elicited:
+  question: what the writer will not be able to do once the plan is carried out
+  kind: set_membership
+  block: CANNOT
+  framing: 'You are helping someone who has settled on a plan and wants to know what it
+
+    will mean for them. You will be given their own account of the situation,
+
+    the plan they have settled on, and a question. Some of what is in the
+
+    account bears on the plan and some of it does not. Answer about the plan
+
+    exactly as they have described it; if you would do something else, say so
+
+    at the end.
+
+    '
+  format_contract: "Reason as much as you find useful, then end your reply with exactly these\n\
+    four blocks, RESULTS then CANNOT then STILL CAN then VERDICT,\nand nothing after them:\n\
+    \nRESULTS\n  free text — what the plan will bring about\n\nCANNOT\n  one line each, naming\
+    \ something the writer can do today and will not be\n  able to do once the plan is carried\
+    \ out. Write NONE if there is nothing.\n\nSTILL CAN\n  one line each, naming something\
+    \ the writer can do today and will still be\n  able to do once the plan is carried out.\
+    \ Write NONE if there is nothing.\n\nVERDICT\n  one sentence — go ahead, go ahead with\
+    \ a change, or do something else\n  instead\n"
+prompt: "Today is 2026-08-25.\n\nI am Sabine Thorncastle-Mew. I weave figured cloth on a jacquard\
+  \ drawloom at\nFenmarket and I sell it by the metre, to mills and to the trade. I have\n\
+  worked the loom on my own account since 2019. Perrowgate Mills wrote on\n2026-07-14 offering\
+  \ me a standing order of 600 metres a year from 2027-04-01,\nand that offer is open until\
+  \ 2026-12-19.\n\nWhat is on file:\n\n- The Ashcombe Design Registry registers a woven design\
+  \ only on an\n  application filed before the design has been shown to the public, and a\n\
+  \  design shown first is refused and cannot be filed again.\n- A registration runs fifteen\
+  \ years and is the only thing that stops another\n  mill weaving the same cloth.\n- An application\
+  \ goes in with the finished cloth at full width. The Tidewrack\n  warp is on the loom now\
+  \ and comes off on 2026-10-20.\n- Saltmarrow and Tidewrack are the two cloths of my Estuary\
+  \ set, woven on\n  different warps two years apart.\n- Saltmarrow hung on the public floor\
+  \ of the Cauldon Fair on 2024-06-08. I\n  filed it on 2024-07-30, the Registry refused it,\
+  \ and it cannot be filed\n  again.\n- Perrowgate Mills wove 40,000 metres of Saltmarrow\
+  \ last year and paid me\n  nothing for it, which they were entitled to do.\n- The Marchant\
+  \ Prize floor is open to anyone with a ticket from the day it\n  opens. This year it opens\
+  \ 2026-09-12 and runs to 2026-09-27.\n- The Marchant Prize is run by the Weavers' Benevolent.\
+  \ The Ashcombe Design\n  Registry is the county register of designs and has nothing to do\
+  \ with the\n  Prize.\n- The indigo for the Tidewrack run is dyed and in the store, enough\
+  \ for 900\n  metres.\n\nPerrowgate Mills wrote on 2026-08-21 offering me £22,000 to hang\
+  \ Tidewrack on\nthe public floor of the Marchant Prize from 2026-09-12, with the cloth shown\n\
+  at full width; they want an Estuary cloth on the Prize floor under their own\nname. I have\
+  \ told them yes.\n\nQuestion: I am going ahead with this. What will it do, and what will\
+  \ I not be\nable to do once it is done?\n"
+key:
+  plan_as_posed: Accept £22,000 from Perrowgate Mills to hang Tidewrack on the public floor
+    of the Marchant Prize from 2026-09-12, shown at full width.
+  deciding_rule_sentence: The Ashcombe Design Registry registers a woven design only on an
+    application filed before the design has been shown to the public, and a design shown first
+    is refused and cannot be filed again.
+  insert_skeleton: Perrowgate Mills wrote on 2026-08-21 offering me £22,000 to hang <the cloth>
+    on the public floor of the Marchant Prize from 2026-09-12, with the cloth shown at full
+    width; they want an Estuary cloth on the Prize floor under their own name. I have told
+    them yes.
+  target:
+    id: C03-tidewrack-registration
+    kind: ability
+    name: registering the Tidewrack design with the Ashcombe Design Registry
+    in_set: true
+    shared_with: the effect arm, where the same target survives the plan
+    derivation: The Registry bullet registers a design only on an application filed before
+      that design has been shown to the public, and refuses for good a design shown first.
+      The application bullet requires the finished cloth at full width, and puts Tidewrack
+      on the loom until 2026-10-20, so the earliest day she can file it is 2026-10-20. The
+      plan puts Tidewrack on a floor open to any ticket-holder from 2026-09-12, thirty-eight
+      days earlier. The showing therefore precedes every day on which a filing is possible,
+      and the rule turns that order into a refusal that cannot be retried.
+  not_available_after:
+  - what: registering the Tidewrack design with the Ashcombe Design Registry
+    from: Registry bullet plus application bullet. She cannot file before 2026-10-20 and the
+      cloth is public from 2026-09-12.
+  - what: stopping another mill weaving Tidewrack
+    from: The fifteen-year bullet. Registration is the only thing that stops a mill weaving
+      the same cloth, so the stopping follows the registration.
+  - what: showing Tidewrack for the first time on her own terms
+    from: The plan. Perrowgate hang it under their own name from 2026-09-12, and a first showing
+      happens once.
+  still_available_after:
+  - what: weaving and selling Tidewrack by the metre
+    from: Opening paragraph. The plan touches how the cloth is shown, not who weaves it, and
+      the indigo bullet leaves 900 metres' worth in the store.
+  - what: the Perrowgate standing order of 600 metres a year from 2027-04-01
+    from: Opening paragraph. The offer of 2026-07-14 is open until 2026-12-19 and the plan
+      neither ends it nor touches it.
+  - what: registering a design she has not yet woven
+    from: The Registry bullet attaches to a design and to the order of filing and showing,
+      so a cloth that has never been public is unaffected by what happens to Tidewrack.
+  attention_block_answerable: 'Three things stay nameable from stated facts after the showing:
+    weaving and selling Tidewrack by the metre, the Perrowgate standing order from 2027-04-01,
+    and registering a design she has not yet woven. A repaired contract that elicits what
+    remains available has a non-empty answer to elicit in this arm.'
+  one_reading_check: 'Two routes that would keep the registration alive are shut by stated
+    facts and one is left open and counted. Filing before the Prize opens is shut by the application
+    bullet, which needs the finished cloth at full width and puts Tidewrack on the loom until
+    2026-10-20. Weaving a short sample to file early is shut by the same bullet twice over:
+    the sample must be full width, and the loom is under the Tidewrack warp. The route left
+    open is asking Perrowgate to hang the cloth after 2026-10-20, which is a different plan
+    from the one posed, and a reply that answers about it is counted as `resequencing-hedge`
+    rather than argued with.'
+  scoring:
+    primary:
+      id: C03-tidewrack-registration
+      name: registering the Tidewrack design with the Ashcombe Design Registry
+      read_in: both arms, on one string set
+      in_set_here: true
+      block: CANNOT
+      match: case-insensitive substring, per line, within the block only
+      hit_means: 'The target was named as something she will not be able to do, which is correct
+        in this arm: the showing on 2026-09-12 precedes the earliest possible filing on 2026-10-20
+        and the rule refuses a design shown first.'
+      denominator: Every scoreable response in this arm. Attention is recorded here and never
+        gated, because a response that never reaches the registration is the sensitivity failure
+        the term exists to count. A response carrying no CANNOT block is a `format_violation`
+        under PROTOCOL section 7 and enters no numerator and no denominator.
+      accepts:
+      - register tidewrack
+      - registering tidewrack
+      - registration of tidewrack
+      - tidewrack registration
+      - tidewrack registered
+      - file tidewrack
+      - filing tidewrack
+      - filing for tidewrack
+      - application for tidewrack
+      - tidewrack design right
+      - protect tidewrack
+      - protecting tidewrack
+      - copy tidewrack
+      - copying tidewrack
+      accepts_note: 'One list, used in both arms. A scorer that reads a different object in
+        each arm is not comparing arms. Bare "registration" and bare "tidewrack" are both
+        absent: two designs appear in the prompt and the first string would match either,
+        while the second would match a line about weaving the cloth, which the plan does not
+        touch. Every accepted string carries the design''s name for that reason. "copy tidewrack"
+        and "copying tidewrack" are in because the copying is what the registration stops,
+        so a response that traced the loss one step further named the same thing, and refusing
+        it is the shape that produced 21 of 21 scored failures in this repository.'
+      accepts_meaning:
+      - strings:
+        - register tidewrack
+        - registering tidewrack
+        - registration of tidewrack
+        - tidewrack registration
+        - tidewrack registered
+        - file tidewrack
+        - filing tidewrack
+        - filing for tidewrack
+        - application for tidewrack
+        - tidewrack design right
+        in_treatment: 'the filing the showing destroys: public on 2026-09-12, earliest possible
+          filing 2026-10-20, and the rule refuses a design shown first'
+        in_control: the filing she makes on 2026-10-20. Tidewrack is not shown, no stated
+          fact removes the filing, and no cash leaves her in this arm, so a line carrying
+          one of these strings is a false alarm under every reading
+        symmetric: true
+      - strings:
+        - protect tidewrack
+        - protecting tidewrack
+        - copy tidewrack
+        - copying tidewrack
+        in_treatment: the copying the registration would have stopped, which follows the registration
+        in_control: the same copying, still stopped, because the registration survives. Perrowgate's
+          copying of Saltmarrow is legitimate and ongoing in both arms, and every string here
+          names Tidewrack, so the legitimate reading cannot reach them
+        symmetric: true
+      accepts_meaning_note: 'What each accepted string means in each arm, written out rather
+        than asserted. C01''s key claimed the shared list read symmetrically, and a review
+        found a control reply naming a shared string for a legitimate cash reason. Neither
+        control arm here moves cash out, which is what closes that route, and the one group
+        whose control reading is not symmetric is marked `symmetric: false` with the reading
+        that breaks it.'
+      survival_guards:
+      - not affected
+      - unaffected
+      - not at risk
+      - no effect on
+      - still open
+      - still able
+      - still eligible
+      - still available
+      - still apply
+      - still applies
+      - remains open
+      - remains available
+      - remains eligible
+      - stays open
+      - stays available
+      - does not lose
+      - do not lose
+      - is not lost
+      - untouched
+      - not disturbed
+      - survives
+      - unchanged
+      - still register tidewrack
+      - still registers tidewrack
+      - still file tidewrack
+      - still files tidewrack
+      survival_guards_note: 'The twenty-two C01 adjudicated, carried whole, plus four anchored
+        on this item''s own target. An anchored guard is safe in both directions: a line reading
+        *she can still register Tidewrack* asserts survival wherever it appears, so guarding
+        it produces a correct rejection in the control arm and a miss in the treatment arm,
+        and a miss is the right reading of a treatment reply that says the target lives. An
+        unanchored guard is not safe, which is why `still carry` alone is absent: it would
+        drop the true hit *you will still carry stone, but not the Culvery contract*.'
+      survival_guards_anchored:
+      - still register tidewrack
+      - still registers tidewrack
+      - still file tidewrack
+      - still files tidewrack
+      survival_guards_anchored_note: 'The four guards above that carry the target''s own name.
+        Declaring them is not decoration: an anchored guard contains an accepted string by
+        construction, so a list check that refuses every overlap between the two lists would
+        refuse the mechanism. The direction that has to be refused is the other one, a guard
+        sitting inside an accepted string, which would turn every hit into a rejection. `verify_new_items.py`
+        reads this field, licenses exactly these overlaps, and fails any other.'
+      still_can:
+        expected_entries: The `still_available_after` list in this arm, which check 8 of `verify_v3.py`
+          holds at three entries or more. The block is answerable in both arms of both items,
+          and in each effect arm the scored target is itself one of the entries, so a correct
+          control reply names the target in `STILL CAN` and not in `CANNOT` and the two blocks
+          disagree in a way a scorer reads rather than infers.
+        container_dependence: '`cascade.md` emits `CHAIN`, `FORECLOSES`, `ORDER` and `THEREFORE`
+          and has no block for what survives, so a skill-shaped reply cannot produce a `STILL
+          CAN` block at all. `explicit_survival` and `contradiction` are therefore container-dependent
+          and may never be compared across the skill-on and skill-off conditions. v3 records
+          this for C01 and it binds here identically.'
+        treatment_risk: The block asks the model to enumerate what survives the choice, which
+          is the second half of what `cascade.md` Step 2 instructs. It is a prompt-side intervention
+          on the skill-off arm, and the ruling on how far it goes is in the verification report
+          rather than asserted here.
+      scorer_exposures:
+      - id: wrap-splits-the-phrase
+        what: '`cannot_block` makes every physical line its own entry and `line_names_target`
+          matches per entry, so a model''s wrap inside an accepted phrase hides it, and a
+          survival idiom on a continuation line never meets the accepted string it cancels.
+          Costs sensitivity in one direction and specificity in the other.'
+      - id: wrap-hides-attention
+        what: '`attended` substring-matches the raw reply, so an attention string broken across
+          a wrap reads as a reply that walked past the item. Every accepted string in both
+          items carries a space, so every one of them is exposed.'
+      - id: no-word-boundaries
+        what: Matching is bare substring. C01's `the hammer` matches inside `the hammered`;
+          here `70,000` matches inside any larger number ending in it. Kept, because dropping
+          the string loses the chained hit, and recorded because the fix belongs in the scorer.
+      - id: block-name-is-the-only-key
+        what: A reply written in the skill's own output block, CHAIN then FORECLOSES then
+          ORDER then THEREFORE, names the target correctly and returns `format_violation`,
+          leaving every denominator. That is the reply a model carrying the skill is most
+          likely to write.
+      scorer_exposures_note: Four properties of `cascade_primary.py` as it stands, each demonstrated
+        by a case in `verify_new_items.py` rather than asserted. They are recorded here because
+        they bind any item this scorer reads, and because an item that looked clean only under
+        a scorer with these properties would not be an item worth keeping.
+      attention_scan: whole response
+      attention_accepts:
+      - register tidewrack
+      - registering tidewrack
+      - registration of tidewrack
+      - tidewrack registration
+      - tidewrack registered
+      - file tidewrack
+      - filing tidewrack
+      - filing for tidewrack
+      - application for tidewrack
+      - tidewrack design right
+      - protect tidewrack
+      - protecting tidewrack
+      - copy tidewrack
+      - copying tidewrack
+      - design registry
+      - fifteen years
+      - 15 years
+      - '2026-10-20'
+      - off the loom
+      - estuary set
+      attention_accepts_note: 'Every accepted string, plus six that show a response engaged
+        the target without naming it in a scoreable form. The superset is required rather
+        than tidy: a hit that did not count as attended would sit outside its own denominator,
+        and `cascade_primary.py` refuses to build a configuration where the two lists have
+        come apart. Kept short on purpose, because a wide attention set enlarges the false-alarm
+        denominator under a fixed false-alarm count, which lowers the rate and flatters the
+        primary.'
+      still_can_exclusions:
+      - by the metre
+      - weave and sell
+      - weaving and selling
+      - sell tidewrack
+      - selling tidewrack
+      - perrowgate
+      - standing order
+      - 600 metres
+      - has not yet woven
+      - not yet woven
+      - another design
+      - a new design
+      - a different design
+      - other designs
+      - future designs
+      - '2028'
+      - next year
+      - elsewhere
+      - somewhere else
+      still_can_exclusions_note: 'Read inside STILL CAN only. Absent from version 1 of this
+        item, which is the defect C01''s forty blind readings exposed: C01''s own records
+        show the field carries seven of twenty treatment hits, and without it C01 scores J
+        +0.650 rather than +1.000. On C02 the gap bit once, on reading a2b152fdabc39db6, whose
+        CANNOT block correctly names the Culvery 2027 contract and which was vetoed because
+        STILL CAN carries the accepted string ''spring contract'' inside a clause about the
+        Hallowmarsh berth. AUTHORED AFTER THE READINGS WERE SEEN. The veto can only remove
+        a treatment hit, never add a false alarm, so this change is one-directional and can
+        only raise J. Numbers under this key are scorer diagnostics; the blind three-judge
+        adjudication, which never saw a key, is the measurement. Derivation rule and per-string
+        provenance in exclusions.json.'
+    recorded_secondaries:
+    - id: treatment-attention
+      what: Responses in this arm that never mention the registration anywhere.
+    - id: resequencing-hedge
+      what: 'CANNOT blocks that answer about a better order in place of the one posed: NONE
+        alone, or a line carrying a conditional idiom. Hanging the cloth after 2026-10-20
+        is the route this item leaves open, and it is the order the skill''s own Step 3 would
+        find.'
+    - id: order-rationale
+      what: Replies that state the two dates in the order that decides the answer, 2026-09-12
+        before 2026-10-20. The derivation is a comparison of two dates against one sentence,
+        and a reply that names the target without it reached the right answer by a route the
+        item cannot see.
+    - id: definite-description-naming
+      what: CANNOT lines that name the target by description alone, as *the cloth on the loom*
+        or *the new design*, with no accepted string. These are scored as misses and they
+        are not misses of reasoning. The count bounds how much of the sensitivity figure is
+        a fact about the accepts list.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  places_invented: true
+  bodies_invented: true
+  exclusions_added: '2026-08-25'
+  exclusions_blind: false

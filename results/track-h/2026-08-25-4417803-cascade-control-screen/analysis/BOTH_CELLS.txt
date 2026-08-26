@@ -1,0 +1,30 @@
+===== C01 =====  n=40  accepts 15 guards 22 exclusions 11
+  KEY AS SHIPPED (C01 already had one)
+    machine       sens 20/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 20/20  FA 0/20  J +1.000   coverage 1.0
+    both cells    sens 20/20  FA 0/20  J +1.000  95% Newcombe [+0.772, +1.000]   NOT producible by the registered estimator
+  counterfactual: C01 with its exclusion set removed
+    machine       sens 13/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 13/20  FA 0/20  J +0.650   coverage 1.0
+    both cells    sens 20/20  FA 0/20  J +1.000  95% Newcombe [+0.772, +1.000]   NOT producible by the registered estimator
+
+===== C02 =====  n=40  accepts 15 guards 26 exclusions 20
+  KEY AS SHIPPED (no exclusion set)
+    machine       sens 19/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 19/20  FA 0/20  J +0.950   coverage 1.0
+    both cells    sens 20/20  FA 0/20  J +1.000  95% Newcombe [+0.772, +1.000]   NOT producible by the registered estimator
+  KEY AS FIXED
+    machine       sens 20/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 20/20  FA 0/20  J +1.000   coverage 1.0
+    both cells    sens 20/20  FA 0/20  J +1.000  95% Newcombe [+0.772, +1.000]   NOT producible by the registered estimator
+
+===== C03 =====  n=40  accepts 14 guards 26 exclusions 19
+  KEY AS SHIPPED (no exclusion set)
+    machine       sens 17/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 17/20  FA 0/20  J +0.850   coverage 1.0
+    both cells    sens 19/20  FA 0/20  J +0.950  95% Newcombe [+0.704, +0.991]   NOT producible by the registered estimator
+  KEY AS FIXED
+    machine       sens 18/20  FA 0/20  J REFUSED   (positive cell unadjudicated)
+    registered    sens 17/20  FA 0/20  J +0.850   coverage 1.0
+    both cells    sens 19/20  FA 0/20  J +0.950  95% Newcombe [+0.704, +0.991]   NOT producible by the registered estimator
+

@@ -1,0 +1,78 @@
+readings 40   answering model(s) ['claude-sonnet-4-6']
+adjudicated verdicts applied: 0
+
+PER-ARM COUNTS
+  foreclosing (treatment)  N 20
+    hits 20   misses 0   format violations 0
+    scoreable 20   sensitivity 1.000
+  effect (control)         N 20
+    false alarms 0   correct rejections 20   format violations 0
+    scoreable 20   false-alarm rate 0.000   specificity 1.000
+
+FORMAT VIOLATIONS AND ENGAGEMENT
+  violations   treatment 0/20 (0.000)   effect 0/20 (0.000)
+  violation gap (treatment - effect)  +0.000
+  dual containers  0
+  engagement   treatment 20/20 (1.000)   effect 20/20 (1.000)
+  engagement is reported and never divided by.
+
+ADJUDICATION
+  positive cell (queue)  20
+  adjudicated            0   fraction 0.000
+  registered coverage    1.000
+
+PRIMARY
+  readable: readable
+  J  REFUSED - 0 of 20 scored positives carry an adjudicated label, coverage 0.000
+  a format spec on it raises, as designed: a format spec was applied to a refused primary: 0 of 20 scored positives carry an adjudicated label, coverage 0.000
+
+SECONDARIES
+  explicit survival   20
+  STILL CAN vetoes    0
+  hedges (treatment)  0
+  engaged misses      0   ratio 0.000  (accepts-list gap, threshold 0.20)
+  guard-disagreement  0   (two lists disagreeing with each other, NOT an error bound)
+  chain-only          0
+  skill containers    0
+
+PER-READING
+  2174abc288713843  effect      correct_rejection  engaged,survival
+  29b3016b83ec5f77  effect      correct_rejection  engaged,survival
+  4d00c700bf54180d  effect      correct_rejection  engaged,survival
+  4f297f709eb511be  effect      correct_rejection  engaged,survival
+  639d7f62838a5b19  effect      correct_rejection  engaged,survival
+  9ef43a97e5626487  effect      correct_rejection  engaged,survival
+  9f00802b26a05fa9  effect      correct_rejection  engaged,survival
+  a1f08a2bdc1bc40d  effect      correct_rejection  engaged,survival
+  a98beeab289dac43  effect      correct_rejection  engaged,survival
+  af5e181596ecadc3  effect      correct_rejection  engaged,survival
+  c393ffa50d4cba7d  effect      correct_rejection  engaged,survival
+  cdf26eea446aa7d9  effect      correct_rejection  engaged,survival
+  d0052922a5900b39  effect      correct_rejection  engaged,survival
+  ddb69cd486f8a8dd  effect      correct_rejection  engaged,survival
+  def065c1b2996677  effect      correct_rejection  engaged,survival
+  e532997714809582  effect      correct_rejection  engaged,survival
+  ecbfd43555cc5d32  effect      correct_rejection  engaged,survival
+  f8f5a01402451ec8  effect      correct_rejection  engaged,survival
+  fe178818e1d5612f  effect      correct_rejection  engaged,survival
+  fe4d766e267f33ea  effect      correct_rejection  engaged,survival
+  06a5e26a1b70568b  foreclosing hit                engaged
+  0985abfb5721681f  foreclosing hit                engaged
+  164379dbf7a53c59  foreclosing hit                engaged
+  25b672ebf2a3952e  foreclosing hit                engaged
+  2a93ae60924d6525  foreclosing hit                engaged
+  3503ed1975401929  foreclosing hit                engaged
+  4bc4036d1cd95e11  foreclosing hit                engaged
+  6317dbcf6e82f997  foreclosing hit                engaged
+  6818a36ec9a936d3  foreclosing hit                engaged
+  723cf3edc5739588  foreclosing hit                engaged
+  780bd5004538026b  foreclosing hit                engaged
+  8121afe8d7fc2b20  foreclosing hit                engaged
+  82e320eb96f49304  foreclosing hit                engaged
+  87e2c68e8ba505da  foreclosing hit                engaged
+  9af890832ee7ebd3  foreclosing hit                engaged
+  ca1faef9fea2482e  foreclosing hit                engaged
+  e60e1db9b913977c  foreclosing hit                engaged
+  e8bd66d5ef531911  foreclosing hit                engaged
+  ee82d29c7a402e5e  foreclosing hit                engaged
+  f64599053c5d9fec  foreclosing hit                engaged

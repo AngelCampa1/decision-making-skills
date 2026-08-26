@@ -1,0 +1,353 @@
+{
+  "cases": {
+    "06e90aa2a564ef56": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The CANNOT block names only loss of access to the Wrenlode during the stoppage, and the STILL CAN block explicitly says Ottoline can meet the Culvery Aggregates spring contract in full with both boats.",
+        "j2=False: The CANNOT block says only that Ottoline cannot keep the Wrenlode at Harrowmere or access her during the stoppage, while the STILL CAN block explicitly says she can meet the Culvery Aggregates spring contract in full with both named boats.",
+        "j0=False: The CANNOT block says only that Ottoline cannot keep the Wrenlode at Harrowmere during the stoppage, and the STILL CAN block explicitly says she can meet the Culvery Aggregates contract in full with both boats after the plan is carried out."
+      ]
+    },
+    "1c507ab88c8189f2": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly lists running both boats on the Culvery contract from March 2027 as something Ottoline retains, and the CANNOT block only addresses use of the Wrenlode during the stoppage period, not the Culvery contract.",
+        "j2=False: The STILL CAN block explicitly says she can run both boats on the Culvery contract from March 2027, and the CANNOT block only removes her use of the Wrenlode during the hire period \u2014 neither block asserts she loses the ability to carry the Culvery contract.",
+        "j0=False: The STILL CAN block explicitly says she can run both boats on the Culvery contract from March 2027, and the CANNOT block addresses only use of the Wrenlode during the stoppage period, not the Culvery contract."
+      ]
+    },
+    "235a0cbd3132d223": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full, provided the Wrenlode is returned at the end of the stoppage, so the reply says the ability survives the plan.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full (conditionally on the Wrenlode's return), and the CANNOT block makes no mention of that contract.",
+        "j2=False: The STILL CAN block explicitly says Ottoline can fulfil the Culvery Aggregates contract in full (provided the Wrenlode is returned on time), and the CANNOT block makes no mention of that contract."
+      ]
+    },
+    "38d8cb73db741c47": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Ottoline can still fulfil the Culvery Aggregates contract in full, and the body of the reply confirms capacity works out with both boats back before 1 March 2027.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can still fulfil the Culvery Aggregates contract in full, and the reply's analysis confirms the plan enables her to meet that obligation.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full, and the body of the reply confirms capacity is sufficient with both boats back before 1 March 2027."
+      ]
+    },
+    "3be54c413173af17": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates 2027 contract in full, and the CANNOT block addresses only loss of access to the Wrenlode during the stoppage period, not loss of ability to carry the Culvery contract.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates 2027 contract in full, and the CANNOT block says only that she cannot use the Wrenlode during the stoppage period \u2014 not that the Culvery contract ability is lost.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates 2027 contract in full, and the CANNOT block says only that she cannot use the Wrenlode during the stoppage period \u2014 not that she loses the ability to carry the Culvery contract."
+      ]
+    },
+    "606d4574e16fe855": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The reply says carrying the Culvery contract is preserved if the Wrenlode is back in time, and the CANNOT block names only inability to do winter maintenance on the Wrenlode\u2014not loss of the Culvery carrying ability.",
+        "j1=False: The CANNOT block says only that Ottoline cannot do her own winter maintenance on the Wrenlode during the stoppage; the reply explicitly says in RESULTS and STILL CAN that the ability to carry the Culvery contract survives provided the Wrenlode is returned before 1 March 2027.",
+        "j2=False: The reply says carrying the Culvery contract is conditional on the Wrenlode's return date, and the STILL CAN block explicitly states Ottoline can resume full operation of both boats after the hire ends with all licence rights intact."
+      ]
+    },
+    "67a55d09793f32e3": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full with both boats, and the reply consistently treats that ability as surviving the plan, not lost.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full with both boats, and the reply as a whole treats that ability as surviving the plan (conditionally on timely return).",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full with both boats, and the reply treats that ability as preserved (conditionally on the Wrenlode returning in time), not lost."
+      ]
+    },
+    "8f04e04ea28f7c25": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Ottoline can use the Wrenlode for the Culvery contract once returned after 2027-02-14, and the CANNOT block does not mention the Culvery contract at all; the VERDICT only flags a conditional risk if the return is late, not a loss of ability.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can use the Wrenlode for the Culvery contract once returned after 2027-02-14, so the reply says the ability survives the plan.",
+        "j2=False: The STILL CAN block explicitly states she can use the Wrenlode for the Culvery contract once returned after 2027-02-14, and the CANNOT block makes no mention of losing that ability."
+      ]
+    },
+    "92a8b4d984d7d143": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract with both named boats from 2027-03-01, so the reply says that ability survives the plan.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract with both named boats from 2027-03-01, so the reply says that ability survives the plan.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract with both named boats from 2027-03-01, and the CANNOT block says nothing about losing that ability."
+      ]
+    },
+    "a7afe5b7eba240c7": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full with both boats, and the body of the reply confirms it remains deliverable provided the Wrenlode is returned in time.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates contract in full with both boats, and the CANNOT block says nothing about losing that ability.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can 'Fulfil the Culvery Aggregates contract in full with both boats,' and the CANNOT block says nothing about that contract."
+      ]
+    },
+    "a9f18810421cd2cd": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly says Ottoline can fulfil the Culvery contract, and the CANNOT block says only that she cannot use the Wrenlode during the hire period, not that the Culvery ability is lost.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery contract, and the CANNOT block says only that she cannot use the Wrenlode during the hire period, not that she loses the ability to carry the contract.",
+        "j1=False: The STILL CAN block explicitly says Ottoline can fulfil the Culvery contract, and the CANNOT block says only that she cannot use the Wrenlode during the hire period \u2014 not that she loses the ability to carry the contract."
+      ]
+    },
+    "ac70f420ed8aa556": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the full Culvery Aggregates spring contract with both named boats, and the rest of the reply reinforces that the plan leaves the contract deliverable.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfil the full Culvery Aggregates spring contract with both named boats, and the CANNOT block says nothing about losing that ability.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the full Culvery Aggregates spring contract with both named boats, and the rest of the reply supports this conclusion throughout."
+      ]
+    },
+    "afee4600490b77d0": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states Ottoline can still fulfill the Culvery contract provided the Wrenlode is returned undamaged in time, and the CANNOT block lists only other lost abilities, not this one.",
+        "j1=False: The STILL CAN block explicitly says Ottoline can still fulfill the Culvery contract provided the Wrenlode is returned undamaged in time, and the CANNOT block lists only other lost abilities, not this one.",
+        "j0=False: The STILL CAN block explicitly says Ottoline can still fulfill the Culvery Aggregates contract, and the CANNOT block lists only other lost abilities, not this one."
+      ]
+    },
+    "b0b82fbab1fb3e71": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly states Ottoline can still fulfil the Culvery 2027 contract with both boats if the Wrenlode is returned on time and in working order, and the CANNOT block lists only restrictions on use during the hire period, not loss of the ability to carry the contract.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery 2027 contract with both boats if the Wrenlode is returned on time and in working order, and the CANNOT block names only loss of control over the boat during the hire period, not loss of ability to carry the contract.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfil the 2027 Culvery contract if the Wrenlode is returned on time and in working order, and the CANNOT block names only restrictions on use/maintenance/control during the hire period, not loss of the ability to carry the Culvery contract."
+      ]
+    },
+    "b64bc56147692935": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The reply places carrying the Culvery contract in STILL CAN (conditionally, if the Wrenlode returns on schedule) and never places it in CANNOT, so the reply says the ability survives the plan rather than is lost by it.",
+        "j2=False: The reply places carrying the Culvery contract in the STILL CAN block (conditional on the Wrenlode returning on schedule) and never places it in the CANNOT block, so it asserts the ability survives the plan rather than being lost.",
+        "j0=False: The reply places meeting the Culvery contract in the STILL CAN block (conditionally, if the Wrenlode is returned on schedule), never in CANNOT, and the VERDICT frames it as a risk to manage rather than a lost ability."
+      ]
+    },
+    "be08a71bc3a6a7a6": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly says Ottoline can meet the Culvery contract using both boats from 2027-03-01, and the CANNOT block lists only loss of use during the stoppage and lack of remedy for late/damaged return \u2014 not loss of ability to carry the Culvery contract.",
+        "j0=False: The STILL CAN block explicitly states Ottoline can meet the Culvery contract using both boats from 2027-03-01, and the reply treats this ability as preserved, not lost.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can meet the Culvery contract using both boats from 2027-03-01, and the CANNOT block names only other lost abilities, not the Culvery contract."
+      ]
+    },
+    "c671f5fbc1383a35": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j1=False: The STILL CAN block explicitly says Ottoline can run both boats on the Culvery contract once the hire ends, and the CANNOT block addresses only use of the Wrenlode during the hire period, not the Culvery contract.",
+        "j2=False: The STILL CAN block and the main body both say Ottoline can run both boats on the Culvery contract once the hire ends; the reply warns she needs the return date confirmed in writing but never asserts she loses that ability.",
+        "j0=False: The reply explicitly states in STILL CAN and in the body that Ottoline can run both boats on the Culvery contract once the hire ends; the CANNOT block only restricts use of the Wrenlode during the hire period, not the Culvery contract itself."
+      ]
+    },
+    "d648593de3d305b6": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Ottoline can fulfill the Culvery Aggregates 2027 contract on two boats, provided the Wrenlode is returned fit, and the CANNOT block does not mention the Culvery contract at all.",
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates 2027 contract on two boats, and the CANNOT block lists only loss of use/control during the hire period, not loss of the Culvery contract ability.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfill the Culvery Aggregates 2027 contract on two boats, and the CANNOT block only lists inability to use or direct the Wrenlode during the hire period and inability to control maintenance decisions \u2014 not loss of the ability to carry the Culvery contract."
+      ]
+    },
+    "ddd9ec6125167269": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j2=False: The STILL CAN block explicitly states Ottoline can fulfil the Culvery Aggregates spring contract in full, and the CANNOT block says nothing about that contract.",
+        "j0=False: The STILL CAN block explicitly says Ottoline can still fulfil the Culvery Aggregates spring contract, so the reply asserts that ability survives the plan.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can still fulfil the Culvery Aggregates spring contract, and the CANNOT block names only a different limitation (maintenance access during the stoppage)."
+      ]
+    },
+    "f087b2dcb8d50350": {
+      "arm": "effect",
+      "resolved": false,
+      "scorer_outcome": "correct_rejection",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        false,
+        false,
+        false
+      ],
+      "why": [
+        "j0=False: The STILL CAN block explicitly states Ottoline can still fulfill the Culvery contract, provided the Wrenlode is back and fit by 2027-03-01.",
+        "j2=False: The STILL CAN block explicitly says Ottoline can still fulfil the Culvery contract, conditional on the Wrenlode being back and fit by 2027-03-01, and the CANNOT block makes no mention of the Culvery contract at all.",
+        "j1=False: The STILL CAN block explicitly states Ottoline can fulfill the Culvery contract, albeit conditionally on the Wrenlode being back and fit by 2027-03-01."
+      ]
+    }
+  },
+  "cell": "negative",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C02",
+  "judges": 3,
+  "moved": [],
+  "movement": 0.0,
+  "seed": 20260825,
+  "threshold": 0.2
+}

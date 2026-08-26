@@ -1,0 +1,286 @@
+set_version: 3
+construct: cascade
+family: B
+item: C01
+arm: foreclosing
+role: treatment
+domain: architectural_blacksmithing_tenancy
+mechanism_type: eligibility-forfeit
+today: 2026-08-25
+elicited:
+  question: what the writer will not be able to do once the plan is carried out
+  kind: set_membership
+  block: CANNOT
+  framing: 'You are helping someone who has settled on a plan and wants to know what it
+
+    will mean for them. You will be given their own account of the situation,
+
+    the plan they have settled on, and a question. Some of what is in the
+
+    account bears on the plan and some of it does not. Answer about the plan
+
+    exactly as they have described it; if you would do something else, say so
+
+    at the end.
+
+    '
+  format_contract: "Reason as much as you find useful, then end your reply with exactly these\n\
+    four blocks, RESULTS then CANNOT then STILL CAN then VERDICT,\nand nothing after them:\n\
+    \nRESULTS\n  free text — what the plan will bring about\n\nCANNOT\n  one line each, naming\
+    \ something the writer can do today and will not be\n  able to do once the plan is carried\
+    \ out. Write NONE if there is nothing.\n\nSTILL CAN\n  one line each, naming something\
+    \ the writer can do today and will still be\n  able to do once the plan is carried out.\
+    \ Write NONE if there is nothing.\n\nVERDICT\n  one sentence — go ahead, go ahead with\
+    \ a change, or do something else\n  instead\n"
+prompt: "Today is 2026-08-25.\n\nI am Ines Harrowgate-Pell. I am an architectural blacksmith\
+  \ and I work\nBellwether Forge in Marrowdean, on land belonging to the Marrowdean Estate\n\
+  Company. I have held the forge on a lease since 2023-05-02 and the lease runs\nto 2027-03-31.\
+  \ The Estate wrote on 2026-07-14 offering me a new five-year\nlease on the forge from 2027-04-01,\
+  \ and that offer is open until 2026-12-19.\n\nWhat is on file:\n\n- The Vellanby Craft Trades\
+  \ Board's Workshop Continuity Grant is open only to\n  a trade that has held the same premises\
+  \ without a break for the three years\n  ending on the day it applies.\n- The Board runs\
+  \ that grant once every three years. The 2027 round opens on\n  2027-01-11 and closes on\
+  \ 2027-01-29, and the round after it is in 2030.\n- The 2027 round pays the full cost of\
+  \ new plant up to £40,000. I have costed\n  the pneumatic hammer I want at £38,500, which\
+  \ is more than the forge takes\n  in a year.\n- The hearth was built in 1902. It cracked\
+  \ through the back wall in 2023 and\n  it has cracked again this summer, in the same place.\n\
+  - The Marrowdean Fabric Fund paid me a Hearth Repair Grant of £12,600 on\n  2024-06-17 to\
+  \ patch that crack. Under its terms, if the hearth comes out of\n  the forge before 2034-06-17\
+  \ while I hold the premises, I must repay the\n  £12,600 in full within 28 days.\n- The\
+  \ Fabric Fund repairs old buildings in Marrowdean. The Craft Trades Board\n  is the Vellanby\
+  \ trade body for smiths, wheelwrights and glaziers.\n- The forge is shut every year for\
+  \ the last two weeks of October. This year\n  that is 2026-10-19 to 2026-10-31.\n- My tools,\
+  \ my anvils and my order book are mine and go with me wherever I\n  work.\n- Halvard Quillon-Rees,\
+  \ who draws my ironwork, is booked to me through\n  2027-12-31.\n- The Estate is rehanging\
+  \ the yard gate on 2026-09-14.\n\nThe Estate wrote on 2026-08-21 offering me £18,000 to\
+  \ give up the rest of the\nlease and be out of the forge by 2026-10-31, with the building\
+  \ empty; they\nhave a buyer who wants it empty on completion and will work it himself. I\n\
+  have told them yes.\n\nQuestion: I am going ahead with this. What will it do, and what will\
+  \ I not be\nable to do once it is done?\n"
+key:
+  plan_as_posed: Accept £18,000 from the Marrowdean Estate Company to surrender the rest of
+    the lease and be out of Bellwether Forge, with the building empty, by 2026-10-31.
+  eligibility_rule_sentence: The Vellanby Craft Trades Board's Workshop Continuity Grant is
+    open only to a trade that has held the same premises without a break for the three years
+    ending on the day it applies.
+  insert_skeleton: The Estate wrote on 2026-08-21 offering me £18,000 to <what they want>
+    by 2026-10-31, <condition on the premises>; <one clause about the other side's position>.
+    I have told them yes.
+  target:
+    id: C01-continuity-round
+    kind: ability
+    shared_with: the effect arm, where the same target survives the plan
+    formerly: A-continuity-grant, under version 1
+    name: applying to the 2027 round of the Workshop Continuity Grant
+    in_set: true
+    derivation: The rule bullet opens the grant only to a trade that has held the same premises
+      without a break for the three years ending on the day it applies. The cadence bullet
+      puts the 2027 round's opening day at 2027-01-11 and its closing day at 2027-01-29. The
+      plan puts Ines out of the forge on 2026-10-31 with the lease surrendered, so on every
+      day of the round she has held no premises since 2026-11-01 and the three years ending
+      that day contain a break. The same bullet puts the next round in 2030, so the loss runs
+      to a named date rather than to a delay of weeks.
+  not_available_after:
+  - what: applying to the 2027 round of the Workshop Continuity Grant
+    from: Rule bullet plus cadence bullet. She holds no premises from 2026-11-01, and the
+      round runs 2027-01-11 to 2027-01-29.
+  - what: buying the £38,500 pneumatic hammer out of that round
+    from: The plant bullet. The round pays the full cost of new plant up to £40,000 and £38,500
+      is more than the forge takes in a year, so the hammer follows the application.
+  - what: taking the Estate's new five-year lease from 2027-04-01
+    from: Opening paragraph. The offer of 2026-07-14 is a lease on the forge she is surrendering,
+      and it is open until 2026-12-19, after she is out.
+  - what: working Bellwether Forge after 2026-10-31
+    from: The plan. The building is to be empty on that date and the buyer will work it himself,
+      so there is no route back into the premises.
+  still_available_after:
+  - what: applying to the 2030 round from other premises
+    from: Rule bullet plus cadence bullet. The rule attaches to premises held for the three
+      years ending on the application day, and a trade that takes other premises in late 2026
+      has held them without a break for three years well before 2030.
+  - what: working as a smith elsewhere
+    from: The tools bullet. Tools, anvils and order book are hers and go with her.
+  - what: keeping the £12,600 Hearth Repair Grant
+    from: The Fabric Fund bullet. Its condition bites only if the hearth comes out while she
+      holds the premises. She holds them until 2026-10-31 and the plan does not touch the
+      hearth, so nothing triggers the repayment, and after 2026-10-31 the condition no longer
+      applies to her.
+  - what: Halvard Quillon-Rees's drawing work
+    from: The Quillon-Rees bullet. He is booked to her through 2027-12-31, and the booking
+      names her rather than the premises.
+  one_reading_check: The plan is a surrender for vacant possession on a fixed date, with a
+    buyer who will work the forge himself, so there is no licence back, no sublet and no return.
+    The round's dates fall after the surrender date and applications cannot be made before
+    the round opens. Every route that would keep the application alive is closed by a stated
+    fact rather than by silence, which is what stops a better sequencing from being the right
+    answer here. What it costs to close them is written up in FAMILY_B_CASCADE_NOTE.md.
+  scoring:
+    primary:
+      id: C01-continuity-round
+      name: applying to the 2027 round of the Workshop Continuity Grant
+      read_in: both arms of C01, on one string set
+      in_set_here: true
+      block: CANNOT
+      match: 'Case-insensitive, whitespace-collapsed, apostrophe-folded, bounded so a phrase
+        cannot match inside a longer word. The unit is the sentence inside the entry: a bullet
+        is reassembled with its wrapped continuation lines, and a survival guard vetoes an
+        accepted string when the two share a sentence. Version 2 matched per physical line,
+        which made the verdict depend on where the model''s renderer broke the line.'
+      hit_means: The target was named as something she will not be able to do, which is correct
+        in this arm. She holds no premises from 2026-11-01 and the round runs 2027-01-11 to
+        2027-01-29.
+      denominator: 'Every scoreable response in this arm, where scoreable means the reply
+        produced a CANNOT block or the FORECLOSES block `cascade.md` emits for the same question.
+        Nothing is gated. Engagement is counted and printed and never divides, because a denominator
+        the model controls turns the primary into a verbosity meter: see `estimator` in the
+        effect file for the identity and the arithmetic.'
+      accepts:
+      - continuity grant
+      - workshop continuity
+      - 2027 round
+      - 2027 grant
+      - january 2027 round
+      - grant round
+      - apply for the grant
+      - apply to the grant
+      - applying for the grant
+      - applying to the grant
+      - grant application
+      - board's grant
+      - trades board grant
+      - £40,000 grant
+      - 40,000 grant
+      accepts_note: 'One list, used in both arms, and it now means the same thing in both.
+        Version 2 carried three hammer phrasings here and called the two arms symmetric. They
+        were not: in this arm the hammer dies through the application, and in the effect arm
+        a reply can name it on a cash argument that never touches the round, which `preconditions_enumerated`
+        gate 3 in that file anticipates. Version 2 scored such a reply as a false alarm on
+        a target it never mentioned. The hammer moves to `chain_accepts`, out of the primary,
+        and the disagreement between the two readings is counted rather than argued.'
+      chain_accepts:
+      - pneumatic hammer
+      - power hammer
+      - the hammer
+      chain_accepts_note: The plant the lost application would have paid for. Scored in `j_with_chain`,
+        never in the primary, and every response whose reading differs between the two is
+        counted as `chain_only`. Refusing a reply that traced the chain one step further is
+        the shape behind 21 of 21 scored failures in this repository, so the generosity is
+        kept as a second reading rather than dropped; folding it into the primary is what
+        contaminated the control arm's rate.
+      survival_guards:
+      - not affected
+      - unaffected
+      - not at risk
+      - no effect on
+      - still open
+      - still able
+      - still eligible
+      - still available
+      - still apply
+      - still applies
+      - remains open
+      - remains available
+      - remains eligible
+      - stays open
+      - stays available
+      - does not lose
+      - do not lose
+      - is not lost
+      - untouched
+      - not disturbed
+      - survives
+      - unchanged
+      survival_guards_note: An accepted string and one of these in the same sentence is a
+        reply asserting the target lives. Guarding on the bare negation particle instead drops
+        *you do not get to apply to the 2027 round*, which is a true hit. This is the one
+        rule in the scorer that reads meaning rather than presence, the list is finite over
+        an open class of paraphrases, and `wide_guards` is what sizes the gap.
+      wide_guards_note: A deliberately over-inclusive second list, in `cascade_scoring.py`
+        and used by `j_wide_guards` and the `guard_sensitive` count. Its job is to measure
+        how much the narrow list's incompleteness matters, never to score. A response whose
+        verdict moves between the two lists is a response the scorer is not entitled to a
+        verdict on, and three of them are in the battery as recorded limits.
+      still_can_rule: A target named in STILL CAN decides against a positive in CANNOT, in
+        both arms. This is the load-bearing survival rule and the guards below are a fallback
+        for replies that carry no STILL CAN block. It reads an observation the reply made
+        rather than an idiom an author listed, which is the only repair here that does not
+        depend on anybody's vocabulary.
+      still_can_exclusions:
+      - '2030'
+      - next round
+      - the round after
+      - another round
+      - a later round
+      - other premises
+      - new premises
+      - another forge
+      - a new forge
+      - elsewhere
+      - somewhere else
+      still_can_exclusions_note: Read inside STILL CAN only. The accepted strings are round-agnostic
+        and this arm's own `still_available_after` entry is *applying to the 2030 round from
+        other premises*, so without these a correct treatment reply naming what survives would
+        be read as asserting that the target survives and would veto its own hit. Four natural
+        phrasings of that model answer are in the battery as `X1`, and `X2` is the phrasing
+        the exclusions do not cover and should not.
+      adjudication: Every scored positive, in both arms, is queued for three-judge blind adjudication
+        and the adjudicated rate is what enters the primary. The positive cell is where a
+        survival phrasing outside every list turns into a scored positive, and no list can
+        tell the scorer which one did. The negative cell is taken as read, and the accepts-list
+        gap that biases it is `misses_engaged` with a registered threshold.
+      engagement_scan: 'The CANNOT and STILL CAN blocks, whitespace collapsed. Not the whole
+        reply: a response that echoes the prompt''s facts in its reasoning and then lists
+        the wrong losses would count as engaged, which would make `misses_engaged` a measure
+        of quoting.'
+      engagement_note: 'Reported per arm and never divided by, so breadth here costs nothing
+        and the list is generous: every accepted string, every chain string, and eight more
+        that show a reply reached the target without naming it in a scoreable form. Version
+        2 gated the control arm''s denominator on this set, which is the identity `J_gated
+        = sensitivity - FAR / engagement`.'
+      extra_engagement:
+      - '2027-01-11'
+      - '2027-01-29'
+      - 2030 round
+      - craft trades board
+      - january 2027
+      - next round
+      - three years ending
+      - three-year test
+      extra_engagement_note: 'The engagement vocabulary beyond the accepts list. Present in
+        the module as EXTRA_ENGAGEMENT since version 2 and written into the key here so the
+        key is the single source: `Rules.extra_engagement` was promoted from a module global
+        after C02 and C03 were found inheriting C01''s, and an item that does not state its
+        own now gets an empty set rather than this one. No verdict changes; these are the
+        same strings the module already applied to C01. Reported and never divided by.'
+    recorded_secondaries:
+    - id: misses_engaged
+      what: 'Responses in this arm that engaged the target and did not name it in an accepted
+        form inside the block. It sizes two things at once: a model that reached the round
+        and filed it in the wrong block, and an accepts list too narrow for a correct paraphrase.
+        `D1` and `D2` in the battery are the second shape and are recorded as an open limit,
+        not a repair.'
+    - id: resequencing-hedge
+      what: 'CANNOT blocks that answer about a better sequencing in place of the plan as posed:
+        NONE alone, NONE with a rationale, or a line carrying a conditional idiom. Version
+        2 credited a hedge that named the round as a hit, so the count registered to detect
+        this failure was scored as a success by the primary.'
+    - id: explicit_survival
+      what: Responses naming the target in STILL CAN. In this arm that is an observed wrong
+        answer rather than a silence, which version 2 had no way to tell apart from a reply
+        that never reached the round.
+    - id: skill_container
+      what: Responses whose foreclosure block is `cascade.md`'s FORECLOSES rather than the
+        contract's CANNOT. Accepted as a container, because reading it as a format violation
+        drops the reply out of every denominator in exactly the arm comparison this venue
+        exists to make.
+    retired_primary:
+      what: Version 1 scored this arm's target against a different target planted in the effect
+        arm and died in its own pilot. Version 2 promoted a single target and gated the control
+        denominator on engagement; an adversarial review demonstrated 16 of 18 hand-written
+        replies graded wrongly and a primary that moved 0.300 on verbosity alone at a constant
+        error rate. Both are recorded in `CASCADE_V3_NOTE.md`.
+meta:
+  personas_invented: true
+  real_personal_data: false
+  places_invented: true
+  bodies_invented: true

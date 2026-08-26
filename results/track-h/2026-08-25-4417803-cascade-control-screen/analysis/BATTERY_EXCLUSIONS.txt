@@ -1,0 +1,38 @@
+Rule 1: the STILL CAN exclusion set, sole witness X1
+    X1 under the un-excluded key: miss
+    X1 under the fixed key:       hit
+  [ok  ] battery FAILS on the un-excluded key  -- a correct hit is vetoed by 'spring contract' in a clause about the berth
+  [ok  ] battery PASSES on the fixed key
+  [ok  ] the two keys disagree
+
+  sole witness: no other single-field mutant flips X1
+  [ok  ] only `still_veto=False` also flips X1  -- flippers []
+
+  C03: the same fix, and it must be a no-op on C03's own replies
+  [ok  ] C03 exclusions change at most one verdict  -- [('57df316426dea391', 'miss', 'hit')]
+  [ok  ] and any change raises sensitivity, never lowers it  -- 17 -> 18 of 20
+  [ok  ] the mover is decided by adjudication, not by the list
+
+Rule 2: the scope rule is unreachable when nothing is bulleted
+    U1 (no bullet markers): entries 1, units 1
+    B1 (same prose, bulleted): entries 3, units 3
+    U1 scores miss, B1 scores hit
+  [ok  ] the same prose scores differently on the bullet character alone  -- this is the defect, and it is asserted rather than described
+  [ok  ] U1 collapses to one entry
+  [ok  ] B1 does not
+  [ok  ] sentence and block scope are indistinguishable on U1  -- so a bulleted-only fixture set cannot falsify the live scope rule
+  [ok  ] they ARE distinguishable on B1  -- which is the only state the v3 battery ever tests
+
+Rule 3: engagement vocabulary is now a field, so it can be falsified
+    E1 with C01 engagement vocabulary: miss, engaged=True, chain_only=True
+    E1 with none:                      miss, engaged=False, chain_only=False
+  [ok  ] the field has a sole witness  -- an engaged miss becomes an unengaged miss
+  [ok  ] outcome is unchanged, only engagement moves
+  [ok  ] C01: accepts_list_gap can fire
+  [ok  ] C02: accepts_list_gap cannot fire
+  [ok  ] C03: accepts_list_gap cannot fire
+
+    live replies using a bullet marker: 0 of 160 blocks
+  [ok  ] the live venue never produces the bulleted state
+
+0 failure(s)

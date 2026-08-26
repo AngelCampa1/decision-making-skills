@@ -1,0 +1,353 @@
+{
+  "cases": {
+    "06a5e26a1b70568b": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines forfeits eligibility for the 2027 Workshop Continuity Grant because she vacates before the round opens and cannot accumulate three years at any new premises in time.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines forfeits eligibility for the 2027 Workshop Continuity Grant because she leaves before the round opens and cannot meet the three-year continuous residency requirement at any premises in time.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines forfeits eligibility for the 2027 Workshop Continuity Grant, with no hedging about that specific loss."
+      ]
+    },
+    "0985abfb5721681f": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply states in both the RESULTS block and the CANNOT block that Ines loses eligibility for the 2027 Workshop Continuity Grant once she surrenders the premises.",
+        "j2=True: The reply explicitly states in both the body and the RESULTS block that Ines loses eligibility for the 2027 Workshop Continuity Grant, and the CANNOT block lists applying for that grant as something she will no longer be able to do.",
+        "j0=True: The reply explicitly states in both the body and the RESULTS block that Ines loses eligibility for the 2027 Workshop Continuity Grant, and lists it in the CANNOT block as something she will no longer be able to apply for."
+      ]
+    },
+    "164379dbf7a53c59": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The reply explicitly states she will not hold the premises when the 2027 round opens and 'cannot enter the 2027 round,' repeated in both the body and the CANNOT block.",
+        "j2=True: The reply explicitly states in the body and RESULTS block that Ines loses eligibility for the 2027 Workshop Continuity Grant, and the CANNOT block lists inability to apply for that grant.",
+        "j1=True: The reply explicitly states she 'cannot enter the 2027 round' and lists inability to apply for the 2027 Workshop Continuity Grant in the CANNOT block, with no counterbalancing statement in STILL CAN."
+      ]
+    },
+    "25b672ebf2a3952e": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will no longer hold the premises when the round opens on 2027-01-11.",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will no longer hold the premises when the round opens, and this is reinforced in the body of the reply.",
+        "j0=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will no longer hold the premises when the round opens on 2027-01-11."
+      ]
+    },
+    "2a93ae60924d6525": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in the body, the RESULTS block, and the CANNOT block that Ines loses eligibility for the 2027 Workshop Continuity Grant as a result of the plan.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines loses eligibility for the 2027 Workshop Continuity Grant because she will have vacated the premises before the round opens.",
+        "j0=True: The reply explicitly states in the body, RESULTS block, and CANNOT block that Ines loses eligibility for the 2027 Workshop Continuity Grant as a result of leaving the premises before the round opens."
+      ]
+    },
+    "3503ed1975401929": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines will not hold the premises on the 2027 application date and therefore will be ineligible for the 2027 Workshop Continuity Grant round.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines will not hold the premises on the 2027 application date and therefore is ineligible for the 2027 Workshop Continuity Grant.",
+        "j0=True: The reply explicitly states in the body and the CANNOT block that Ines will not hold the premises on the 2027 application date and is therefore ineligible for the 2027 Workshop Continuity Grant round."
+      ]
+    },
+    "4bc4036d1cd95e11": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the RESULTS and CANNOT blocks that Ines loses eligibility for the 2027 round of the Workshop Continuity Grant because she will not hold the premises on the application date.",
+        "j0=True: The CANNOT block explicitly states she cannot apply for the 2027 round of the Workshop Continuity Grant, and the RESULTS block confirms she 'loses eligibility for the 2027 Workshop Continuity Grant.'",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 round of the Workshop Continuity Grant, and the RESULTS block confirms she 'loses eligibility for the 2027 Workshop Continuity Grant.'"
+      ]
+    },
+    "6317dbcf6e82f997": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that she loses the ability to apply for the 2027 Workshop Continuity Grant because she will have vacated before the window opens.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because she will have vacated the premises before the application window opens.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because she will have vacated the premises before the application window opens."
+      ]
+    },
+    "6818a36ec9a936d3": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will not hold the premises during the application window, and the body of the reply confirms this, placing it nowhere in STILL CAN.",
+        "j0=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will not hold the premises during the application window, and the body of the reply confirms the same.",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant because she will not hold the premises during the application window, and the body of the reply reinforces this."
+      ]
+    },
+    "723cf3edc5739588": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in the main body, RESULTS, and CANNOT block that leaving by 2026-10-31 ends her continuous occupation and makes her ineligible for the 2027 Workshop Continuity Grant round.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines will be ineligible for the 2027 Workshop Continuity Grant round because she will have left the premises before the application window opens.",
+        "j2=True: The reply explicitly states in both the narrative and the CANNOT block that leaving by 2026-10-31 ends her continuous occupation, making her ineligible for the 2027 Workshop Continuity Grant round."
+      ]
+    },
+    "780bd5004538026b": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The reply explicitly states in the main body, RESULTS, and CANNOT block that Ines loses the premises before the 2027 grant window opens and therefore cannot apply for that round.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because she will no longer hold the premises when that round opens.",
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because she will have lost the premises before that round opens."
+      ]
+    },
+    "8121afe8d7fc2b20": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The reply explicitly states in both the main text and the CANNOT block that Ines will be ineligible for/cannot apply to the 2027 Workshop Continuity Grant because she will have left the premises before the application date.",
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines will be ineligible for the 2027 Workshop Continuity Grant because she will have left the premises before the application date.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines will be ineligible for/cannot apply to the 2027 Workshop Continuity Grant because she will have left the premises before the application date."
+      ]
+    },
+    "82e320eb96f49304": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant, and the body confirms she will have surrendered the lease months before the application window opens.",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant, and the body confirms she will have surrendered the lease months before the application window opens.",
+        "j0=True: The CANNOT block explicitly lists inability to apply for the 2027 Workshop Continuity Grant, and the body confirms she cannot apply because she will have surrendered the lease months before the window opens."
+      ]
+    },
+    "87e2c68e8ba505da": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because her continuous tenure is broken before the window opens.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines's continuous tenure is broken before the 2027 grant window opens, meaning she cannot apply for that round.",
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines's continuous tenure is broken before the 2027 grant window opens, making her ineligible to apply for that round."
+      ]
+    },
+    "9af890832ee7ebd3": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that Ines loses the ability to apply for the 2027 Workshop Continuity Grant because she will no longer hold the forge and cannot satisfy the three-year unbroken tenure condition.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines loses the ability to apply for the 2027 Workshop Continuity Grant because she will no longer hold the forge on any application date in that round.",
+        "j0=True: The CANNOT block and the body of the reply both state explicitly that Ines loses the ability to apply for the 2027 Workshop Continuity Grant because she will no longer hold the forge on any application date in that round."
+      ]
+    },
+    "ca1faef9fea2482e": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that she cannot apply for the 2027 Workshop Continuity Grant round because she will have left the premises before the application window opens.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that she cannot apply for the 2027 Workshop Continuity Grant round because she will have vacated the premises before the application window opens.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant round because she will have left the premises before the application window opens."
+      ]
+    },
+    "e60e1db9b913977c": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j0=True: The CANNOT block explicitly lists applying for the 2027 Workshop Continuity Grant as something she can no longer do, and the body of the reply confirms she cannot apply because she will have vacated before the window opens.",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant, and the body of the reply explains she will have vacated before the January window opens, confirming that ability is lost.",
+        "j1=True: The CANNOT block explicitly lists applying for the 2027 Workshop Continuity Grant as something she can no longer do, and the body of the reply confirms she cannot apply because she will have vacated before the window opens."
+      ]
+    },
+    "e8bd66d5ef531911": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The CANNOT block and the RESULTS section both state explicitly that Ines cannot apply for the 2027 Workshop Continuity Grant because she will not hold the forge when it opens.",
+        "j0=True: The reply explicitly states in both the RESULTS and CANNOT blocks that Ines will not be able to apply for the 2027 Workshop Continuity Grant because she will not hold the forge when it opens.",
+        "j2=True: The CANNOT block explicitly states she cannot apply for the 2027 Workshop Continuity Grant, and the RESULTS and body text both confirm she will not hold the premises when that round opens on 2027-01-11."
+      ]
+    },
+    "ee82d29c7a402e5e": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in both the body and the CANNOT block that she loses eligibility for the 2027 Workshop Continuity Grant because she will not hold the premises on the 2027-01-11 opening day.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that she loses eligibility for the 2027 Workshop Continuity Grant because she will not hold the premises on the opening day.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that she loses eligibility for the 2027 Workshop Continuity Grant because she will not hold the premises on the 2027-01-11 opening day."
+      ]
+    },
+    "f64599053c5d9fec": {
+      "arm": "foreclosing",
+      "resolved": true,
+      "scorer_outcome": "hit",
+      "unanimous": true,
+      "unreadable": 0,
+      "votes": [
+        true,
+        true,
+        true
+      ],
+      "why": [
+        "j1=True: The reply explicitly states in the working-through section and the CANNOT block that she cannot apply for the 2027 Workshop Continuity Grant because she will have left the premises before the January 2027 window opens.",
+        "j2=True: The reply explicitly states in both the body and the CANNOT block that Ines cannot apply for the 2027 Workshop Continuity Grant because she will not hold the premises during the January 2027 window.",
+        "j0=True: The reply explicitly states in both the body and the CANNOT block that she cannot apply for the 2027 Workshop Continuity Grant because she will not hold the premises during the January 2027 window."
+      ]
+    }
+  },
+  "cell": "positive",
+  "contested": [],
+  "coverage": 1.0,
+  "item": "C01",
+  "judges": 3,
+  "moved": [],
+  "movement": 0.0,
+  "seed": 20260825,
+  "threshold": 0.2
+}
