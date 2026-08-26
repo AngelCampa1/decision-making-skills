@@ -32,6 +32,50 @@ Format: `## <date> — <title>`, a `**Commits:**` line, then why.
 
 ---
 
+## 2026-08-26 — NVIDIA Build's free tier enters `screen`, and no row guesses
+
+**Commits:** `62bf5ee`
+
+Seven rows added to `MODELS`, one per vendor family, all `screen`, all on the
+existing `openai_compatible` backend.
+
+**Why a new venue at all.** The skill-evolution study needs two model roles that
+one subscription cannot fill honestly: a target model whose skill is being
+rewritten, and an optimiser model doing the rewriting. Running both on Claude
+puts the same training lineage on both sides, and the correlated-auditor problem
+already recorded in [`LIMITATIONS.md`](LIMITATIONS.md) is what that produces. A
+second vendor is the fix, and a free tier is the only kind this repository may
+hold, which is why [`AGENTS.md`](../AGENTS.md)'s "Cost" section was amended in
+the same commit rather than worked around.
+
+**Why `screen` and not `dev`.** It is hosted and it is not free of consequence
+in the way a local server is: it rate-limits, it can change weights under a
+name, and it is somebody else's machine. It is also not `confirm`, for the
+reason below.
+
+**Why not `confirm`, which is the load-bearing part.** `agy` sits in `screen`
+because a scaffold is in context on every call. Nothing wraps a call here — the
+request is the whole context — so that argument does not apply and a naive
+reading would promote this venue. The disqualifier is different: NVIDIA Build
+publishes no equivalent of Ollama's `/api/show`, so `Endpoint.has_receipt` is
+false and every run records that no receipt was obtainable. `docs/PROTOCOL.md`
+§2 already draws that line for exactly this case. A verdict is a claim that the
+skill under test was the only instruction in the context, and here that cannot
+be checked, only assumed. Assumed is not checked.
+
+**Why the ids are namespaced.** `nvbuild/qwen/qwen3-next-80b-a3b-instruct`
+against a local `ollama/qwen3:4b`: both are Qwen weights, reached two ways, and
+a bare id could not say which answered. The label names the venue because the
+arena is a property of the pair. The second segment is the vendor, which is why
+these are seven rows rather than one prefix.
+
+**Why a vendor with no row is refused.** `resolve_model` raises on
+`nvbuild/ai21/...` rather than inheriting a venue-wide arena. A catch-all row
+would have been shorter and would have made the next vendor's arena a guess,
+which is the failure the registry exists to prevent.
+
+---
+
 ## 2026-08-19 — The merge that carried `c55d4af` onto `item-analysis`
 
 **Commits:** `b83384d`
