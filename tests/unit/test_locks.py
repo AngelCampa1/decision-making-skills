@@ -107,6 +107,47 @@ def test_antigravity_models_resolve_to_screen(
     assert (entry.arena, entry.backend, entry.vendor) == (arena, backend, vendor)
 
 
+@pytest.mark.parametrize(
+    ("model", "vendor"),
+    [
+        ("nvbuild/meta/llama-3.3-70b-instruct", "meta"),
+        ("nvbuild/qwen/qwen3-next-80b-a3b-instruct", "alibaba"),
+        ("nvbuild/nvidia/llama-3.3-nemotron-super-49b-v1.5", "nvidia"),
+        ("nvbuild/openai/gpt-oss-120b", "openai"),
+        ("nvbuild/deepseek-ai/deepseek-v3.1", "deepseek"),
+        ("nvbuild/google/gemma-3-27b-it", "google"),
+        ("nvbuild/mistralai/mistral-small-24b-instruct", "mistral"),
+    ],
+)
+def test_nvidia_build_models_resolve_to_screen(model: str, vendor: str) -> None:
+    """A free hosted tier screens, because no receipt can be had from it.
+
+    Narrower than the reason ``agy`` screens. There is no scaffold in context
+    here; what is missing is the model card, so isolation is unverifiable and a
+    verdict would rest on an absence.
+    """
+    entry = resolve_model(model)
+    assert (entry.arena, entry.backend, entry.vendor) == ("screen", "openai_compatible", vendor)
+
+
+def test_a_qwen_on_two_venues_is_two_venues() -> None:
+    """The same collision ``agy/`` resolves, one venue further out.
+
+    NVIDIA Build serves a ``qwen/qwen3-*`` and a local Ollama serves
+    ``qwen3:4b``. Both are Qwen weights reached two ways, and only the label
+    says which answered -- one of them free-tier hosted with no receipt, the
+    other local with a model card.
+    """
+    assert resolve_model("ollama/qwen3:4b").arena == "dev"
+    assert resolve_model("nvbuild/qwen/qwen3-next-80b-a3b-instruct").arena == "screen"
+
+
+def test_an_nvidia_vendor_with_no_row_is_refused_rather_than_guessed() -> None:
+    """The registry refuses an unknown vendor even under a known venue prefix."""
+    with pytest.raises(ArenaError, match="is not in the registry"):
+        resolve_model("nvbuild/ai21/jamba-1.5-large")
+
+
 def test_the_same_weights_on_two_backends_are_two_venues() -> None:
     """The collision this registry exists to resolve.
 

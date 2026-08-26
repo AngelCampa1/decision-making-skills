@@ -200,11 +200,14 @@ somebody being careful. The three estimator failures are told in
 run.** Maintainer instruction, 2026-08-13, replacing a section that used to say
 "stop for significant quota".
 
-There is no API key here and no money. `total_cost_usd` is a notional
-API-equivalent price and a useful burn meter, so keep reporting it; it is not a
-budget. A long serial grid is hours of wall clock, so run it. The runner is
-checkpointed and resumable precisely so that a run spanning quota windows is a
-scheduling detail rather than a decision. The full reasoning is in
+There is no money here. A key for a free tier is permitted as of 2026-08-26 and
+lives in the environment; anything that bills still does not.
+`total_cost_usd` is a notional API-equivalent price and a useful burn meter, so
+keep reporting it; it is not a budget, and on a local or free-tier venue it
+reads zero, where call count and wall clock are the guard. A long serial grid is
+hours of wall clock, so run it. The runner is checkpointed and resumable
+precisely so that a run spanning quota windows or a rate limit is a scheduling
+detail rather than a decision. The full reasoning is in
 [`WHY_THESE_RULES.md`](WHY_THESE_RULES.md#why-there-are-no-dollars).
 
 State a run's call count before starting it, because a reader deserves the

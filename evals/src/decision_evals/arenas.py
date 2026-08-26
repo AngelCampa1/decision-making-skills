@@ -106,6 +106,28 @@ MODELS: Final[tuple[ModelEntry, ...]] = (
     ModelEntry("agy/gemini-", "google", "antigravity", "screen"),
     ModelEntry("agy/gpt-oss", "openai", "antigravity", "screen"),
     ModelEntry("agy/claude-", "anthropic", "antigravity", "screen"),
+    # NVIDIA Build's free tier, namespaced ``nvbuild/`` for the reason ``agy/``
+    # and ``ollama/`` are namespaced: the ids are **not** disjoint. This venue
+    # serves ``qwen/qwen3-*`` and a local Ollama serves ``qwen3:4b``, and a bare
+    # id could not say which answered. The label names the venue because the
+    # venue is what the arena is a property of; the vendor is the second segment
+    # and is why these are separate rows.
+    #
+    # Every row is ``screen``, and the reason is narrower than agy's. There is no
+    # scaffold in context here -- the request is the whole context. What is
+    # missing is the receipt: this server publishes no equivalent of Ollama's
+    # ``/api/show``, so ``Endpoint.has_receipt`` is false and a run records that
+    # no receipt was obtainable. A verdict resting on a venue that cannot be
+    # checked would be the confusion ``docs/PROTOCOL.md`` §2 was written to stop.
+    #
+    # A vendor with no row here is refused rather than guessed at. Add the row.
+    ModelEntry("nvbuild/meta/", "meta", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/qwen/", "alibaba", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/nvidia/", "nvidia", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/openai/", "openai", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/deepseek-ai/", "deepseek", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/google/", "google", "openai_compatible", "screen"),
+    ModelEntry("nvbuild/mistralai/", "mistral", "openai_compatible", "screen"),
 )
 
 #: Aliases that name a family rather than a set of weights. Refused outright.

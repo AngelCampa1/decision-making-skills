@@ -54,6 +54,7 @@ confused.**
 from __future__ import annotations
 
 import json
+import os
 import time
 import urllib.error
 import urllib.request
@@ -75,6 +76,10 @@ OLLAMA_BASE_URL: Final = "http://127.0.0.1:11434/v1"
 #: Ollama's native API, which is where the model card lives. The
 #: OpenAI-compatible surface has no equivalent of ``/api/show``.
 OLLAMA_NATIVE_URL: Final = "http://127.0.0.1:11434/api"
+
+#: NVIDIA Build's OpenAI-compatible endpoint. Free tier, hosted, and it
+#: publishes no model card, so a run there carries no isolation receipt.
+NVIDIA_BUILD_BASE_URL: Final = "https://integrate.api.nvidia.com/v1"
 
 #: HTTP statuses that mean the credential, not the request, was refused.
 _AUTH_STATUSES: Final[frozenset[int]] = frozenset({401, 403})
@@ -126,6 +131,32 @@ def ollama(host: str = "http://127.0.0.1:11434") -> Endpoint:
         base_url=f"{host}/v1",
         label="ollama",
         native_url=f"{host}/api",
+    )
+
+
+def nvidia_build(api_key: str | None = None) -> Endpoint:
+    """NVIDIA Build's free tier, which is OpenAI-compatible and offers no card.
+
+    The key is read from ``NVIDIA_API_KEY`` when the caller passes none, so it
+    lives in the environment and never in the tree.
+
+    ``native_url`` stays ``None`` and that is the honest setting: this server
+    publishes no equivalent of Ollama's ``/api/show``, so no isolation receipt
+    is obtainable and :attr:`Endpoint.has_receipt` says so. A run here records
+    that no receipt was available, which is a different statement from a receipt
+    that passed, and the distinction is the reason that field exists.
+
+    Free rather than paid, which is what makes it admissible at all under the
+    rule in ``AGENTS.md``. ``cost_usd`` therefore stays ``0.0`` and the guard
+    that binds a run here is call count and wall clock.
+    """
+    if api_key is None:
+        api_key = os.environ.get("NVIDIA_API_KEY")
+    return Endpoint(
+        base_url=NVIDIA_BUILD_BASE_URL,
+        label="nvbuild",
+        native_url=None,
+        api_key=api_key,
     )
 
 

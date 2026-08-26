@@ -33,6 +33,7 @@ from decision_evals.providers.openai_compatible import (
     _post,
     assert_isolated,
     build_payload,
+    nvidia_build,
     ollama,
     parse_completion,
     preflight,
@@ -115,6 +116,41 @@ def test_an_endpoint_without_a_native_surface_says_so() -> None:
 def test_local_inference_costs_zero_and_the_field_exists() -> None:
     """`BudgetLedger` is a burn meter; a free call is a fact, not a gap."""
     assert ollama().cost_usd == 0.0
+
+
+def test_nvidia_build_offers_no_receipt_and_says_so() -> None:
+    """A hosted server with no card surface records an absence."""
+    endpoint = nvidia_build(api_key="k")
+    assert endpoint.base_url == "https://integrate.api.nvidia.com/v1"
+    assert endpoint.label == "nvbuild"
+    assert endpoint.native_url is None
+    assert not endpoint.has_receipt
+    assert endpoint.cost_usd == 0.0
+
+
+def test_the_nvidia_key_comes_from_the_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """So it lives there and never in the tree."""
+    monkeypatch.setenv("NVIDIA_API_KEY", "from-env")
+    assert nvidia_build().api_key == "from-env"
+
+
+def test_an_explicit_nvidia_key_beats_the_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("NVIDIA_API_KEY", "from-env")
+    assert nvidia_build(api_key="explicit").api_key == "explicit"
+
+
+def test_a_missing_nvidia_key_is_none_rather_than_an_empty_string(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """`_post` adds the header only when the key is not None, so the request
+    goes out unauthenticated and the server's 401 is the error the caller
+    sees. An empty Bearer would be a malformed header instead."""
+    monkeypatch.delenv("NVIDIA_API_KEY", raising=False)
+    assert nvidia_build().api_key is None
 
 
 # --------------------------------------------------------------------------- #

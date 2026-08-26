@@ -61,15 +61,24 @@ about whether the skill is usable. See [`SCORECARD.md`](SCORECARD.md).
 
 ## Cost
 
-Every model call goes through the Claude Code CLI on a Claude Max subscription.
-There is no API key and none may be added. `total_cost_usd` is a notional
-API-equivalent price: a burn meter, never an expense and never a spend cap.
-Report it as notional cost.
+Three venues carry model calls: the Claude Code CLI on a Claude Max
+subscription, a local OpenAI-compatible server, and a free-tier API endpoint. A
+key for a free tier is permitted, lives in the environment and never in the
+tree. Every call goes through the checkpointed runner whatever the venue, so
+which one answered stays in the record. Maintainer instruction, 2026-08-26; the
+reasoning is in
+[`docs/WHY_THESE_RULES.md`](docs/WHY_THESE_RULES.md#why-there-are-no-dollars).
+
+`total_cost_usd` is a notional API-equivalent price: a burn meter, never an
+expense and never a spend cap. Report it as notional cost. It reads zero on a
+local model and on a free tier, so a run there is guarded by call count and wall
+clock instead, and a dollar cap that cannot fire is worth nothing.
 
 Never drop a model tier, trim a stratum or cut repeats to save money. The budget
-is the rolling quota and wall-clock time, which is why the runner is
-checkpointed and resumable. Nothing may be bought: no paid APIs, datasets or
-tooling. "Vendoring" means checking a copy into `datasets/vendor/`.
+is the rolling quota, a free tier's rate limit, and wall-clock time, which is
+why the runner is checkpointed and resumable. Nothing may be bought: no paid
+APIs, datasets or tooling. "Vendoring" means checking a copy into
+`datasets/vendor/`.
 
 ---
 

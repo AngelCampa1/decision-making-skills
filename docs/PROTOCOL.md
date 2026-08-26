@@ -63,7 +63,7 @@ discipline.
 | Arena | Models | Split | Skill may change | Emits a verdict |
 | --- | --- | --- | --- | --- |
 | `dev` | Local (Ollama, mock) | public | yes | no |
-| `screen` | Cheap hosted (Haiku) | public | yes | no |
+| `screen` | Cheap hosted (Haiku), agy, NVIDIA Build free tier | public | yes | no |
 | `confirm` | Target (Sonnet, Opus) | private holdout | no | yes |
 
 Prompting Inversion (arXiv:2510.22251) showed a sculpted prompt helping GPT-4o
@@ -96,6 +96,16 @@ invisible in the request, present in every generation. `assert_isolated` reads
 the model card and refuses one. Where a server offers no card, `Endpoint` makes
 the caller record that no receipt was obtainable, because that is a different
 statement from a receipt that passed.
+
+**A free hosted tier joined `screen` on 2026-08-26.** NVIDIA Build speaks the
+same wire format, so it is a row in `MODELS` and a constructor beside `ollama()`
+rather than a backend. It sits in `screen` for a narrower reason than `agy`
+does: nothing wraps the call, and the request is the whole context, but the
+server publishes no card, so `has_receipt` is false and every run there records
+an absence. A venue whose isolation cannot be checked is a venue whose results
+are a screen. The permission to hold a key at all is
+[`AGENTS.md`](../AGENTS.md)'s "Cost" section, amended the same day, and it
+extends to a free tier only.
 
 ## 3. Pre-registration
 

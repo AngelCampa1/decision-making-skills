@@ -137,6 +137,25 @@ than trusting anyone to remember it.
   has never meant paying anyone, and the word has already been misread that way
   once, which is the reason this bullet names it.
 
+- **A free tier is now permitted, and a paid one still is not.** Maintainer
+  instruction, 2026-08-26. The rule above said "there is no API key and none may
+  be added", and it was written when the subscription was the only venue that
+  existed here. Two things changed. `providers/openai_compatible.py` landed on
+  2026-08-19 and speaks the wire format a free endpoint serves, so a second
+  vendor costs an entry in `MODELS` rather than a new backend. And the
+  skill-evolution work needs an optimiser model that is not the model under
+  test, which one subscription cannot supply without putting the same family on
+  both sides of the comparison. The constraint that survives is the one that was
+  always doing the work: **nothing may be bought.** A key that bills is still
+  refused, and the sentence it replaces is kept above so a reader can see which
+  rule moved.
+- **A dollar cap cannot guard a venue that costs nothing.** `total_cost_usd`
+  reads zero on Ollama and on a free tier, so `assert_can_afford` passes every
+  time and a runaway loop meets no guard at all. An evolution run makes a
+  candidate, scores it, and does it again, which is the shape that turns an
+  unguarded loop into an overnight surprise. Call count and wall clock are what
+  bind there, and `budget.py` carries both as of this change.
+
 In the paper and in `results/`, this is reported as *notional cost*, with the
 subscription stated. Writing "we spent $250" would be false.
 
