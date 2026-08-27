@@ -25,7 +25,9 @@ quietly becomes neither training nor test.
 from __future__ import annotations
 
 import hashlib
-from collections.abc import Iterable, Sequence
+import itertools
+from collections.abc import Callable, Iterable, Iterator, Sequence
+from dataclasses import dataclass
 from typing import Final, Literal
 
 Pool = Literal["train", "validation", "holdout"]
@@ -130,18 +132,31 @@ def holdout_seeds(passphrase: str, count: int) -> tuple[int, ...]:
     if not 1 <= count <= len(span):
         raise ValueError(f"count must be between 1 and {len(span)}, got {count}")
 
-    drawn: list[int] = []
+    drawn = list(itertools.islice(_derive(passphrase), count))
+    return tuple(sorted(drawn))
+
+
+def _derive(passphrase: str) -> Iterator[int]:
+    """Holdout seeds in derivation order, without repeats, forever.
+
+    Separate from :func:`holdout_seeds` because the two callers want different
+    things from the same sequence. A split is reported sorted, which is a
+    presentation choice. :func:`mint` has to walk the sequence *in the order it
+    was derived*, or which seeds it keeps would depend on how many it looked at
+    -- and a split that changes when the search ceiling changes is not
+    reproducible from the passphrase.
+    """
+    span = POOLS["holdout"]
     seen: set[int] = set()
     attempt = 0
-    while len(drawn) < count:
+    while len(seen) < len(span):
         digest = hashlib.sha256(f"{passphrase}:{attempt}".encode()).digest()
         seed = span.start + int.from_bytes(digest[:8], "big") % len(span)
         attempt += 1
         if seed in seen:
             continue
         seen.add(seed)
-        drawn.append(seed)
-    return tuple(sorted(drawn))
+        yield seed
 
 
 def census(seeds: Sequence[int]) -> dict[str, int]:
@@ -156,3 +171,84 @@ def census(seeds: Sequence[int]) -> dict[str, int]:
     for seed in seeds:
         counts[pool_of(seed) or "unassigned"] += 1
     return counts
+
+
+@dataclass(frozen=True, slots=True)
+class Mint:
+    """A holdout split, and every seed that was thrown away making it.
+
+    Discards are carried rather than dropped because dropping them is a
+    researcher degree of freedom. "Draw forty seeds" and "draw until forty of
+    them worked" are different procedures, and only the second one is what
+    happens; a split that reports the first while doing the second has an
+    unrecorded filter in it.
+    """
+
+    seeds: tuple[int, ...]
+    #: Seed -> why it could not be minted, in the order they were drawn.
+    discarded: tuple[tuple[int, str], ...]
+    #: How many draws it took. The denominator for the discard rate.
+    attempts: int
+
+    @property
+    def discard_rate(self) -> float:
+        return len(self.discarded) / self.attempts if self.attempts else 0.0
+
+
+def mint(
+    passphrase: str,
+    count: int,
+    generate_at: Callable[[int], object],
+    *,
+    ceiling: int = 0,
+) -> Mint:
+    """Draw ``count`` holdout seeds that can actually produce a corpus.
+
+    Roughly one seed in forty cannot. It is always the same template --
+    ``rel-008-contract-renew`` fails to produce a robust, discriminative
+    ``renew`` in 500 attempts -- and it is not rare enough to leave to chance:
+    seed 1001 was this package's shipped default and crashed the first run
+    against a real venue. Finding one inside a frozen holdout partway through a
+    study is the same failure with the cost of the study attached.
+
+    Seeds are tried in the order :func:`holdout_seeds` derives them, so the same
+    passphrase mints the same split, discards included.
+
+    Args:
+        passphrase: Not in the tree. See :func:`holdout_seeds`.
+        count: How many usable seeds are wanted.
+        generate_at: What proves a seed usable. Called once per candidate and
+            expected to raise when the corpus cannot be built. Injected rather
+            than imported so this module does not depend on the generator, and
+            so a test can mint without generating 280 items a seed.
+        ceiling: Give up after this many draws. Zero derives one from ``count``,
+            which is enough headroom for a discard rate many times the observed
+            one.
+
+    Raises:
+        ValueError: The ceiling was reached. A run that quietly returned a
+            short split would put a smaller denominator into every test that
+            reads it.
+    """
+    limit = ceiling or max(count * 4, count + 50)
+    kept: list[int] = []
+    discarded: list[tuple[int, str]] = []
+    attempts = 0
+    for seed in itertools.islice(_derive(passphrase), limit):
+        if len(kept) == count:
+            break
+        attempts += 1
+        try:
+            generate_at(seed)
+        except Exception as exc:
+            discarded.append((seed, f"{type(exc).__name__}: {exc}"))
+            continue
+        kept.append(seed)
+    if len(kept) < count:
+        raise ValueError(
+            f"only {len(kept)} of {count} holdout seeds could be minted in {attempts} "
+            f"draws ({len(discarded)} discarded). Raise `ceiling` deliberately rather "
+            "than accepting a short split: every paired test downstream reads its "
+            "denominator off this."
+        )
+    return Mint(tuple(sorted(kept)), tuple(discarded), attempts)

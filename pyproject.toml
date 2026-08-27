@@ -111,6 +111,13 @@ evolve = [
     # would have been: they are the engine's reflection strategy, which is the
     # thing under study.
     "skillopt @ git+https://github.com/microsoft/SkillOpt@v0.2.0",
+    # SkillOpt's own optional dependency, declared under its `claude` and `qwen`
+    # extras. Without it the engine warns once and then drops any analyst reply
+    # whose JSON does not parse -- `extract_json` returns falsy, the patch
+    # becomes `None`, and the step reports zero edits with no traceback. That is
+    # a silent handicap on one of the two engines under study, and the smaller
+    # reflector this run fell back to is likelier to trip it.
+    "json_repair>=0.61.0",
 ]
 dev = [
     "pytest>=8.3",

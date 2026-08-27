@@ -10,6 +10,7 @@ match the record it is filed under.
 from __future__ import annotations
 
 import importlib.util
+import itertools
 import json
 import re
 import time
@@ -48,9 +49,11 @@ from decision_evals.evolution.holdout import (
     HOLDOUT_FLOOR,
     POOLS,
     HoldoutBreachError,
+    _derive,
     assert_evolvable,
     census,
     holdout_seeds,
+    mint,
     pool_of,
 )
 from decision_evals.evolution.lineage import (
@@ -1501,3 +1504,71 @@ def test_an_interrupt_that_is_not_the_deadline_is_re_raised(tmp_path: Path, monk
             repo_root=REPO_ROOT,
             git_sha="abc1234",
         )
+
+
+# ---------------------------------------------------------------------------
+# Minting the holdout
+#
+# About one holdout seed in forty cannot produce a corpus at all, always through
+# the same template. Drawing seeds and hoping is how seed 1001 became a shipped
+# default that crashed the first run against a real venue.
+# ---------------------------------------------------------------------------
+
+
+def _ungenerable(bad: set[int]):
+    def generate_at(seed: int) -> None:
+        if seed in bad:
+            raise RuntimeError("could not produce a robust, discriminative answer")
+
+    return generate_at
+
+
+def _order(passphrase: str, n: int) -> list[int]:
+    """The first n seeds in derivation order, which is the order minting walks."""
+    return list(itertools.islice(_derive(passphrase), n))
+
+
+def test_minting_skips_seeds_that_cannot_generate() -> None:
+    order = _order("a passphrase", 10)
+    minted = mint("a passphrase", 5, _ungenerable({order[0], order[1]}))
+    assert len(minted.seeds) == 5
+    assert order[0] not in minted.seeds
+    assert all(pool_of(seed) == "holdout" for seed in minted.seeds)
+
+
+def test_the_discards_are_carried_rather_than_dropped() -> None:
+    """Draw forty and draw-until-forty-worked are different procedures."""
+    order = _order("a passphrase", 10)
+    minted = mint("a passphrase", 3, _ungenerable({order[0]}))
+    assert [seed for seed, _ in minted.discarded] == [order[0]]
+    assert "discriminative" in minted.discarded[0][1]
+    assert minted.attempts == 4
+    assert minted.discard_rate == pytest.approx(0.25)
+
+
+def test_the_same_passphrase_mints_the_same_split() -> None:
+    bad = _ungenerable({_order("a passphrase", 10)[2]})
+    assert mint("a passphrase", 4, bad).seeds == mint("a passphrase", 4, bad).seeds
+
+
+def test_the_split_does_not_depend_on_how_far_minting_was_allowed_to_look() -> None:
+    """A split that moves when the ceiling moves is not reproducible from the passphrase.
+
+    Walking a *sorted* draw made the candidate set a function of `ceiling`,
+    which is how this went wrong the first time.
+    """
+    bad = _ungenerable({_order("a passphrase", 10)[1]})
+    assert mint("a passphrase", 4, bad, ceiling=8).seeds == mint("a passphrase", 4, bad).seeds
+
+
+def test_a_split_that_cannot_be_filled_is_refused_rather_than_shortened() -> None:
+    """A short split silently changes the denominator of every test downstream."""
+    with pytest.raises(ValueError, match="short split"):
+        mint("a passphrase", 5, _ungenerable(set(_order("a passphrase", 6))), ceiling=6)
+
+
+def test_nothing_is_discarded_when_every_seed_generates() -> None:
+    minted = mint("a passphrase", 6, lambda _seed: None)
+    assert minted.discarded == ()
+    assert minted.attempts == 6
+    assert minted.discard_rate == 0.0
