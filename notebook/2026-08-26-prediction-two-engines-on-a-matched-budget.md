@@ -198,3 +198,66 @@ what it is, and that is the number worth reading rather than the ceiling.
 
 **No prediction changes.** The four above stand as written. This changes what
 stops a run, and no engine reaches either number by being better at deciding.
+
+---
+
+## Amendment, before SkillOpt's first scored run: the reflector changes, and GEPA runs again
+
+Registered above with `nvbuild/openai/gpt-oss-120b` as the reflector for both
+engines. It stopped answering on 2026-08-27, partway through SkillOpt's first
+working run, and the study cannot wait for it.
+
+**What was observed.** Every chat completion to that model hangs: a sixteen-token
+request times out at 45 seconds, repeatedly, over eighteen minutes. The API
+itself is healthy — `/v1/models` returns 200 in 1.2 seconds and still lists the
+model with no end-of-life marker. `openai/gpt-oss-20b` on the same endpoint,
+with the same key, answers in 2.1 seconds.
+
+It is not an entitlement problem in the shape already on record from
+2026-08-26, when `gemma-3-4b-it` returned an HTTP 404 for an account that could
+see it in the catalogue. A 404 is an answer. This is no answer at all, which is
+worse, because SkillOpt's model layer wraps every call in
+`except Exception: time.sleep(...)` and prints nothing, so a dead reflector
+looks exactly like a slow one for as long as the retries last.
+
+**The catalogue is moving under the study.** Two models queried in the same
+minute returned HTTP 410 Gone: `meta/llama-3.3-70b-instruct`, retired
+2026-08-26 — the day before this — and `qwen/qwen3-next-80b-a3b-instruct`,
+retired 2026-07-27. A free tier retires models on its own schedule, and a run
+that takes hours can start on a model that exists and finish on one that does
+not.
+
+**The change.** The reflector for both engines becomes
+**`nvbuild/openai/gpt-oss-20b`**: same vendor, same endpoint, same key, same
+model family, and it is still far larger than the 1.7B target. `arenas.py`
+registers `nvbuild/openai/` by prefix, so this needs no model-registry change
+and no entry in `DECISIONS.md`.
+
+**GEPA runs again.** Its matched run of 2026-08-26 used the 120B reflector and
+completed. Keeping it and running SkillOpt against the 20B would make the
+comparison between an engine *and* a reflector, which is the one thing the
+matched budget exists to prevent. So both engines re-run from scratch on the
+same reflector, and the earlier GEPA run stays on record as what it is: a
+finished search whose result cannot be set beside SkillOpt's.
+
+**What survives from it.** The memorisation finding
+([its own entry](2026-08-27-gepa-found-the-answer-key-and-wrote-it-into-the-skill.md))
+is an observation about what an evolved body *contained* — a transcription of
+`rel-005-security-patch.yaml`'s solution expression and its high-strength
+distractor. That a search found the answer key does not become untrue because
+the reflector changed. Whether the new run's winner does it again is now a thing
+to watch rather than a thing established, and it is worth watching: if a second
+reflector produces the same memorisation, that is a much stronger claim than one
+run could support.
+
+**Prediction 4 gains a companion, registered before the run.** The winners of
+these two searches will be compared against each other for *shared* memorised
+content. I expect some, because the pressure comes from the corpus rather than
+from the reflector. Confidence: moderate.
+
+**One thing this exposes about the instrument, recorded rather than fixed.** The
+wall-clock guard is charged in `DecisionAdapter.score`, which only runs when the
+*target* is called. A reflector that hangs spends no target calls, so
+`max_seconds` cannot fire and the run waits indefinitely. Every published guard
+in this repository has the same shape. It did not bite here because a monitor
+caught it, and a guard that depends on somebody watching is not a guard.
