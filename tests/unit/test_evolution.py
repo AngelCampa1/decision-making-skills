@@ -50,12 +50,14 @@ from decision_evals.evolution.holdout import (
     HOLDOUT_FLOOR,
     POOLS,
     HoldoutBreachError,
+    Split,
     _derive,
     assert_evolvable,
     census,
     holdout_seeds,
     mint,
     pool_of,
+    template_split,
 )
 from decision_evals.evolution.lineage import (
     Candidate,
@@ -1923,3 +1925,41 @@ def test_holding_out_a_template_that_does_not_exist_is_refused() -> None:
 
 def test_naming_no_templates_draws_all_of_them() -> None:
     assert len({item.template_id for item in items_for([1000], templates=None)}) == 10
+
+
+def test_the_split_is_derived_from_the_passphrase_and_nothing_else() -> None:
+    """A split picked by hand after looking at the corpus can be picked again if
+    the first one is inconvenient. This one cannot."""
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    first = template_split(ids, passphrase="evolution-study-v1", holdout=3)
+    again = template_split(reversed(ids), passphrase="evolution-study-v1", holdout=3)
+    assert first == again, "input order must not reach the split"
+
+
+def test_the_two_sides_of_a_split_partition_the_corpus() -> None:
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    split = template_split(ids, passphrase="p", holdout=4)
+    assert len(split.holdout) == 4
+    assert not set(split.train) & set(split.holdout)
+    assert set(split.train) | set(split.holdout) == set(ids)
+
+
+def test_a_different_passphrase_moves_the_split() -> None:
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    a = template_split(ids, passphrase="one", holdout=3)
+    b = template_split(ids, passphrase="two", holdout=3)
+    assert a.holdout != b.holdout
+
+
+@pytest.mark.parametrize("holdout", [0, -1, 10, 11])
+def test_a_split_that_leaves_one_side_empty_is_refused(holdout: int) -> None:
+    """A search with no training scenarios has nothing to search over, and a
+    holdout of nothing reports generalisation it never tested."""
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    with pytest.raises(ValueError, match="at least one on each side"):
+        template_split(ids, passphrase="p", holdout=holdout)
+
+
+def test_a_template_cannot_be_on_both_sides() -> None:
+    with pytest.raises(ValueError, match="both trained on and held out"):
+        Split(train=("a", "b"), holdout=("b",), passphrase="p")

@@ -159,6 +159,61 @@ def _derive(passphrase: str) -> Iterator[int]:
         yield seed
 
 
+@dataclass(frozen=True, slots=True)
+class Split:
+    """Which scenarios a search may see, and which are kept back from it.
+
+    Seeds hold out *instances*; this holds out *scenarios*, and the difference
+    is what the 2026-08-27 searches made unavoidable. Both winners wrote decision
+    rules for their training templates into the skill -- SkillOpt's under a
+    heading reading "Examples from the training data:" -- and a rule survives a
+    change of seed intact. A seed-held-out test would have scored that as
+    generalisation.
+    """
+
+    train: tuple[str, ...]
+    holdout: tuple[str, ...]
+    passphrase: str
+
+    def __post_init__(self) -> None:
+        if set(self.train) & set(self.holdout):
+            raise ValueError("a template cannot be both trained on and held out")
+
+
+def template_split(template_ids: Iterable[str], *, passphrase: str, holdout: int) -> Split:
+    """Choose which templates a search never sees, from a passphrase.
+
+    Derived rather than chosen, for the same reason the seeds are: a split
+    picked by hand after looking at the corpus is a split that can be picked
+    again if the first one is inconvenient. The passphrase goes in the
+    pre-registration, and anyone can rederive the split from it.
+
+    Ranked by ``sha256(passphrase:template_id)`` and the lowest ``holdout``
+    digests are held back. Ties break on the id, which cannot happen and costs
+    nothing to make impossible.
+
+    Raises:
+        ValueError: Fewer templates than the split asks to hold out, or a split
+            that would leave a search nothing to train on.
+    """
+    ids = sorted(set(template_ids))
+    if holdout < 1 or holdout >= len(ids):
+        raise ValueError(
+            f"cannot hold out {holdout} of {len(ids)} template(s): a split needs at "
+            "least one on each side, and a search with no training scenarios has "
+            "nothing to search over."
+        )
+    ranked = sorted(
+        ids, key=lambda name: (hashlib.sha256(f"{passphrase}:{name}".encode()).digest(), name)
+    )
+    held = tuple(sorted(ranked[:holdout]))
+    return Split(
+        train=tuple(name for name in ids if name not in set(held)),
+        holdout=held,
+        passphrase=passphrase,
+    )
+
+
 def census(seeds: Sequence[int]) -> dict[str, int]:
     """How many seeds fall in each pool, for a run's own record.
 
