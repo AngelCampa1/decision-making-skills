@@ -155,3 +155,46 @@ The missing prompts came after a rollout reported `hard=1.0000`. None of them
 was a silent failure in the sense of producing nothing — they were silent in the
 sense of producing something plausible first, and a run that dies after printing
 a number leaves the number behind.
+
+---
+
+## Appended after the fix: the number reproduced, and a claim above is wrong
+
+The run was repeated with the encoding corrected. Its baseline:
+
+```
+[baseline result] selection hard=0.7143 soft=0.7143 gate[hard]=0.7143
+```
+
+15 of 21, against GEPA's 0.714 on the same 21 items. The two engines agree
+exactly. That was the check worth making: the diagnosis said one number came
+from a corrupted prompt, which predicted that fixing the encoding would make the
+two agree. It did.
+
+**"What that says about 21 items" is wrong and stays as written.** It reads the
+14.3-point gap as noise at a small denominator, and argues from there that a
+three-item difference is inside what this measurement can resolve. The
+reproduction says otherwise. The same body scored 15 of 21 twice, on two runs,
+through two engines, hours apart. The venue is *deterministic* here, serially,
+at temperature 0 — and the gap was not noise but a faithful measurement of a
+prompt that differed by eight characters.
+
+So the corrupted skill really did score three items better than the real one.
+Eight characters of mojibake in the middle of a body, reproducibly worth 14.3
+points. That is a stranger result than the one I replaced it with, and it is not
+evidence about sample size.
+
+What it *is* evidence about is sensitivity: this target's score on this corpus
+moves that far under a perturbation carrying no decision content whatsoever.
+Any claim that an evolved skill beat a seed skill by a few points on 21 items
+has to contend with the fact that damaging a skill moved it further, in the
+helpful direction, for no reason anyone can point at.
+
+**Prediction 2's bar was set at ≥ 3 points and it is now clearly too low.** It
+stays as registered and it will be reported against, and it should be read
+knowing that mojibake cleared it.
+
+The claim that stands from the original section is the narrow one: the engines
+under study report single-run point estimates with no repeats and no intervals,
+and nothing in that practice would have distinguished 0.857-from-a-broken-prompt
+from 0.857-because-the-skill-is-better.
