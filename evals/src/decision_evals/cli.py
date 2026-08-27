@@ -1352,7 +1352,13 @@ def evolve(
         reflection_lm=_reflector(request),
     )
     typer.echo(f"explored {result.explored} candidate(s)")
-    typer.echo(f"winner   {result.winner.candidate_sha[:12]} scored {result.winner.score}")
+    # The item count belongs beside the score. A lineage records the *first*
+    # score a body got, and for GEPA that is usually a minibatch: "scored 1.0"
+    # alone reads like a result and "1.000 on 3 item(s)" reads like what it is.
+    typer.echo(
+        f"winner   {result.winner.candidate_sha[:12]} scored "
+        f"{result.winner.score:.3f} on {result.winner.n_items} item(s)"
+    )
     typer.echo(f"lineage  {result.paths.lineage.relative_to(REPO_ROOT)}")
     typer.echo(f"frozen   {(result.paths.root / 'winner.md').relative_to(REPO_ROOT)}")
 
