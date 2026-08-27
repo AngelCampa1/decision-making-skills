@@ -12,6 +12,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import re
+import time
 from dataclasses import asdict
 from datetime import date
 from pathlib import Path
@@ -64,6 +65,7 @@ from decision_evals.evolution.lineage import (
 )
 from decision_evals.evolution.run import (
     DRIVERS,
+    Deadline,
     EvolveError,
     EvolveRequest,
     _best_validated,
@@ -1434,3 +1436,68 @@ def test_a_wrong_item_carries_why_it_was_wrong(tmp_path: Path) -> None:
     results = env.rollout(env.build_train_env(4, seed=0), "a skill body", str(tmp_path / "r"))
     for result in results:
         assert ("fail_reason" in result) == (result["hard"] == 0)
+
+
+# ---------------------------------------------------------------------------
+# The wall-clock deadline
+#
+# The call budget only advances when the target is called, so an engine that is
+# waiting rather than working cannot be stopped by it. On 2026-08-27 the
+# reflector stopped answering and the run had nothing that would ever fire.
+# ---------------------------------------------------------------------------
+
+
+def test_the_deadline_interrupts_work_that_spends_no_calls() -> None:
+    """A hung reflector makes no target calls, so only the clock can stop it."""
+    deadline = Deadline(0.2)
+    with pytest.raises(KeyboardInterrupt), deadline:
+        time.sleep(5)
+    assert deadline.expired
+
+
+def test_a_search_that_finishes_in_time_is_not_interrupted() -> None:
+    deadline = Deadline(30)
+    with deadline:
+        pass
+    time.sleep(0.05)
+    assert not deadline.expired, "the timer has to be cancelled on the way out"
+
+
+def test_a_zero_deadline_never_fires() -> None:
+    """Zero means no clock, which is what a smoke run through the mock venue wants."""
+    deadline = Deadline(0)
+    with deadline:
+        time.sleep(0.1)
+    assert not deadline.expired
+
+
+def test_the_stop_reason_names_the_cause_rather_than_the_symptom() -> None:
+    reason = Deadline(120).reason()
+    assert "120s" in reason
+    assert "reflector" in reason, "the message has to point at what actually stalls"
+
+
+def test_an_interrupt_that_is_not_the_deadline_is_re_raised(tmp_path: Path, monkeypatch) -> None:
+    """Ctrl-C and an expired clock arrive as the same exception and are not the same event.
+
+    A run somebody stopped by hand must not be frozen as though its budget ran
+    out, because `winner.json` would then record a result nobody produced.
+    """
+
+    def interrupted(*_args: object, **_kwargs: object) -> str:
+        raise KeyboardInterrupt
+
+    monkeypatch.setitem(DRIVERS, "gepa", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        evolve(
+            EvolveRequest(
+                engine="gepa",
+                target_model=MOCK_MODEL,
+                train_seeds=(0,),
+                val_seeds=(1000,),
+                limit=2,
+                val_limit=2,
+            ),
+            repo_root=REPO_ROOT,
+            git_sha="abc1234",
+        )

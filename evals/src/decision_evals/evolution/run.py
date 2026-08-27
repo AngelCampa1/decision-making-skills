@@ -14,7 +14,9 @@ whole package was built after.
 
 from __future__ import annotations
 
+import _thread
 import json
+import threading
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import date
@@ -156,6 +158,58 @@ def seed_body(repo_root: Path, path: str = SEED_SKILL) -> str:
         if sep:
             return body.lstrip("\n")
     return text
+
+
+class Deadline:
+    """Stops a search that is not spending calls.
+
+    The budget is charged in
+    :meth:`~decision_evals.evolution.adapter.DecisionAdapter.score`, which runs
+    only when the *target* is called. Everything else an engine does is free as
+    far as the guard is concerned, and on 2026-08-27 that turned out to include
+    waiting: the reflector stopped answering, the engine sat in
+    ``except Exception: time.sleep(...)`` making no target calls, and
+    ``max_seconds`` could not fire because nothing advanced it. The run would
+    have waited until somebody looked.
+
+    So the clock runs on its own thread. When it expires it raises
+    ``KeyboardInterrupt`` in the main thread, which unwinds out of whatever the
+    engine is blocked on and lands in the same graceful stop a budget refusal
+    lands in: the lineage is on disk, the records are on disk, and a winner is
+    chosen from what was actually scored.
+
+    :attr:`expired` is how a deadline is told apart from somebody pressing
+    Ctrl-C. Both arrive as the same exception and they do not mean the same
+    thing — one is a stopping rule doing its job and the other is a person
+    stopping a run — and only the first should be recorded as a result.
+    """
+
+    def __init__(self, seconds: float) -> None:
+        self.seconds = seconds
+        self.expired = False
+        self._timer: threading.Timer | None = None
+
+    def _fire(self) -> None:
+        self.expired = True
+        _thread.interrupt_main()
+
+    def __enter__(self) -> Deadline:
+        if self.seconds > 0:
+            self._timer = threading.Timer(self.seconds, self._fire)
+            self._timer.daemon = True
+            self._timer.start()
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        if self._timer is not None:
+            self._timer.cancel()
+
+    def reason(self) -> str:
+        return (
+            f"stopped after {self.seconds:g}s of wall clock. The engine was not spending "
+            "target calls, so the call budget could not stop it -- a hung reflector or a "
+            "stalled venue looks like this."
+        )
 
 
 def write_seed(path: Path, body: str) -> Path:
@@ -359,17 +413,19 @@ def evolve(
 
     stop_reason = ""
     body = ""
+    deadline = Deadline(request.max_seconds)
     try:
-        body = DRIVERS[request.engine](
-            request,
-            repo_root=repo_root,
-            paths=paths,
-            adapter=adapter,
-            train=train,
-            validation=validation,
-            venue=venue,
-            reflection_lm=reflection_lm,
-        )
+        with deadline:
+            body = DRIVERS[request.engine](
+                request,
+                repo_root=repo_root,
+                paths=paths,
+                adapter=adapter,
+                train=train,
+                validation=validation,
+                venue=venue,
+                reflection_lm=reflection_lm,
+            )
     except BudgetError as exc:
         # A budget is a stopping rule. One that also discards the search is a
         # defect, and it was one here: a 300-call cap fired mid-proposal, the
@@ -377,6 +433,13 @@ def evolve(
         # 287 scored records stayed on disk with nothing pointing at them.
         # The cap still stops the run -- it is not raised, retried or widened.
         stop_reason = str(exc)
+    except KeyboardInterrupt:
+        # The deadline, or a person. Only the first is a result: a run somebody
+        # stopped by hand has no business being frozen as though its clock ran
+        # out, so the interrupt is re-raised when it was not ours.
+        if not deadline.expired:
+            raise
+        stop_reason = deadline.reason()
 
     lineage = load_lineage(paths.lineage)
     assert_searched(lineage)
