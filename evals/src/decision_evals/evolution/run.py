@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
 from typing import Any, Final
@@ -273,7 +273,10 @@ def evolve(
     write_manifest(
         paths,
         {
-            "request": request,
+            # `asdict` rather than the object: `write_manifest` unpacks a
+            # dataclass only at the top level, and a nested one falls through to
+            # `default=str`, which writes a Python repr into a JSON file.
+            "request": asdict(request),
             "git_sha": git_sha,
             "pools": {name: [span.start, span.stop] for name, span in POOLS.items()},
             "train": {"items": len(train), "seeds": census([i.seed for i in train])},

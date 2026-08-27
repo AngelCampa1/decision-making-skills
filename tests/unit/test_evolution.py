@@ -1109,3 +1109,28 @@ def test_an_unset_validation_limit_follows_the_training_one() -> None:
     )
     assert request.val_limit == 0
     assert len(items_for(request.val_seeds, limit=request.val_limit or request.limit)) == 14
+
+
+def test_the_manifest_records_the_request_as_data(tmp_path: Path) -> None:
+    """A nested dataclass falls through to `default=str` and lands as a Python repr.
+
+    The manifest exists so the arguments and the record cannot disagree, and a
+    repr string disagrees with every reader that expects JSON.
+    """
+    from dataclasses import asdict
+
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        limit=4,
+        val_limit=2,
+    )
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    write_manifest(paths, {"request": asdict(request), "git_sha": "abc1234"})
+
+    recorded = read_manifest(paths)["request"]
+    assert isinstance(recorded, dict), "a repr string means no reader can index this"
+    assert recorded["target_model"] == MOCK_MODEL
+    assert recorded["val_limit"] == 2
