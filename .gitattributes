@@ -1,0 +1,7 @@
+# The vendored engine prompts are pinned by SHA-256 in
+# `datasets/vendor/skillopt_prompts.lock.json`, and the digest is of the bytes.
+# `core.autocrlf` is true on at least one machine here, which would rewrite
+# every line ending on checkout and fail the check on a clean clone while
+# passing on the machine that committed them. `-text` means git does not touch
+# these files in either direction.
+datasets/vendor/skillopt-prompts/** -text

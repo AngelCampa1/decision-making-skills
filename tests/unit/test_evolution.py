@@ -34,6 +34,15 @@ from decision_evals.evolution.checkpoints import (
     run_name,
     write_manifest,
 )
+from decision_evals.evolution.engine_prompts import (
+    LOCK_PATH,
+    VENDOR_ROOT,
+    PromptError,
+    ensure_installed,
+    install,
+    load_lock,
+    verify_vendored,
+)
 from decision_evals.evolution.holdout import (
     HOLDOUT_FLOOR,
     POOLS,
@@ -64,9 +73,11 @@ from decision_evals.evolution.run import (
     evolve,
     items_for,
     seed_body,
+    write_seed,
 )
 from decision_evals.evolution.skillopt_env import (
     COMPAT_AUTH,
+    REFLECT_SETTINGS,
     TASK_TYPES,
     SkillOptError,
     _deployment,
@@ -94,6 +105,9 @@ from decision_evals.solvers.arms import render_item
 #: dependency group and the gate never installs them. A test that needs one is
 #: skipped rather than failed: a red gate on a missing subject would push
 #: somebody to make the instrument depend on the thing it measures.
+#: This repository, from a test file two directories down.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
 needs_skillopt = pytest.mark.skipif(
     importlib.util.find_spec("skillopt") is None,
     reason="skillopt is in the `evolve` group, which the gate does not install",
@@ -1197,3 +1211,226 @@ def test_the_winner_says_who_chose_it(tmp_path: Path) -> None:
     recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
     assert recorded["winner_source"] == "lineage (budget-stopped)"
     assert "budget" in recorded["stop_reason"]
+
+
+def _reflect_attributes() -> set[str]:
+    """Every attribute the inherited reflection step reads off the environment.
+
+    Read out of the installed base class for the same reason
+    :func:`_required_keys` reads the trainer: this is a contract carried by the
+    ``_template`` and by every built-in adapter's ``__init__``, and by nothing
+    the abstract base declares. A pinned list would keep passing after the
+    engine started reading a fifth.
+    """
+    from skillopt.envs import base
+
+    source = Path(base.__file__).read_text(encoding="utf-8")
+    body = source[source.index("    def reflect(") :]
+    body = body[: body.index("\n    @abstractmethod")]
+    return set(re.findall(r"self\.([a-z_]+),", body))
+
+
+@needs_skillopt
+def test_setup_sets_every_attribute_reflection_reads(tmp_path: Path) -> None:
+    """The failure this covers cost a baseline pass and a training rollout before it fired.
+
+    `EnvAdapter` declares four abstract methods. Implement exactly those and the
+    inherited `reflect` raises `AttributeError` at the first reflection, eleven
+    hundred lines into the trainer, with the run's calls already spent.
+    """
+    assert _reflect_attributes() <= set(REFLECT_SETTINGS), (
+        "the engine's reflection step reads an attribute REFLECT_SETTINGS does not name"
+    )
+    train = items_for([0], limit=2)
+    validation = items_for([1000], limit=2)
+    skill = tmp_path / "skill.md"
+    skill.write_text("body", encoding="utf-8")
+    env = build_env(_adapter(tmp_path, train), train=train, validation=validation)
+    env.setup(
+        train_config(
+            target=venue_for("ollama/qwen3:4b"),
+            optimizer=venue_for("ollama/qwen3:4b"),
+            out_root=tmp_path,
+            skill_init=skill,
+            batch_size=2,
+            sel_env_num=2,
+            train_size=2,
+        )
+    )
+    for name in REFLECT_SETTINGS:
+        assert hasattr(env, name), f"reflection reads {name} and setup left it unset"
+
+
+@needs_skillopt
+def test_setup_refuses_a_config_missing_a_reflection_setting(tmp_path: Path) -> None:
+    """Named at setup, where it is cheap, rather than mid-step, where it is not."""
+    train = items_for([0], limit=2)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=items_for([1000], limit=2))
+    with pytest.raises(SkillOptError, match="analyst_workers"):
+        env.setup({"minibatch_size": 8, "failure_only": False, "edit_budget": 4})
+
+
+@needs_skillopt
+def test_the_concurrency_finding_reaches_the_reflection_step(tmp_path: Path) -> None:
+    """`analyst_workers` is 1 in the config and has to arrive as 1 on the environment.
+
+    The 2026-08-19 falsifier measured this venue changing every answer under
+    concurrency. A config that says 1 while the environment reflects on the
+    engine's default of 16 would put that finding back in play silently.
+    """
+    train = items_for([0], limit=2)
+    skill = tmp_path / "skill.md"
+    skill.write_text("body", encoding="utf-8")
+    env = build_env(_adapter(tmp_path, train), train=train, validation=items_for([1000], limit=2))
+    env.setup(
+        train_config(
+            target=venue_for("ollama/qwen3:4b"),
+            optimizer=venue_for("ollama/qwen3:4b"),
+            out_root=tmp_path,
+            skill_init=skill,
+            batch_size=2,
+            sel_env_num=2,
+            train_size=2,
+        )
+    )
+    assert env.analyst_workers == 1
+
+
+def test_the_seed_body_crosses_the_filesystem_unchanged(tmp_path: Path) -> None:
+    """The two engines start from one body, and one of them reads it off disk.
+
+    Newline translation broke this without failing anything: SkillOpt's baseline
+    ran against a body with 59 extra bytes and a different sha, so its number
+    and GEPA's were about different candidates.
+    """
+    body = "one\ntwo\nthree\n"
+    written = write_seed(tmp_path / "skill_init.md", body)
+    assert written.read_bytes() == body.encode("utf-8")
+    assert body_sha(written.read_text(encoding="utf-8")) == body_sha(body)
+
+
+def test_a_seed_body_the_engine_would_misread_is_refused(tmp_path: Path, monkeypatch) -> None:
+    """The corruption that produced a plausible score and no error.
+
+    SkillOpt opens the seed skill with no encoding. On a cp1252 box the skill's
+    typographic characters came back as three each, and the engine searched from
+    a body that was not the skill while reporting a number for it.
+    """
+    import io
+
+    body = "a rule \u2014 and an arrow \u2192\n"
+    real = Path.open
+
+    def as_cp1252(self, *args, **kwargs):
+        if not args and "encoding" not in kwargs:
+            with real(self, "rb") as raw:
+                return io.StringIO(raw.read().decode("cp1252"))
+        return real(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", as_cp1252)
+    with pytest.raises(EvolveError, match="PYTHONUTF8"):
+        write_seed(tmp_path / "skill_init.md", body)
+
+
+def test_an_ascii_body_survives_any_encoding(tmp_path: Path) -> None:
+    """The check is the engine's own read, so it passes wherever that read is faithful."""
+    body = "plain ascii, no typography\n"
+    assert write_seed(tmp_path / "skill_init.md", body).read_text(encoding="utf-8") == body
+
+
+# ---------------------------------------------------------------------------
+# The engine's own prompts
+#
+# No release of skillopt 0.2.0 contains them -- not the wheel, not the sdist,
+# not a build from the tag -- so the engine cannot complete one optimisation
+# step as published. These are pinned copies, and the tests here are about
+# keeping them copies.
+# ---------------------------------------------------------------------------
+
+
+def test_the_lock_pins_a_commit_and_a_digest_per_file() -> None:
+    lock = load_lock(REPO_ROOT)
+    assert lock.repo == "microsoft/SkillOpt"
+    assert len(lock.commit) == 40, "a tag moves and a commit does not"
+    assert lock.digests, "a lock with no files pins nothing"
+
+
+def test_the_vendored_copies_match_the_lock() -> None:
+    """An edited prompt is a patched engine, so this is the check that matters."""
+    verify_vendored(REPO_ROOT, load_lock(REPO_ROOT))
+
+
+def test_an_edited_prompt_is_refused(tmp_path: Path) -> None:
+    lock = load_lock(REPO_ROOT)
+    name = next(iter(lock.digests))
+    root = tmp_path / VENDOR_ROOT
+    for member in lock.digests:
+        target = root / member
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((REPO_ROOT / VENDOR_ROOT / member).read_bytes())
+    (root / name).write_text("a prompt we wrote ourselves", encoding="utf-8")
+    (tmp_path / LOCK_PATH).parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / LOCK_PATH).write_bytes((REPO_ROOT / LOCK_PATH).read_bytes())
+    with pytest.raises(PromptError, match="different engine"):
+        verify_vendored(tmp_path, load_lock(tmp_path))
+
+
+def test_install_writes_what_is_missing_and_then_nothing(tmp_path: Path) -> None:
+    """Idempotent, so the second run of a search repairs nothing and says so."""
+    lock = load_lock(REPO_ROOT)
+    first = install(REPO_ROOT, tmp_path, lock)
+    assert len(first) == len(lock.digests)
+    assert install(REPO_ROOT, tmp_path, lock) == []
+
+
+def test_a_restored_prompt_is_byte_identical_to_the_vendored_copy(tmp_path: Path) -> None:
+    lock = load_lock(REPO_ROOT)
+    install(REPO_ROOT, tmp_path, lock)
+    name = next(iter(lock.digests))
+    assert (tmp_path / name).read_bytes() == (REPO_ROOT / VENDOR_ROOT / name).read_bytes()
+
+
+@needs_skillopt
+def test_the_engine_can_load_a_prompt_once_they_are_restored() -> None:
+    """The end the whole module is for: `load_prompt` is what raised."""
+    from skillopt.prompts import clear_cache, load_prompt
+
+    ensure_installed(REPO_ROOT)
+    clear_cache()
+    assert load_prompt("analyst_success").strip()
+    assert load_prompt("analyst_error").strip()
+
+
+@needs_skillopt
+def test_rollout_writes_the_transcript_reflection_reads(tmp_path: Path) -> None:
+    """Without it the analyst returns before calling the optimizer, silently.
+
+    `fmt_minibatch_trajectories` skips any item with no
+    `predictions/<id>/conversation.json`, and an empty result makes the analyst
+    return `None` with no call. The step then prints an analyst line, reports
+    zero edits and skips, which is indistinguishable from a search that had
+    nothing to propose.
+    """
+    from skillopt.gradient.reflect import fmt_minibatch_trajectories
+
+    train = items_for([0], limit=2)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=items_for([1000], limit=2))
+    out_dir = tmp_path / "rollout"
+    results = env.rollout(env.build_train_env(2, seed=0), "a skill body", str(out_dir))
+
+    assert results, "a rollout over a non-empty batch returns results"
+    for result in results:
+        assert (out_dir / "predictions" / result["id"] / "conversation.json").is_file()
+
+    text = fmt_minibatch_trajectories(results, str(out_dir / "predictions"))
+    assert text.strip(), "the analyst would return None before calling the optimizer"
+
+
+@needs_skillopt
+def test_a_wrong_item_carries_why_it_was_wrong(tmp_path: Path) -> None:
+    """The analyst's prompt header reads `fail_reason`, and the cause picks the edit."""
+    train = items_for([0], limit=4)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=items_for([1000], limit=2))
+    results = env.rollout(env.build_train_env(4, seed=0), "a skill body", str(tmp_path / "r"))
+    for result in results:
+        assert ("fail_reason" in result) == (result["hard"] == 0)

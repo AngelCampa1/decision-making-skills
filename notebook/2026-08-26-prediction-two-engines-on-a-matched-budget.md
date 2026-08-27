@@ -162,3 +162,39 @@ now also worth recording that this target's format violations have two distinct
 causes — an answer that finished in the wrong shape, and a generation that never
 finished at all — and they call for different edits. The run reports them apart:
 a capped runaway is a record with `output_tokens` at the cap.
+
+---
+
+## Amendment, before SkillOpt's first scored run: the guard sits above the projection
+
+Registered above at 261 target calls for SkillOpt against 300 for GEPA. The 261
+is wrong by one pass, and using it as a cap would do something the registration
+did not intend.
+
+**The arithmetic.** Nine steps of eight training rollouts plus a 21-item
+acceptance gate is 9 x 29 = 261. The trainer also scores the seed body on all 21
+validation items **before** the first step, to have something for its gate to
+compare against. That baseline is 21 target calls and was left out. The loop
+needs **282**.
+
+**Why the difference matters.** GEPA's 300 is a cap: `max_metric_calls` is the
+knob, and the engine searches until it binds. SkillOpt has no such knob — its
+call count falls out of epochs and batch size — so 261 was a *projection* of
+what its loop would spend, not a budget chosen for it. Setting `--max-calls` to
+a projection that is 21 short converts a guard into a truncation, and it would
+truncate inside the ninth step's acceptance gate: the last proposal would be
+scored on part of the validation pool and then stopped. Whatever came out of
+that would be an artefact of my arithmetic.
+
+**The correction.** SkillOpt's guard is set to **300**, the same number GEPA
+had, and its loop is left to terminate on its own at 282. Neither engine is
+stopped by the other's shape. This is a smaller deviation than the alternative,
+because the registered claim was that the budgets are matched and 300 against
+300 is more matched than 261 against 300.
+
+The comparison this run reports is still per-engine spend against a common
+ceiling, and both spends are recorded: what an engine *chose* to use is part of
+what it is, and that is the number worth reading rather than the ceiling.
+
+**No prediction changes.** The four above stand as written. This changes what
+stops a run, and no engine reaches either number by being better at deciding.

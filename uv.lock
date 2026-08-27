@@ -535,7 +535,7 @@ dev = [
 ]
 evolve = [
     { name = "gepa", specifier = ">=0.1.4" },
-    { name = "skillopt", specifier = ">=0.2.0" },
+    { name = "skillopt", git = "https://github.com/microsoft/SkillOpt?rev=v0.2.0" },
 ]
 
 [[package]]
@@ -1461,7 +1461,7 @@ wheels = [
 [[package]]
 name = "skillopt"
 version = "0.2.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/microsoft/SkillOpt?rev=v0.2.0#e4ea6a6771e797ef820cdd8bfea64c57e0481065" }
 dependencies = [
     { name = "azure-core" },
     { name = "azure-identity" },
@@ -1470,10 +1470,6 @@ dependencies = [
     { name = "openai" },
     { name = "openpyxl" },
     { name = "pyyaml" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ec/93/c896156981f56228e6a20ed1a95814aabb75d5e4a97a44534b216a269fdb/skillopt-0.2.0.tar.gz", hash = "sha256:d9f047336d4d13936f26589677406db77df43897fa23dd7973f81aff7907c4e4", size = 291002, upload-time = "2026-07-02T14:12:06.184Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/2d/dd7693a5e3d52174d18cd66a825d7d8b1cb01314d185da0237c6da0de534/skillopt-0.2.0-py3-none-any.whl", hash = "sha256:818db802507c6f82553fd24c75aa70c953ab0a712647f60e68e4595052c4b150", size = 320667, upload-time = "2026-07-02T14:12:04.463Z" },
 ]
 
 [[package]]

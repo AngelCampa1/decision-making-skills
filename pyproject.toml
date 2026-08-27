@@ -100,7 +100,17 @@ Changelog = "https://github.com/AngelCampa1/decision-making-skills/blob/main/doc
 [dependency-groups]
 evolve = [
     "gepa>=0.1.4",
-    "skillopt>=0.2.0",
+    # The v0.2.0 tag rather than the v0.2.0 release, because the release is
+    # missing its data files. Neither the wheel nor the sdist on PyPI carries a
+    # single non-Python file, and the reflection stage loads all 22 of its
+    # prompts from `skillopt/prompts/*.md`. So `pip install skillopt` produces
+    # an engine that raises `FileNotFoundError` at the first optimisation step
+    # of any environment, its own benchmarks included. The tag is the same
+    # commit as the release; the Python is byte-identical and the prompts are
+    # there. Pinning the tag is not a patch, and authoring the missing prompts
+    # would have been: they are the engine's reflection strategy, which is the
+    # thing under study.
+    "skillopt @ git+https://github.com/microsoft/SkillOpt@v0.2.0",
 ]
 dev = [
     "pytest>=8.3",

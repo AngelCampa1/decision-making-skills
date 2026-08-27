@@ -1,0 +1,204 @@
+{
+  "_comment": [
+    "The engine's own reflection prompts, at the commit its v0.2.0 tag points at.",
+    "Vendored because no built distribution of skillopt contains them: the wheel",
+    "and the sdist on PyPI ship zero non-Python files, and a build from the git",
+    "tag ships none either -- the pyproject declares packages but no package-data.",
+    "So `load_prompt` raises FileNotFoundError at the first optimisation step of",
+    "any environment, and the engine cannot complete one step as published.",
+    "These are copies, byte-for-byte, restored into the installed package before a",
+    "run. Authoring replacements would have been a patch: the prompts ARE the",
+    "reflection strategy, which is the thing under study.",
+    "Do not re-pin to silence a mismatch -- find out what changed upstream first."
+  ],
+  "repo": "microsoft/SkillOpt",
+  "tag": "v0.2.0",
+  "commit": "e4ea6a6771e797ef820cdd8bfea64c57e0481065",
+  "member_root": "skillopt/",
+  "license": "MIT",
+  "retrieved": "2026-08-27",
+  "upstream_defect": {
+    "what": "no built distribution carries the package's .md data files",
+    "cause": "pyproject.toml declares [tool.setuptools.packages.find] and no package-data",
+    "effect": "load_prompt raises FileNotFoundError on the first reflect of any env",
+    "checked_against": [
+      "wheel 0.2.0",
+      "sdist 0.2.0",
+      "build from tag v0.2.0"
+    ]
+  },
+  "files": {
+    "envs/alfworld/prompts/analyst_error.md": {
+      "size_bytes": 2932,
+      "sha256": "b8747f41bf2b9535b852e93b74eda268ff260591b982e82c4f068e9cab4c3b8c"
+    },
+    "envs/alfworld/prompts/analyst_success.md": {
+      "size_bytes": 1554,
+      "sha256": "1cf47b94ecca52109cbe813f7f35661c4f6ff5db1067c944a3c2e2d2467501b6"
+    },
+    "envs/alfworld/prompts/rollout_no_history.md": {
+      "size_bytes": 515,
+      "sha256": "fcf6fe7a561729ccc4581697f5c8ad5986c150e56e32d761bad944b2fc9da614"
+    },
+    "envs/alfworld/prompts/rollout_with_history.md": {
+      "size_bytes": 768,
+      "sha256": "7b17c85e102f3e49400df99bd3f333337827df9441abd873926a566ad9858027"
+    },
+    "envs/alfworld/prompts/rollout_with_memory.md": {
+      "size_bytes": 846,
+      "sha256": "74ff72a6e78d0feab1edd3295b5c7fe430f27c7d0d462871779784b008d16f92"
+    },
+    "envs/docvqa/prompts/analyst_error.md": {
+      "size_bytes": 1808,
+      "sha256": "29ff71f094b66472b015a4dabc68a3d5d77e9e72a086f9e09b74643c237bdb54"
+    },
+    "envs/docvqa/prompts/analyst_success.md": {
+      "size_bytes": 1220,
+      "sha256": "71052e02f76ad03b3e1755c88dfb2932fd69fe27326be0afd5e09c2cf1d2654b"
+    },
+    "envs/docvqa/prompts/rollout_system.md": {
+      "size_bytes": 510,
+      "sha256": "f6484254d7e4a8bc8504caab5090937e650c4ffda1baa233d5be65202560ffd9"
+    },
+    "envs/livemathematicianbench/prompts/analyst_error.md": {
+      "size_bytes": 1700,
+      "sha256": "9cd5e3449b9013fb67b6dec930486bd8c23c7128f2746f97a1ca29b07b178150"
+    },
+    "envs/livemathematicianbench/prompts/analyst_success.md": {
+      "size_bytes": 1070,
+      "sha256": "42619d41000d16b7e5194e5dd09ba67fcd65d1c5ae8b04b4097c38e45a02750d"
+    },
+    "envs/livemathematicianbench/prompts/rollout_system.md": {
+      "size_bytes": 494,
+      "sha256": "506702528eabd178a7f4e3f4a44339175a712cec8d6d68e4c3c7032e9f6c3df6"
+    },
+    "envs/officeqa/prompts/analyst_error.md": {
+      "size_bytes": 2033,
+      "sha256": "7e29d2009757776fe02e1d5278bd4f3aae541e15af47bbaadf71d34bfe92073e"
+    },
+    "envs/officeqa/prompts/analyst_success.md": {
+      "size_bytes": 1375,
+      "sha256": "5569d91461e70e04eaa9e362b6cd0de1f95294b0cbf1f0ef00f923d2c9143195"
+    },
+    "envs/officeqa/prompts/rollout_system.md": {
+      "size_bytes": 903,
+      "sha256": "dccf88db96ad91011c1ffd49339b3312db30c7e5f26d92dd2123f81cd5ba49f0"
+    },
+    "envs/searchqa/prompts/analyst_error.md": {
+      "size_bytes": 2312,
+      "sha256": "ac58184f03e2198244ace28a9339674256061a62433787aed358954e6a031a19"
+    },
+    "envs/searchqa/prompts/analyst_success.md": {
+      "size_bytes": 1515,
+      "sha256": "0a169f33a141ed544b460d3f800f9dd2da28450d42b93556a3656cf8a45f0322"
+    },
+    "envs/searchqa/prompts/rollout_system.md": {
+      "size_bytes": 536,
+      "sha256": "080659db39377c7cb5673063466e16c51446397d09aa3f0382152cea3ca1abbe"
+    },
+    "envs/spreadsheetbench/prompts/analyst_error.md": {
+      "size_bytes": 2335,
+      "sha256": "2e5aeb30856529ff39e40c84483a55971744f9c97fdb679b98e07bcebd668839"
+    },
+    "envs/spreadsheetbench/prompts/analyst_success.md": {
+      "size_bytes": 1515,
+      "sha256": "6c71d691286275f8cf775a5517e16d705bd31d2b4bce6b4136b59a7a9ba3abf2"
+    },
+    "envs/spreadsheetbench/prompts/codegen_system.md": {
+      "size_bytes": 568,
+      "sha256": "a8b561ebd38fc384035cd7e9210ad679e6f84ad581233f0d51a2086e96f690b4"
+    },
+    "envs/spreadsheetbench/prompts/critical_rules.md": {
+      "size_bytes": 575,
+      "sha256": "47a0c80e670adbfe7dbe585fd1f2db8f7e5af999f274e3644c5fc80ad92ff8e2"
+    },
+    "envs/spreadsheetbench/prompts/react_system.md": {
+      "size_bytes": 1058,
+      "sha256": "907cb385ea2f7a82877e0c058d880dd610de2bd7c0161f0df2920568660456af"
+    },
+    "prompts/analyst_error.md": {
+      "size_bytes": 1951,
+      "sha256": "40eaf561c7fdbdfc1c7a1febd9f7c3540270ca6d5e7e0a8798c7c90b8d303200"
+    },
+    "prompts/analyst_error_full_rewrite.md": {
+      "size_bytes": 1258,
+      "sha256": "a81389ca63e75f13d6aca4d2f01cd6825a364e9cca833f316de125014a2f7365"
+    },
+    "prompts/analyst_error_rewrite.md": {
+      "size_bytes": 1934,
+      "sha256": "c393358b2be63d49bc8400944f17bcfb45f58aed5959cf6a46c2e1c1caefcd1b"
+    },
+    "prompts/analyst_success.md": {
+      "size_bytes": 1646,
+      "sha256": "0ffc8f85e13af2b14e1b9f3307a44d30ecf60e9d803ccb9190fdd9785e43fabc"
+    },
+    "prompts/analyst_success_full_rewrite.md": {
+      "size_bytes": 1219,
+      "sha256": "359a7481e348a89d51e5c7ee60a3d4d1d7a5ce7fdd8193d490c64f2667aeec55"
+    },
+    "prompts/analyst_success_rewrite.md": {
+      "size_bytes": 1408,
+      "sha256": "758bfe107d15ba1b5318f7191ea9e965fb09982b12599d62fee9db0d823f22f0"
+    },
+    "prompts/lr_autonomous.md": {
+      "size_bytes": 745,
+      "sha256": "667c78c7873a28fae0e6f47c5c6ed556d76dfe337c74da986757c9e4fadb1f0e"
+    },
+    "prompts/merge_failure.md": {
+      "size_bytes": 1422,
+      "sha256": "071313895da226840164ccda6e7f01d5f849ea128037d3f337cddab66ae799db"
+    },
+    "prompts/merge_failure_full_rewrite.md": {
+      "size_bytes": 1099,
+      "sha256": "adef4b6e8f0b1d7cf992e4bd9a34f633375b122cc054477c305a228627ec79ae"
+    },
+    "prompts/merge_failure_rewrite.md": {
+      "size_bytes": 1059,
+      "sha256": "e9cd2289d8515bca4561e52d3c8da14a2fe97d1b2e77d50f0d34f2fb257326c1"
+    },
+    "prompts/merge_final.md": {
+      "size_bytes": 1398,
+      "sha256": "b2c7b452032fbbe3b223e877b766ea6202775d685c3b32e68956a402e775b84b"
+    },
+    "prompts/merge_final_full_rewrite.md": {
+      "size_bytes": 1053,
+      "sha256": "21ee282d5720dd07dcea9ddd3cce2de893adeeed51518a0c241590130f1635bd"
+    },
+    "prompts/merge_final_rewrite.md": {
+      "size_bytes": 926,
+      "sha256": "6a79e19eebe2fbbe20f93a6b864c7c157388bbae168980154c0cdac452bbdfe4"
+    },
+    "prompts/merge_success.md": {
+      "size_bytes": 1121,
+      "sha256": "6b816bcf5526d31164b779921f3c8c847541bf92fbe26c6a38b555eb3b753712"
+    },
+    "prompts/merge_success_full_rewrite.md": {
+      "size_bytes": 1103,
+      "sha256": "8f1339cd57ed41af82f8ac7675891a9a58412b5c7ef4e6762a12ad8caad347ca"
+    },
+    "prompts/merge_success_rewrite.md": {
+      "size_bytes": 1006,
+      "sha256": "2b293d9a16da199cade8bdade560b12553577ad66aacb0f9de3ae979aa150ab7"
+    },
+    "prompts/meta_skill.md": {
+      "size_bytes": 1755,
+      "sha256": "b2bab7f7635cd2a94348de6adf15ceaa247ddabd0a2a8bb7c53eab5cfca7deba"
+    },
+    "prompts/ranking.md": {
+      "size_bytes": 999,
+      "sha256": "8bf37725b7b328d8d54af7a8fb173179bdd0f02b57399ed2cc7a5b5d25edea8a"
+    },
+    "prompts/ranking_rewrite.md": {
+      "size_bytes": 647,
+      "sha256": "2ff8c755188704352cb7dd5c57bbce66c506145a5a5cd212b8881bd09d608031"
+    },
+    "prompts/rewrite_skill.md": {
+      "size_bytes": 1234,
+      "sha256": "2da412ee1d92ab32e59f8a33e2816a2c315edef5e2906d7628d8d093ae0dc68a"
+    },
+    "prompts/slow_update.md": {
+      "size_bytes": 2998,
+      "sha256": "7f6f97d2283a370ad072a91ad61e152551f4f4eb4f519c9a1c5c60679b4782f2"
+    }
+  }
+}

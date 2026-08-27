@@ -46,10 +46,18 @@ repos:
       #
       # Same reasoning as the `.playwright-mcp/` scoping above: the hook was
       # written to tidy source files, and a transcript is not one.
+      #
+      # `datasets/vendor/skillopt-prompts/` is off both for the same reason one
+      # step further on. Those files are copies of another project's prompts,
+      # pinned by a SHA-256 each, and the point of the pin is that nothing here
+      # edits them: an engine running prompts we tidied is not the engine the
+      # study is about. This hook appended a newline to two of them on the first
+      # commit that staged them, which would have failed the digest check and
+      # been read as upstream drift.
       - id: end-of-file-fixer
-        exclude: ^results/
+        exclude: ^(results/|datasets/vendor/skillopt-prompts/)
       - id: trailing-whitespace
-        exclude: ^(\.playwright-mcp/|results/)
+        exclude: ^(\.playwright-mcp/|results/|datasets/vendor/skillopt-prompts/)
       - id: check-merge-conflict
       - id: check-added-large-files
         args: [--maxkb=2048]

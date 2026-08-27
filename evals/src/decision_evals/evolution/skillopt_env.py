@@ -32,6 +32,7 @@ because a patched engine is no longer the engine the result is about.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Final
@@ -61,9 +62,68 @@ SELECTION: Final[frozenset[str]] = frozenset(
 #: failing.
 HELD_OUT: Final[frozenset[str]] = frozenset({"valid_unseen", "test", "holdout", "unseen"})
 
+#: The four settings ``EnvAdapter.reflect`` reads off ``self``. It is the
+#: inherited reflection step -- no shipped environment overrides it -- and it
+#: reads four attributes the abstract base never declares and never sets. Every
+#: built-in adapter and the ``_template`` set them in ``__init__``, so the
+#: contract is real and carried entirely by the example rather than by the
+#: class. :meth:`DecisionEnv.setup` mirrors them off the config instead, because
+#: the trainer hands ``setup`` the same dictionary it reads its own copies from
+#: and two sources for one number is how they come to disagree.
+REFLECT_SETTINGS: Final[tuple[str, ...]] = (
+    "analyst_workers",
+    "failure_only",
+    "minibatch_size",
+    "edit_budget",
+)
+
 
 class SkillOptError(RuntimeError):
     """SkillOpt cannot be reached, or cannot be pointed at this venue."""
+
+
+def _why(trace: Any) -> str:
+    """One line naming why an item was wrong, for the analyst's prompt header.
+
+    The distinctions are the scorer's own, because they call for different
+    edits: an answer in the wrong shape wants a format instruction and a
+    confidently wrong answer wants better reasoning, and a reflector that cannot
+    tell them apart will rewrite the wrong half of a skill.
+    """
+    if trace.zero_cause == "infrastructure":
+        return "the call did not complete, so this item says nothing about the skill"
+    if trace.parsed is None:
+        return (
+            f"no answer could be read from the reply ({trace.parse_status}); "
+            f"expected {trace.expected!r}"
+        )
+    return f"answered {trace.parsed!r} where the correct option was {trace.expected!r}"
+
+
+def _write_transcript(directory: Path, trace: Any) -> None:
+    """Write one item's exchange where the reflection step looks for it.
+
+    Three turns, which is what this corpus is: the rendered problem, the reply,
+    and the scorer's verdict. The verdict goes in as ``role: system``, which is
+    how the engine's own environments hand grading back to the analyst and how
+    its formatter renders one.
+    """
+    directory.mkdir(parents=True, exist_ok=True)
+    verdict = (
+        "[EVALUATION RESULT]\n"
+        f"Answer read from the reply: {trace.parsed!r}\n"
+        f"Correct option: {trace.expected!r}\n"
+        f"Parse status: {trace.parse_status}\n"
+        f"Scored: {'correct' if trace.correct else 'incorrect'}"
+    )
+    conversation = [
+        {"role": "user", "content": trace.rendered},
+        {"role": "assistant", "content": trace.response},
+        {"role": "system", "content": verdict},
+    ]
+    (directory / "conversation.json").write_text(
+        json.dumps(conversation, ensure_ascii=False, indent=2), encoding="utf-8", newline=""
+    )
 
 
 class Batch:
@@ -113,6 +173,38 @@ def build_env(
 
     class DecisionEnv(EnvAdapter):  # type: ignore[misc]
         """This corpus, in the shape SkillOpt's trainer expects."""
+
+        def setup(self, cfg: dict[str, Any]) -> None:
+            """Mirror the reflection settings off the config, before any step runs.
+
+            The trainer calls this once with the flat config, then eleven
+            hundred lines later the inherited ``reflect`` reads
+            ``REFLECT_SETTINGS`` off ``self``. Nothing in the abstract base sets
+            them, so an adapter that implements every abstract method and no
+            more raises ``AttributeError`` at the first reflection -- after a
+            baseline pass and a training rollout have already been spent. This
+            run hit exactly that.
+
+            Reading them from ``cfg`` rather than from constructor arguments is
+            the point. The trainer reads its own copies out of the same
+            dictionary, so there is no arrangement in which the env reflects on
+            a budget the trainer is not using.
+
+            Raises:
+                SkillOptError: A config missing one of them, which
+                    :func:`train_config` cannot produce.
+            """
+            super().setup(cfg)
+            for name in REFLECT_SETTINGS:
+                if name not in cfg:
+                    raise SkillOptError(
+                        f"the config has no {name!r}, and the inherited reflection step "
+                        "reads it off the environment partway into the first step. "
+                        "`train_config` supplies all of "
+                        f"{list(REFLECT_SETTINGS)}; a config built some other way has to "
+                        "as well."
+                    )
+                setattr(self, name, cfg[name])
 
         def build_train_env(self, batch_size: int, seed: int, **kwargs: Any) -> Batch:
             """A slice of the training pool.
@@ -177,14 +269,27 @@ def build_env(
             here is an option from a fixed menu, so there is no partial credit
             to report, and reporting a fabricated gradient between 0 and 1 would
             give SkillOpt's reflection a signal that is not in the data.
+
+            **Writing the transcripts is not optional and the base class does
+            not say so.** The reflection step reads each item's trajectory back
+            off disk, from ``<out_dir>/predictions/<id>/conversation.json``, and
+            when it finds nothing it returns ``None`` before calling the
+            optimizer at all. That path is silent: the step prints an analyst
+            line, reports zero edits, skips, and a whole search completes having
+            proposed nothing while every log line looks ordinary. It did.
             """
             traces = core.score(skill_content, env_manager.items)
-            return [
-                {
+            predictions = Path(out_dir) / "predictions"
+            results: list[dict[str, Any]] = []
+            for trace in traces:
+                _write_transcript(predictions / trace.item_id, trace)
+                result: dict[str, Any] = {
                     "id": trace.item_id,
                     "hard": int(trace.correct),
                     "soft": trace.score,
                     "task_type": TASK_TYPES[0],
+                    "task_description": trace.question,
+                    "n_turns": 1,
                     "seed": trace.seed,
                     "prompt": trace.rendered,
                     "response": trace.response,
@@ -192,8 +297,14 @@ def build_env(
                     "parsed": trace.parsed,
                     "zero_cause": trace.zero_cause,
                 }
-                for trace in traces
-            ]
+                if not trace.correct:
+                    # Read straight into the analyst's prompt header. The cause
+                    # matters more than the score: a reflector told only "0.0"
+                    # rewrites reasoning guidance for a reply whose real problem
+                    # was that it had no final line.
+                    result["fail_reason"] = _why(trace)
+                results.append(result)
+            return results
 
         def get_task_types(self) -> list[str]:
             return list(TASK_TYPES)
@@ -256,6 +367,8 @@ def train_config(
     merge_batch_size: int = 1,
     edit_budget: int = 4,
     analyst_workers: int = 1,
+    minibatch_size: int = 8,
+    failure_only: bool = False,
     seed: int = 0,
 ) -> dict[str, Any]:
     """The flat config ``ReflACTTrainer`` reads, with every required key supplied.
@@ -327,6 +440,14 @@ def train_config(
             "merge_batch_size": merge_batch_size,
             "edit_budget": edit_budget,
             "analyst_workers": analyst_workers,
+            # Read by the inherited reflection step off the environment rather
+            # than off the config. `DecisionEnv.setup` mirrors them across, and
+            # they are named here so the config stays the one place a setting
+            # is written down. `minibatch_size` and `failure_only` are the
+            # engine's own defaults; the other two are not, and `train_config`'s
+            # docstring says why.
+            "minibatch_size": minibatch_size,
+            "failure_only": failure_only,
             "seed": seed,
             "sel_env_num": sel_env_num,
             # Read as `cfg.get("train_size", 0)` and then, when that is zero,

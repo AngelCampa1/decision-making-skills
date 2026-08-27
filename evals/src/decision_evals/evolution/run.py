@@ -24,6 +24,8 @@ from typing import Any, Final
 from decision_evals.budget import BudgetError, BudgetLedger, NestedBudget
 from decision_evals.evolution.adapter import COMPONENT, DecisionAdapter
 from decision_evals.evolution.checkpoints import RunPaths, paths_for, run_name, write_manifest
+from decision_evals.evolution.engine_prompts import LOCK_PATH as PROMPT_LOCK
+from decision_evals.evolution.engine_prompts import ensure_installed
 from decision_evals.evolution.holdout import POOLS, assert_evolvable, census
 from decision_evals.evolution.lineage import (
     Candidate,
@@ -154,6 +156,48 @@ def seed_body(repo_root: Path, path: str = SEED_SKILL) -> str:
         if sep:
             return body.lstrip("\n")
     return text
+
+
+def write_seed(path: Path, body: str) -> Path:
+    """Write a starting body to disk and prove the engine will read it back.
+
+    SkillOpt reads its starting skill off a file where GEPA takes a string, so
+    this is the one place a body crosses the filesystem before a search sees it,
+    and the study depends on both engines starting from the same body.
+
+    ``newline=""`` because the default translates ``\\n`` to ``\\r\\n`` on
+    Windows. That one turned out to be harmless -- the reader translates it
+    back -- and it is still not left to chance, because which of the two ends
+    normalises is not something this function gets to know.
+
+    The read-back is the part that caught something. SkillOpt opens the file
+    with no encoding, so it decodes by locale, and on a ``cp1252`` box a UTF-8
+    body comes back mojibaked: eight typographic characters became twenty-four,
+    3,428 became 3,444, and the engine spent its whole baseline scoring a body
+    that was not the skill. Nothing raised. The number it produced -- 0.857
+    against the same items GEPA scored the real body at 0.714 -- looked like a
+    result.
+
+    So the check is the engine's own read rather than a rule about locales:
+    perform it, compare, and refuse. The fix is ``PYTHONUTF8=1``, which is not a
+    patch to the engine but the environment it already has everywhere its
+    locale is UTF-8.
+
+    Raises:
+        EvolveError: The default-encoding read does not return the body.
+    """
+    path.write_text(body, encoding="utf-8", newline="")
+    with path.open() as handle:  # deliberately no encoding: what the engine does
+        read_back = handle.read()
+    if read_back != body:
+        raise EvolveError(
+            f"{path.name} does not read back as itself under this machine's default "
+            f"encoding: {len(body)} characters written, {len(read_back)} read. SkillOpt's "
+            "trainer opens the seed skill with no encoding, so it would search from a "
+            "corrupted body and report a score for it. Set `PYTHONUTF8=1` in the "
+            "environment and run again."
+        )
+    return path
 
 
 def items_for(seeds: Sequence[int], *, limit: int = 0) -> list[Item]:
@@ -488,8 +532,23 @@ def _drive_skillopt(
     """
     out_root = paths.root / request.engine
     out_root.mkdir(parents=True, exist_ok=True)
-    start = out_root / "skill_init.md"
-    start.write_text(seed_body(repo_root), encoding="utf-8")
+
+    # No release of this engine carries its own reflection prompts, so a stock
+    # install raises `FileNotFoundError` at the first step of any search. The
+    # pinned copies go back where it looks for them, and what had to be restored
+    # is written beside the run: which prompts a search reflected with is part of
+    # what the search was.
+    restored = ensure_installed(repo_root)
+    (out_root / "restored-prompts.json").write_text(
+        json.dumps(
+            {"lock": PROMPT_LOCK, "restored": restored, "count": len(restored)},
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    start = write_seed(out_root / "skill_init.md", seed_body(repo_root))
 
     config = train_config(
         target=venue,
