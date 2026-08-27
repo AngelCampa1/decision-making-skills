@@ -32,6 +32,7 @@ from decision_evals.evolution.lineage import body_sha
 from decision_evals.evolution.run import items_for
 from decision_evals.evolution.solo import Solo
 from decision_evals.evolution.venues import Venue, assert_cap_fits, call_fn, context_window
+from decision_evals.generators.audit import corpus_fingerprint
 from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn, RunRecord, load_records, run_arm
 from decision_evals.solvers.arms import ArmName, build_arm
@@ -344,6 +345,12 @@ def run_study(
                     "items": len(rows),
                     "templates": sorted({row.template_id for row in rows}),
                     "seeds": census([row.seed for row in rows]),
+                    # The identity of a *generated* corpus. Item ids are
+                    # coordinates and survive a template rewrite unchanged, so a
+                    # study that recorded only its seeds and templates could be
+                    # re-run against different content under the same
+                    # description and nobody would see it.
+                    "fingerprint": corpus_fingerprint(rows),
                 }
                 for label, rows in items.items()
             },
