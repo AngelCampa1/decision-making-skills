@@ -1354,6 +1354,7 @@ def evolve(
     typer.echo(f"explored {result.explored} candidate(s)")
     typer.echo(f"winner   {result.winner.candidate_sha[:12]} scored {result.winner.score}")
     typer.echo(f"lineage  {result.paths.lineage.relative_to(REPO_ROOT)}")
+    typer.echo(f"frozen   {(result.paths.root / 'winner.md').relative_to(REPO_ROOT)}")
 
 
 def _seeds(text: str) -> tuple[int, ...]:

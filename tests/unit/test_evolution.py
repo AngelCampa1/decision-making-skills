@@ -1001,3 +1001,36 @@ def test_the_frozen_body_hashes_to_the_recorded_sha(tmp_path: Path) -> None:
     body = (paths.root / "winner.md").read_text(encoding="utf-8")
     recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
     assert body_sha(body) == recorded["candidate_sha"]
+
+
+@needs_skillopt
+def test_the_trainer_accepts_this_environment(tmp_path: Path) -> None:
+    """Everything the trainer touches before its first model call.
+
+    `ReflACTTrainer.train` calls `setup`, `get_dataloader` and then builds
+    environments, and only then makes a call. Those steps need no GPU and no
+    server, so they are checked here rather than discovered three hours into a
+    search.
+    """
+    from skillopt.engine.trainer import ReflACTTrainer
+
+    train = items_for([0], limit=4)
+    validation = items_for([1000], limit=4)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=validation)
+    skill = tmp_path / "skill_init.md"
+    skill.write_text("body", encoding="utf-8")
+    config = train_config(
+        target=venue_for("ollama/qwen3:4b"),
+        optimizer=venue_for("ollama/qwen3:4b"),
+        out_root=tmp_path,
+        skill_init=skill,
+        batch_size=4,
+        sel_env_num=4,
+    )
+
+    ReflACTTrainer(config, env)
+    env.setup(config)
+    assert env.get_dataloader() is None
+    assert env.requires_ray() is False
+    assert len(env.build_train_env(batch_size=2, seed=0)) == 2
+    assert len(env.build_eval_env(env_num=3, split="valid_seen", seed=0)) == 3
