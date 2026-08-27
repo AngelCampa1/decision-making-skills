@@ -90,6 +90,13 @@ from decision_evals.evolution.skillopt_env import (
     train_config,
     venue_config,
 )
+from decision_evals.evolution.solo import (
+    LOCK_NAME,
+    ConcurrencyError,
+    Solo,
+    read_holder,
+    unsafe,
+)
 from decision_evals.evolution.venues import (
     MOCK_LADDER,
     MOCK_MARKER,
@@ -1572,3 +1579,67 @@ def test_nothing_is_discarded_when_every_seed_generates() -> None:
     assert minted.discarded == ()
     assert minted.attempts == 6
     assert minted.discard_rate == 0.0
+
+
+# ---------------------------------------------------------------------------
+# One search at a time
+#
+# Two concurrent runs against `ollama` do not merely race: they change each
+# other's answers. Measured 0 of 40 agreement on 2026-08-19, and measured again
+# on 2026-08-27 when the same skill scored 17 of 21 in an overlapping run and
+# 15 of 21 in each of two serial ones.
+# ---------------------------------------------------------------------------
+
+
+def test_the_lock_is_taken_for_a_venue_that_batches(tmp_path: Path) -> None:
+    with Solo(tmp_path, "ollama/qwen3:1.7b", "a-run"):
+        held = read_holder(tmp_path)
+        assert held is not None
+        assert held.model == "ollama/qwen3:1.7b"
+        assert held.run == "a-run"
+    assert read_holder(tmp_path) is None, "the lock is released on the way out"
+
+
+def test_a_second_search_against_the_same_venue_is_refused(tmp_path: Path) -> None:
+    with (
+        Solo(tmp_path, "ollama/qwen3:1.7b", "first"),
+        pytest.raises(ConcurrencyError, match="17 of 21"),
+        Solo(tmp_path, "ollama/qwen3:4b", "second"),
+    ):
+        pass
+
+
+def test_a_hosted_venue_is_not_locked(tmp_path: Path) -> None:
+    """Two runs against somebody else's endpoint are two runs, and it fans out anyway."""
+    with (
+        Solo(tmp_path, "nvbuild/openai/gpt-oss-20b", "first"),
+        Solo(tmp_path, "nvbuild/openai/gpt-oss-20b", "second"),
+    ):
+        pass
+    assert read_holder(tmp_path) is None
+
+
+def test_a_lock_left_by_a_dead_process_does_not_block_anything(tmp_path: Path) -> None:
+    """A killed run leaves its file behind, and a guard nobody can get past is the problem."""
+    (tmp_path / LOCK_NAME).write_text(
+        json.dumps({"pid": 2**31 - 1, "model": "ollama/qwen3:1.7b", "run": "a corpse"}),
+        encoding="utf-8",
+    )
+    assert read_holder(tmp_path) is None
+    with Solo(tmp_path, "ollama/qwen3:1.7b", "a live run"):
+        held = read_holder(tmp_path)
+        assert held is not None
+        assert held.run == "a live run"
+
+
+def test_an_unreadable_lock_does_not_block_anything(tmp_path: Path) -> None:
+    (tmp_path / LOCK_NAME).write_text("{not json", encoding="utf-8")
+    assert read_holder(tmp_path) is None
+
+
+@pytest.mark.parametrize(
+    ("model", "expected"),
+    [("ollama/qwen3:4b", True), ("nvbuild/openai/gpt-oss-20b", False), (MOCK_MODEL, False)],
+)
+def test_only_the_measured_venues_are_locked(model: str, expected: bool) -> None:
+    assert unsafe(model) is expected

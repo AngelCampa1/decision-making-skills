@@ -37,6 +37,7 @@ from decision_evals.evolution.lineage import (
     load_lineage,
 )
 from decision_evals.evolution.skillopt_env import build_env, train_config
+from decision_evals.evolution.solo import Solo
 from decision_evals.evolution.venues import (
     MOCK_MODEL,
     Venue,
@@ -415,7 +416,11 @@ def evolve(
     body = ""
     deadline = Deadline(request.max_seconds)
     try:
-        with deadline:
+        # `paths.root.parent` is `results/evolution/`, so one lock covers every
+        # run under it. The guard is here rather than in a launcher because a
+        # launcher is what failed: twice on 2026-08-27 a shell loop meant to
+        # serialise two searches started the second into the first.
+        with Solo(paths.root.parent, venue.model, paths.root.name), deadline:
             body = DRIVERS[request.engine](
                 request,
                 repo_root=repo_root,
