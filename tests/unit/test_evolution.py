@@ -103,8 +103,11 @@ from decision_evals.evolution.venues import (
     MOCK_LADDER,
     MOCK_MARKER,
     MOCK_MODEL,
+    PROMPT_ALLOWANCE,
     VenueError,
+    assert_cap_fits,
     call_fn,
+    context_window,
     isolation_receipt,
     key_is_present,
     mock_call,
@@ -1797,3 +1800,63 @@ def test_an_engine_pick_still_reports_the_engines_own_numbers(tmp_path: Path) ->
     recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
     assert (recorded["score"], recorded["n_items"]) == (0.9, 21)
     assert recorded["n_calls"] is None
+
+
+def test_a_cap_larger_than_the_context_window_is_refused() -> None:
+    """The 2026-08-27 runs sent 8,192 at a model loaded with 4,096.
+
+    Fourteen of sixteen unreadable answers were past the window: a generation
+    that fills it pushes the question out of the front and then cannot answer.
+    They were scored as the skill failing to comply with an output format.
+    """
+    with pytest.raises(VenueError, match="does not fit a context window"):
+        assert_cap_fits(4096, 8192)
+
+
+def test_a_cap_that_leaves_no_room_for_the_prompt_is_refused() -> None:
+    """A cap equal to the window leaves the prompt nowhere to go."""
+    with pytest.raises(VenueError, match="does not fit"):
+        assert_cap_fits(4096, 4096 - PROMPT_ALLOWANCE + 1)
+
+
+def test_a_cap_with_room_for_the_prompt_is_allowed() -> None:
+    assert assert_cap_fits(4096, 4096 - PROMPT_ALLOWANCE) is None
+
+
+def test_an_unknowable_window_is_not_a_failure() -> None:
+    """A hosted endpoint publishes no residency. A check that cannot be made
+    must not refuse the run; whether it could be made is a separate question."""
+    assert assert_cap_fits(None, 1_000_000) is None
+
+
+def test_a_hosted_venue_has_no_context_window() -> None:
+    assert context_window(venue_for("nvbuild/openai/gpt-oss-20b", api_key="k")) is None
+
+
+def test_a_cold_model_is_loaded_before_the_window_is_read(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A guard that only fires on a warm server misses every first run of the day."""
+    calls: list[str] = []
+    answers = [{}, {"qwen3:1.7b": 4096}]
+
+    def fake_loaded(**_: object) -> dict[str, int]:
+        calls.append("ps")
+        return answers.pop(0)
+
+    def fake_warm(*_: object, **__: object) -> None:
+        calls.append("load")
+
+    monkeypatch.setattr("decision_evals.evolution.venues.loaded", fake_loaded)
+    monkeypatch.setattr("decision_evals.evolution.venues.warm", fake_warm)
+    assert context_window(venue_for("ollama/qwen3:1.7b")) == 4096
+    assert calls == ["ps", "load", "ps"], "the load has to sit between the two reads"
+
+
+def test_a_resident_model_is_not_reloaded(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_warm(*_: object, **__: object) -> None:
+        raise AssertionError("a loaded model must not be loaded again")
+
+    monkeypatch.setattr("decision_evals.evolution.venues.loaded", lambda **_: {"qwen3:1.7b": 8192})
+    monkeypatch.setattr("decision_evals.evolution.venues.warm", fake_warm)
+    assert context_window(venue_for("ollama/qwen3:1.7b")) == 8192

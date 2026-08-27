@@ -197,3 +197,79 @@ still reads `"score": 1.0, "n_items": 3`. The number selection was actually made
 on is **20 of 21**, computed above from that run's own checkpoint, and it is
 stated here rather than written back over the artefact. Anything downstream
 reads the checkpoint.
+
+---
+
+## Appended the same day: the unreadable answers were the harness, not the skill
+
+Two more measurements landed after the entry above, and together they take the
+"format compliance is the real gain" reading apart.
+
+### The venue is deterministic when nothing else is happening
+
+Ten back-to-back passes of the seed body over the same 21 items, one process,
+nothing else running:
+
+```
+18, 19, 19, 19, 19, 19, 19, 19, 19, 19
+```
+
+One item flipped, on the first pass only. Across 189 adjacent call pairs, **one
+disagreement**: 0.53%, Wilson 95% [0.09%, 2.9%], against 14.3% [7.1%, 26.7%]
+from repeats inside the two runs. The intervals do not come close to
+overlapping.
+
+The two items the seed gets wrong every time are
+`rel-005-security-patch#v0-d4-early` and `rel-009-flight-rebook#v1-d1-middle`,
+and they are wrong the same way ten times running. That is the part of a score
+that means something here.
+
+So the flip rate above is not a property of the venue. It is a property of the
+conditions calls are made under, and **no number measured under one condition
+transfers to another.** Record-gap does not explain it either: the in-run
+disagreements happen at gaps of 4 and 8 records as readily as at 21.
+
+### The unreadable answers walked off the end of the context window
+
+`GET /api/ps` reports the loaded model's `context_length` as **4096**. The runs
+sent `max_tokens: 8192`. Those two numbers are not compatible, and the records
+say what happens when they meet:
+
+| | n | max prompt + output |
+| --- | --- | --- |
+| readable answers | 478 | **3,861** |
+| unreadable answers | 16 | output alone reached 8,192 |
+
+**Not one readable answer in 478 ever crossed 4,096 total tokens.** Every long
+unreadable one is past it — 5,488 and 8,192 output tokens on top of a
+thousand-token prompt. Past the window ollama shifts the context, the system
+prompt and the question go out of it, and the model cannot emit an answer line
+because it no longer has the question. It then talks until the cap.
+
+That is a cliff, not a gradient. And the 8,192 cap added on 2026-08-26 to stop a
+40,960-token runaway sits *above* the cliff, so it truncates the failure rather
+than preventing it.
+
+### What this retracts
+
+**The format violations were a misconfigured venue.** The section above credits
+both engines with taking them to zero and calls it the only part of the gain the
+instrument can see. The mechanism is smaller than that: a shorter, more directive
+skill gets the model to its answer in fewer tokens, which keeps it on the near
+side of a 4,096-token cliff the harness should never have let it approach. Real,
+reproducible, and a workaround for a defect rather than a decision-quality gain.
+
+Two of the sixteen unreadable answers are under the cliff, at 522 and 2,973
+output tokens. Those are genuine format failures. Fourteen are the harness.
+
+### What Phase 3 has to settle first
+
+- **Give the venue a context window the cap fits inside**, and record which.
+  Ollama's OpenAI-compatible endpoint takes no `num_ctx`, so this is a change of
+  venue configuration, and it makes runs on either side of it incomparable. It
+  belongs in the pre-registration rather than in a quiet fix.
+- **Refuse a cap above the window.** A harness that sends `max_tokens` larger
+  than the model's context is asking for an answer it has arranged not to be
+  able to read.
+- **Measure the flip rate under the study's own conditions.** Neither 14.3% nor
+  0.7% is the number Phase 3 gets to use.

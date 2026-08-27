@@ -41,7 +41,9 @@ from decision_evals.evolution.solo import Solo
 from decision_evals.evolution.venues import (
     MOCK_MODEL,
     Venue,
+    assert_cap_fits,
     call_fn,
+    context_window,
     mock_call,
     venue_for,
 )
@@ -400,10 +402,15 @@ def evolve(
         },
     )
 
+    call = _mock_oracle(venue, [*train, *validation]) or call_fn(
+        venue, max_tokens=request.max_tokens or None
+    )
+    if request.max_tokens:
+        assert_cap_fits(context_window(venue), request.max_tokens)
+
     adapter = DecisionAdapter(
         venue=venue,
-        call=_mock_oracle(venue, [*train, *validation])
-        or call_fn(venue, max_tokens=request.max_tokens or None),
+        call=call,
         checkpoint=paths.records,
         lineage=paths.lineage,
         budget=budget_for(request, venue),

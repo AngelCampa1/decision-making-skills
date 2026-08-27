@@ -29,16 +29,19 @@ from decision_evals.providers.claude_code import (
 from decision_evals.providers.openai_compatible import (
     Endpoint,
     ModelCard,
+    _get,
     _number,
     _post,
     assert_isolated,
     build_payload,
+    loaded,
     nvidia_build,
     ollama,
     parse_completion,
     preflight,
     run,
     show,
+    warm,
 )
 
 
@@ -520,3 +523,116 @@ def test_preflight_asks_for_one_word(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("decision_evals.providers.openai_compatible._post", fake_post)
     assert preflight(model="ollama/qwen3:4b").text == "ready"
     assert "ready" in captured["payload"]["messages"][1]["content"]
+
+
+# --------------------------------------------------------------------------- #
+# Residency: the context window a model is actually loaded with
+# --------------------------------------------------------------------------- #
+
+
+def _fake_get(monkeypatch: pytest.MonkeyPatch, payload: Any) -> dict[str, Any]:
+    captured: dict[str, Any] = {}
+
+    def fake(url: str, **kwargs: Any) -> Any:
+        captured["url"] = url
+        captured["kwargs"] = kwargs
+        return payload
+
+    monkeypatch.setattr("decision_evals.providers.openai_compatible._get", fake)
+    return captured
+
+
+def test_a_resident_model_reports_the_window_it_was_loaded_with(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Not the architectural maximum. `qwen3` supports 40,960 and loads with 4,096."""
+    captured = _fake_get(monkeypatch, {"models": [{"model": "qwen3:1.7b", "context_length": 4096}]})
+    assert loaded(endpoint=ollama()) == {"qwen3:1.7b": 4096}
+    assert captured["url"] == "http://127.0.0.1:11434/api/ps"
+
+
+def test_an_empty_server_reports_nothing_loaded(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Absent is not zero. A model nobody loaded has no window, not a window of 0."""
+    _fake_get(monkeypatch, {"models": []})
+    assert loaded(endpoint=ollama()) == {}
+
+
+def test_a_residency_entry_without_a_window_is_skipped(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _fake_get(
+        monkeypatch, {"models": [{"model": "a"}, "junk", {"model": "b", "context_length": 8}]}
+    )
+    assert loaded(endpoint=ollama()) == {"b": 8}
+
+
+def test_a_hosted_endpoint_has_no_residency_surface() -> None:
+    with pytest.raises(CliError, match="no residency surface"):
+        loaded(endpoint=nvidia_build(api_key="k"))
+
+
+def test_a_malformed_residency_listing_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    _fake_get(monkeypatch, ["not", "a", "listing"])
+    with pytest.raises(CliError, match="residency listing"):
+        loaded(endpoint=ollama())
+
+
+def test_warming_asks_for_a_load_and_not_a_completion(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An empty prompt is Ollama's documented load. Nothing is generated, so
+    nothing needs to reach the checkpointed record."""
+    captured: dict[str, Any] = {}
+
+    def fake_post(url: str, payload: dict[str, Any], **kwargs: Any) -> Any:
+        captured["url"] = url
+        captured["payload"] = payload
+        return {}
+
+    monkeypatch.setattr("decision_evals.providers.openai_compatible._post", fake_post)
+    warm("ollama/qwen3:1.7b", endpoint=ollama())
+    assert captured["url"] == "http://127.0.0.1:11434/api/generate"
+    assert captured["payload"] == {"model": "qwen3:1.7b", "prompt": ""}
+
+
+def test_a_hosted_endpoint_cannot_be_warmed() -> None:
+    with pytest.raises(CliError, match="no load surface"):
+        warm("openai/gpt-oss-20b", endpoint=nvidia_build(api_key="k"))
+
+
+def test_a_get_sends_the_bearer_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen = _fake_urlopen(monkeypatch, b"{}")
+    _get("http://x", api_key="sekrit", timeout=1.0)
+    assert seen[0].headers["Authorization"] == "Bearer sekrit"
+    assert seen[0].get_method() == "GET"
+
+
+def test_a_get_without_a_key_sends_no_header(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen = _fake_urlopen(monkeypatch, b"{}")
+    _get("http://x", api_key=None, timeout=1.0)
+    assert "Authorization" not in seen[0].headers
+
+
+@pytest.mark.parametrize("code", [401, 403])
+def test_a_get_maps_a_refused_credential(monkeypatch: pytest.MonkeyPatch, code: int) -> None:
+    _fake_urlopen(monkeypatch, _http_error(code, "no"))
+    with pytest.raises(AuthenticationError):
+        _get("http://x", api_key=None, timeout=1.0)
+
+
+def test_a_get_maps_any_other_status_to_cli_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    _fake_urlopen(monkeypatch, _http_error(500, "boom"))
+    with pytest.raises(CliError, match="returned 500"):
+        _get("http://x", api_key=None, timeout=1.0)
+
+
+def test_a_get_that_cannot_reach_the_server_says_so(monkeypatch: pytest.MonkeyPatch) -> None:
+    _fake_urlopen(monkeypatch, urllib.error.URLError("refused"))
+    with pytest.raises(CliError, match="Is the server running"):
+        _get("http://x", api_key=None, timeout=1.0)
+
+
+def test_a_get_that_returns_prose_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    _fake_urlopen(monkeypatch, b"<html>nope</html>")
+    with pytest.raises(CliError, match="did not return JSON"):
+        _get("http://x", api_key=None, timeout=1.0)

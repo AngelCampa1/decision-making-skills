@@ -35,9 +35,11 @@ from decision_evals.providers.claude_code import CliResult, IsolationError
 from decision_evals.providers.openai_compatible import (
     Endpoint,
     assert_isolated,
+    loaded,
     nvidia_build,
     ollama,
     show,
+    warm,
 )
 from decision_evals.providers.openai_compatible import run as openai_run
 from decision_evals.runner import CallFn, RunError, local_call
@@ -159,6 +161,65 @@ def isolation_receipt(venue: Venue, *, timeout: float = 30.0) -> str:
         f"{venue.model}: card read, no baked-in system prompt "
         f"(system={len(card.system)} chars, template={len(card.template)} chars)."
     )
+
+
+#: What the longest prompt this corpus has produced actually cost, rounded up.
+#: Every skill body plus its item across the two 2026-08-27 runs fitted in 1,873
+#: input tokens, and a search grows bodies, so the allowance is generous rather
+#: than tight.
+PROMPT_ALLOWANCE: Final = 2_048
+
+
+def context_window(venue: Venue, *, timeout: float = 30.0) -> int | None:
+    """The context window the target is *loaded* with, or ``None`` if unknowable.
+
+    ``None`` is a real answer and appears in two cases: a hosted endpoint that
+    exposes no residency surface, and a local model nobody has loaded yet. The
+    caller warms the model and asks again rather than treating either as
+    permission to proceed.
+    """
+    if not venue.receipts:
+        return None
+    bare = venue.model[len(venue.label) + 1 :]
+    window = loaded(endpoint=venue.endpoint, timeout=timeout).get(bare)
+    if window is not None:
+        return window
+    # Nobody has loaded it, which is the state every first run of the day is
+    # in. A guard that only ever fires on a warm server is a guard that misses
+    # the run it was written for, so make the server resident and ask again.
+    # The load generates nothing and is not a model call.
+    warm(venue.model, endpoint=venue.endpoint)
+    return loaded(endpoint=venue.endpoint, timeout=timeout).get(bare)
+
+
+def assert_cap_fits(window: int | None, max_tokens: int) -> None:
+    """Refuse an output cap the model's own context cannot hold.
+
+    A generation that reaches the end of its window does not stop. The server
+    shifts the context, the system prompt and the question go out of it, and the
+    model then produces text forever about a question it no longer has. It reads
+    downstream as a formatting failure, which is what it was recorded as: on
+    2026-08-27 two searches sent ``max_tokens: 8192`` at a model loaded with a
+    4,096-token window, and fourteen of sixteen unreadable answers were past the
+    window rather than badly formatted.
+
+    ``window`` of ``None`` passes, because a check that cannot be made is not a
+    failure. Whether it *could* be made is the caller's problem.
+
+    Raises:
+        EvolveError: The cap plus a prompt allowance exceeds the window.
+    """
+    if window is None:
+        return
+    if max_tokens + PROMPT_ALLOWANCE > window:
+        raise VenueError(
+            f"an output cap of {max_tokens:,} tokens does not fit a context window of "
+            f"{window:,}, once {PROMPT_ALLOWANCE:,} tokens are left for the prompt. A "
+            "generation that runs to the end of the window loses the question out of the "
+            "front of it and can never answer, which scores as a formatting failure. "
+            f"Cap the output at {window - PROMPT_ALLOWANCE:,} or load the model with a "
+            "larger window (`OLLAMA_CONTEXT_LENGTH`), and record which."
+        )
 
 
 def key_is_present(variable: str = "NVIDIA_API_KEY") -> bool:

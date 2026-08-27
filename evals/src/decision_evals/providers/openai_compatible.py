@@ -234,6 +234,38 @@ def _post(url: str, payload: dict[str, Any], *, api_key: str | None, timeout: fl
         raise CliError(f"{url} did not return JSON: {raw[:200]!r}") from exc
 
 
+def _get(url: str, *, api_key: str | None, timeout: float) -> Any:
+    """GET JSON and return the decoded response.
+
+    A sibling of :func:`_post` rather than a parameter on it. The two share an
+    error vocabulary and nothing else: a GET carries no body, and the
+    prompt-too-long mapping that :func:`_post` needs cannot arise on one.
+    """
+    headers = {}
+    if api_key is not None:
+        headers["Authorization"] = f"Bearer {api_key}"
+    request = urllib.request.Request(url, headers=headers, method="GET")
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            raw = response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")[:400]
+        if exc.code in _AUTH_STATUSES:
+            raise AuthenticationError(
+                f"{url} refused the credential ({exc.code}): {detail}"
+            ) from exc
+        raise CliError(f"{url} returned {exc.code}: {detail}") from exc
+    except urllib.error.URLError as exc:
+        raise CliError(
+            f"could not reach {url}: {exc.reason}. Is the server running? "
+            "For Ollama: `ollama serve`, then `ollama pull <model>`."
+        ) from exc
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise CliError(f"{url} did not return JSON: {raw[:200]!r}") from exc
+
+
 def build_payload(
     *,
     prompt: str,
@@ -382,6 +414,74 @@ def show(model: str, *, endpoint: Endpoint, timeout: float = 30.0) -> ModelCard:
         system=str(payload.get("system") or ""),
         template=str(payload.get("template") or ""),
         parameters=str(payload.get("parameters") or ""),
+    )
+
+
+def loaded(*, endpoint: Endpoint, timeout: float = 30.0) -> dict[str, int]:
+    """The context window each of a server's resident models is actually running with.
+
+    Not the same question as "what context length does this model support".
+    ``/api/show`` answers the architectural maximum -- 40,960 for ``qwen3`` --
+    while a server loads with whatever ``OLLAMA_CONTEXT_LENGTH`` says, which
+    defaults to **4,096**. The effective number is the one on the loaded
+    instance, and ``/api/ps`` is where it is readable.
+
+    The gap is not cosmetic. On 2026-08-27 two evolution runs sent
+    ``max_tokens: 8192`` at a model loaded with a 4,096-token window. Not one of
+    478 readable answers ever crossed 4,096 prompt-plus-output tokens; every
+    long unreadable one was past it, because a generation that reaches the end
+    of the window pushes the system prompt and the question out of it and then
+    cannot answer a question it no longer has. It talks until the cap instead.
+    Those failures were scored as the skill failing to comply with an output
+    format.
+
+    Returns:
+        Bare model name to context window, empty when the server has nothing
+        loaded. A model absent from the mapping is not loaded, which is a
+        different answer from a window of zero.
+
+    Raises:
+        CliError: The endpoint offers no native surface, or the reply is
+            malformed.
+    """
+    if endpoint.native_url is None:
+        raise CliError(
+            f"{endpoint.label} exposes no residency surface, so the context window it "
+            "would run with cannot be read. Record the absence rather than assuming one."
+        )
+    payload = _get(f"{endpoint.native_url}/ps", api_key=endpoint.api_key, timeout=timeout)
+    if not isinstance(payload, dict):
+        raise CliError(f"expected a residency listing, got {payload!r}")
+    windows: dict[str, int] = {}
+    for entry in payload.get("models") or ():
+        if not isinstance(entry, dict):
+            continue
+        window = entry.get("context_length")
+        if isinstance(window, int):
+            windows[str(entry.get("model") or entry.get("name") or "")] = window
+    return windows
+
+
+def warm(model: str, *, endpoint: Endpoint, timeout: float = 300.0) -> None:
+    """Make a server load a model, without asking it to generate anything.
+
+    ``/api/generate`` with an empty prompt is Ollama's documented load: it
+    resides the model and returns. **This is not a model call** -- no prompt,
+    no completion, nothing to score -- which is why it does not go through the
+    checkpointed runner and leaves no record. It exists so that
+    :func:`loaded` has something to report on the first run of the day.
+
+    Raises:
+        CliError: The endpoint offers no native surface, or the load failed.
+    """
+    if endpoint.native_url is None:
+        raise CliError(f"{endpoint.label} exposes no load surface")
+    bare = model[len(endpoint.label) + 1 :] if model.startswith(f"{endpoint.label}/") else model
+    _post(
+        f"{endpoint.native_url}/generate",
+        {"model": bare, "prompt": ""},
+        api_key=endpoint.api_key,
+        timeout=timeout,
     )
 
 
