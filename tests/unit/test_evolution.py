@@ -12,6 +12,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import re
+from dataclasses import asdict
 from datetime import date
 from pathlib import Path
 
@@ -1134,3 +1135,27 @@ def test_the_manifest_records_the_request_as_data(tmp_path: Path) -> None:
     assert isinstance(recorded, dict), "a repr string means no reader can index this"
     assert recorded["target_model"] == MOCK_MODEL
     assert recorded["val_limit"] == 2
+
+
+def test_an_uncapped_call_sends_no_cap() -> None:
+    """Every published run sent no `max_tokens`, and that behaviour is unchanged."""
+    from decision_evals.providers.openai_compatible import build_payload
+
+    payload = build_payload(prompt="p", system_prompt="s", model="ollama/x", label="ollama")
+    assert "max_tokens" not in payload
+
+
+def test_a_capped_call_sends_the_cap() -> None:
+    """A runaway and a capped runaway score the same and differ 100x in wall clock."""
+    from decision_evals.providers.openai_compatible import build_payload
+
+    payload = build_payload(
+        prompt="p", system_prompt="s", model="ollama/x", label="ollama", max_tokens=8192
+    )
+    assert payload["max_tokens"] == 8192
+
+
+def test_the_cap_reaches_the_manifest() -> None:
+    """The number a search ran under is part of what the search was, so it is recorded."""
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_tokens=8192)
+    assert asdict(request)["max_tokens"] == 8192

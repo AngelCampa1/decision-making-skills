@@ -241,6 +241,7 @@ def build_payload(
     model: str,
     label: str,
     temperature: float = 0.0,
+    max_tokens: int | None = None,
 ) -> dict[str, Any]:
     """The request body for one single-turn completion.
 
@@ -252,6 +253,20 @@ def build_payload(
     nothing else, so sampling noise is variance this design has no use for --
     :mod:`decision_evals.stats.reliability` exists to measure scatter that is
     part of the phenomenon, not scatter the harness introduced.
+
+    ``max_tokens`` defaults to ``None``, which sends no cap and leaves every
+    published run's behaviour exactly as it was. It exists because a small
+    reasoning model can fail to stop: on 2026-08-26 a ``qwen3:1.7b`` call
+    generated 40,960 tokens over 317 seconds and never emitted an answer line,
+    against a ceiling of 4,479 output tokens across every *completed* answer
+    ever recorded here. An uncapped runaway and a capped one score the same --
+    no answer line either way -- and differ by two orders of magnitude in wall
+    clock, which on a matched-budget comparison is the difference between
+    measuring two engines and measuring which drew more runaways.
+
+    A cap has to be set high enough to truncate nothing that would have
+    finished, and it is passed in rather than defaulted here so that the number
+    reaches a run's manifest instead of hiding in a provider.
     """
     bare = model[len(label) + 1 :] if model.startswith(f"{label}/") else model
     return {
@@ -262,6 +277,7 @@ def build_payload(
         ],
         "temperature": temperature,
         "stream": False,
+        **({"max_tokens": max_tokens} if max_tokens else {}),
     }
 
 
@@ -394,6 +410,7 @@ def run(
     endpoint: Endpoint | None = None,
     temperature: float = 0.0,
     timeout: float = 900.0,
+    max_tokens: int | None = None,
 ) -> CliResult:
     """Run one item against an OpenAI-compatible server.
 
@@ -415,6 +432,7 @@ def run(
         model=model,
         label=endpoint.label,
         temperature=temperature,
+        max_tokens=max_tokens,
     )
     started = time.monotonic()
     response = _post(

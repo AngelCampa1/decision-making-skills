@@ -33,7 +33,13 @@ from decision_evals.evolution.lineage import (
     load_lineage,
 )
 from decision_evals.evolution.skillopt_env import build_env, train_config
-from decision_evals.evolution.venues import MOCK_MODEL, Venue, mock_call, venue_for
+from decision_evals.evolution.venues import (
+    MOCK_MODEL,
+    Venue,
+    call_fn,
+    mock_call,
+    venue_for,
+)
 from decision_evals.generators import generate, load_all
 from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn
@@ -91,6 +97,13 @@ class EvolveRequest:
     batch_size: int = 8
     sel_env_num: int = 20
     num_epochs: int = 1
+    #: Output-token cap per call. Zero sends none, which is what every published
+    #: run did. It is here rather than in the provider so the number a search
+    #: ran under reaches `run.json`: a `qwen3:1.7b` call has generated 40,960
+    #: tokens over 317 seconds without emitting an answer line, against 4,479 for
+    #: the longest answer that ever finished, and an uncapped runaway spends a
+    #: matched budget on one item.
+    max_tokens: int = 0
 
     def __post_init__(self) -> None:
         if not self.train_seeds or not self.val_seeds:
@@ -286,7 +299,8 @@ def evolve(
 
     adapter = DecisionAdapter(
         venue=venue,
-        call=_mock_oracle(venue, [*train, *validation]),
+        call=_mock_oracle(venue, [*train, *validation])
+        or call_fn(venue, max_tokens=request.max_tokens or None),
         checkpoint=paths.records,
         lineage=paths.lineage,
         budget=budget_for(request, venue),

@@ -108,8 +108,14 @@ def venue_for(model: str, *, api_key: str | None = None) -> Venue:
     )
 
 
-def call_fn(venue: Venue) -> CallFn:
+def call_fn(venue: Venue, *, max_tokens: int | None = None) -> CallFn:
     """The callable a run makes its calls through.
+
+    ``max_tokens`` caps generation. It is passed rather than defaulted because
+    the number belongs in the run's manifest: a small reasoning model that fails
+    to stop scores the same as one that is capped -- no answer line either way --
+    but costs two orders of magnitude more wall clock, and on a matched-budget
+    comparison that decides the result.
 
     Raises:
         VenueError: The model does not name its venue.
@@ -121,7 +127,7 @@ def call_fn(venue: Venue) -> CallFn:
     if venue.model == MOCK_MODEL:
         return mock_call()
     try:
-        return local_call(venue.model, venue.endpoint)
+        return local_call(venue.model, venue.endpoint, max_tokens=max_tokens)
     except RunError as exc:
         raise VenueError(str(exc)) from exc
 

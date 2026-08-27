@@ -289,7 +289,9 @@ def default_call(model: str, cwd: str) -> CallFn:
     return call
 
 
-def local_call(model: str, endpoint: Endpoint | None = None) -> CallFn:
+def local_call(
+    model: str, endpoint: Endpoint | None = None, *, max_tokens: int | None = None
+) -> CallFn:
     """A :data:`CallFn` bound to an OpenAI-compatible server.
 
     The substitution :data:`CallFn` was written for. No ``cwd``, because nothing
@@ -340,6 +342,7 @@ def local_call(model: str, endpoint: Endpoint | None = None) -> CallFn:
             system_prompt=system_prompt,
             model=model,
             endpoint=endpoint,
+            max_tokens=max_tokens,
         )
 
     return call

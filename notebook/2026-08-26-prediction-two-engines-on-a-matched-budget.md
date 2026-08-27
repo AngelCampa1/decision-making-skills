@@ -114,3 +114,51 @@ is not what this was designed to measure.
 proposals may be well beyond what the target can follow. That is a real
 configuration people use and it is the planned one, but a winner that helps a
 larger model and not this one would be invisible here.
+
+---
+
+## Amendment, before any scored comparison: an output cap
+
+Registered above without one, and the first GEPA run showed why there has to be
+one. Appended rather than edited into the text above, which stands as written.
+
+**What happened.** Eight items into the seed candidate's validation pass, one
+call generated **40,960 output tokens over 317 seconds** and never emitted an
+answer line. 40,960 is a server ceiling, not a stopping point: the model entered
+a reasoning loop and ran until something else stopped it. That one call was 89%
+of the elapsed time of the run to that point.
+
+**Why it breaks the design rather than merely slowing it.** The budgets are
+matched at 261 target calls against 300 so that the comparison is between two
+engines. A runaway costs roughly 50 ordinary calls' worth of wall clock, the
+run's guard is `max_seconds`, and the guard would have bound long before either
+call cap. Whichever engine happened to draw more runaways would have searched
+less, and the result would have been a measurement of luck.
+
+**The evidence for where to put the cap.** Across 168 records on three models:
+
+| model | longest completed answer | longest call | runaways |
+| --- | --- | --- | --- |
+| `qwen3:4b` | 4,479 | 6,595 | 0 of 76 |
+| `qwen3:1.7b` | 1,611 | 40,960 | 1 of 42 |
+| `qwen3:0.6b` | 847 | 847 | 0 of 42 |
+
+No answer that finished has ever exceeded 4,479 output tokens. **The cap is
+8,192**, which is above every completed answer on record by a factor of 1.8 and
+below every runaway by a factor of 5.
+
+**Why this does not bias the comparison.** It is set on the venue, so it applies
+identically to every arm and every candidate. A runaway scores `no_answer_line`
+capped or uncapped — the item is wrong either way, and only the clock changes.
+The one thing it could distort is a skill that legitimately needs more than
+8,192 tokens to answer, and nothing in 168 records has come within half of it.
+
+`max_tokens` defaults to zero everywhere else, which sends no cap, so every
+published run's behaviour is untouched. The number reaches `run.json`, because a
+search's instrument settings are part of what the search was.
+
+**Prediction 3 gains a companion.** It said format violations would fall. It is
+now also worth recording that this target's format violations have two distinct
+causes — an answer that finished in the wrong shape, and a generation that never
+finished at all — and they call for different edits. The run reports them apart:
+a capped runaway is a record with `output_tokens` at the cap.
