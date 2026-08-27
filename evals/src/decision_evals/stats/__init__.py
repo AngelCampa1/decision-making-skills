@@ -59,7 +59,12 @@ from decision_evals.stats.cluster import (
     effective_sample_size,
     intraclass_correlation,
 )
-from decision_evals.stats.multiplicity import BenjaminiHochbergResult, benjamini_hochberg
+from decision_evals.stats.multiplicity import (
+    BenjaminiHochbergResult,
+    HolmResult,
+    benjamini_hochberg,
+    holm,
+)
 from decision_evals.stats.paired import (
     McNemarResult,
     PermutationResult,
@@ -85,6 +90,7 @@ __all__ = [
     "DegenerateAgreementError",
     "EffectiveRatersResult",
     "FleissKappaResult",
+    "HolmResult",
     "KrippendorffAlphaResult",
     "McNemarResult",
     "MurphyDecomposition",
@@ -107,6 +113,7 @@ __all__ = [
     "effective_sample_size",
     "expected_calibration_error",
     "fleiss_kappa",
+    "holm",
     "intraclass_correlation",
     "krippendorff_alpha",
     "log_score",

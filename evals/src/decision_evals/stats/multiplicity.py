@@ -96,3 +96,73 @@ def benjamini_hochberg(p_values: npt.ArrayLike, *, q: float = 0.10) -> Benjamini
         n_tests=int(p.size),
         n_rejected=int(np.count_nonzero(rejected)),
     )
+
+
+@dataclass(frozen=True, slots=True)
+class HolmResult:
+    """Adjusted p-values and rejection flags under Holm-Bonferroni.
+
+    Attributes:
+        p_values: The input p-values, in input order.
+        adjusted: Holm-adjusted p-values, in input order. Monotone in the sorted
+            p-values and never smaller than the corresponding raw p-value.
+        rejected: Whether each hypothesis is rejected at the given ``alpha``.
+        alpha: The family-wise error rate applied.
+        n_tests: Family size.
+        n_rejected: Count of rejections.
+    """
+
+    p_values: tuple[float, ...]
+    adjusted: tuple[float, ...]
+    rejected: tuple[bool, ...]
+    alpha: float
+    n_tests: int
+    n_rejected: int
+
+
+def holm(p_values: npt.ArrayLike, *, alpha: float = 0.05) -> HolmResult:
+    """Control the family-wise error rate across a small family of tests.
+
+    The companion to :func:`benjamini_hochberg`, and the choice between them is
+    about what the family is for. Benjamini-Hochberg screens several skills and
+    tolerates a false discovery among genuine ones. Holm is for a family whose
+    whole point is a single verdict -- three arms against one placebo -- where
+    one false positive is the failure, not a proportion of them.
+
+    It is also uniformly more powerful than Bonferroni and needs no assumption
+    about dependence between the tests, which matters here: the arms share their
+    items, so their p-values are correlated by construction.
+
+    Args:
+        p_values: Raw p-values, one per hypothesis in the pre-registered family.
+        alpha: Family-wise error rate.
+
+    Returns:
+        A :class:`HolmResult`. The arithmetic is
+        ``statsmodels.stats.multitest.multipletests(method="holm")``; this
+        function contributes input validation and a named result.
+
+    Raises:
+        ValueError: If ``p_values`` is empty or not one-dimensional, contains a
+            value outside ``[0, 1]``, or ``alpha`` is outside ``(0, 1]``.
+    """
+    if not 0.0 < alpha <= 1.0:
+        raise ValueError(f"alpha must be in (0, 1], got {alpha}")
+
+    p = np.asarray(p_values, dtype=np.float64)
+    if p.ndim != 1:
+        raise ValueError(f"p_values must be one-dimensional, got shape {p.shape}")
+    if p.size == 0:
+        raise ValueError("p_values must not be empty")
+    if np.any(p < 0.0) or np.any(p > 1.0):
+        raise ValueError("p_values must lie in [0, 1]")
+
+    rejected, adjusted, _, _ = multipletests(p, alpha=alpha, method="holm")
+    return HolmResult(
+        p_values=tuple(float(v) for v in p),
+        adjusted=tuple(float(v) for v in adjusted),
+        rejected=tuple(bool(v) for v in rejected),
+        alpha=alpha,
+        n_tests=int(p.size),
+        n_rejected=int(np.count_nonzero(rejected)),
+    )

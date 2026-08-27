@@ -19,6 +19,7 @@ from decision_evals.stats import (
     design_effect,
     effective_sample_size,
     expected_calibration_error,
+    holm,
     intraclass_correlation,
     log_score,
     mcnemar_exact,
@@ -422,3 +423,45 @@ class TestPowerValidation:
         result = required_pairs(0.1, 0.5, design_effect=2.0)
         assert result.n_pairs >= 2 * result.n_pairs_unadjusted - 1
         assert result.design_effect == 2.0
+
+
+class TestHolmValidation:
+    @pytest.mark.parametrize("alpha", [0.0, -0.1, 1.5])
+    def test_rejects_alpha_outside_valid_range(self, alpha: float) -> None:
+        with pytest.raises(ValueError, match=r"alpha must be in \(0, 1\]"):
+            holm([0.01], alpha=alpha)
+
+    def test_rejects_empty_family(self) -> None:
+        with pytest.raises(ValueError, match="must not be empty"):
+            holm([])
+
+    def test_rejects_two_dimensional_input(self) -> None:
+        with pytest.raises(ValueError, match="one-dimensional"):
+            holm([[0.01, 0.02]])
+
+    @pytest.mark.parametrize("bad", [-0.01, 1.01])
+    def test_rejects_values_outside_unit_interval(self, bad: float) -> None:
+        with pytest.raises(ValueError, match=r"p_values must lie in \[0, 1\]"):
+            holm([bad])
+
+    def test_the_step_down_stops_at_the_first_failure(self) -> None:
+        """Holm's whole shape: once a hypothesis survives, everything weaker
+        survives with it, however small its own p-value looked."""
+        result = holm([0.01, 0.04, 0.20], alpha=0.05)
+        assert result.rejected == (True, False, False)
+        assert result.adjusted[0] == pytest.approx(0.03)
+        assert result.n_tests == 3
+        assert result.n_rejected == 1
+
+    def test_no_adjusted_value_is_smaller_than_its_own_p(self) -> None:
+        raw = [0.001, 0.02, 0.03, 0.5]
+        result = holm(raw, alpha=0.05)
+        assert all(a >= p for a, p in zip(result.adjusted, raw, strict=True))
+
+    def test_holm_is_never_more_generous_than_benjamini_hochberg(self) -> None:
+        """Family-wise control is the stricter question, and a family of three
+        against one placebo is the case where that is the right question."""
+        raw = [0.005, 0.03, 0.06]
+        strict = holm(raw, alpha=0.10)
+        loose = benjamini_hochberg(raw, q=0.10)
+        assert sum(strict.rejected) <= sum(loose.rejected)
