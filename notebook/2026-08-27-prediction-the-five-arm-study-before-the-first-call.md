@@ -146,3 +146,19 @@ separately at 300 target calls each.
 
 Predictions 3 and 4 are the study. The rest are checks that it measured what it
 says it measured.
+
+---
+
+## Amendment, before the first call: the pool sizes
+
+The registration above fixed the split and the arms and said nothing about how
+many items each search draws. Recording the choice as a choice rather than
+letting it arrive as a default.
+
+**Training pool 70 items, validation pool 21**, the same two numbers Phase 2
+used. They are matched between the two engines, which is the comparison that has
+to hold; they are not matched to Phase 2's per-template density, because seven
+templates into 70 is ten items each against Phase 2's seven.
+
+What would have measured it instead: a headroom sweep over pool size, which
+costs a search per point and answers a question this study is not asking.
