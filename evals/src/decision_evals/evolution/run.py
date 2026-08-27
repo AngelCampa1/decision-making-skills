@@ -17,7 +17,7 @@ from __future__ import annotations
 import _thread
 import json
 import threading
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
@@ -265,7 +265,9 @@ def write_seed(path: Path, body: str) -> Path:
     return path
 
 
-def items_for(seeds: Sequence[int], *, limit: int = 0) -> list[Item]:
+def items_for(
+    seeds: Sequence[int], *, limit: int = 0, templates: Collection[str] | None = None
+) -> list[Item]:
     """Generate the corpus at each seed, in seed order.
 
     Seed order rather than interleaved, so a checkpoint reads as blocks and a
@@ -294,11 +296,33 @@ def items_for(seeds: Sequence[int], *, limit: int = 0) -> list[Item]:
     Striding within a template is the trap to avoid. A template's 28 items are
     variant-major and stratum-minor, so a stride of ``28 // per`` is usually a
     multiple of seven and draws the same stratum every time.
+
+    ``templates`` restricts the draw to the ids named, and it is how a split
+    holds out *scenarios* rather than *instances*. Fresh seeds over the same ten
+    templates are not a control for a skill that has memorised those templates'
+    decision rules, which is what both engines produced on 2026-08-27: new seeds
+    redraw the numbers and leave the rules standing. Balance is preserved --
+    ``limit`` still spreads the draw across whichever templates remain.
+
+    Raises:
+        EvolveError: An id was named that no template answers to. A split that
+            silently holds out nothing is a split that reports generalisation
+            it never tested.
     """
-    templates = load_all()
+    loaded = load_all()
+    if templates is not None:
+        wanted = set(templates)
+        known = {template.template_id for template in loaded}
+        missing = sorted(wanted - known)
+        if missing:
+            raise EvolveError(
+                f"no template answers to {', '.join(missing)}. The corpus holds "
+                f"{', '.join(sorted(known))}."
+            )
+        loaded = [template for template in loaded if template.template_id in wanted]
     items: list[Item] = []
     for seed in seeds:
-        by_template = [list(generate(template, seed)) for template in templates]
+        by_template = [list(generate(template, seed)) for template in loaded]
         if not limit:
             items.extend(item for rows in by_template for item in rows)
             continue

@@ -1890,3 +1890,36 @@ def test_a_window_is_not_requested_by_default() -> None:
     """Every run before 2026-08-27 inherited the server's, and this records that
     as zero rather than pretending a number was chosen."""
     assert EvolveRequest(engine="gepa", target_model=MOCK_MODEL).num_ctx == 0
+
+
+def test_a_split_can_hold_out_templates_rather_than_seeds() -> None:
+    """Fresh seeds are not a control for a skill that memorised the rules.
+
+    Both 2026-08-27 winners carry decision rules for templates they trained on:
+    new seeds redraw `199/436` and leave `usage < threshold` standing.
+    """
+    held = {"rel-003-oncall-escalate", "rel-009-flight-rebook"}
+    inside = items_for([1000], templates=held)
+    outside = items_for([1000], templates={"rel-001-vendor-outage"})
+    assert {item.template_id for item in inside} == held
+    assert {item.template_id for item in outside} == {"rel-001-vendor-outage"}
+    assert not {i.item_id for i in inside} & {i.item_id for i in outside}
+
+
+def test_a_limited_draw_still_spreads_over_the_templates_that_remain() -> None:
+    """The balance `limit` buys is the reason it exists, and a filter must not
+    quietly take it away."""
+    held = {"rel-001-vendor-outage", "rel-004-inventory-reorder", "rel-007-capacity-scale"}
+    drawn = items_for([1000], limit=6, templates=held)
+    assert len(drawn) == 6
+    assert {item.template_id for item in drawn} == held
+
+
+def test_holding_out_a_template_that_does_not_exist_is_refused() -> None:
+    """A split that silently holds out nothing reports generalisation it never tested."""
+    with pytest.raises(EvolveError, match="no template answers to rel-999-invented"):
+        items_for([1000], templates={"rel-999-invented"})
+
+
+def test_naming_no_templates_draws_all_of_them() -> None:
+    assert len({item.template_id for item in items_for([1000], templates=None)}) == 10
