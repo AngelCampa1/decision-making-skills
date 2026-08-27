@@ -387,6 +387,7 @@ def build_native_payload(
     temperature: float = 0.0,
     max_tokens: int | None = None,
     num_ctx: int,
+    keep_alive: str = "60m",
 ) -> dict[str, Any]:
     """The request body for one completion on Ollama's own surface.
 
@@ -400,6 +401,17 @@ def build_native_payload(
 
     ``num_predict`` is Ollama's name for ``max_tokens`` and ``-1`` is its
     uncapped value.
+
+    ``keep_alive`` pins residency, and it is the reason this defaults to an hour
+    rather than to the server's five minutes. Measured 2026-08-27 over twelve
+    passes of one body on 21 items: nineteen items answered identically every
+    time, and **two answered to whether the model had just been loaded** --
+    `rel-002-deploy-window#v0-d1-early` correct only while resident,
+    `rel-005-security-patch#v0-d4-early` correct only just after a load, in
+    antiphase for eleven consecutive passes. A search waits minutes on a hosted
+    reflector between validation passes, which is longer than the default
+    residency, so it samples both states in an order nobody chose. That was read
+    as run-to-run noise for a day.
     """
     bare = model[len(label) + 1 :] if model.startswith(f"{label}/") else model
     return {
@@ -409,6 +421,7 @@ def build_native_payload(
             {"role": "user", "content": prompt},
         ],
         "stream": False,
+        "keep_alive": keep_alive,
         "options": {
             "temperature": temperature,
             "num_ctx": num_ctx,
@@ -503,13 +516,16 @@ def loaded(*, endpoint: Endpoint, timeout: float = 30.0) -> dict[str, int]:
     instance, and ``/api/ps`` is where it is readable.
 
     The gap is not cosmetic. On 2026-08-27 two evolution runs sent
-    ``max_tokens: 8192`` at a model loaded with a 4,096-token window. Not one of
-    478 readable answers ever crossed 4,096 prompt-plus-output tokens; every
-    long unreadable one was past it, because a generation that reaches the end
-    of the window pushes the system prompt and the question out of it and then
-    cannot answer a question it no longer has. It talks until the cap instead.
-    Those failures were scored as the skill failing to comply with an output
-    format.
+    ``max_tokens: 8192`` at a model loaded with a 4,096-token window, which is a
+    request that has arranged not to be able to hold its own answer.
+
+    **What that misconfiguration did is not established.** Of 478 readable
+    answers not one ever crossed 4,096 prompt-plus-output tokens and every long
+    unreadable one was past it, which reads as cause and is only correlation: a
+    controlled probe at a 16,384-token window produced no unreadable answer in
+    231 calls, and the same body at 4,096 produced none in 210. Widening the
+    window does not reproduce the failure and neither does keeping it narrow.
+    The refusal below stands on the incoherence rather than on the incident.
 
     Returns:
         Bare model name to context window, empty when the server has nothing

@@ -751,3 +751,27 @@ def test_a_hosted_endpoint_cannot_be_given_a_window() -> None:
             endpoint=nvidia_build(api_key="k"),
             num_ctx=16384,
         )
+
+
+def test_a_native_call_pins_residency_for_an_hour() -> None:
+    """A search waits minutes on a hosted reflector between validation passes,
+    which crosses Ollama's five-minute default and evicts the model. Two of this
+    corpus's 21 items then flip, deterministically and in antiphase, on whether
+    the model was freshly loaded."""
+    payload = build_native_payload(
+        prompt="p", system_prompt="s", model="qwen3:1.7b", label="ollama", num_ctx=8192
+    )
+    assert payload["keep_alive"] == "60m"
+
+
+def test_residency_can_be_set_deliberately() -> None:
+    """Pinning is a claim about the server, so a probe has to be able to unpin it."""
+    payload = build_native_payload(
+        prompt="p",
+        system_prompt="s",
+        model="qwen3:1.7b",
+        label="ollama",
+        num_ctx=8192,
+        keep_alive="0",
+    )
+    assert payload["keep_alive"] == "0"

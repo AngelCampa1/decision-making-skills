@@ -120,10 +120,11 @@ def call_fn(venue: Venue, *, max_tokens: int | None = None, num_ctx: int | None 
     comparison that decides the result.
 
     ``num_ctx`` fixes the context window, and passing it moves the call to
-    Ollama's native surface, the only one that accepts a window. Without it the
-    server answers at whatever it was started with -- 4,096 here, under which
-    fourteen of sixteen unreadable answers on 2026-08-27 were generations that
-    had pushed their own question out of the window.
+    Ollama's native surface, the only one that accepts a window. That surface
+    also pins residency, which matters more than the window did: two of this
+    corpus's 21 validation items answer to whether the model was freshly loaded,
+    deterministically, and a search that waits on a hosted reflector between
+    passes crosses the default five-minute residency every time.
 
     Raises:
         VenueError: The model does not name its venue.
@@ -201,13 +202,17 @@ def context_window(venue: Venue, *, timeout: float = 30.0) -> int | None:
 def assert_cap_fits(window: int | None, max_tokens: int) -> None:
     """Refuse an output cap the model's own context cannot hold.
 
-    A generation that reaches the end of its window does not stop. The server
-    shifts the context, the system prompt and the question go out of it, and the
-    model then produces text forever about a question it no longer has. It reads
-    downstream as a formatting failure, which is what it was recorded as: on
-    2026-08-27 two searches sent ``max_tokens: 8192`` at a model loaded with a
-    4,096-token window, and fourteen of sixteen unreadable answers were past the
-    window rather than badly formatted.
+    A cap larger than the window asks for an answer the request cannot hold. The
+    server shifts the context as the window fills, the system prompt and the
+    question go out of the front of it, and whatever the model does after that
+    it is no longer answering the question it was asked. Refusing that is not a
+    theory about any particular run: it is the observation that no possible
+    response fills the gap between the two numbers.
+
+    On 2026-08-27 two searches ran at ``max_tokens: 8192`` against a 4,096-token
+    window. Whether that produced their unreadable answers is **not** settled --
+    a probe at 16,384 did not reproduce them and neither did one at 4,096 --
+    and this refusal does not need it to be.
 
     ``window`` of ``None`` passes, because a check that cannot be made is not a
     failure. Whether it *could* be made is the caller's problem.
