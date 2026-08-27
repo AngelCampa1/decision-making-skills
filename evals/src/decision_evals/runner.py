@@ -290,7 +290,11 @@ def default_call(model: str, cwd: str) -> CallFn:
 
 
 def local_call(
-    model: str, endpoint: Endpoint | None = None, *, max_tokens: int | None = None
+    model: str,
+    endpoint: Endpoint | None = None,
+    *,
+    max_tokens: int | None = None,
+    num_ctx: int | None = None,
 ) -> CallFn:
     """A :data:`CallFn` bound to an OpenAI-compatible server.
 
@@ -343,6 +347,7 @@ def local_call(
             model=model,
             endpoint=endpoint,
             max_tokens=max_tokens,
+            num_ctx=num_ctx,
         )
 
     return call

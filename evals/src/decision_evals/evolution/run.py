@@ -104,6 +104,14 @@ class EvolveRequest:
     batch_size: int = 8
     sel_env_num: int = 20
     num_epochs: int = 1
+    #: The context window the target runs with. Zero leaves it to the server,
+    #: which is what every run before 2026-08-27 did and what made those runs
+    #: hard to read: Ollama defaults to 4,096, and fourteen of sixteen
+    #: unreadable answers in the two matched runs were generations that filled
+    #: the window and pushed their own question out of the front of it. Setting
+    #: it moves the call to Ollama's native surface, the only one that accepts a
+    #: window, so it reaches the manifest rather than being inherited.
+    num_ctx: int = 0
     #: Output-token cap per call. Zero sends none, which is what every published
     #: run did. It is here rather than in the provider so the number a search
     #: ran under reaches `run.json`: a `qwen3:1.7b` call has generated 40,960
@@ -403,10 +411,14 @@ def evolve(
     )
 
     call = _mock_oracle(venue, [*train, *validation]) or call_fn(
-        venue, max_tokens=request.max_tokens or None
+        venue, max_tokens=request.max_tokens or None, num_ctx=request.num_ctx or None
     )
     if request.max_tokens:
-        assert_cap_fits(context_window(venue), request.max_tokens)
+        # A window the run asked for is the window it gets, and the guard reads
+        # that rather than what the server happens to have resident. Without one
+        # there is nothing to ask but residency, and a hosted endpoint answers
+        # neither.
+        assert_cap_fits(request.num_ctx or context_window(venue), request.max_tokens)
 
     adapter = DecisionAdapter(
         venue=venue,

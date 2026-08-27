@@ -273,3 +273,28 @@ output tokens. Those are genuine format failures. Fourteen are the harness.
   able to read.
 - **Measure the flip rate under the study's own conditions.** Neither 14.3% nor
   0.7% is the number Phase 3 gets to use.
+
+### The window cannot be widened from the endpoint the study uses
+
+Checked directly, because the guard above only refuses a run and the study still
+has to run one.
+
+`POST /api/chat` with `options.num_ctx: 16384` loads the model at 16,384 and
+`/api/ps` confirms it. No server restart, no environment variable, nothing on
+the machine outside this repository changes. Then one call to
+`/v1/chat/completions` — the OpenAI-compatible endpoint every model call in this
+study goes through — and `/api/ps` reads **4,096** again.
+
+```
+resident:                          {'qwen3:1.7b': 16384}
+after an OpenAI-endpoint call:     {'qwen3:1.7b': 4096}
+```
+
+The OpenAI surface takes no `num_ctx` and reloads the model at the server
+default on every request, so pre-loading a wider instance buys nothing. The
+window is a property of the request, and only the native surface accepts it.
+
+**So Phase 3's target calls go through `/api/chat` with an explicit `num_ctx`,
+or they run at 4,096 forever.** Which is a change of venue configuration, which
+makes every number on either side of it incomparable, which is why it is written
+here before the run rather than fixed quietly during one.

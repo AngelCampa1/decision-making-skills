@@ -33,11 +33,13 @@ from decision_evals.providers.openai_compatible import (
     _number,
     _post,
     assert_isolated,
+    build_native_payload,
     build_payload,
     loaded,
     nvidia_build,
     ollama,
     parse_completion,
+    parse_native,
     preflight,
     run,
     show,
@@ -636,3 +638,116 @@ def test_a_get_that_returns_prose_is_refused(monkeypatch: pytest.MonkeyPatch) ->
     _fake_urlopen(monkeypatch, b"<html>nope</html>")
     with pytest.raises(CliError, match="did not return JSON"):
         _get("http://x", api_key=None, timeout=1.0)
+
+
+# --------------------------------------------------------------------------- #
+# The native surface, which is the only one that takes a context window
+# --------------------------------------------------------------------------- #
+
+
+def _native(**overrides: Any) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "model": "qwen3:1.7b",
+        "message": {"role": "assistant", "content": "4", "thinking": "two and two"},
+        "done": True,
+        "done_reason": "stop",
+        "prompt_eval_count": 32,
+        "eval_count": 63,
+    }
+    payload.update(overrides)
+    return payload
+
+
+def test_a_native_payload_carries_the_window_and_the_cap() -> None:
+    payload = build_native_payload(
+        prompt="p",
+        system_prompt="s",
+        model="ollama/qwen3:1.7b",
+        label="ollama",
+        max_tokens=4096,
+        num_ctx=16384,
+    )
+    assert payload["model"] == "qwen3:1.7b"
+    assert payload["options"] == {"temperature": 0.0, "num_ctx": 16384, "num_predict": 4096}
+    assert payload["messages"] == [
+        {"role": "system", "content": "s"},
+        {"role": "user", "content": "p"},
+    ]
+
+
+def test_no_cap_sends_ollamas_uncapped_value() -> None:
+    """`num_predict` has no "absent" form; -1 is how Ollama spells uncapped."""
+    payload = build_native_payload(
+        prompt="p", system_prompt="s", model="qwen3:1.7b", label="ollama", num_ctx=8192
+    )
+    assert payload["options"]["num_predict"] == -1
+
+
+def test_a_native_reply_parses_into_the_same_result_shape() -> None:
+    result = parse_native(_native(), label="ollama", duration_ms=7, cost_usd=0.0)
+    assert result.text == "4"
+    assert result.model == "ollama/qwen3:1.7b"
+    assert (result.input_tokens, result.output_tokens) == (32, 63)
+    assert result.reasoning == "two and two", "`thinking` is what the native surface calls it"
+
+
+def test_a_truncated_generation_says_so() -> None:
+    """The signal the OpenAI surface never gave us. Fourteen of sixteen
+    unreadable answers on 2026-08-27 were generations that ran to their cap,
+    and nothing in the record said which."""
+    result = parse_native(
+        _native(done_reason="length"), label="ollama", duration_ms=1, cost_usd=0.0
+    )
+    assert result.status == "length"
+
+
+@pytest.mark.parametrize(
+    "payload",
+    ["not an object", {"error": "model not found"}, {"message": {"role": "assistant"}}, {}],
+)
+def test_a_malformed_native_reply_is_refused(payload: Any) -> None:
+    with pytest.raises(CliError):
+        parse_native(payload, label="ollama", duration_ms=1, cost_usd=0.0)
+
+
+def test_asking_for_a_window_moves_the_call_to_the_native_surface(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_post(url: str, payload: dict[str, Any], **kwargs: Any) -> Any:
+        captured["url"] = url
+        captured["payload"] = payload
+        return _native()
+
+    monkeypatch.setattr("decision_evals.providers.openai_compatible._post", fake_post)
+    result = run("p", system_prompt="s", model="ollama/qwen3:1.7b", num_ctx=16384)
+    assert captured["url"] == "http://127.0.0.1:11434/api/chat"
+    assert captured["payload"]["options"]["num_ctx"] == 16384
+    assert result.text == "4"
+
+
+def test_asking_for_no_window_stays_on_the_openai_surface(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_post(url: str, payload: dict[str, Any], **kwargs: Any) -> Any:
+        captured["url"] = url
+        return _completion()
+
+    monkeypatch.setattr("decision_evals.providers.openai_compatible._post", fake_post)
+    run("p", system_prompt="s", model="ollama/qwen3:4b")
+    assert captured["url"] == "http://127.0.0.1:11434/v1/chat/completions"
+
+
+def test_a_hosted_endpoint_cannot_be_given_a_window() -> None:
+    """Silently answering at an unknown window is the failure this exists to stop."""
+    with pytest.raises(CliError, match="takes no `num_ctx`"):
+        run(
+            "p",
+            system_prompt="s",
+            model="nvbuild/openai/gpt-oss-20b",
+            endpoint=nvidia_build(api_key="k"),
+            num_ctx=16384,
+        )

@@ -378,6 +378,82 @@ def parse_completion(payload: Any, *, label: str, duration_ms: int, cost_usd: fl
     )
 
 
+def build_native_payload(
+    *,
+    prompt: str,
+    system_prompt: str,
+    model: str,
+    label: str,
+    temperature: float = 0.0,
+    max_tokens: int | None = None,
+    num_ctx: int,
+) -> dict[str, Any]:
+    """The request body for one completion on Ollama's own surface.
+
+    Same call as :func:`build_payload` in every respect the study cares about,
+    with one thing the OpenAI shape cannot express: ``num_ctx``. Measured on
+    2026-08-27 -- loading the model at 16,384 through ``/api/chat`` and then
+    making a single ``/v1/chat/completions`` call reloads it at the server
+    default of 4,096, so the window is a property of the request and only this
+    surface accepts it. A study that runs on the OpenAI surface runs at
+    whatever the server was started with, whatever it did beforehand.
+
+    ``num_predict`` is Ollama's name for ``max_tokens`` and ``-1`` is its
+    uncapped value.
+    """
+    bare = model[len(label) + 1 :] if model.startswith(f"{label}/") else model
+    return {
+        "model": bare,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt},
+        ],
+        "stream": False,
+        "options": {
+            "temperature": temperature,
+            "num_ctx": num_ctx,
+            "num_predict": max_tokens if max_tokens else -1,
+        },
+    }
+
+
+def parse_native(payload: Any, *, label: str, duration_ms: int, cost_usd: float) -> CliResult:
+    """Turn an ``/api/chat`` reply into a :class:`CliResult`.
+
+    Two fields are named differently from the OpenAI shape and one has no
+    equivalent there. Reasoning arrives as ``thinking`` rather than
+    ``reasoning``; the token counts are ``prompt_eval_count`` and ``eval_count``.
+    The third is ``done_reason``, which says **why** the generation stopped and
+    reads ``"length"`` when the cap was reached. That is the signal that would
+    have named the 2026-08-27 runaways on the day they happened rather than
+    three weeks later, so it is recorded in ``status``.
+
+    Raises:
+        CliError: The reply was not a well-formed chat response.
+    """
+    if not isinstance(payload, dict):
+        raise CliError(f"expected a chat response, got {payload!r}")
+    error = payload.get("error")
+    if error:
+        raise CliError(str(error))
+    message = payload.get("message")
+    if not isinstance(message, dict) or not isinstance(message.get("content"), str):
+        raise CliError(f"response carries no message content: {payload!r}")
+    resolved = payload.get("model")
+    thinking = message.get("thinking") or ""
+    return CliResult(
+        text=message["content"],
+        model=f"{label}/{resolved}" if isinstance(resolved, str) and resolved else label,
+        cost_usd=cost_usd,
+        input_tokens=int(_number(payload.get("prompt_eval_count"))),
+        output_tokens=int(_number(payload.get("eval_count"))),
+        duration_ms=duration_ms,
+        session_id="",
+        reasoning=thinking if isinstance(thinking, str) else "",
+        status=str(payload.get("done_reason") or ""),
+    )
+
+
 def _number(value: Any) -> float:
     """Coerce a possibly-absent, possibly-null usage field to a number."""
     if value is None:
@@ -511,8 +587,16 @@ def run(
     temperature: float = 0.0,
     timeout: float = 900.0,
     max_tokens: int | None = None,
+    num_ctx: int | None = None,
 ) -> CliResult:
     """Run one item against an OpenAI-compatible server.
+
+    ``num_ctx`` switches to the server's *native* surface, because the
+    OpenAI-compatible one has nowhere to put a context window and reloads the
+    model at the server default on every request. Passing it is how a run states
+    the window it ran under instead of inheriting one. Only Ollama offers this;
+    a hosted endpoint is refused rather than silently answered at an unknown
+    window.
 
     No ``cwd`` parameter, and its absence is the one real difference from
     :func:`~decision_evals.providers.claude_code.run`. That signature requires a
@@ -526,23 +610,40 @@ def run(
     scored as infrastructure failure rather than retried.
     """
     endpoint = endpoint or ollama()
-    payload = build_payload(
-        prompt=prompt,
-        system_prompt=system_prompt,
-        model=model,
-        label=endpoint.label,
-        temperature=temperature,
-        max_tokens=max_tokens,
+    native = num_ctx is not None
+    if native and endpoint.native_url is None:
+        raise CliError(
+            f"a context window was requested for {endpoint.label}, which exposes only an "
+            "OpenAI-compatible surface. That surface takes no `num_ctx` and the server "
+            "answers at whatever it was started with. Ask for no window and record that "
+            "the one in force is unknown."
+        )
+    url = f"{endpoint.native_url}/chat" if native else f"{endpoint.base_url}/chat/completions"
+    payload = (
+        build_native_payload(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            model=model,
+            label=endpoint.label,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            num_ctx=num_ctx,
+        )
+        if num_ctx is not None
+        else build_payload(
+            prompt=prompt,
+            system_prompt=system_prompt,
+            model=model,
+            label=endpoint.label,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
     )
     started = time.monotonic()
-    response = _post(
-        f"{endpoint.base_url}/chat/completions",
-        payload,
-        api_key=endpoint.api_key,
-        timeout=timeout,
-    )
+    response = _post(url, payload, api_key=endpoint.api_key, timeout=timeout)
     duration_ms = int((time.monotonic() - started) * 1000)
-    return parse_completion(
+    parse = parse_native if native else parse_completion
+    return parse(
         response,
         label=endpoint.label,
         duration_ms=duration_ms,

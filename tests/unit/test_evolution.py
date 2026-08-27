@@ -1860,3 +1860,33 @@ def test_a_resident_model_is_not_reloaded(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr("decision_evals.evolution.venues.loaded", lambda **_: {"qwen3:1.7b": 8192})
     monkeypatch.setattr("decision_evals.evolution.venues.warm", fake_warm)
     assert context_window(venue_for("ollama/qwen3:1.7b")) == 8192
+
+
+def test_the_window_a_run_asked_for_is_the_one_the_guard_reads(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Residency answers what the server has now, not what this run will ask for.
+
+    A run that sets `num_ctx` reloads the model at that window on its first
+    call, so checking what is resident beforehand checks the previous run's
+    configuration.
+    """
+
+    def unreachable(*_: object, **__: object) -> int:
+        raise AssertionError("a requested window makes residency irrelevant")
+
+    monkeypatch.setattr("decision_evals.evolution.run.context_window", unreachable)
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_tokens=8192, num_ctx=16384)
+    assert_cap_fits(request.num_ctx or None, request.max_tokens)
+
+
+def test_the_window_reaches_the_manifest() -> None:
+    """A run that inherited its window cannot say which one it ran under."""
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, num_ctx=16384)
+    assert asdict(request)["num_ctx"] == 16384
+
+
+def test_a_window_is_not_requested_by_default() -> None:
+    """Every run before 2026-08-27 inherited the server's, and this records that
+    as zero rather than pretending a number was chosen."""
+    assert EvolveRequest(engine="gepa", target_model=MOCK_MODEL).num_ctx == 0

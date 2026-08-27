@@ -110,7 +110,7 @@ def venue_for(model: str, *, api_key: str | None = None) -> Venue:
     )
 
 
-def call_fn(venue: Venue, *, max_tokens: int | None = None) -> CallFn:
+def call_fn(venue: Venue, *, max_tokens: int | None = None, num_ctx: int | None = None) -> CallFn:
     """The callable a run makes its calls through.
 
     ``max_tokens`` caps generation. It is passed rather than defaulted because
@@ -118,6 +118,12 @@ def call_fn(venue: Venue, *, max_tokens: int | None = None) -> CallFn:
     to stop scores the same as one that is capped -- no answer line either way --
     but costs two orders of magnitude more wall clock, and on a matched-budget
     comparison that decides the result.
+
+    ``num_ctx`` fixes the context window, and passing it moves the call to
+    Ollama's native surface, the only one that accepts a window. Without it the
+    server answers at whatever it was started with -- 4,096 here, under which
+    fourteen of sixteen unreadable answers on 2026-08-27 were generations that
+    had pushed their own question out of the window.
 
     Raises:
         VenueError: The model does not name its venue.
@@ -129,7 +135,7 @@ def call_fn(venue: Venue, *, max_tokens: int | None = None) -> CallFn:
     if venue.model == MOCK_MODEL:
         return mock_call()
     try:
-        return local_call(venue.model, venue.endpoint, max_tokens=max_tokens)
+        return local_call(venue.model, venue.endpoint, max_tokens=max_tokens, num_ctx=num_ctx)
     except RunError as exc:
         raise VenueError(str(exc)) from exc
 

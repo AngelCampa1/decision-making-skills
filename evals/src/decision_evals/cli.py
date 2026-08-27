@@ -1316,6 +1316,13 @@ def evolve(
     ] = 20,
     num_epochs: Annotated[int, typer.Option(help="SkillOpt: passes over the training pool.")] = 1,
     max_tokens: Annotated[int, typer.Option(help="Output-token cap per call. 0 sends none.")] = 0,
+    num_ctx: Annotated[
+        int,
+        typer.Option(
+            help="Context window the target runs with. 0 leaves it to the server, "
+            "which on Ollama means 4,096 whatever the model supports."
+        ),
+    ] = 0,
 ) -> None:
     """Evolve a skill against the corpus, and write the search down.
 
@@ -1350,6 +1357,7 @@ def evolve(
         sel_env_num=sel_env_num,
         num_epochs=num_epochs,
         max_tokens=max_tokens,
+        num_ctx=num_ctx,
     )
     result = run_evolution(
         request,
