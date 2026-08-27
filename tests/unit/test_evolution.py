@@ -12,6 +12,7 @@ from __future__ import annotations
 import importlib.util
 import itertools
 import json
+import os
 import re
 import time
 from dataclasses import asdict
@@ -94,6 +95,7 @@ from decision_evals.evolution.solo import (
     LOCK_NAME,
     ConcurrencyError,
     Solo,
+    _alive,
     read_holder,
     unsafe,
 )
@@ -1643,3 +1645,34 @@ def test_an_unreadable_lock_does_not_block_anything(tmp_path: Path) -> None:
 )
 def test_only_the_measured_venues_are_locked(model: str, expected: bool) -> None:
     assert unsafe(model) is expected
+
+
+def test_this_very_process_reads_as_alive() -> None:
+    """The case the first version got wrong, on the platform it runs on.
+
+    `os.kill(pid, 0)` raises `WinError 87` here rather than probing, the
+    handler caught it as OSError and returned False, and so every live process
+    read as dead. The lock released itself and a second search started into a
+    running one -- the failure it exists to prevent. Every other test passed:
+    they only ever asked about pids that really were dead.
+    """
+    assert _alive(os.getpid())
+
+
+def test_a_pid_that_cannot_exist_reads_as_dead() -> None:
+    assert not _alive(2**31 - 1)
+    assert not _alive(0)
+    assert not _alive(-1)
+
+
+def test_a_live_holder_blocks_and_the_message_names_the_run(tmp_path: Path) -> None:
+    """End to end against a real pid, rather than a stub that cannot catch this."""
+    (tmp_path / LOCK_NAME).write_text(
+        json.dumps({"pid": os.getpid(), "model": "ollama/qwen3:1.7b", "run": "the-live-one"}),
+        encoding="utf-8",
+    )
+    with (
+        pytest.raises(ConcurrencyError, match="the-live-one"),
+        Solo(tmp_path, "ollama/qwen3:1.7b", "the-second-one"),
+    ):
+        pass

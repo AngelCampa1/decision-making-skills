@@ -56,15 +56,58 @@ def unsafe(model: str) -> bool:
     return any(model.startswith(prefix) for prefix in CONCURRENCY_UNSAFE)
 
 
+#: ``OpenProcess`` access right that only asks to wait on a handle.
+_SYNCHRONIZE: Final = 0x0010_0000
+#: ``WaitForSingleObject`` saying the process has not exited.
+_WAIT_TIMEOUT: Final = 0x0000_0102
+#: ``OpenProcess`` refused because the process belongs to somebody else. It
+#: exists, which is the whole question.
+_ERROR_ACCESS_DENIED: Final = 5
+
+
+def _alive_windows(pid: int) -> bool:
+    """Whether a process id is running, asked of the Win32 API.
+
+    ``os.kill(pid, 0)`` does not work here and does not fail safely either. The
+    POSIX idiom of "signal zero probes without delivering" has no Windows
+    equivalent: ``os.kill`` maps to ``TerminateProcess`` for any signal it does
+    not special-case, and signal zero is rejected outright with
+    ``WinError 87``. The first version of this module caught that as
+    ``OSError``, returned ``False``, and so reported **every** live process as
+    dead -- a lock that took itself out and let a second search start into a
+    running one, which is exactly what it was written to prevent.
+
+    ``SYNCHRONIZE`` is the narrowest right that answers the question, and
+    access-denied is an answer: a process somebody else owns is still a process.
+    """
+    import ctypes
+
+    kernel32 = ctypes.windll.kernel32
+    handle = kernel32.OpenProcess(_SYNCHRONIZE, False, pid)
+    if not handle:
+        return bool(kernel32.GetLastError() == _ERROR_ACCESS_DENIED)
+    try:
+        return bool(kernel32.WaitForSingleObject(handle, 0) == _WAIT_TIMEOUT)
+    finally:
+        kernel32.CloseHandle(handle)
+
+
 def _alive(pid: int) -> bool:
     """Whether a process id is still running.
 
-    ``os.kill(pid, 0)`` is the portable check and raises ``PermissionError``
-    when the process exists but belongs to somebody else, which still counts as
-    alive.
+    Two implementations because the platforms disagree about what "ask without
+    disturbing" means. See :func:`_alive_windows` for why the portable-looking
+    one is not portable.
+
+    The branch is on ``os.name`` rather than ``sys.platform`` because the type
+    checker narrows the latter to the platform it was configured for and then
+    reports the other half of a deliberately cross-platform function as dead
+    code.
     """
     if pid <= 0:
         return False
+    if os.name == "nt":
+        return _alive_windows(pid)
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
