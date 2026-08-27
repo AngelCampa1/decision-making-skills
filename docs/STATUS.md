@@ -16,12 +16,14 @@ skill* and is empty on purpose.
 
 ## The one-line version
 
-**Eleven results are in, eleven measurements were caught being broken, no skill
-has been evaluated end-to-end — and the instrument that produced every trigger
-result was solvable at 0.890 by counting words, which is
-[Track N](RESEARCH_PROGRAMME.md) and is now rebuilt: the best shortcut on the
-**258**-item corpus is a stump at **0.7054** against a 0.6667 baseline, a lift
-of **0.0387**. One of the eleven, **N9, is void** and answers nothing.**
+**This harness has caught eleven of its own measurements broken before they
+became a result, across the eleven results now on record, none of them yet an
+end-to-end skill evaluation.** The instrument behind every trigger result was
+itself found solvable at 0.890 by counting words, a finding
+[Track N](RESEARCH_PROGRAMME.md) produced about its own corpus and has since
+rebuilt: the best shortcut on the **258**-item corpus is a stump at **0.7054**
+against a 0.6667 baseline, a lift of **0.0387**. **N9**, one of the eleven, is
+void and answers nothing.
 
 *The counts above read "six" and "five" until 2026-08-13, and "eight" until
 2026-08-14, each time because the tables below had already grown past them. A
@@ -36,6 +38,15 @@ were stale by one revision: 261 items and a 0.701 stump are the **pre-shrink**
 numbers, from before `l15` was retired. On v4 the stump is 0.7054 against
 0.6667. Three drifts now, all of the same shape, and the count has never once
 been wrong in the direction of claiming less than the tables held.*
+
+**2026-08-27, open on a branch, not on `main`.** `origin/evolution-study` at
+`5daf654` found that two automated prompt optimizers, GEPA and SkillOpt, each
+produced a winning skill that had written the answer key into its own body,
+and that a 14.3% per-item flip rate in the runs' own accidental repeats
+(Wilson 95% [7.1%, 26.7%]) puts both winners' gains inside the noise of a
+21-item score. It also found that the seed-varied holdout planned for the
+next phase would have scored memorisation as generalisation. Not merged, not
+settled: see the branch's `notebook/` entries dated the same day.
 
 ---
 
@@ -178,6 +189,15 @@ M6 + M6b, Track I, Track K, L7, N5, N6, N7, N9, N10. The `hinge` screen does not
 add a row there. It is a venue disposition and it sits in *Venues built* with the
 two `ledger` runs, which is where the previous two Track H entries went and why
 they were easy to miss.
+
+**Correction, 2026-08-27, appended. A documentation rewrite changed the
+one-line version's count from "eleven" to "twelve" in place, and that edit is
+reverted.** The summary sentence again reads "eleven results," matching the
+decision recorded above not to correct that line in place a third time. The
+table above still counts twelve results on record, unchanged by this
+correction. Reviewed 2026-08-27 and left as written: the summary line stays
+hand-maintained at eleven, the table stays counted at twelve, and the gap
+between them is the fact worth keeping visible.
 
 ---
 

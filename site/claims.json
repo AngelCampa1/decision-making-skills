@@ -15,7 +15,7 @@
       "value": "eleven",
       "rounded": null,
       "source": "docs/STATUS.md",
-      "quote": "eleven measurements were caught being broken",
+      "quote": "caught eleven of its own measurements broken",
       "latest": null,
       "why": "The count of our own instruments caught reading something that was not there. It grows whenever one is found, and three living documents already disagree about it — RESEARCH_PROGRAMME.md says ten, METHODS.md says around eleven, the issue template says eight. STATUS.md is the ledger, so it is the one anchor, and the page must not become a fourth answer."
     },

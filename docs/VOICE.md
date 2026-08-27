@@ -57,6 +57,18 @@ rule keeps a pointer.
 for style is a record destroyed. New entries meet this standard and old entries
 are left alone. Corrections are appended.
 
+**Amended 2026-08-27, `docs/STATUS.md` only.** The findings, entries, numbers
+and dates inside its append-only correction log still fall under the rule
+above and are never rewritten. What changed is narrower: the summary prose
+that sits above that log, the sections that describe what the entries add up
+to, may be rewritten for framing, order and construction, held to the same
+register as a cold-reader or evaluating-reader document. It may not move a
+fact. A number, an entry, a date, a finding or a verdict changes only through
+a newly appended, dated correction in that same log, never by editing the
+summary sentence that states it. `DECISIONS.md`, `RUN_INDEX.md` and
+`notebook/` keep the old rule without exception: nothing in them is a
+summary, so nothing in them qualifies.
+
 ## What not to write
 
 Each of these was found in this repository, and every example is real.

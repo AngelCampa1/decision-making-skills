@@ -73,9 +73,9 @@ considerably more than an evidence channel that only ever agrees with itself.
 
 **proven: 0 / shipped: 0**
 
-The table is empty because no confirmation run has happened. The harness is
-being built first, deliberately. [`docs/PROTOCOL.md`](docs/PROTOCOL.md) carries
-the standing methodology, and [`notebook/`](notebook/) the running research log.
+The harness comes first, deliberately: no confirmation run has happened yet, so
+the table above is empty. [`docs/PROTOCOL.md`](docs/PROTOCOL.md) carries the
+standing methodology, and [`notebook/`](notebook/) the running research log.
 
 ## The caveat that used to qualify every number on record
 

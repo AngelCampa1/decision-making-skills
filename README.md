@@ -45,7 +45,7 @@ instances and reports their agreement chance-corrected. It stamps an answer-key
 version into every record and refuses, in code, to compare arms across a version
 boundary. It pins MCP empty at every call, because a connector present in one
 arm and absent in another is a confound. And it refuses to publish a result
-whose prediction cannot be shown by git ancestry to predate its data. Sixteen
+whose prediction cannot be shown by git ancestry to predate its data. Nineteen
 runs are published under those rules, raw transcripts included.
 
 What they have found so far is about *firing*: whether a skill switches on when
@@ -130,14 +130,17 @@ label move once raised recall on every arm on disk without a single call being
 re-made.
 
 **Relabelling it, blind.** The maintainer's labels do not get the last word on
-themselves. [`scripts/adjudicate.py`](scripts/adjudicate.py) puts three blind
-adjudicators on every turn, an LLM-as-a-judge panel of independent model
-instances, none of which sees the maintainer's label or the other two, resolved
-by majority against a kill threshold fixed before the run. Inter-rater
-reliability is reported chance-corrected, with Fleiss' kappa and Krippendorff's
-alpha beside raw agreement, because on this class balance two judges that have
-learned nothing still agree most of the time. Primary metrics stay
-deterministic and a judge never produces one.
+themselves. [`scripts/adjudicate.py`](scripts/adjudicate.py) runs a blind
+three-judge panel on every turn:
+
+- Three independent model instances judge each turn, and none sees the
+  maintainer's label or the other two.
+- A verdict needs a majority, checked against a kill threshold fixed before
+  the run.
+- Agreement is reported chance-corrected, with Fleiss' kappa and
+  Krippendorff's alpha beside raw agreement, because on this class balance
+  two judges that have learned nothing still agree most of the time.
+- Primary metrics stay deterministic. A judge never produces one.
 
 **The arms.** A confirmation run is a within-item comparison with four arms on
 the same items: **off** (the ablation), **on**, **placebo** (token- and
@@ -203,9 +206,9 @@ it, and whether it has actually run.
 
 Every caveat, in one place.
 
-No skill here carries a verdict. `decision-making` and all six procedures are
-`UNTESTED` and ship as `experimental`. [`SCORECARD.md`](SCORECARD.md) is the
-file that changes that, and it is empty.
+The verdict badge above is not a formality: `decision-making` and all six
+procedures are `UNTESTED` and ship as `experimental`. [`SCORECARD.md`](SCORECARD.md)
+is the file that changes that, and it is empty.
 
 Every trigger number on record measures whether a skill *fires*, which is
 upstream of whether it helps. Firing decides whether a skill is worth having
@@ -219,7 +222,7 @@ No published run has used the placebo or cot arm. Every trigger call on record
 compares variants of the skill's *description*. The four-arm comparison is what
 a confirmation run would do, and no confirmation run has happened.
 
-One of the sixteen published runs is void. It was refused on parse rate before
+One of the nineteen published runs is void. It was refused on parse rate before
 any prediction was scored, which is the first registered void condition here to
 fire on its own.
 
@@ -245,6 +248,20 @@ invalidates it, and the remedy each time was a new version rather than an edited
 hash. `de confirm` reaches the module from the console script, so
 `[tool.decision-evals.unwired]` is now empty. What has never run is the
 `confirm` arena itself, which still refuses for want of a holdout.
+
+**2026-08-27, open on a branch, not merged.** `origin/evolution-study` at
+`5daf654` ran two automated prompt optimizers, GEPA and SkillOpt, on a matched
+budget, and both winning skills had written the answer key into their own
+bodies: one transcribed a training template's rule, the other appended worked
+examples whose numbers trace back to the training pool. The same branch found
+that the runs' own accidental repeated items disagreed 7 times out of 49, a
+14.3% per-item flip rate (Wilson 95% [7.1%, 26.7%]), which puts the noise on a
+21-item score at about 1.2 items, inside which both winners' three-item gains
+sit. It also found that the holdout planned for the next phase, varying only
+the random seed, would have scored memorisation as generalisation, and that
+the split needed is one that holds out whole templates instead. None of this
+is settled and none of it is merged; it is where that track stands as of this
+commit.
 
 [`docs/STATUS.md`](docs/STATUS.md) is the ledger: every run, what it showed,
 which measurements turned out to be broken, and which tracks are untouched.
@@ -274,7 +291,8 @@ local tells you the working tree passes, CI tells you the *commit* passes, and a
 gate that has only ever run on the machine it was written on has only ever been
 asked about that machine.
 
-Several of its steps check the method instead of the code:
+The full gate is 22 steps. Eleven of them check the method instead of the
+code:
 
 | Step | Refuses |
 | --- | --- |
@@ -336,6 +354,11 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md). The short version: run `de check`
 before believing anything works, put predictions in the notebook before runs,
 and never edit a notebook entry after the fact. Append a correction instead.
 Prose goes through the standard in [`docs/VOICE.md`](docs/VOICE.md).
+
+Think a published number is wrong? [Open a dispute against
+it](.github/ISSUE_TEMPLATE/dispute-a-result.md). The template is pre-populated
+with the specific ways a measurement here has already failed, so pointing at
+the right one is most of the report.
 
 ## License
 
