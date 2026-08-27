@@ -47,9 +47,12 @@ from decision_evals.drift import (
     worklist,
 )
 from decision_evals.drift import census as drift_census
-from decision_evals.evolution.run import EvolveRequest
+from decision_evals.evolution.holdout import mint, template_split
+from decision_evals.evolution.run import EvolveRequest, seed_body
 from decision_evals.evolution.run import evolve as run_evolution
-from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm
+from decision_evals.evolution.study import Arm, ItemSet, StudyRequest, freeze, run_study
+from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm, venue_for
+from decision_evals.generators import generate, load_all
 from decision_evals.prereg import (
     PreregistrationError,
     RepoState,
@@ -1417,6 +1420,127 @@ def _reflector(request: EvolveRequest) -> Callable[[str], str] | None:
     """
     model = request.reflector_model or request.target_model
     return mock_reflector() if model == MOCK_MODEL else reflection_lm(model)
+
+
+@app.command()
+def study(
+    target: Annotated[str, typer.Option(help="The model every arm is scored on.")] = MOCK_MODEL,
+    winner: Annotated[
+        list[str] | None,
+        typer.Option(
+            help="An evolved arm, as `label=path/to/winner.md`. Repeatable. The label "
+            "is what the report calls it."
+        ),
+    ] = None,
+    passphrase: Annotated[
+        str, typer.Option(help="Derives both the template split and the holdout seeds.")
+    ] = "",
+    holdout_templates: Annotated[
+        int, typer.Option(help="How many scenarios are kept back from the searches.")
+    ] = 3,
+    unseen_seeds: Annotated[
+        int, typer.Option(help="Holdout seeds drawn for the held-out scenarios.")
+    ] = 4,
+    seen_seeds: Annotated[
+        int, typer.Option(help="Holdout seeds drawn for the trained scenarios.")
+    ] = 2,
+    num_ctx: Annotated[int, typer.Option(help="Context window every arm runs at.")] = 0,
+    max_tokens: Annotated[int, typer.Option(help="Output-token cap per call.")] = 0,
+    max_calls: Annotated[int, typer.Option(help="Whole-study call cap.")] = 10_000,
+    max_seconds: Annotated[float, typer.Option(help="Whole-study wall-clock cap.")] = 86_400.0,
+    alpha: Annotated[float, typer.Option(help="Family-wise error rate for Holm.")] = 0.05,
+    slug: Annotated[str, typer.Option(help="Appended to the run directory name.")] = "",
+) -> None:
+    """Score every arm against the placebo on items no search could reach.
+
+    The split and the seeds are both derived from ``--passphrase`` rather than
+    chosen, so the test set is reproducible from one string and cannot be
+    re-drawn until it is convenient.
+    """
+    if not passphrase:
+        raise typer.BadParameter("a study needs a passphrase; the split derives from it")
+    head = _git_output(["rev-parse", "HEAD"])
+    if head is None:
+        typer.secho("not a git repository, so no commit can be recorded", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    split = template_split(
+        (template.template_id for template in load_all()),
+        passphrase=passphrase,
+        holdout=holdout_templates,
+    )
+    seeds = mint(passphrase, unseen_seeds + seen_seeds, _generates)
+    unseen = tuple(seeds.seeds[:unseen_seeds])
+    seen = tuple(seeds.seeds[unseen_seeds:])
+
+    arms = [
+        Arm(label="off", kind="off"),
+        Arm(label="on", kind="on", body=seed_body(REPO_ROOT)),
+        Arm(
+            label="placebo",
+            kind="placebo",
+            body=_body(REPO_ROOT / "skills/decision-making/placebo.md"),
+        ),
+    ]
+    for pair in winner or []:
+        label, _, path = pair.partition("=")
+        if not path:
+            raise typer.BadParameter(f"--winner takes `label=path`, got {pair!r}")
+        arms.append(Arm(label=label, kind="candidate", body=_body(Path(path))))
+
+    request = StudyRequest(
+        target_model=target,
+        sets=(
+            ItemSet(label="unseen", templates=split.holdout, seeds=unseen),
+            ItemSet(label="seen", templates=split.train, seeds=seen),
+        ),
+        num_ctx=num_ctx,
+        max_tokens=max_tokens,
+        max_calls=max_calls,
+        max_seconds=max_seconds,
+        alpha=alpha,
+        slug=slug,
+    )
+    typer.echo(f"held out {', '.join(split.holdout)}")
+    typer.echo(f"seeds    unseen {list(unseen)}  seen {list(seen)}")
+    typer.echo(f"arms     {', '.join(arm.label for arm in arms)}")
+
+    result = run_study(request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head)
+    freeze(result.paths, result.sets, result.aa)
+    for outcome in result.sets:
+        typer.echo(f"\n{outcome.label}: {outcome.n_items} item(s)")
+        for label, value in outcome.accuracy.items():
+            typer.echo(f"   {label:12s} {value:.3f}")
+        for comparison in outcome.comparisons:
+            verdict = "beats placebo" if comparison.rejected else "does not beat placebo"
+            typer.echo(
+                f"   {comparison.arm:12s} {comparison.effect:+.3f} "
+                f"p={comparison.p_value:.4f} Holm={comparison.adjusted:.4f}  {verdict}"
+            )
+    typer.echo(f"\nanalysis {(result.paths.root / 'analysis.json').relative_to(REPO_ROOT)}")
+
+
+def _body(path: Path) -> str:
+    """A markdown body with any frontmatter stripped.
+
+    Raises:
+        typer.Exit: No such file. An arm that silently fell back to an empty body
+            would run as the control wearing another arm's label.
+    """
+    if not path.is_file():
+        typer.secho(f"no such body: {path}", fg=typer.colors.RED)
+        raise typer.Exit(2)
+    text = path.read_text(encoding="utf-8")
+    if text.startswith("---"):
+        _, _, rest = text.partition("---")
+        _, sep, body = rest.partition("\n---")
+        if sep:
+            return body.lstrip("\n")
+    return text
+
+
+def _generates(seed: int) -> object:
+    """Whether a seed can produce the whole corpus, which one in forty cannot."""
+    return [item for template in load_all() for item in generate(template, seed)]
 
 
 @app.command()
