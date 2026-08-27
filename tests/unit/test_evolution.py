@@ -1963,3 +1963,21 @@ def test_a_split_that_leaves_one_side_empty_is_refused(holdout: int) -> None:
 def test_a_template_cannot_be_on_both_sides() -> None:
     with pytest.raises(ValueError, match="both trained on and held out"):
         Split(train=("a", "b"), holdout=("b",), passphrase="p")
+
+
+def test_the_split_a_search_ran_under_reaches_the_manifest() -> None:
+    """A run that held templates back and did not say which cannot be told from
+    one that held nothing back."""
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_templates=("rel-003-oncall-escalate", "rel-004-inventory-reorder"),
+    )
+    assert asdict(request)["train_templates"] == (
+        "rel-003-oncall-escalate",
+        "rel-004-inventory-reorder",
+    )
+
+
+def test_naming_no_training_templates_means_all_of_them() -> None:
+    assert EvolveRequest(engine="gepa", target_model=MOCK_MODEL).train_templates == ()

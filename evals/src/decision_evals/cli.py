@@ -1316,6 +1316,13 @@ def evolve(
     ] = 20,
     num_epochs: Annotated[int, typer.Option(help="SkillOpt: passes over the training pool.")] = 1,
     max_tokens: Annotated[int, typer.Option(help="Output-token cap per call. 0 sends none.")] = 0,
+    train_templates: Annotated[
+        str,
+        typer.Option(
+            help="Comma-separated template ids the search may see. Empty means all of "
+            "them. `template_split` derives the set from a passphrase."
+        ),
+    ] = "",
     num_ctx: Annotated[
         int,
         typer.Option(
@@ -1358,6 +1365,7 @@ def evolve(
         num_epochs=num_epochs,
         max_tokens=max_tokens,
         num_ctx=num_ctx,
+        train_templates=tuple(name.strip() for name in train_templates.split(",") if name.strip()),
     )
     result = run_evolution(
         request,

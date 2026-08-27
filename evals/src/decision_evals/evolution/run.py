@@ -104,6 +104,13 @@ class EvolveRequest:
     batch_size: int = 8
     sel_env_num: int = 20
     num_epochs: int = 1
+    #: Which scenarios the search may see. Empty means all of them, which is
+    #: what every run before 2026-08-27 did. It is a request field so the
+    #: manifest records the split: a run that held templates back and did not
+    #: say which cannot be told from one that held nothing back.
+    #: :func:`~decision_evals.evolution.holdout.template_split` derives the set
+    #: from a passphrase rather than leaving it to taste.
+    train_templates: tuple[str, ...] = ()
     #: The context window the target runs with. Zero leaves it to the server,
     #: which is what every run before 2026-08-27 did and what made those runs
     #: hard to read: Ollama defaults to 4,096, and fourteen of sixteen
@@ -412,8 +419,11 @@ def evolve(
         repo_root, run_name(engine=request.engine, git_sha=git_sha, on=on, slug=request.slug)
     )
 
-    train = items_for(request.train_seeds, limit=request.limit)
-    validation = items_for(request.val_seeds, limit=request.val_limit or request.limit)
+    templates = set(request.train_templates) or None
+    train = items_for(request.train_seeds, limit=request.limit, templates=templates)
+    validation = items_for(
+        request.val_seeds, limit=request.val_limit or request.limit, templates=templates
+    )
     if not train or not validation:
         raise EvolveError(
             "no items were generated. A search over an empty corpus scores zero "
@@ -429,6 +439,7 @@ def evolve(
             "request": asdict(request),
             "git_sha": git_sha,
             "pools": {name: [span.start, span.stop] for name, span in POOLS.items()},
+            "templates": sorted({item.template_id for item in train}),
             "train": {"items": len(train), "seeds": census([i.seed for i in train])},
             "validation": {"items": len(validation), "seeds": census([i.seed for i in validation])},
         },
