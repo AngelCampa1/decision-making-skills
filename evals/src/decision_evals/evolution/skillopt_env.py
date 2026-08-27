@@ -250,6 +250,7 @@ def train_config(
     skill_init: Path,
     batch_size: int,
     sel_env_num: int,
+    train_size: int,
     num_epochs: int = 1,
     accumulation: int = 1,
     merge_batch_size: int = 1,
@@ -297,6 +298,7 @@ def train_config(
     for name, value in (
         ("batch_size", batch_size),
         ("sel_env_num", sel_env_num),
+        ("train_size", train_size),
         ("num_epochs", num_epochs),
         ("accumulation", accumulation),
         ("merge_batch_size", merge_batch_size),
@@ -327,6 +329,12 @@ def train_config(
             "analyst_workers": analyst_workers,
             "seed": seed,
             "sel_env_num": sel_env_num,
+            # Read as `cfg.get("train_size", 0)` and then, when that is zero,
+            # inferred from a dataloader. This adapter has none by design -- the
+            # corpus is generated, not loaded -- so the inference returns None
+            # and the trainer raises. A `.get` with a fallback is still a
+            # required key when the fallback cannot succeed.
+            "train_size": train_size,
             # Read only inside `if cfg["eval_test"]:`, so this is never used.
             # Present because a KeyError from a branch nobody meant to take is a
             # worse failure than an unused zero.

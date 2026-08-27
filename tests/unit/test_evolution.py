@@ -57,6 +57,7 @@ from decision_evals.evolution.run import (
     DRIVERS,
     EvolveError,
     EvolveRequest,
+    _best_validated,
     _freeze,
     _redacted,
     budget_for,
@@ -867,7 +868,11 @@ def _required_keys() -> set[str]:
     source = Path(trainer.__file__).read_text(encoding="utf-8")
     read = set(re.findall(r'cfg\["([a-z_]+)"\]\s*(?!=[^=])', source))
     written = set(re.findall(r'cfg\["([a-z_]+)"\]\s*=[^=]', source))
-    return read - written
+    # `train_size` is read as `cfg.get("train_size", 0)` and then inferred from
+    # a dataloader when that is zero. This adapter has no dataloader, so the
+    # inference raises: a `.get` with a fallback that cannot succeed is a
+    # required key, and the bracket-read scan above cannot see it.
+    return (read - written) | {"train_size"}
 
 
 @needs_skillopt
@@ -886,6 +891,7 @@ def test_the_config_supplies_every_key_the_trainer_demands(tmp_path: Path) -> No
         skill_init=skill,
         batch_size=4,
         sel_env_num=8,
+        train_size=16,
     )
     missing = _required_keys() - set(config)
     assert not missing, f"the trainer requires {sorted(missing)} and the config omits them"
@@ -922,17 +928,20 @@ def test_the_config_turns_the_test_evaluation_off(tmp_path: Path) -> None:
         skill_init=skill,
         batch_size=4,
         sel_env_num=8,
+        train_size=16,
     )
     assert config["eval_test"] is False
     assert config["analyst_workers"] == 1
 
 
 @needs_skillopt
-@pytest.mark.parametrize("field", ["batch_size", "sel_env_num", "num_epochs", "accumulation"])
+@pytest.mark.parametrize(
+    "field", ["batch_size", "sel_env_num", "num_epochs", "accumulation", "train_size"]
+)
 def test_a_non_positive_count_is_refused(tmp_path: Path, field: str) -> None:
     skill = tmp_path / "skill.md"
     skill.write_text("body", encoding="utf-8")
-    kwargs: dict[str, int] = {"batch_size": 4, "sel_env_num": 8}
+    kwargs: dict[str, int] = {"batch_size": 4, "sel_env_num": 8, "train_size": 16}
     kwargs[field] = 0
     with pytest.raises(SkillOptError, match="non-positive"):
         train_config(
@@ -955,6 +964,7 @@ def test_the_trainer_needs_its_seed_skill_on_disk(tmp_path: Path) -> None:
             skill_init=tmp_path / "nothing.md",
             batch_size=4,
             sel_env_num=8,
+            train_size=16,
         )
 
 
@@ -1027,6 +1037,7 @@ def test_the_trainer_accepts_this_environment(tmp_path: Path) -> None:
         skill_init=skill,
         batch_size=4,
         sel_env_num=4,
+        train_size=16,
     )
 
     ReflACTTrainer(config, env)
@@ -1159,3 +1170,30 @@ def test_the_cap_reaches_the_manifest() -> None:
     """The number a search ran under is part of what the search was, so it is recorded."""
     request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL, max_tokens=8192)
     assert asdict(request)["max_tokens"] == 8192
+
+
+def test_a_budget_stop_keeps_the_search(tmp_path: Path) -> None:
+    """A cap that also discards fourteen candidates is a defect, not a stop.
+
+    The cap still stops the run. What changed is that the work survives it.
+    """
+    items = items_for([1000], limit=4)
+    with pytest.raises(EvolveError, match="stopped before any candidate"):
+        _best_validated([], tmp_path / "nothing.jsonl", items)
+
+
+def test_the_winner_says_who_chose_it(tmp_path: Path) -> None:
+    """An engine's acceptance rule is part of what the engine is. Ours is not."""
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    paths.root.mkdir(parents=True, exist_ok=True)
+
+    _freeze(paths, _candidate(body="engine pick"))
+    assert (
+        json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))["winner_source"]
+        == "engine"
+    )
+
+    _freeze(paths, _candidate(body="our pick"), stop_reason="the run budget refused this call")
+    recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert recorded["winner_source"] == "lineage (budget-stopped)"
+    assert "budget" in recorded["stop_reason"]

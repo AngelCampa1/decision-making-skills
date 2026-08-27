@@ -21,7 +21,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Final
 
-from decision_evals.budget import BudgetLedger, NestedBudget
+from decision_evals.budget import BudgetError, BudgetLedger, NestedBudget
 from decision_evals.evolution.adapter import COMPONENT, DecisionAdapter
 from decision_evals.evolution.checkpoints import RunPaths, paths_for, run_name, write_manifest
 from decision_evals.evolution.holdout import POOLS, assert_evolvable, census
@@ -42,7 +42,7 @@ from decision_evals.evolution.venues import (
 )
 from decision_evals.generators import generate, load_all
 from decision_evals.generators.generate import Item
-from decision_evals.runner import CallFn
+from decision_evals.runner import CallFn, load_records
 from decision_evals.solvers.arms import render_item
 
 #: Where the human-written body a search starts from lives.
@@ -126,6 +126,10 @@ class EvolveResult:
     winner: Candidate
     explored: int
     lineage: list[Candidate] = field(default_factory=list)
+    #: Empty when the engine finished on its own terms. Otherwise what stopped
+    #: it, and a signal that ``winner`` was chosen here rather than by the
+    #: engine.
+    stop_reason: str = ""
 
 
 def seed_body(repo_root: Path, path: str = SEED_SKILL) -> str:
@@ -309,30 +313,87 @@ def evolve(
         reflector_model=request.reflector_model,
     )
 
-    body = DRIVERS[request.engine](
-        request,
-        repo_root=repo_root,
-        paths=paths,
-        adapter=adapter,
-        train=train,
-        validation=validation,
-        venue=venue,
-        reflection_lm=reflection_lm,
-    )
+    stop_reason = ""
+    body = ""
+    try:
+        body = DRIVERS[request.engine](
+            request,
+            repo_root=repo_root,
+            paths=paths,
+            adapter=adapter,
+            train=train,
+            validation=validation,
+            venue=venue,
+            reflection_lm=reflection_lm,
+        )
+    except BudgetError as exc:
+        # A budget is a stopping rule. One that also discards the search is a
+        # defect, and it was one here: a 300-call cap fired mid-proposal, the
+        # exception propagated out of `de evolve`, and fourteen candidates and
+        # 287 scored records stayed on disk with nothing pointing at them.
+        # The cap still stops the run -- it is not raised, retried or widened.
+        stop_reason = str(exc)
 
     lineage = load_lineage(paths.lineage)
     assert_searched(lineage)
-    winner = find(lineage, body_sha(body))
-    _freeze(paths, winner)
+    winner = (
+        find(lineage, body_sha(body))
+        if body
+        else _best_validated(lineage, paths.records, validation)
+    )
+    _freeze(paths, winner, stop_reason=stop_reason)
     return EvolveResult(
         paths=paths,
         winner=winner,
         explored=len({c.candidate_sha for c in lineage}),
         lineage=lineage,
+        stop_reason=stop_reason,
     )
 
 
-def _freeze(paths: RunPaths, winner: Candidate) -> None:
+def _best_validated(
+    lineage: list[Candidate], checkpoint: Path, validation: Sequence[Item]
+) -> Candidate:
+    """The best candidate that was scored on the *whole* validation pool.
+
+    Only reached when a search was stopped before its engine declared a winner.
+    **This is our arithmetic rather than the engine's acceptance rule**, and the
+    difference is recorded in ``winner.json`` so that a study built on this body
+    cannot quietly describe it as the engine's choice.
+
+    Completeness is the whole of the care here. A lineage records the *first*
+    score a candidate got, and for GEPA that is a three-item minibatch, so
+    ranking on it compares 1.000-of-3 against 0.714-of-21 and picks the noise.
+    Candidates evaluated on fewer than every validation item are not ranked at
+    all -- not ranked lower, because a partial pass is not a worse score, it is
+    an answer to a different question.
+
+    Raises:
+        EvolveError: No candidate completed a validation pass, so there is
+            nothing here that can be compared with anything.
+    """
+    wanted = {item.item_id for item in validation}
+    seen: dict[str, dict[str, bool]] = {}
+    for record in load_records(checkpoint):
+        if record.item_id in wanted and record.candidate_sha:
+            seen.setdefault(record.candidate_sha, {})[record.item_id] = record.correct
+
+    scored = [
+        (sum(items.values()) / len(wanted), sha)
+        for sha, items in seen.items()
+        if len(items) == len(wanted)
+    ]
+    if not scored:
+        raise EvolveError(
+            f"the search stopped before any candidate was scored on all {len(wanted)} "
+            "validation items, so there is no winner to freeze. Every candidate on file "
+            "was seen on a minibatch only, and a minibatch score is not comparable with "
+            "the seed's full pass. Resume with a larger budget."
+        )
+    return find(lineage, max(scored)[1])
+
+
+def _freeze(paths: RunPaths, winner: Candidate, *, stop_reason: str = "") -> None:
     """Write the winning body where a later study can read it.
 
     Two files rather than one. ``winner.md`` is the body itself and is what an
@@ -356,6 +417,11 @@ def _freeze(paths: RunPaths, winner: Candidate) -> None:
                 "n_items": winner.n_items,
                 "git_sha": winner.git_sha,
                 "created_at": winner.created_at,
+                # Which of the two selected this body. An engine's acceptance
+                # rule is part of what the engine is; ours is not, and a study
+                # citing this file has to be able to tell them apart.
+                "winner_source": "lineage (budget-stopped)" if stop_reason else "engine",
+                "stop_reason": stop_reason,
             },
             indent=2,
             ensure_ascii=False,
@@ -432,6 +498,7 @@ def _drive_skillopt(
         skill_init=start,
         batch_size=request.batch_size,
         sel_env_num=min(request.sel_env_num, len(validation)),
+        train_size=len(train),
         num_epochs=request.num_epochs,
     )
     # Beside the engine's own output rather than in `run.json`, which already

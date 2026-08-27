@@ -1367,6 +1367,13 @@ def evolve(
     )
     typer.echo(f"lineage  {result.paths.lineage.relative_to(REPO_ROOT)}")
     typer.echo(f"frozen   {(result.paths.root / 'winner.md').relative_to(REPO_ROOT)}")
+    if result.stop_reason:
+        typer.secho(
+            "stopped  the engine did not declare a winner; this body was chosen here "
+            "by validation accuracy over complete passes",
+            fg=typer.colors.YELLOW,
+        )
+        typer.echo(f"         {result.stop_reason}")
 
 
 def _seeds(text: str) -> tuple[int, ...]:
