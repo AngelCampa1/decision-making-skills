@@ -1034,3 +1034,55 @@ def test_the_trainer_accepts_this_environment(tmp_path: Path) -> None:
     assert env.requires_ray() is False
     assert len(env.build_train_env(batch_size=2, seed=0)) == 2
     assert len(env.build_eval_env(env_num=3, split="valid_seen", seed=0)) == 3
+
+
+# ---------------------------------------------------------------------------
+# `--limit` and what it draws
+#
+# The failure being guarded against produced a full checkpoint and an aggregate
+# that was arithmetically right about the wrong corpus, twice in one day: once
+# from a stride that aliased with the stratum period, once from a slice that
+# took every item from the first template.
+# ---------------------------------------------------------------------------
+
+
+def _strata(items: list[Item]) -> set[tuple[int, str]]:
+    return {(item.n_distractors, item.position) for item in items}
+
+
+def test_a_limited_corpus_is_not_one_template() -> None:
+    """`at_seed[:20]` returned twenty vendor outages and nothing else."""
+    items = items_for([0], limit=20)
+    assert len(items) == 20
+    assert len({item.template_id for item in items}) == 10
+
+
+def test_a_limited_corpus_is_not_one_stratum() -> None:
+    """Ten items, one from each template, would be ten `d0-none` -- all the easiest."""
+    items = items_for([0], limit=10)
+    assert len(_strata(items)) == 7
+
+
+def test_a_tiny_limit_still_varies_difficulty() -> None:
+    """A smoke corpus of seven should not be seven copies of the easy stratum."""
+    items = items_for([0], limit=7)
+    assert len(_strata(items)) == 7
+
+
+def test_the_draw_is_a_permutation_not_a_resample() -> None:
+    """Asking for everything through the limited path returns everything, once.
+
+    A rotation that skipped or repeated would show up as a corpus that scores
+    one item twice and weights it double in a paired test.
+    """
+    full = items_for([0])
+    limited = items_for([0], limit=len(full))
+    assert len(limited) == len(full)
+    assert {item.item_id for item in limited} == {item.item_id for item in full}
+
+
+def test_the_limit_applies_per_seed() -> None:
+    """Capping the flattened list would take every stratum from the first seed."""
+    items = items_for([0, 1], limit=20)
+    assert len(items) == 40
+    assert {item.seed for item in items} == {0, 1}

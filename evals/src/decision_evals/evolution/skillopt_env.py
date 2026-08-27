@@ -2,7 +2,9 @@
 
 SkillOpt takes an environment rather than an adapter: a subclass of its
 ``EnvAdapter`` supplying ``build_train_env``, ``build_eval_env``, ``rollout`` and
-``get_task_types``, and a YAML config naming the models. Its reflection step is
+``get_task_types``, and a flat config naming the models. Its own loader reads
+that config from YAML; :func:`train_config` builds the same dictionary directly,
+so there is no second file claiming to be the settings. Its reflection step is
 inherited and runs against SkillOpt's own model layer, which is the difference
 that matters — GEPA takes a ``reflection_lm`` callable and SkillOpt reads a
 config.

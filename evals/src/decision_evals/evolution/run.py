@@ -65,8 +65,9 @@ class EvolveRequest:
     #: it is always that template. A default that crashes on first contact
     #: with a real venue is worse than one that is merely arbitrary.
     val_seeds: tuple[int, ...] = (1000, 1002)
-    #: The whole-run call cap. On a venue that bills nothing this is the guard,
-    #: which is why it has no default: a number nobody chose is not a budget.
+    #: The whole-run call cap, and on a venue that bills nothing it is the
+    #: guard. The default is small on purpose: 200 calls is a smoke run, and a
+    #: real search has to raise it deliberately and record the number it chose.
     max_calls: int = 200
     #: Wall-clock seconds. The other guard, and the one that catches a run held
     #: at a free tier's rate limit, where no calls are being spent either.
@@ -135,16 +136,67 @@ def items_for(seeds: Sequence[int], *, limit: int = 0) -> list[Item]:
     """Generate the corpus at each seed, in seed order.
 
     Seed order rather than interleaved, so a checkpoint reads as blocks and a
-    truncated run is a whole number of seeds. ``limit`` caps items *per seed*,
-    which keeps the strata balanced across seeds; capping the flattened list
-    would take every stratum from the first seed and none from the last.
+    truncated run is a whole number of seeds.
+
+    ``limit`` caps items per seed and **draws them evenly across templates and
+    strata**, which the obvious implementation does not. A seed's corpus is
+    template-major: ten templates of 28 items each, and those 28 are four
+    variants crossed with seven strata in a fixed order. So ``at_seed[:limit]``
+    with a limit of 20 returns twenty items from ``rel-001-vendor-outage`` and
+    nothing else, and a search run against it optimises for vendor outages while
+    the manifest records a corpus of ten scenarios.
+
+    That is the same defect as sampling every seventh item and drawing one
+    stratum forty times, which happened here on 2026-08-26 and is written up in
+    the notebook. Both produce a full checkpoint and an aggregate that is
+    arithmetically right about the wrong object.
+
+    Template balance and stratum balance pull against each other below one item
+    per template, so the order rotates: template ``t`` starts at stratum ``t``.
+    Ten items then span ten templates *and* seven strata, where taking one item
+    from each template would span ten templates and one stratum — every one of
+    them ``d0-none``, the easiest, which is precisely the reading that made a
+    ceilinged model look like a headroom problem.
+
+    Striding within a template is the trap to avoid. A template's 28 items are
+    variant-major and stratum-minor, so a stride of ``28 // per`` is usually a
+    multiple of seven and draws the same stratum every time.
     """
     templates = load_all()
     items: list[Item] = []
     for seed in seeds:
-        at_seed = [item for template in templates for item in generate(template, seed)]
-        items.extend(at_seed[:limit] if limit else at_seed)
+        by_template = [list(generate(template, seed)) for template in templates]
+        if not limit:
+            items.extend(item for rows in by_template for item in rows)
+            continue
+        items.extend(_rotated(by_template)[:limit])
     return items
+
+
+def _rotated(by_template: Sequence[Sequence[Item]]) -> list[Item]:
+    """Every item once, ordered so any prefix spans templates and strata.
+
+    Each template is grouped into its strata, and template ``t`` is read from an
+    offset of ``t``, so the templates are never all on the same stratum at the
+    same time.
+    """
+    grouped: list[list[list[Item]]] = []
+    for rows in by_template:
+        buckets: dict[tuple[int, str], list[Item]] = {}
+        for item in rows:
+            buckets.setdefault((item.n_distractors, item.position), []).append(item)
+        grouped.append(list(buckets.values()))
+
+    order: list[Item] = []
+    depth = max((len(strata) * max(len(v) for v in strata) for strata in grouped), default=0)
+    for cycle in range(depth):
+        for offset, strata in enumerate(grouped):
+            spot = (cycle + offset) % (len(strata) * max(len(v) for v in strata))
+            variants = strata[spot % len(strata)]
+            index = spot // len(strata)
+            if index < len(variants):
+                order.append(variants[index])
+    return order
 
 
 def budget_for(request: EvolveRequest, venue: Venue) -> NestedBudget:
