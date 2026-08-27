@@ -1086,3 +1086,26 @@ def test_the_limit_applies_per_seed() -> None:
     items = items_for([0, 1], limit=20)
     assert len(items) == 40
     assert {item.seed for item in items} == {0, 1}
+
+
+def test_the_pools_are_sized_separately() -> None:
+    """Validation is paid for on every candidate, so it is the knob that multiplies calls."""
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        limit=70,
+        val_limit=21,
+    )
+    assert len(items_for(request.train_seeds, limit=request.limit)) == 70
+    assert len(items_for(request.val_seeds, limit=request.val_limit or request.limit)) == 21
+
+
+def test_an_unset_validation_limit_follows_the_training_one() -> None:
+    """The old single-knob behaviour, kept so an existing call means what it meant."""
+    request = EvolveRequest(
+        engine="gepa", target_model=MOCK_MODEL, train_seeds=(0,), val_seeds=(1000,), limit=14
+    )
+    assert request.val_limit == 0
+    assert len(items_for(request.val_seeds, limit=request.val_limit or request.limit)) == 14

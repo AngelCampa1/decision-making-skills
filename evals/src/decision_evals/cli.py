@@ -1305,7 +1305,10 @@ def evolve(
     max_seconds: Annotated[float, typer.Option(help="Whole-run wall-clock cap.")] = 1800.0,
     generation_calls: Annotated[int, typer.Option(help="Call cap per generation.")] = 400,
     child_calls: Annotated[int, typer.Option(help="Call cap per candidate.")] = 200,
-    limit: Annotated[int, typer.Option(help="Items per seed. 0 means all of them.")] = 0,
+    limit: Annotated[int, typer.Option(help="Training items per seed. 0 means all.")] = 0,
+    val_limit: Annotated[
+        int, typer.Option(help="Validation items per seed. 0 follows --limit.")
+    ] = 0,
     slug: Annotated[str, typer.Option(help="Appended to the run directory name.")] = "",
     batch_size: Annotated[int, typer.Option(help="SkillOpt: items per training step.")] = 8,
     sel_env_num: Annotated[
@@ -1340,6 +1343,7 @@ def evolve(
         generation_calls=generation_calls,
         child_calls=child_calls,
         limit=limit,
+        val_limit=val_limit,
         slug=slug,
         batch_size=batch_size,
         sel_env_num=sel_env_num,

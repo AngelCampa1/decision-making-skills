@@ -74,8 +74,15 @@ class EvolveRequest:
     max_seconds: float = 3_600.0
     generation_calls: int = 400
     child_calls: int = 200
-    #: Items per seed, after generation. Zero means all of them.
+    #: Items per seed in the training pool, after generation. Zero means all of
+    #: them.
     limit: int = 0
+    #: Items per seed in the validation pool. Zero follows ``limit``, which is
+    #: the old single-knob behaviour. It is separate because the two pools are
+    #: sized for different jobs: training wants breadth for a proposal to learn
+    #: from, and validation is an acceptance gate paid for on every candidate,
+    #: so it is the one that multiplies the call count.
+    val_limit: int = 0
     slug: str = ""
     #: SkillOpt only. GEPA sizes its own batches from ``max_metric_calls``;
     #: SkillOpt requires these three and divides by two of them, so they are
@@ -256,7 +263,7 @@ def evolve(
     )
 
     train = items_for(request.train_seeds, limit=request.limit)
-    validation = items_for(request.val_seeds, limit=request.limit)
+    validation = items_for(request.val_seeds, limit=request.val_limit or request.limit)
     if not train or not validation:
         raise EvolveError(
             "no items were generated. A search over an empty corpus scores zero "
