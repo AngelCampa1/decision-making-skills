@@ -56,6 +56,7 @@ from decision_evals.evolution.run import (
     DRIVERS,
     EvolveError,
     EvolveRequest,
+    _freeze,
     _redacted,
     budget_for,
     evolve,
@@ -975,3 +976,28 @@ def test_a_secret_never_reaches_the_manifest() -> None:
     redacted = _redacted({"target_azure_openai_api_key": "nvapi-real", "target_model": "qwen3:4b"})
     assert redacted["target_azure_openai_api_key"] == "<redacted>"
     assert redacted["target_model"] == "qwen3:4b"
+
+
+def test_a_finished_search_leaves_its_winner_on_disk(tmp_path: Path) -> None:
+    """Phase 3 builds an arm from this. A winner only in a return value is not frozen."""
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    paths.root.mkdir(parents=True, exist_ok=True)
+    winner = _candidate(body="the evolved body", generation=2, parent_sha="a" * 64)
+    _freeze(paths, winner)
+
+    assert (paths.root / "winner.md").read_text(encoding="utf-8") == "the evolved body"
+    recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert recorded["candidate_sha"] == winner.candidate_sha
+    assert recorded["generation"] == 2
+    assert recorded["engine"] == winner.engine
+
+
+def test_the_frozen_body_hashes_to_the_recorded_sha(tmp_path: Path) -> None:
+    """The two files have to agree, or a study cites a hash for a body it did not read."""
+    paths = paths_for(tmp_path, "2026-08-26-abc1234-gepa")
+    paths.root.mkdir(parents=True, exist_ok=True)
+    _freeze(paths, _candidate(body="a body worth freezing"))
+
+    body = (paths.root / "winner.md").read_text(encoding="utf-8")
+    recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert body_sha(body) == recorded["candidate_sha"]

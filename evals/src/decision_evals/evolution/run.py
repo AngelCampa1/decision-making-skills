@@ -246,12 +246,49 @@ def evolve(
 
     lineage = load_lineage(paths.lineage)
     assert_searched(lineage)
+    winner = find(lineage, body_sha(body))
+    _freeze(paths, winner)
     return EvolveResult(
         paths=paths,
-        winner=find(lineage, body_sha(body)),
+        winner=winner,
         explored=len({c.candidate_sha for c in lineage}),
         lineage=lineage,
     )
+
+
+def _freeze(paths: RunPaths, winner: Candidate) -> None:
+    """Write the winning body where a later study can read it.
+
+    Two files rather than one. ``winner.md`` is the body itself and is what an
+    arm would be built from; ``winner.json`` carries the hash, the generation,
+    the engine, the venue and the score, so a study can state which search
+    produced its arm without re-deriving it from a lineage.
+
+    The body is written last. A reader that finds ``winner.md`` finds a
+    ``winner.json`` already beside it, rather than a body with no provenance.
+    """
+    paths.root.joinpath("winner.json").write_text(
+        json.dumps(
+            {
+                "candidate_sha": winner.candidate_sha,
+                "parent_sha": winner.parent_sha,
+                "generation": winner.generation,
+                "engine": winner.engine,
+                "target_model": winner.target_model,
+                "reflector_model": winner.reflector_model,
+                "score": winner.score,
+                "n_items": winner.n_items,
+                "git_sha": winner.git_sha,
+                "created_at": winner.created_at,
+            },
+            indent=2,
+            ensure_ascii=False,
+            default=str,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    paths.root.joinpath("winner.md").write_text(winner.body, encoding="utf-8")
 
 
 def _drive_gepa(
