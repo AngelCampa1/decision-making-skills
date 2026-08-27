@@ -179,3 +179,21 @@ Recorded here, not yet fixed:
   the seed reads 15 of 21 from the checkpoint and 17 of 21 from the lineage of
   the same run. Harmless while the ranking is over whole passes; not harmless
   once repeats are deliberate, which Phase 3 makes them.
+
+---
+
+## Appended the same day: both defects fixed, and one artefact left alone
+
+`_best_validated` now counts every answer a candidate gave rather than the last
+one, and returns a `Validated` carrying `correct`, `calls` and `items` so the
+score and the basis for it travel together. `_freeze` writes that score, and a
+new `n_calls` field says how many answers it is over. Two tests pin the
+behaviour that was wrong, and one pins that a partial pass is still refused —
+counting repeats must not let three answers to one item pass as a full pass.
+
+**The two run directories are not being regenerated.** They are the record of
+what happened, and `results/evolution/2026-08-27-7038a46-gepa-matched-20b/winner.json`
+still reads `"score": 1.0, "n_items": 3`. The number selection was actually made
+on is **20 of 21**, computed above from that run's own checkpoint, and it is
+stated here rather than written back over the artefact. Anything downstream
+reads the checkpoint.

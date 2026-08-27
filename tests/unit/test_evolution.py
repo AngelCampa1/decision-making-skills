@@ -1676,3 +1676,124 @@ def test_a_live_holder_blocks_and_the_message_names_the_run(tmp_path: Path) -> N
         Solo(tmp_path, "ollama/qwen3:1.7b", "the-second-one"),
     ):
         pass
+
+
+def _record(item_id: str, sha: str, correct: bool) -> dict[str, object]:
+    """One checkpoint line, carrying only what `_best_validated` reads."""
+    return {
+        "item_id": item_id,
+        "template_id": item_id.split("#")[0],
+        "arm": "candidate",
+        "model": MOCK_MODEL,
+        "n_distractors": 0,
+        "position": "none",
+        "expected": "a",
+        "parsed": "a" if correct else "b",
+        "parse_status": "parsed",
+        "correct": correct,
+        "zero_cause": None if correct else "agent_wrong",
+        "cost_usd": 0.0,
+        "input_tokens": 1,
+        "output_tokens": 1,
+        "duration_ms": 1,
+        "response": "",
+        "candidate_sha": sha,
+    }
+
+
+def _checkpoint(path: Path, rows: list[dict[str, object]]) -> Path:
+    path.write_text(
+        "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8"
+    )
+    return path
+
+
+def test_a_repeated_item_is_two_answers_and_not_the_second_one(tmp_path: Path) -> None:
+    """Last-write-wins made the ranking depend on the order records were appended.
+
+    A resume re-asks some items, and on this venue 49 such pairs disagreed seven
+    times. Collapsing to the last answer is not a tidy-up: it hands the choice of
+    winner to record order.
+    """
+    items = items_for([1000], limit=2)
+    first, second = (item.item_id for item in items)
+    steady = _candidate(body="steady")
+    flappy = _candidate(body="flappy")
+
+    checkpoint = _checkpoint(
+        tmp_path / "records.jsonl",
+        [
+            _record(first, steady.candidate_sha, True),
+            _record(second, steady.candidate_sha, False),
+            # Asked twice, right then wrong. Overwriting keeps the wrong one and
+            # scores this body 0.5; counting both scores it 0.75.
+            _record(first, flappy.candidate_sha, True),
+            _record(second, flappy.candidate_sha, True),
+            _record(first, flappy.candidate_sha, False),
+        ],
+    )
+
+    best = _best_validated([steady, flappy], checkpoint, items)
+    assert best.candidate.candidate_sha == flappy.candidate_sha
+    assert (best.correct, best.calls, best.items) == (2, 3, 2)
+    assert best.score == pytest.approx(2 / 3)
+
+
+def test_a_partial_pass_is_still_not_ranked(tmp_path: Path) -> None:
+    """Counting every answer must not turn three answers to one item into a pass."""
+    items = items_for([1000], limit=2)
+    first, second = (item.item_id for item in items)
+    whole = _candidate(body="whole")
+    partial = _candidate(body="partial")
+
+    checkpoint = _checkpoint(
+        tmp_path / "records.jsonl",
+        [
+            _record(first, whole.candidate_sha, True),
+            _record(second, whole.candidate_sha, False),
+            *[_record(first, partial.candidate_sha, True) for _ in range(3)],
+        ],
+    )
+
+    best = _best_validated([whole, partial], checkpoint, items)
+    assert best.candidate.candidate_sha == whole.candidate_sha, (
+        "a perfect score on one of two items answers a different question"
+    )
+
+
+def test_the_frozen_score_is_the_one_the_winner_was_chosen_on(tmp_path: Path) -> None:
+    """GEPA's 2026-08-27 winner was picked on 20 of 21 and published `1.0` of `3`.
+
+    The lineage keeps the *first* score a candidate got, which for GEPA is a
+    three-item minibatch. Reading it here published a number nothing was decided
+    by.
+    """
+    items = items_for([1000], limit=2)
+    first, second = (item.item_id for item in items)
+    minibatch = _candidate(body="picked", score=1.0, n_items=3)
+    checkpoint = _checkpoint(
+        tmp_path / "records.jsonl",
+        [
+            _record(first, minibatch.candidate_sha, True),
+            _record(second, minibatch.candidate_sha, False),
+        ],
+    )
+    selection = _best_validated([minibatch], checkpoint, items)
+
+    paths = paths_for(tmp_path, "2026-08-27-abc1234-gepa")
+    paths.root.mkdir(parents=True, exist_ok=True)
+    _freeze(paths, minibatch, selection=selection, stop_reason="the budget refused this call")
+
+    recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert (recorded["score"], recorded["n_items"], recorded["n_calls"]) == (0.5, 2, 2)
+
+
+def test_an_engine_pick_still_reports_the_engines_own_numbers(tmp_path: Path) -> None:
+    """We cannot say what the engine counted, so we do not overwrite what it said."""
+    paths = paths_for(tmp_path, "2026-08-27-abc1234-skillopt")
+    paths.root.mkdir(parents=True, exist_ok=True)
+    _freeze(paths, _candidate(body="engine pick", score=0.9, n_items=21))
+
+    recorded = json.loads((paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert (recorded["score"], recorded["n_items"]) == (0.9, 21)
+    assert recorded["n_calls"] is None

@@ -21,7 +21,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Any, Final
+from typing import Any, Final, cast
 
 from decision_evals.budget import BudgetError, BudgetLedger, NestedBudget
 from decision_evals.evolution.adapter import COMPONENT, DecisionAdapter
@@ -47,7 +47,7 @@ from decision_evals.evolution.venues import (
 )
 from decision_evals.generators import generate, load_all
 from decision_evals.generators.generate import Item
-from decision_evals.runner import CallFn, load_records
+from decision_evals.runner import CallFn, RunRecord, load_records
 from decision_evals.solvers.arms import render_item
 
 #: Where the human-written body a search starts from lives.
@@ -448,12 +448,9 @@ def evolve(
 
     lineage = load_lineage(paths.lineage)
     assert_searched(lineage)
-    winner = (
-        find(lineage, body_sha(body))
-        if body
-        else _best_validated(lineage, paths.records, validation)
-    )
-    _freeze(paths, winner, stop_reason=stop_reason)
+    selection = None if body else _best_validated(lineage, paths.records, validation)
+    winner = find(lineage, body_sha(body)) if body else cast(Validated, selection).candidate
+    _freeze(paths, winner, selection=selection, stop_reason=stop_reason)
     return EvolveResult(
         paths=paths,
         winner=winner,
@@ -463,9 +460,29 @@ def evolve(
     )
 
 
+@dataclass(frozen=True, slots=True)
+class Validated:
+    """What a candidate scored over the whole validation pool, and on what.
+
+    ``calls`` exceeds ``items`` when a resume re-asked something. Those repeats
+    are kept rather than collapsed, so the fraction below is over every answer
+    the model gave rather than over the last one it happened to give.
+    """
+
+    candidate: Candidate
+    correct: int
+    calls: int
+    items: int
+
+    @property
+    def score(self) -> float:
+        """Correct answers over answers given."""
+        return self.correct / self.calls
+
+
 def _best_validated(
     lineage: list[Candidate], checkpoint: Path, validation: Sequence[Item]
-) -> Candidate:
+) -> Validated:
     """The best candidate that was scored on the *whole* validation pool.
 
     Only reached when a search was stopped before its engine declared a winner.
@@ -473,27 +490,40 @@ def _best_validated(
     difference is recorded in ``winner.json`` so that a study built on this body
     cannot quietly describe it as the engine's choice.
 
-    Completeness is the whole of the care here. A lineage records the *first*
-    score a candidate got, and for GEPA that is a three-item minibatch, so
-    ranking on it compares 1.000-of-3 against 0.714-of-21 and picks the noise.
-    Candidates evaluated on fewer than every validation item are not ranked at
-    all -- not ranked lower, because a partial pass is not a worse score, it is
-    an answer to a different question.
+    Completeness is most of the care here. A lineage records the *first* score a
+    candidate got, and for GEPA that is a three-item minibatch, so ranking on it
+    compares 1.000-of-3 against 0.714-of-21 and picks the noise. Candidates
+    evaluated on fewer than every validation item are not ranked at all -- not
+    ranked lower, because a partial pass is not a worse score, it is an answer
+    to a different question.
+
+    The rest of the care is repeats. A checkpoint resumed mid-search asks some
+    items twice, and the first version of this function kept one answer per item
+    and let the second overwrite the first. On this venue that is not a tidy-up:
+    49 such pairs across the two 2026-08-27 runs disagreed seven times, so a
+    ranking built on last-write-wins moves with the order records were appended
+    in. Every answer counts, and a candidate asked an item twice is scored over
+    two answers.
 
     Raises:
         EvolveError: No candidate completed a validation pass, so there is
             nothing here that can be compared with anything.
     """
     wanted = {item.item_id for item in validation}
-    seen: dict[str, dict[str, bool]] = {}
+    seen: dict[str, list[RunRecord]] = {}
     for record in load_records(checkpoint):
         if record.item_id in wanted and record.candidate_sha:
-            seen.setdefault(record.candidate_sha, {})[record.item_id] = record.correct
+            seen.setdefault(record.candidate_sha, []).append(record)
 
     scored = [
-        (sum(items.values()) / len(wanted), sha)
-        for sha, items in seen.items()
-        if len(items) == len(wanted)
+        Validated(
+            candidate=find(lineage, sha),
+            correct=sum(r.correct for r in records),
+            calls=len(records),
+            items=len(wanted),
+        )
+        for sha, records in seen.items()
+        if {r.item_id for r in records} == wanted
     ]
     if not scored:
         raise EvolveError(
@@ -502,16 +532,30 @@ def _best_validated(
             "was seen on a minibatch only, and a minibatch score is not comparable with "
             "the seed's full pass. Resume with a larger budget."
         )
-    return find(lineage, max(scored)[1])
+    return max(scored, key=lambda v: (v.score, v.candidate.candidate_sha))
 
 
-def _freeze(paths: RunPaths, winner: Candidate, *, stop_reason: str = "") -> None:
+def _freeze(
+    paths: RunPaths,
+    winner: Candidate,
+    *,
+    selection: Validated | None = None,
+    stop_reason: str = "",
+) -> None:
     """Write the winning body where a later study can read it.
 
     Two files rather than one. ``winner.md`` is the body itself and is what an
     arm would be built from; ``winner.json`` carries the hash, the generation,
     the engine, the venue and the score, so a study can state which search
     produced its arm without re-deriving it from a lineage.
+
+    **The score reported is the one selection was made on.** When we chose the
+    winner ourselves it is the full validation pass, passed in as ``selection``;
+    only when the engine chose does it fall back to the lineage. Reading the
+    lineage in both cases was a defect and it published: GEPA's 2026-08-27
+    winner was picked on 20 of 21 and ``winner.json`` said ``1.0`` of ``3``,
+    which is the minibatch the candidate was first seen on. A study quoting that
+    field would have quoted a number nothing was decided by.
 
     The body is written last. A reader that finds ``winner.md`` finds a
     ``winner.json`` already beside it, rather than a body with no provenance.
@@ -525,8 +569,12 @@ def _freeze(paths: RunPaths, winner: Candidate, *, stop_reason: str = "") -> Non
                 "engine": winner.engine,
                 "target_model": winner.target_model,
                 "reflector_model": winner.reflector_model,
-                "score": winner.score,
-                "n_items": winner.n_items,
+                "score": winner.score if selection is None else selection.score,
+                "n_items": winner.n_items if selection is None else selection.items,
+                # Answers given, which exceeds the item count when a resume
+                # re-asked something. Absent when the engine chose, because then
+                # the score is the engine's and we cannot say what it counted.
+                "n_calls": None if selection is None else selection.calls,
                 "git_sha": winner.git_sha,
                 "created_at": winner.created_at,
                 # Which of the two selected this body. An engine's acceptance
