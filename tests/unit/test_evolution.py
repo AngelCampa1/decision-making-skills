@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 from datetime import date
 from pathlib import Path
 
@@ -52,9 +53,12 @@ from decision_evals.evolution.lineage import (
     load_lineage,
 )
 from decision_evals.evolution.run import (
+    DRIVERS,
     EvolveError,
     EvolveRequest,
+    _redacted,
     budget_for,
+    evolve,
     items_for,
     seed_body,
 )
@@ -64,6 +68,7 @@ from decision_evals.evolution.skillopt_env import (
     SkillOptError,
     _deployment,
     build_env,
+    train_config,
     venue_config,
 )
 from decision_evals.evolution.venues import (
@@ -735,15 +740,17 @@ def test_an_inner_cap_is_never_larger_than_the_run() -> None:
     assert budget.child.limit_calls == 5
 
 
-def test_an_engine_with_no_driver_says_so(tmp_path: Path) -> None:
-    from decision_evals.evolution.run import evolve
+def test_every_default_seed_can_actually_be_generated() -> None:
+    """A default that crashes on first contact with a real venue is not a default.
 
-    with pytest.raises(EvolveError, match="has no driver here yet"):
-        evolve(
-            EvolveRequest(engine="skillopt", target_model=MOCK_MODEL),
-            repo_root=tmp_path,
-            git_sha="abc1234",
-        )
+    `rel-008-contract-renew` cannot produce a robust, discriminative `renew` at
+    roughly one seed in sixty, and 1001 -- which was the shipped default -- is
+    one of them. The generator raises rather than returning a short corpus, so
+    this surfaces as a crash after the manifest is written and before any call.
+    """
+    request = EvolveRequest(engine="gepa", target_model=MOCK_MODEL)
+    for seed in (*request.train_seeds, *request.val_seeds):
+        assert len(items_for([seed])) > 0
 
 
 # -- the SkillOpt environment -----------------------------------------------
@@ -834,3 +841,137 @@ def test_the_mock_venue_cannot_be_reached_over_http() -> None:
     """It answers inside this process, so a config pointing at it points at nothing."""
     with pytest.raises(SkillOptError, match="no base URL"):
         venue_config(venue_for(MOCK_MODEL), venue_for("ollama/qwen3:4b"))
+
+
+# ---------------------------------------------------------------------------
+# The SkillOpt driver
+#
+# `train_config` has to satisfy a contract written in another package, and the
+# test that matters reads that contract out of the installed engine rather than
+# restating it. A pinned list of key names would pass forever and stop being
+# true the first time SkillOpt requires a fifteenth.
+# ---------------------------------------------------------------------------
+
+
+def _required_keys() -> set[str]:
+    """Every config key the trainer reads with no default, from its own source.
+
+    ``cfg["x"]`` is a required read and ``cfg.get("x", ...)`` is not, and the
+    trainer does both. Assignments are excluded: it writes several keys back
+    into the config it was handed, and those are outputs rather than inputs.
+    """
+    from skillopt.engine import trainer
+
+    source = Path(trainer.__file__).read_text(encoding="utf-8")
+    read = set(re.findall(r'cfg\["([a-z_]+)"\]\s*(?!=[^=])', source))
+    written = set(re.findall(r'cfg\["([a-z_]+)"\]\s*=[^=]', source))
+    return read - written
+
+
+@needs_skillopt
+def test_the_config_supplies_every_key_the_trainer_demands(tmp_path: Path) -> None:
+    """Read off the installed engine, so a version bump fails here rather than mid-run.
+
+    The trainer reads fourteen keys as `cfg[...]`, not `cfg.get(...)`. A missing
+    one is a KeyError partway into a search that has already spent its calls.
+    """
+    skill = tmp_path / "skill.md"
+    skill.write_text("body", encoding="utf-8")
+    config = train_config(
+        target=venue_for("ollama/qwen3:4b"),
+        optimizer=venue_for("ollama/qwen3:4b"),
+        out_root=tmp_path,
+        skill_init=skill,
+        batch_size=4,
+        sel_env_num=8,
+    )
+    missing = _required_keys() - set(config)
+    assert not missing, f"the trainer requires {sorted(missing)} and the config omits them"
+
+
+@needs_skillopt
+def test_the_held_out_split_is_refused_rather_than_served(tmp_path: Path) -> None:
+    """A validation number reported as a test number is the failure the split prevents."""
+    train = items_for([0], limit=2)
+    validation = items_for([1000], limit=2)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=validation)
+    with pytest.raises(SkillOptError, match="held-out test split"):
+        env.build_eval_env(2, "valid_unseen", seed=0)
+
+
+@needs_skillopt
+def test_the_trainers_own_selection_split_reaches_validation(tmp_path: Path) -> None:
+    """`valid_seen` is what it actually asks for, so refusing it would refuse every run."""
+    train = items_for([0], limit=2)
+    validation = items_for([1000], limit=3)
+    env = build_env(_adapter(tmp_path, train), train=train, validation=validation)
+    assert env.build_eval_env(0, "valid_seen", seed=0).split == "validation"
+
+
+@needs_skillopt
+def test_the_config_turns_the_test_evaluation_off(tmp_path: Path) -> None:
+    """The firewall's first line: a run that never asks cannot be refused."""
+    skill = tmp_path / "skill.md"
+    skill.write_text("body", encoding="utf-8")
+    config = train_config(
+        target=venue_for("ollama/qwen3:4b"),
+        optimizer=venue_for("ollama/qwen3:4b"),
+        out_root=tmp_path,
+        skill_init=skill,
+        batch_size=4,
+        sel_env_num=8,
+    )
+    assert config["eval_test"] is False
+    assert config["analyst_workers"] == 1
+
+
+@needs_skillopt
+@pytest.mark.parametrize("field", ["batch_size", "sel_env_num", "num_epochs", "accumulation"])
+def test_a_non_positive_count_is_refused(tmp_path: Path, field: str) -> None:
+    skill = tmp_path / "skill.md"
+    skill.write_text("body", encoding="utf-8")
+    kwargs: dict[str, int] = {"batch_size": 4, "sel_env_num": 8}
+    kwargs[field] = 0
+    with pytest.raises(SkillOptError, match="non-positive"):
+        train_config(
+            target=venue_for("ollama/qwen3:4b"),
+            optimizer=venue_for("ollama/qwen3:4b"),
+            out_root=tmp_path,
+            skill_init=skill,
+            **kwargs,
+        )
+
+
+@needs_skillopt
+def test_the_trainer_needs_its_seed_skill_on_disk(tmp_path: Path) -> None:
+    """It reads its starting skill off disk rather than taking a string."""
+    with pytest.raises(SkillOptError, match="not a file"):
+        train_config(
+            target=venue_for("ollama/qwen3:4b"),
+            optimizer=venue_for("ollama/qwen3:4b"),
+            out_root=tmp_path,
+            skill_init=tmp_path / "nothing.md",
+            batch_size=4,
+            sel_env_num=8,
+        )
+
+
+def test_both_engines_have_drivers() -> None:
+    """The refusal message names what is wired, so this is what it names."""
+    assert set(DRIVERS) == {"gepa", "skillopt"}
+
+
+def test_an_engine_with_no_driver_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(EvolveError, match="no driver"):
+        evolve(
+            EvolveRequest(engine="evoskill", target_model=MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abcdef1",
+        )
+
+
+def test_a_secret_never_reaches_the_manifest() -> None:
+    """`results/evolution/` is gitignored, which is a reason to be careful, not to skip it."""
+    redacted = _redacted({"target_azure_openai_api_key": "nvapi-real", "target_model": "qwen3:4b"})
+    assert redacted["target_azure_openai_api_key"] == "<redacted>"
+    assert redacted["target_model"] == "qwen3:4b"

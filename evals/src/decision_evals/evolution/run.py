@@ -14,6 +14,7 @@ whole package was built after.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import date
@@ -31,6 +32,7 @@ from decision_evals.evolution.lineage import (
     find,
     load_lineage,
 )
+from decision_evals.evolution.skillopt_env import build_env, train_config
 from decision_evals.evolution.venues import MOCK_MODEL, Venue, mock_call, venue_for
 from decision_evals.generators import generate, load_all
 from decision_evals.generators.generate import Item
@@ -57,7 +59,12 @@ class EvolveRequest:
     target_model: str
     reflector_model: str | None = None
     train_seeds: tuple[int, ...] = (0, 1, 2)
-    val_seeds: tuple[int, ...] = (1000, 1001)
+    #: 1002 rather than the adjacent 1001, which cannot be generated at all:
+    #: `rel-008-contract-renew` fails to produce a robust, discriminative
+    #: `renew` there in 500 attempts. Roughly one seed in sixty does this and
+    #: it is always that template. A default that crashes on first contact
+    #: with a real venue is worse than one that is merely arbitrary.
+    val_seeds: tuple[int, ...] = (1000, 1002)
     #: The whole-run call cap. On a venue that bills nothing this is the guard,
     #: which is why it has no default: a number nobody chose is not a budget.
     max_calls: int = 200
@@ -69,6 +76,13 @@ class EvolveRequest:
     #: Items per seed, after generation. Zero means all of them.
     limit: int = 0
     slug: str = ""
+    #: SkillOpt only. GEPA sizes its own batches from ``max_metric_calls``;
+    #: SkillOpt requires these three and divides by two of them, so they are
+    #: request fields rather than constants and reach the manifest with
+    #: everything else the run was told.
+    batch_size: int = 8
+    sel_env_num: int = 20
+    num_epochs: int = 1
 
     def __post_init__(self) -> None:
         if not self.train_seeds or not self.val_seeds:
@@ -167,23 +181,21 @@ def evolve(
     """Run one search and return its checked winner.
 
     Args:
-        reflection_lm: What writes the proposals. A callable rather than a model
-            name so the smoke path can pass a stub; a real run passes a hosted
-            model, because a 4B target is a poor reflector for a skill it is
-            meant to read.
+        reflection_lm: What writes GEPA's proposals. A callable rather than a
+            model name so the smoke path can pass a stub; a real run passes a
+            hosted model, because a 4B target is a poor reflector for a skill it
+            is meant to read. SkillOpt ignores it and reads its optimizer out of
+            its own config, which is a difference between the engines rather
+            than an inconsistency here.
 
     Raises:
-        EvolveError: An unsupported engine, or GEPA is not installed.
+        EvolveError: An unsupported engine, or the engine is not installed.
         LineageError: The search explored one candidate, which is what a search
             whose every proposal failed also produces.
     """
-    if request.engine != "gepa":
+    if request.engine not in DRIVERS:
         raise EvolveError(
-            f"engine {request.engine!r} has no driver here yet. `gepa` is wired end to "
-            "end. `skillopt` has its environment and its venue configuration in "
-            "`evolution/skillopt_env.py`, and what is missing is the flat config its "
-            "`ReflACTTrainer` reads: guessing at those keys would produce a run whose "
-            "settings nobody chose."
+            f"engine {request.engine!r} has no driver here. Wired end to end: {sorted(DRIVERS)}."
         )
 
     venue = venue_for(request.target_model)
@@ -221,6 +233,39 @@ def evolve(
         reflector_model=request.reflector_model,
     )
 
+    body = DRIVERS[request.engine](
+        request,
+        repo_root=repo_root,
+        paths=paths,
+        adapter=adapter,
+        train=train,
+        validation=validation,
+        venue=venue,
+        reflection_lm=reflection_lm,
+    )
+
+    lineage = load_lineage(paths.lineage)
+    assert_searched(lineage)
+    return EvolveResult(
+        paths=paths,
+        winner=find(lineage, body_sha(body)),
+        explored=len({c.candidate_sha for c in lineage}),
+        lineage=lineage,
+    )
+
+
+def _drive_gepa(
+    request: EvolveRequest,
+    *,
+    repo_root: Path,
+    paths: RunPaths,
+    adapter: DecisionAdapter,
+    train: list[Item],
+    validation: list[Item],
+    venue: Venue,
+    reflection_lm: Callable[[str], str] | None,
+) -> str:
+    """Run GEPA and return the body it declared best."""
     result = _optimize(
         seed_candidate={COMPONENT: seed_body(repo_root)},
         trainset=train,
@@ -231,15 +276,106 @@ def evolve(
         run_dir=str(paths.root / request.engine),
         logger=_FileLogger(paths.root / "search.log"),
     )
+    return _best_body(result)
 
-    lineage = load_lineage(paths.lineage)
-    assert_searched(lineage)
-    return EvolveResult(
-        paths=paths,
-        winner=find(lineage, body_sha(_best_body(result))),
-        explored=len({c.candidate_sha for c in lineage}),
-        lineage=lineage,
+
+def _drive_skillopt(
+    request: EvolveRequest,
+    *,
+    repo_root: Path,
+    paths: RunPaths,
+    adapter: DecisionAdapter,
+    train: list[Item],
+    validation: list[Item],
+    venue: Venue,
+    reflection_lm: Callable[[str], str] | None,
+) -> str:
+    """Run SkillOpt's trainer and return the body it declared best.
+
+    ``reflection_lm`` is ignored, and that is the difference between the two
+    engines rather than an oversight. GEPA takes a callable for its proposal
+    step; SkillOpt reads its optimizer out of the config and calls it through
+    its own model layer, which is why
+    :func:`~decision_evals.evolution.skillopt_env.venue_config` exists. A run
+    that quietly routed SkillOpt's reflection through our callable would be
+    measuring an engine nobody ships.
+
+    The seed body is written to the run directory rather than pointed at
+    ``skills/decision-making/SKILL.md``, for two reasons. The trainer reads its
+    starting skill off disk and would otherwise get the frontmatter, which GEPA
+    does not; both engines have to start from the same bytes or the comparison
+    is between starting points. And the trainer rewrites what it is given, so
+    aiming it at the tracked file would have a search editing the product.
+    """
+    out_root = paths.root / request.engine
+    out_root.mkdir(parents=True, exist_ok=True)
+    start = out_root / "skill_init.md"
+    start.write_text(seed_body(repo_root), encoding="utf-8")
+
+    config = train_config(
+        target=venue,
+        optimizer=venue_for(request.reflector_model or request.target_model),
+        out_root=out_root,
+        skill_init=start,
+        batch_size=request.batch_size,
+        sel_env_num=min(request.sel_env_num, len(validation)),
+        num_epochs=request.num_epochs,
     )
+    # Beside the engine's own output rather than in `run.json`, which already
+    # holds the request and is what `read_manifest` returns. Two manifests each
+    # describing one layer beat one describing neither.
+    (out_root / "config.json").write_text(
+        json.dumps(_redacted(config), indent=2, ensure_ascii=False, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+    _train(config, build_env(adapter, train=train, validation=validation))
+
+    winner = out_root / "best_skill.md"
+    if not winner.is_file():
+        raise EvolveError(
+            f"the trainer finished and wrote no {winner.name}. That file is how SkillOpt "
+            "declares its winner, so there is nothing here to freeze -- and its own "
+            "summary reports a best score regardless, which is why this is checked "
+            "rather than read."
+        )
+    return winner.read_text(encoding="utf-8")
+
+
+#: Which engines can actually be run, and what runs them. A dict rather than a
+#: chain of ``if``, so the refusal message above names exactly what is wired.
+DRIVERS: Final[dict[str, Any]] = {"gepa": _drive_gepa, "skillopt": _drive_skillopt}
+
+
+def _redacted(config: dict[str, Any]) -> dict[str, Any]:
+    """The config with every secret removed, for the manifest.
+
+    Keys live in the environment and never in the tree, and a manifest is a
+    file. ``results/evolution/`` is gitignored, which is a reason to be careful
+    here rather than a reason not to be: an ignore rule is one line away from
+    not applying.
+    """
+    return {
+        key: ("<redacted>" if "api_key" in key or "token" in key else value)
+        for key, value in config.items()
+    }
+
+
+def _train(config: dict[str, Any], env: Any) -> Any:
+    """Call ``ReflACTTrainer(...).train()``, importing it at call time.
+
+    Raises:
+        EvolveError: SkillOpt is not installed.
+    """
+    try:
+        from skillopt.engine.trainer import ReflACTTrainer
+    except ImportError as exc:  # pragma: no cover - exercised by the import guard test
+        raise EvolveError(
+            "skillopt is not installed. Run `python -m uv sync --group evolve`; the gate "
+            "does not install it, because the engine under study must not become a "
+            "dependency of the instrument."
+        ) from exc
+    return ReflACTTrainer(config, env).train()
 
 
 def _mock_oracle(venue: Venue, items: Sequence[Item]) -> CallFn | None:

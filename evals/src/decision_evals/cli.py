@@ -1293,7 +1293,7 @@ def mirror() -> None:
 @app.command()
 def evolve(
     engine: Annotated[
-        str, typer.Option(help="Which search to run. Only `gepa` is wired.")
+        str, typer.Option(help="Which search to run: `gepa` or `skillopt`.")
     ] = "gepa",
     target: Annotated[str, typer.Option(help="The model the skill is evolved *for*.")] = MOCK_MODEL,
     reflector: Annotated[
@@ -1307,6 +1307,11 @@ def evolve(
     child_calls: Annotated[int, typer.Option(help="Call cap per candidate.")] = 200,
     limit: Annotated[int, typer.Option(help="Items per seed. 0 means all of them.")] = 0,
     slug: Annotated[str, typer.Option(help="Appended to the run directory name.")] = "",
+    batch_size: Annotated[int, typer.Option(help="SkillOpt: items per training step.")] = 8,
+    sel_env_num: Annotated[
+        int, typer.Option(help="SkillOpt: validation items its acceptance gate reads.")
+    ] = 20,
+    num_epochs: Annotated[int, typer.Option(help="SkillOpt: passes over the training pool.")] = 1,
 ) -> None:
     """Evolve a skill against the corpus, and write the search down.
 
@@ -1336,6 +1341,9 @@ def evolve(
         child_calls=child_calls,
         limit=limit,
         slug=slug,
+        batch_size=batch_size,
+        sel_env_num=sel_env_num,
+        num_epochs=num_epochs,
     )
     result = run_evolution(
         request,

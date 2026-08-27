@@ -31,6 +31,7 @@ because a patched engine is no longer the engine the result is about.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any, Final
 
 from decision_evals.evolution.adapter import DecisionAdapter
@@ -45,6 +46,18 @@ TASK_TYPES: Final[tuple[str, ...]] = ("decision",)
 #: SkillOpt's auth mode for a plain OpenAI-compatible endpoint. Its own name for
 #: it, in its own backend, so nothing here is a patch.
 COMPAT_AUTH: Final = "openai_compatible"
+
+#: The split names the trainer uses for its acceptance gate. ``valid_seen`` is
+#: what it actually asks for; the rest are accepted because they mean the same
+#: thing and a rename upstream should not be a crash.
+SELECTION: Final[frozenset[str]] = frozenset(
+    {"valid_seen", "val", "valid", "validation", "eval", "select"}
+)
+
+#: The split names meaning "held out", every one of which is refused. See
+#: ``DecisionEnv.build_eval_env`` for why serving these would be worse than
+#: failing.
+HELD_OUT: Final[frozenset[str]] = frozenset({"valid_unseen", "test", "holdout", "unseen"})
 
 
 class SkillOptError(RuntimeError):
@@ -111,20 +124,42 @@ def build_env(
             return Batch(train[:batch_size] if batch_size else train, "train")
 
         def build_eval_env(self, env_num: int, split: str, seed: int, **kwargs: Any) -> Batch:
-            """A slice of the validation pool, whatever ``split`` is called.
+            """A slice of the validation pool, for the splits that mean one.
 
-            SkillOpt names its splits and this environment has two pools. A
-            ``split`` naming neither is an error rather than a default: silently
-            evaluating on training items is how an acceptance gate stops being
-            one.
+            SkillOpt's trainer asks for ALFWorld's split names, because that is
+            the environment it was written against: ``valid_seen`` for the
+            acceptance gate and ``valid_unseen`` for its final test. Those two
+            names carry the whole distinction this study depends on, so they are
+            mapped rather than accepted alike.
+
+            ``SELECTION`` gets the validation pool. ``HELD_OUT`` gets a refusal:
+            the holdout for this study is minted after the winners are frozen
+            and no search may see it, so there is no pool here that could
+            honestly answer. Serving validation items under a name meaning
+            "test" would put a number in the trainer's own summary that reads
+            like a held-out result and is not one.
+
+            The refusal is a backstop rather than the control. ``eval_test`` is
+            ``False`` in :func:`train_config`, so a run never asks; if one does,
+            something changed and the run should stop rather than answer.
             """
-            if split not in {"val", "validation", "eval", "test"}:
+            if split in SELECTION:
+                return Batch(validation[:env_num] if env_num else validation, "validation")
+            if split in HELD_OUT:
                 raise SkillOptError(
-                    f"split {split!r} names no pool here. The pools are `train` and "
-                    "`validation`; anything else would have to fall back to one of them, "
-                    "and falling back to training is an acceptance gate that accepts."
+                    f"split {split!r} is this trainer's held-out test split, and there is "
+                    "nothing here to serve it. The study's holdout is minted after the "
+                    "winners are frozen and no search may read it. Set `eval_test: false` "
+                    "-- which `train_config` already does -- rather than pointing this at "
+                    "the validation pool, because a validation number reported as a test "
+                    "number is the failure the split exists to prevent."
                 )
-            return Batch(validation[:env_num] if env_num else validation, "validation")
+            raise SkillOptError(
+                f"split {split!r} names no pool here. The pools are `train` and "
+                f"`validation`; the selection splits are {sorted(SELECTION)}. Anything else "
+                "would have to fall back to one of them, and falling back to training is an "
+                "acceptance gate that accepts."
+            )
 
         def rollout(
             self,
@@ -203,6 +238,123 @@ def venue_config(target: Venue, optimizer: Venue) -> dict[str, Any]:
             "optimizer_azure_openai_auth_mode": COMPAT_AUTH,
         }
     }
+
+
+def train_config(
+    *,
+    target: Venue,
+    optimizer: Venue,
+    out_root: Path,
+    skill_init: Path,
+    batch_size: int,
+    sel_env_num: int,
+    num_epochs: int = 1,
+    accumulation: int = 1,
+    merge_batch_size: int = 1,
+    edit_budget: int = 4,
+    analyst_workers: int = 1,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """The flat config ``ReflACTTrainer`` reads, with every required key supplied.
+
+    ``ReflACTTrainer`` takes a flat dictionary and reads fourteen keys with no
+    default at all -- ``cfg["batch_size"]`` rather than ``cfg.get(...)`` -- so a
+    missing one is a ``KeyError`` partway into a run that has already spent
+    calls. They are all supplied here, and everything else is left to the
+    engine's own defaults, which is the difference between configuring a run and
+    inventing one.
+
+    The arguments without defaults are the ones no default could be right for.
+    The rest carry the smallest value that still exercises the mechanism, because
+    the binding constraint on this study is wall-clock on a single local GPU and
+    every one of them multiplies the call count.
+
+    Three settings are not tuning and should not be changed to make a run finish:
+
+    ``eval_test`` is ``False``. It is what stops the trainer asking for its
+    held-out split, which this environment refuses to serve.
+
+    ``analyst_workers`` is 1. The reflection analyst is the one place the trainer
+    fans out, and on 2026-08-19 this repository measured a batching server
+    changing **every** answer under concurrency -- 0 of 40 agreement, McNemar
+    p < 0.0001 -- which is why ``runner.CONCURRENCY_UNSAFE`` registers the
+    ``ollama`` prefix. That finding is about the venue rather than about the
+    caller, so it applies to an optimizer served from the same place.
+
+    ``target_model`` and ``target_backend`` are set because the trainer requires
+    them, and they are **unused for scoring**: every scored call in this study
+    goes through ``rollout`` and this repository's own runner, so the record, the
+    budget and the resume key are the harness's. They matter only if some path
+    inside the engine calls the target itself, and a config that named nothing
+    would fail there rather than surfacing it.
+
+    Raises:
+        SkillOptError: A venue with no reachable endpoint, or a non-positive
+            count where the engine would divide by it.
+    """
+    for name, value in (
+        ("batch_size", batch_size),
+        ("sel_env_num", sel_env_num),
+        ("num_epochs", num_epochs),
+        ("accumulation", accumulation),
+        ("merge_batch_size", merge_batch_size),
+        ("analyst_workers", analyst_workers),
+    ):
+        if value < 1:
+            raise SkillOptError(
+                f"{name} is {value}, and a search cannot run a non-positive number of "
+                "anything. The engine divides by several of these."
+            )
+    if not skill_init.is_file():
+        raise SkillOptError(
+            f"{skill_init} is not a file, so the trainer has no skill to start from. It "
+            "reads the seed body off disk rather than taking it as a string."
+        )
+
+    flat = _flatten(venue_config(target, optimizer))
+    flat.update(
+        {
+            "out_root": str(out_root),
+            "skill_init": str(skill_init),
+            "env": TASK_TYPES[0],
+            "batch_size": batch_size,
+            "num_epochs": num_epochs,
+            "accumulation": accumulation,
+            "merge_batch_size": merge_batch_size,
+            "edit_budget": edit_budget,
+            "analyst_workers": analyst_workers,
+            "seed": seed,
+            "sel_env_num": sel_env_num,
+            # Read only inside `if cfg["eval_test"]:`, so this is never used.
+            # Present because a KeyError from a branch nobody meant to take is a
+            # worse failure than an unused zero.
+            "test_env_num": 0,
+            "eval_test": False,
+        }
+    )
+    return flat
+
+
+def _flatten(structured: dict[str, Any]) -> dict[str, Any]:
+    """Flatten through SkillOpt's own mapping.
+
+    Its ``_FLATTEN_MAP`` is 80-odd entries and it is the engine's business which
+    structured key becomes which flat one. Re-typing that mapping here would
+    make a version bump silently produce a config the trainer reads differently
+    from the way it is written.
+
+    Raises:
+        SkillOptError: SkillOpt is not installed.
+    """
+    try:
+        from skillopt.config import flatten_config
+    except ImportError as exc:  # pragma: no cover - exercised by the import guard test
+        raise SkillOptError(
+            "skillopt is not installed. It is in the `evolve` dependency group, which "
+            "the gate deliberately does not install: run "
+            "`python -m uv sync --group evolve`."
+        ) from exc
+    return dict(flatten_config(structured))
 
 
 def _deployment(model: str) -> str:
