@@ -99,3 +99,85 @@ meant to solve.
 directory" into "discard eleven records". Noted here rather than fixed, because
 adding a field to the record schema mid-study changes the golden files and every
 resume key, and that is a change to make deliberately between runs.
+
+---
+
+## Appended the same day: the concurrency claim above is wrong
+
+The table at the top of this entry rests on two serial runs agreeing at 15 of 21,
+and reads the overlapping run's 17 of 21 as the cost of sharing the server. Both
+halves of that are wrong, and the second one only looked right because of the
+first.
+
+**The agreement was a coincidence.** After both matched runs finished I scored
+the seed body again, serially, with nothing else running and the lock free. Two
+back-to-back replicates:
+
+```
+replicate 1: 18/21 = 0.8571
+replicate 2: 19/21 = 0.9048
+```
+
+They disagree with each other. Three more immediately after gave 19, 19, 19.
+The same body, the same 21 items, the same model, temperature zero, one process.
+
+Every measurement of `edc3ee70` on record today:
+
+| | score |
+| --- | --- |
+| GEPA, 2026-08-26, reflector 120b | 15 / 21 |
+| SkillOpt, first matched-20b run | 15 / 21 |
+| SkillOpt, overlapping a live run | 17 / 21 |
+| GEPA, clean matched run | 17 / 21 |
+| SkillOpt, clean matched run | 17 / 21 |
+| standalone replicate 1 | 18 / 21 |
+| standalone replicates 2-5 | 19 / 21 |
+
+**Range: 15 to 19 of 21.** Four items, nineteen points, on a body nobody
+touched.
+
+So the overlapping run's 17 is not evidence about concurrency. It is the middle
+of the distribution, and both clean runs landed on exactly the same number. The
+2026-08-19 falsifier's finding stands on its own evidence and is not
+re-confirmed here; this entry cannot separate a concurrency effect from the
+run-to-run spread, because the spread is bigger than the effect it claimed.
+
+**The mojibake claim goes the same way.** 18 of 21 for the corrupted body is
+inside the clean body's own range. That the corrupted skill "scored three items
+better" was a comparison against a number that happens to be the bottom of the
+distribution. What the earlier entry could legitimately claim is narrower: a run
+scoring 0.857 tells you nothing about the skill, whether the skill was corrupted
+or not.
+
+## What is actually true, and it is worse
+
+**This venue is not deterministic, serially, at temperature zero.** Two calls,
+one after another, same prompt, different answers. The recent replicates cluster
+at 19 while the in-run measurements cluster at 15-17, which looks like drift in
+server state rather than symmetric noise — the standalone replicates make
+back-to-back calls, and a run interleaves them with hosted reflector calls, so
+the server sits idle between batches. That is a hypothesis, not a finding.
+
+The consequence does not depend on the mechanism:
+
+**Both engines' Phase 2 results are inside the noise.** GEPA's winner scored
+20/21 against the seed's 17/21 *in the same run*. SkillOpt's scored 21/21
+against the same 17/21. Three and four items — and the seed body alone moves
+four items across runs. Neither gain is distinguishable from re-measuring the
+seed skill.
+
+Prediction 2 asked for ≥ 3 points and both engines cleared it by a wide margin.
+**It stays as registered and it is reported as met, and it should not be
+believed**, because the bar it set is under the instrument's own resolution.
+Registering a bar before a run does not make it measurable.
+
+**Every number in this study needs repeats.** Phase 3 was designed with paired
+statistics on a frozen holdout, which is right, and it was going to run each arm
+once, which is not. An arm measured once here carries ±2 items of noise on 21,
+and the effects being tested are that size. The holdout has to be scored with
+repeats per item, and the pre-registration has to name how many and how they are
+combined, computed from the variance being measured now rather than guessed.
+
+This is the study's own thesis arriving uninvited. The surveyed engines report
+single-run point estimates on fixed splits, and this instrument was about to do
+the same thing while measuring them for it.
