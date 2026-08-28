@@ -1800,6 +1800,17 @@ def gate_steps() -> tuple[Step, ...]:
             True,
         ),
         Step("mypy", lambda: _run("mypy", [python, "-m", "mypy"]), True),
+        # The same check aimed at the platform CI runs on. mypy resolves
+        # platform-gated symbols against the machine it is on, so
+        # `ctypes.windll` type-checks on Windows and fails on Linux, and
+        # every local gate went green while `main` went red. Cheap: the run
+        # is a few seconds and it is the only step here that can see a
+        # platform this machine is not.
+        Step(
+            "mypy (linux)",
+            lambda: _run("mypy (linux)", [python, "-m", "mypy", "--platform", "linux"]),
+            True,
+        ),
         Step("skill lint", lint_skills_step, True),
         Step("trigger sets", check_triggers_step, True),
         Step("tailoring corpus", check_tailoring_step, True),

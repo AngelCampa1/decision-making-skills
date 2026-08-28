@@ -72,6 +72,7 @@ GATE_STEPS = (
     ("ruff check", True),
     ("ruff format", True),
     ("mypy", True),
+    ("mypy (linux)", True),
     ("skill lint", True),
     ("trigger sets", True),
     ("tailoring corpus", True),

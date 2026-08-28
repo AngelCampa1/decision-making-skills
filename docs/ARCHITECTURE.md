@@ -258,24 +258,25 @@ table below is the gate's own step table.
 | 2 | ruff check | runs |
 | 3 | ruff format | runs |
 | 4 | mypy | runs |
-| 5 | skill lint | runs |
-| 6 | trigger sets | runs |
-| 7 | tailoring corpus | runs |
-| 8 | plugin manifests | runs |
-| 9 | citations | runs |
-| 10 | run provenance | runs |
-| 11 | integrity wiring | runs |
-| 12 | decision register | runs |
-| 13 | label corrections | runs |
-| 14 | label adjudication | runs |
-| 15 | checkpoint label versions | runs |
-| 16 | documentation | runs |
-| 17 | published claims | runs |
-| 18 | generated regions | runs |
-| 19 | site | skipped |
-| 20 | document drift | skipped |
-| 21 | pytest | skipped |
-| 22 | coverage floors | skipped |
+| 5 | mypy (linux) | runs |
+| 6 | skill lint | runs |
+| 7 | trigger sets | runs |
+| 8 | tailoring corpus | runs |
+| 9 | plugin manifests | runs |
+| 10 | citations | runs |
+| 11 | run provenance | runs |
+| 12 | integrity wiring | runs |
+| 13 | decision register | runs |
+| 14 | label corrections | runs |
+| 15 | label adjudication | runs |
+| 16 | checkpoint label versions | runs |
+| 17 | documentation | runs |
+| 18 | published claims | runs |
+| 19 | generated regions | runs |
+| 20 | site | skipped |
+| 21 | document drift | skipped |
+| 22 | pytest | skipped |
+| 23 | coverage floors | skipped |
 <!-- /de:generated -->
 
 ```mermaid

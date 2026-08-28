@@ -82,7 +82,15 @@ def _alive_windows(pid: int) -> bool:
     """
     import ctypes
 
-    kernel32 = ctypes.windll.kernel32
+    # `ctypes.windll` exists only on Windows, and typeshed says so, so a direct
+    # attribute access is an error wherever the checker is configured for
+    # another platform. CI runs on Linux and caught it there after every local
+    # run had passed. The two obvious repairs both fail under this config:
+    # `strict` turns on `warn_unused_ignores`, so a `type: ignore` here is an
+    # error on Windows, and `warn_unreachable` rejects a `sys.platform` branch
+    # on whichever platform it narrows away. `getattr` is the one spelling that
+    # is clean on both.
+    kernel32 = getattr(ctypes, "windll").kernel32  # noqa: B009
     handle = kernel32.OpenProcess(_SYNCHRONIZE, False, pid)
     if not handle:
         return bool(kernel32.GetLastError() == _ERROR_ACCESS_DENIED)
