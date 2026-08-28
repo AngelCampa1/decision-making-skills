@@ -15,7 +15,14 @@ Write-up: [`notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat
 
 4,368 calls on `ollama/qwen3:1.7b`, Ollama's native `/api/chat` at a 16,384
 context window, output capped at 4,096, temperature 0, `keep_alive: 60m`. Local,
-notional cost $0. Commit `98229a1`.
+notional cost $0.
+
+**Two commits name this run.** `run.json` records `git_sha 98229a1`, which is the
+commit the calls were actually made at and is left as it was written. The branch
+was then rebased onto `main`, which replayed that commit as `53b4965` with the
+same study code, and the directory carries the second because that is the one a
+reader can check the prediction against. The prediction's first commit,
+`e882eff`, is an ancestor of `53b4965`.
 
 Five arms at a matched token budget, all through `solvers/arms.build_arm`, told
 apart by `candidate_sha`:

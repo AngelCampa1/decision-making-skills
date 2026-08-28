@@ -34,7 +34,7 @@ Format: `## <date> — <title>`, a `**Commits:**` line, then why.
 
 ## 2026-08-26 — NVIDIA Build's free tier enters `screen`, and no row guesses
 
-**Commits:** `62bf5ee`
+**Commits:** `080c2a2`
 
 Seven rows added to `MODELS`, one per vendor family, all `screen`, all on the
 existing `openai_compatible` backend.

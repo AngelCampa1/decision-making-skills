@@ -884,7 +884,7 @@ hand back survive a placebo control and a paired test on items neither engine
 saw?
 
 **Answer, on one small local model: no.**
-[`results/evolution-study/2026-08-27-98229a1-five-arm/`](../results/evolution-study/2026-08-27-98229a1-five-arm/)
+[`results/evolution-study/2026-08-27-53b4965-five-arm/`](../results/evolution-study/2026-08-27-53b4965-five-arm/)
 is 4,368 calls on `ollama/qwen3:1.7b`, five arms over a frozen holdout minted
 after both winners were frozen. No arm rejects against `placebo` on either set
 after Holm. SkillOpt's winner is the best showing at +0.041 on the seen set,
