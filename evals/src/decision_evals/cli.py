@@ -52,6 +52,7 @@ from decision_evals.evolution.run import EvolveRequest, seed_body
 from decision_evals.evolution.run import evolve as run_evolution
 from decision_evals.evolution.study import Arm, ItemSet, StudyRequest, freeze, run_study
 from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm, venue_for
+from decision_evals.figures import write_figures
 from decision_evals.generators import generate, load_all
 from decision_evals.prereg import (
     PreregistrationError,
@@ -609,6 +610,28 @@ def deployed() -> None:
     typer.secho(str(state), fg=colour)
     if state.exit_code:
         raise typer.Exit(state.exit_code)
+
+
+@app.command()
+def figures(
+    out: Path = typer.Option(  # noqa: B008 - typer reads the default at import
+        Path("paper"),
+        "--out",
+        help="Directory to write `generated/` and `figures/` under.",
+    ),
+) -> None:
+    """Write the paper's numbers, tables and plots from the published records."""
+    _echo_header("figures")
+    result = write_figures(REPO_ROOT, (REPO_ROOT / out).resolve())
+    if result.run is None:
+        typer.secho(
+            "no published study run; wrote an empty macro file so the paper still builds",
+            fg=typer.colors.YELLOW,
+        )
+        return
+    for path in result.paths:
+        typer.echo(f"  wrote {path.relative_to(REPO_ROOT)}")
+    typer.secho(f"{result.macros} macro(s) from {result.run}", fg=typer.colors.GREEN)
 
 
 @app.command()

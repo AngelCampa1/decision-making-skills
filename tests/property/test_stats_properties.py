@@ -34,6 +34,7 @@ from decision_evals.stats import (
     design_effect,
     effective_sample_size,
     fleiss_kappa,
+    informedness,
     krippendorff_alpha,
     log_score,
     mcnemar_exact,
@@ -46,6 +47,7 @@ from decision_evals.stats import (
     repeats_for_reliability,
     repeats_for_scatter_precision,
     required_pairs,
+    skew,
     smooth_calibration_error,
     unanimity_rate,
 )
@@ -652,3 +654,103 @@ class TestAgreementUnderMissingRatings:
         strict = unanimity_rate(matrix).rate
         loose = unanimity_rate(matrix, require_complete=False).rate
         assert 0.0 <= strict <= loose <= 1.0
+
+
+# --------------------------------------------------------------------------- #
+# Signal detection.
+#
+# These two properties are the entire reason informedness was reached for on
+# 2026-08-28 instead of accuracy. A template that a model answers one-sidedly
+# reads as hard under accuracy and reads as empty under J, and the second
+# reading is the true one. If either property below stops holding, the measure
+# no longer does the job it was chosen for and every number computed from it
+# needs re-reading.
+# --------------------------------------------------------------------------- #
+
+options = st.sampled_from(["expedite", "leave_standard"])
+
+
+@st.composite
+def two_option_key(draw, min_size: int = 2):
+    """An answer key holding both options, with an answer column beside it."""
+    n = draw(st.integers(min_value=min_size, max_value=40))
+    expected = draw(st.lists(options, min_size=n, max_size=n))
+    assume(len(set(expected)) == 2)
+    parsed = draw(st.lists(options, min_size=n, max_size=n))
+    return expected, parsed
+
+
+class TestInformedness:
+    """Youden's J, and the two claims made about it in the write-ups."""
+
+    @given(two_option_key(), options)
+    def test_a_constant_answer_scores_zero_at_every_base_rate(self, key, always: str) -> None:
+        """The property the measure exists for.
+
+        A model that ignores the item and answers one option scores whatever
+        the base rate hands it under accuracy, anywhere from 0 to 1. Under J it
+        scores zero, because sensitivity and specificity move against each
+        other by exactly as much.
+        """
+        expected, _ = key
+        constant = [always] * len(expected)
+        result = informedness(expected, constant, positive=always)
+        assert result.informedness == pytest.approx(0.0)
+
+    @given(two_option_key(), options)
+    def test_j_does_not_depend_on_which_option_is_positive(self, key, positive: str) -> None:
+        """Swapping the labels trades sensitivity for specificity and no more.
+
+        This is what lets a per-template J be averaged without anyone choosing,
+        per template, which of two equally arbitrary options is the positive
+        one.
+        """
+        expected, parsed = key
+        other = "leave_standard" if positive == "expedite" else "expedite"
+        assert informedness(expected, parsed, positive=positive).informedness == pytest.approx(
+            informedness(expected, parsed, positive=other).informedness
+        )
+
+    @given(two_option_key())
+    def test_a_perfect_reader_scores_one_and_an_inverted_one_scores_minus_one(self, key) -> None:
+        expected, _ = key
+        inverted = ["leave_standard" if e == "expedite" else "expedite" for e in expected]
+        assert informedness(expected, expected, positive="expedite").informedness == pytest.approx(
+            1.0
+        )
+        assert informedness(expected, inverted, positive="expedite").informedness == pytest.approx(
+            -1.0
+        )
+
+    @given(two_option_key())
+    def test_j_stays_inside_its_range(self, key) -> None:
+        expected, parsed = key
+        assert -1.0 <= informedness(expected, parsed, positive="expedite").informedness <= 1.0
+
+
+class TestSkew:
+    """The other half of accuracy, and the half J is built to ignore."""
+
+    @given(two_option_key(), options)
+    def test_answering_the_key_back_has_no_skew(self, key, option: str) -> None:
+        expected, _ = key
+        assert skew(expected, expected, option=option) == pytest.approx(0.0)
+
+    @given(two_option_key())
+    def test_the_two_options_skew_by_the_same_amount_in_opposite_directions(self, key) -> None:
+        expected, parsed = key
+        assert skew(expected, parsed, option="expedite") == pytest.approx(
+            -skew(expected, parsed, option="leave_standard")
+        )
+
+    @given(two_option_key(), options)
+    def test_a_constant_answer_skews_by_whatever_the_key_did_not_want(self, key, always) -> None:
+        expected, _ = key
+        constant = [always] * len(expected)
+        wanted = sum(e == always for e in expected) / len(expected)
+        assert skew(expected, constant, option=always) == pytest.approx(1.0 - wanted)
+
+    @given(two_option_key(), options)
+    def test_skew_stays_inside_its_range(self, key, option: str) -> None:
+        expected, parsed = key
+        assert -1.0 <= skew(expected, parsed, option=option) <= 1.0

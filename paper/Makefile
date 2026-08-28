@@ -21,9 +21,17 @@ LATEXMK := latexmk -pdf -interaction=nonstopmode -halt-on-error
 paper: figures
 	$(LATEXMK) main.tex
 
-# `de figures` reads ../results/**/summary.json and writes figures/*.pdf plus
-# generated/macros.tex. With no results present it emits an empty macro file
-# and returns cleanly, so the skeleton compiles before any run has happened.
+# `de figures` reads the latest run under ../results/evolution-study/ and writes
+# generated/macros.tex, generated/tables.tex and figures/*.tex. Everything is
+# TeX rather than PDF: pgfplots draws the pictures, so a figure is a diff a
+# reviewer can read and the build needs no plotting library. With no results
+# present it emits an empty macro file and returns cleanly, so the skeleton
+# compiles before any run has happened.
+#
+# This named ../results/**/summary.json until 2026-08-28. No such file has ever
+# existed anywhere under results/, and nothing noticed for eighteen days,
+# because the documentation gate reads *.md and docs/ and a Makefile is
+# neither.
 figures:
 	cd .. && $(UV) run de figures --out paper
 

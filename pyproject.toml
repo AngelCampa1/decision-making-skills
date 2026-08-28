@@ -308,6 +308,13 @@ output = "coverage.json"
 # last of those into either of the others is the failure this module was added
 # to remove, one level up.
 "decision_evals/deployed.py" = { line = 100.0, branch = 100.0 }
+# The last hop before a number leaves the repository. `claims.py` binds a
+# published figure on the site to the sentence it came from; this writes every
+# figure the paper prints, and a PDF is the one artefact here that travels
+# without the repository around it to check it. It already merged two arms into
+# one by reading the field that names an arm's kind rather than its label, and
+# reported a mean for an arm that does not exist.
+"decision_evals/figures.py" = { line = 100.0, branch = 100.0 }
 # A generator bug silently changes the benchmark rather than failing loudly.
 "decision_evals/providers" = { line = 100.0, branch = 100.0 }
 "decision_evals/generators" = { line = 98.0, branch = 95.0 }

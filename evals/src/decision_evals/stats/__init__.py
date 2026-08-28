@@ -81,6 +81,12 @@ from decision_evals.stats.reliability import (
     repeats_for_reliability,
     repeats_for_scatter_precision,
 )
+from decision_evals.stats.signal import (
+    DegenerateSignalError,
+    SignalResult,
+    informedness,
+    skew,
+)
 
 __all__ = [
     "BenjaminiHochbergResult",
@@ -88,6 +94,7 @@ __all__ = [
     "ClusterBootstrapResult",
     "CohenKappaResult",
     "DegenerateAgreementError",
+    "DegenerateSignalError",
     "EffectiveRatersResult",
     "FleissKappaResult",
     "HolmResult",
@@ -99,6 +106,7 @@ __all__ = [
     "PermutationResult",
     "PowerResult",
     "ReliabilityResult",
+    "SignalResult",
     "TwoSampleClusterBootstrapResult",
     "UnanimityResult",
     "aptitude_unreliability",
@@ -114,6 +122,7 @@ __all__ = [
     "expected_calibration_error",
     "fleiss_kappa",
     "holm",
+    "informedness",
     "intraclass_correlation",
     "krippendorff_alpha",
     "log_score",
@@ -128,6 +137,7 @@ __all__ = [
     "repeats_for_reliability",
     "repeats_for_scatter_precision",
     "required_pairs",
+    "skew",
     "smooth_calibration_error",
     "unanimity_rate",
 ]

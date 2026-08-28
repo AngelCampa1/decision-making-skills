@@ -154,14 +154,14 @@ itself, so it grows a row the day a module does.
 <!-- de:generated harness-modules -->
 | Package | Modules |
 | --- | --- |
-| `decision_evals/` | `adjudication` · `arenas` · `budget` · `citations` · `claims` · `cli` · `corpus` · `corrections` · `decisions` · `deployed` · `docs` · `drift` · `elicit` · `orchestrator` · `prereg` · `provenance` · `rescore` · `runner` · `sharded` · `site` · `skills` · `sync` · `tailoring` · `telemetry` · `trigger_arms` · `triggers` · `unbundle` · `wiring` |
+| `decision_evals/` | `adjudication` · `arenas` · `budget` · `citations` · `claims` · `cli` · `corpus` · `corrections` · `decisions` · `deployed` · `docs` · `drift` · `elicit` · `figures` · `orchestrator` · `prereg` · `provenance` · `rescore` · `runner` · `sharded` · `site` · `skills` · `sync` · `tailoring` · `telemetry` · `trigger_arms` · `triggers` · `unbundle` · `wiring` |
 | `decision_evals/corpora/` | `lost_in_conversation` |
 | `decision_evals/evolution/` | `adapter` · `checkpoints` · `engine_prompts` · `holdout` · `lineage` · `run` · `skillopt_env` · `solo` · `study` · `venues` |
 | `decision_evals/generators/` | `audit` · `generate` · `loader` · `safe_eval` · `schema` |
 | `decision_evals/providers/` | `antigravity` · `claude_code` · `openai_compatible` |
 | `decision_evals/scorers/` | `answer` · `bfcl` |
 | `decision_evals/solvers/` | `arms` |
-| `decision_evals/stats/` | `agreement` · `calibration` · `cluster` · `multiplicity` · `paired` · `power` · `reliability` · `track_h` |
+| `decision_evals/stats/` | `agreement` · `calibration` · `cluster` · `multiplicity` · `paired` · `power` · `reliability` · `signal` · `track_h` |
 <!-- /de:generated -->
 
 `trigger_arms.py` carries the part that is easiest to get wrong: scoring one
@@ -407,6 +407,7 @@ Every command the harness answers to:
 | `de drift` | List the documents whose subject has moved since anyone recorded reading them. |
 | `de evolve` | Evolve a skill against the corpus, and write the search down. |
 | `de fetch` | Download the vendored corpora and verify them against their locks. |
+| `de figures` | Write the paper's numbers, tables and plots from the published records. |
 | `de index` | Regenerate `docs/RUN_INDEX.md` from the published run records. |
 | `de lint` | Validate skill frontmatter, evidence metadata, and claim coverage. |
 | `de mirror` | Regenerate the cross-tool mirrors (`.agents/skills/`, `CLAUDE.md`). |
