@@ -316,7 +316,7 @@ code:
 | decision register | a change to the answer key or the shipped skill with no entry in [`docs/DECISIONS.md`](docs/DECISIONS.md) |
 | label corrections | a version the answer key has reached that no line of [`datasets/triggers/corrections.jsonl`](datasets/triggers/corrections.jsonl) accounts for |
 | documentation | a `de` command, path, or component that this README names and the repository does not have, a document under `docs/` that [`docs/README.md`](docs/README.md) does not list, and a living document that names no audience |
-| citations | a claim carrying an arXiv identifier whose entry in [`paper/refs.bib`](paper/refs.bib) has no quote behind it |
+| citations | a claim carrying an arXiv identifier, or a `\cite` key in `paper/`, whose entry in [`paper/refs.bib`](paper/refs.bib) has no quote behind it |
 | generated regions | a table a document derives from the repository that is no longer what it derives from, and a renderer no document uses |
 | document drift | a living document with no review on record, or one more than ten commits past the last one |
 | published claims | a measured number, on the website or in a document, that no longer matches the sentence it came from |

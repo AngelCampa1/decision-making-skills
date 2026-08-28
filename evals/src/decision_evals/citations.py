@@ -84,8 +84,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
 
-#: Files whose citations are governed. ``paper/`` is excluded: it is generated
-#: from the bibliography rather than citing into it.
+#: Files whose citations are governed by arXiv identifier.
 GOVERNED: Final[tuple[str, ...]] = (
     "docs/**/*.md",
     "notebook/*.md",
@@ -94,6 +93,22 @@ GOVERNED: Final[tuple[str, ...]] = (
     "CLAUDE.md",
     "README.md",
     "SCORECARD.md",
+)
+
+#: The paper, governed by the same rule keyed on the citation command instead.
+#:
+#: Until 2026-08-28 this module's own comment said ``paper/`` was excluded
+#: because it is generated from the bibliography rather than citing into it.
+#: Half of that is true: the paper writes ``\citep{key}`` and never an arXiv
+#: identifier, so :data:`_ARXIV` cannot fire on it and adding these globs to
+#: :data:`GOVERNED` would have been a no-op that looked like coverage. The other
+#: half is not. The paper asserts numbers beside citations exactly as the
+#: documents do, and it is the one artifact that leaves the repository, so it
+#: was the only prose here that no gate read. Hence :func:`scan_tex`, which is
+#: the same rule over the same bibliography with the key as the identifier.
+PAPER_GOVERNED: Final[tuple[str, ...]] = (
+    "paper/main.tex",
+    "paper/sections/*.tex",
 )
 
 #: The bibliography every governed citation must resolve into.
@@ -118,6 +133,13 @@ QUOTE_BODY_FIELD: Final = "quote_body"
 _KNOWN_QUOTE_FIELDS: Final = frozenset({QUOTE_FIELD, QUOTE_BODY_FIELD})
 
 _ARXIV: Final = re.compile(r"\b(\d{4}\.\d{4,5})\b")
+
+#: Every LaTeX citation command, so ``\cite``, ``\citep``, ``\citet`` and
+#: ``\citealp`` are one rule. A command may carry several keys.
+_CITE: Final = re.compile(r"\\cite[a-z]*\{([^}]+)\}")
+
+#: A BibTeX entry's key, which is what the paper cites by.
+_BIB_KEY: Final = re.compile(r"^\s*\w+\s*\{\s*([^,\s}]+)\s*,")
 
 #: A number doing claim work. Percentages, percentage points, and the bare
 #: decimals that agreement statistics are reported in (``kappa = 0.88``).
@@ -186,6 +208,34 @@ def parse_bib(text: str) -> dict[str, BibEntry]:
     return entries
 
 
+def parse_bib_by_key(text: str) -> dict[str, BibEntry]:
+    """The same bibliography, indexed by citation key instead.
+
+    The paper cites by key and the documents cite by identifier, so the same
+    entries have to be reachable both ways. An entry with no arXiv identifier is
+    still indexed: a key can be cited and still need a quote behind a number,
+    and refusing to index one would exempt every non-arXiv source from the rule.
+    """
+    entries: dict[str, BibEntry] = {}
+    for chunk in re.split(r"^@", text, flags=re.M)[1:]:
+        body = _strip_comments(chunk)
+        key = _BIB_KEY.match(body)
+        if key is None:
+            continue
+        found = _ARXIV.search(body)
+        has_quote = any(
+            re.search(rf"^\s*{name}\s*=", body, re.M | re.IGNORECASE) is not None
+            for name in _KNOWN_QUOTE_FIELDS
+        )
+        # First entry wins, as in :func:`parse_bib`, so a duplicated key
+        # resolves the way a reader scanning top to bottom would resolve it.
+        entries.setdefault(
+            key.group(1),
+            BibEntry(arxiv_id=found.group(1) if found else "", has_quote=has_quote),
+        )
+    return entries
+
+
 def _strip_comments(text: str) -> str:
     """Drop whole-line ``%`` comments.
 
@@ -193,6 +243,28 @@ def _strip_comments(text: str) -> str:
     identifier mentioned in a comment must not register as a bibliography entry.
     """
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("%"))
+
+
+def strip_tex_comments(text: str) -> str:
+    """Blank every LaTeX comment, keeping the line count intact.
+
+    Line-preserving because an issue is reported at the line its citation sits
+    on, and a scan that deleted comment lines would report the wrong one.
+
+    A comment runs from the first unescaped ``%`` to the end of the line, so
+    ``50\\%`` survives and a trailing ``% SOURCE OF TRUTH`` note does not. The
+    paper's sections open with argument comments that name figures and papers,
+    and reading those as prose would gate the paper on its own margin notes.
+    """
+    kept: list[str] = []
+    for line in text.splitlines():
+        cut = 0
+        while cut < len(line):
+            if line[cut] == "%" and (cut == 0 or line[cut - 1] != "\\"):
+                break
+            cut += 1
+        kept.append(line[:cut])
+    return "\n".join(kept)
 
 
 def asserts_a_number(line: str) -> bool:
@@ -454,6 +526,59 @@ def scan_text(path: str, text: str, bib: dict[str, BibEntry]) -> list[CitationIs
     return issues
 
 
+def scan_tex(path: str, text: str, bib: dict[str, BibEntry]) -> list[CitationIssue]:
+    """Check one LaTeX source's citations against the bibliography.
+
+    :func:`scan_text`'s rule with the citation key standing in for the arXiv
+    identifier: a key must resolve into the bibliography, and a key cited in a
+    block that asserts a number needs a quote behind it.
+
+    The identifier reported is the whole ``\\cite{key}``, so a paper issue can
+    never be silenced by an arXiv identifier in the baseline that happens to
+    read the same way.
+    """
+    # Comments first, because that pass is what tells `\%` from a comment start.
+    # Then unescape, because LaTeX writes a percentage `49\%` and the claim-number
+    # rule this shares with the documents reads `49%`. Neither step removes a
+    # newline, so an issue still reports the line its citation sits on.
+    body = strip_tex_comments(text).replace("\\%", "%")
+    issues: list[CitationIssue] = []
+    for block in blocks(body):
+        block_asserts = asserts_a_number(block.text)
+        seen: set[str] = set()
+        for number, line in block.lines:
+            for group in _CITE.findall(line):
+                for key in dict.fromkeys(part.strip() for part in group.split(",")):
+                    if not key or key in seen:
+                        continue
+                    seen.add(key)
+                    entry = bib.get(key)
+                    if entry is None:
+                        issues.append(
+                            CitationIssue(
+                                path,
+                                number,
+                                f"\\cite{{{key}}}",
+                                f"not in {BIB_PATH}. A key with no entry is an undefined "
+                                "reference at build time and a missing source to a reader.",
+                            )
+                        )
+                        continue
+                    if block_asserts and not entry.has_quote:
+                        issues.append(
+                            CitationIssue(
+                                path,
+                                number,
+                                f"\\cite{{{key}}}",
+                                f"a number is asserted in the same block as this citation, but "
+                                f"its {BIB_PATH} entry has no `{QUOTE_FIELD}` field. Add the "
+                                "verbatim sentence the figure comes from. This is the paper, "
+                                "so the number leaves the repository with it.",
+                            )
+                        )
+    return issues
+
+
 #: Any ``name = { ... }`` field, matched to its opening brace so the body can be
 #: brace-balanced from there. **Every** field, not only ``quote`` — see
 #: :func:`check_percent_escaping` for why that turned out to be the wrong scope.
@@ -568,8 +693,17 @@ def check_unknown_quote_fields(text: str) -> list[CitationIssue]:
 
 def governed_files(repo_root: Path) -> list[Path]:
     """Every file whose citations this gate governs, deduplicated and sorted."""
+    return _matching(repo_root, GOVERNED)
+
+
+def paper_files(repo_root: Path) -> list[Path]:
+    """Every LaTeX source governed by the key-based rule."""
+    return _matching(repo_root, PAPER_GOVERNED)
+
+
+def _matching(repo_root: Path, patterns: tuple[str, ...]) -> list[Path]:
     found: set[Path] = set()
-    for pattern in GOVERNED:
+    for pattern in patterns:
         found.update(path for path in repo_root.glob(pattern) if path.is_file())
     return sorted(found)
 
@@ -609,10 +743,14 @@ def check_citations(repo_root: Path) -> list[CitationIssue]:
 
     bib_text = bib_path.read_text(encoding="utf-8")
     bib = parse_bib(bib_text)
+    by_key = parse_bib_by_key(bib_text)
     found: list[CitationIssue] = []
     for path in governed_files(repo_root):
         relative = str(path.relative_to(repo_root)).replace("\\", "/")
         found += scan_text(relative, path.read_text(encoding="utf-8"), bib)
+    for path in paper_files(repo_root):
+        relative = str(path.relative_to(repo_root)).replace("\\", "/")
+        found += scan_tex(relative, path.read_text(encoding="utf-8"), by_key)
 
     baseline = load_baseline(repo_root)
     issues = [issue for issue in found if issue.arxiv_id not in baseline]

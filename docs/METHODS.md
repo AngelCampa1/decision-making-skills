@@ -448,7 +448,7 @@ method rather than lint:
 | integrity wiring | a module with a coverage floor that no entry point can reach | two shipped modules tested to 100% and called by nothing |
 | checkpoint label versions | two checkpoints disagreeing about the answer key with no re-scored bridge | §3 |
 | label adjudication | an answer key on disk, or a published run, naming an item with no three-judge adjudication record | a version shipping 72 unadjudicated items under a register entry blocking publication against them |
-| citations | an arXiv identifier with no bib entry, or a claim number beside one with no verbatim source quote | three misattributed figures in one morning, all citing real papers |
+| citations | an arXiv identifier with no bib entry, or a claim number beside one with no verbatim source quote. Since 2026-08-28 the same rule reads `paper/` keyed on the `\cite` command, because the paper cites by key and the identifier rule could never fire on it | three misattributed figures in one morning, all citing real papers |
 | documentation | a `de` command, path or component named in the docs that does not exist | the README advertising two commands and a directory that never existed |
 | site | a published build older than the files it renders | a site that renders this repo's markdown in place, so it cannot silently drift |
 | skill lint | an `UNTESTED` skill in the shipped plugin; a verdict outside the vocabulary | a typo in a verdict is a false claim |

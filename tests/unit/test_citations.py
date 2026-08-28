@@ -25,8 +25,12 @@ from decision_evals.citations import (
     check_unknown_quote_fields,
     governed_files,
     load_baseline,
+    paper_files,
     parse_bib,
+    parse_bib_by_key,
+    scan_tex,
     scan_text,
+    strip_tex_comments,
 )
 
 _ENTRY = r"""
@@ -581,3 +585,132 @@ def test_an_unrecognised_quote_field_fails_check_citations_even_when_unused(
 def test_the_bibliography_has_no_unrecognised_quote_fields() -> None:
     root = Path(__file__).resolve().parents[2]
     assert check_unknown_quote_fields((root / BIB_PATH).read_text(encoding="utf-8")) == []
+
+
+# --------------------------------------------------------------------------- #
+# The paper, governed by citation key rather than by arXiv identifier.
+# --------------------------------------------------------------------------- #
+
+
+def test_the_bibliography_indexes_by_key_as_well_as_by_identifier() -> None:
+    by_key = parse_bib_by_key(_ENTRY)
+    assert set(by_key) == {"example"}
+    assert by_key["example"].has_quote
+    assert by_key["example"].arxiv_id == "2605.24050"
+
+
+def test_an_entry_with_no_identifier_is_still_indexed_by_key() -> None:
+    """A key can be cited and still need a quote, so a web source is governed too."""
+    by_key = parse_bib_by_key("@misc{site,\n  title = {A Page},\n  year = {2026}\n}\n")
+    assert by_key["site"].arxiv_id == ""
+    assert not by_key["site"].has_quote
+
+
+def test_a_commented_out_entry_is_not_indexed_by_key() -> None:
+    assert parse_bib_by_key("% @article{ghost,\n%   year = {2026}\n% }\n") == {}
+
+
+def test_an_entry_with_no_readable_key_is_skipped_rather_than_guessed() -> None:
+    """A malformed entry is BibTeX's problem to report, not this gate's to invent."""
+    assert parse_bib_by_key("@article{\n  title = {No Key Here}\n}\n") == {}
+
+
+def test_a_duplicated_key_resolves_to_the_first_entry() -> None:
+    """The way a reader scanning top to bottom would resolve it."""
+    text = "@misc{same,\n  quote = {first}\n}\n\n@misc{same,\n  year = {2026}\n}\n"
+    assert parse_bib_by_key(text)["same"].has_quote
+
+
+def test_a_key_with_no_entry_is_an_issue() -> None:
+    issues = scan_tex("paper/sections/x.tex", r"See \citep{nowhere}.", parse_bib_by_key(_ENTRY))
+    assert len(issues) == 1
+    assert issues[0].arxiv_id == r"\cite{nowhere}"
+
+
+def test_a_bare_key_needs_no_quote() -> None:
+    text = r"Skills are a distribution channel~\citep{example}."
+    assert scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE)) == []
+
+
+def test_a_number_beside_a_key_requires_a_quote() -> None:
+    text = r"It lifts accuracy by 23.5\% here~\citep{example}."
+    issues = scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))
+    assert len(issues) == 1
+    assert QUOTE_FIELD in issues[0].message
+
+
+def test_a_number_beside_a_quoted_key_is_fine() -> None:
+    text = r"It lifts accuracy by 21\% here~\citep{example}."
+    assert scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY)) == []
+
+
+def test_a_number_wrapped_onto_another_line_still_reaches_the_citation() -> None:
+    """The block is the window here for the same reason it is one in markdown."""
+    text = "It lifts accuracy by 21\\% on the\nlarger model~\\citep{example}.\n"
+    assert len(scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))) == 1
+
+
+def test_one_command_citing_two_keys_checks_both() -> None:
+    text = r"Both disagree, by 30\%~\citep{example,nowhere}."
+    issues = scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))
+    assert {issue.arxiv_id for issue in issues} == {r"\cite{example}", r"\cite{nowhere}"}
+
+
+def test_one_key_cited_twice_in_a_block_reports_once() -> None:
+    text = "Worth 30\\% more~\\citep{example}.\nAnd again~\\citep{example}.\n"
+    assert len(scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))) == 1
+
+
+@pytest.mark.parametrize("command", [r"\cite", r"\citep", r"\citet", r"\citealp"])
+def test_every_citation_command_spelling_is_governed(command: str) -> None:
+    text = "Worth 30\\% more~" + command + "{example}."
+    by_key = parse_bib_by_key(_ENTRY_NO_QUOTE)
+    assert len(scan_tex("paper/sections/x.tex", text, by_key)) == 1
+
+
+def test_a_comment_is_not_prose() -> None:
+    """Section files open with argument comments that name figures and papers."""
+    text = "% It reports 30\\% per \\citep{example}.\nNo claim here.\n"
+    assert scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE)) == []
+
+
+def test_an_escaped_percent_is_not_a_comment() -> None:
+    text = r"Worth 30\% more~\citep{example}."
+    assert len(scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))) == 1
+
+
+def test_stripping_comments_keeps_the_line_count() -> None:
+    assert strip_tex_comments("one\n% two\nthree % four\n") == "one\n\nthree "
+
+
+def test_an_issue_is_reported_at_the_line_its_citation_sits_on() -> None:
+    text = "% a comment\nA claim of 30\\%,\nand its source~\\citep{example}.\n"
+    issues = scan_tex("paper/sections/x.tex", text, parse_bib_by_key(_ENTRY_NO_QUOTE))
+    assert [issue.line for issue in issues] == [3]
+
+
+def test_a_paper_issue_cannot_be_silenced_by_the_baseline(tmp_path: Path) -> None:
+    """The identifier reported is the command, so no arXiv id in the list matches it."""
+    root = _repo(tmp_path, doc="No citations here.", bib=_ENTRY_NO_QUOTE, baseline="")
+    (root / "paper" / "sections").mkdir()
+    (root / "paper" / "sections" / "x.tex").write_text(
+        "Worth 30\\% more~\\citep{example}.", encoding="utf-8"
+    )
+    assert any(issue.arxiv_id == r"\cite{example}" for issue in check_citations(root))
+
+
+def test_paper_files_finds_the_sections_and_the_root_document(tmp_path: Path) -> None:
+    (tmp_path / "paper" / "sections").mkdir(parents=True)
+    (tmp_path / "paper" / "main.tex").write_text("", encoding="utf-8")
+    (tmp_path / "paper" / "sections" / "a.tex").write_text("", encoding="utf-8")
+    (tmp_path / "paper" / "refs.bib").write_text("", encoding="utf-8")
+    found = [str(p.relative_to(tmp_path)).replace("\\", "/") for p in paper_files(tmp_path)]
+    assert found == ["paper/main.tex", "paper/sections/a.tex"]
+
+
+def test_the_paper_itself_passes_the_gate() -> None:
+    root = Path(__file__).resolve().parents[2]
+    by_key = parse_bib_by_key((root / BIB_PATH).read_text(encoding="utf-8"))
+    for path in paper_files(root):
+        relative = str(path.relative_to(root)).replace("\\", "/")
+        assert scan_tex(relative, path.read_text(encoding="utf-8"), by_key) == []
