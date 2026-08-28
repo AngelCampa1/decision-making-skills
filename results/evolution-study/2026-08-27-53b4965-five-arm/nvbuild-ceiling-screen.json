@@ -1,0 +1,74 @@
+[
+ {
+  "model": "nvbuild/nvidia/nemotron-3-nano-30b-a3b",
+  "asked": 30,
+  "answered": 30,
+  "correct": 29,
+  "accuracy": 0.9666666666666667,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 59.8
+ },
+ {
+  "model": "nvbuild/openai/gpt-oss-20b",
+  "asked": 30,
+  "answered": 30,
+  "correct": 30,
+  "accuracy": 1.0,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 129.8
+ },
+ {
+  "model": "nvbuild/meta/llama-3.2-11b-vision-instruct",
+  "asked": 30,
+  "answered": 30,
+  "correct": 28,
+  "accuracy": 0.9333333333333333,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 146.1
+ },
+ {
+  "model": "nvbuild/nvidia/nemotron-3-super-120b-a12b",
+  "asked": 30,
+  "answered": 30,
+  "correct": 30,
+  "accuracy": 1.0,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 157.3
+ },
+ {
+  "model": "nvbuild/nvidia/ising-calibration-1.5-31b",
+  "asked": 30,
+  "answered": 30,
+  "correct": 28,
+  "accuracy": 0.9333333333333333,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 185.8
+ },
+ {
+  "model": "nvbuild/deepseek-ai/deepseek-v4-flash-0731",
+  "asked": 30,
+  "answered": 30,
+  "correct": 30,
+  "accuracy": 1.0,
+  "unparsed": 0,
+  "failures": {},
+  "seconds": 1221.6
+ },
+ {
+  "model": "nvbuild/google/diffusiongemma-26b-a4b-it",
+  "asked": 30,
+  "answered": 29,
+  "correct": 29,
+  "accuracy": 1.0,
+  "unparsed": 0,
+  "failures": {
+   "CliError": 1
+  },
+  "seconds": 1222.6
+ }
+]

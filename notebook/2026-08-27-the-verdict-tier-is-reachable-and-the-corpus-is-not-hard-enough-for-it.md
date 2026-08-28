@@ -69,3 +69,57 @@ the whole study in `screen` and let it carry a verdict.
 That is a corpus change, which is a governed path and a fresh answer key, and it
 is not a thing to start while a registered run is mid-flight. Recording it as
 the next move rather than doing it now.
+
+---
+
+## Correction, 2026-08-28: "every" was four of eleven, and one row was wrong
+
+The sentence above reads **"Every model this key can reach solves the corpus
+with an empty prompt."** Four models were screened. The key answers for fifteen,
+eleven of them under a prefix `arenas.py` registers. Four of eleven does not
+license the word *every*, and the entry stated it as measured.
+
+The prompt to check came from a background task reported as stopped with no
+completion record, which sent me back to the files. The screen it belonged to
+had been superseded, and re-reading the ones that stood found the overclaim.
+
+Re-screened with two repairs. **Accuracy is now over calls that answered rather
+than items asked**, which is the same defect the entry already caught in one row
+and did not generalise: a rate-limited call was scoring as a wrong answer.
+**Failed calls are retried** before being recorded, because a free-tier 429 is
+traffic and not evidence about a model.
+
+| model | correct / answered | no-skill accuracy |
+| --- | --- | --- |
+| `meta/llama-3.2-11b-vision-instruct` | 28/30 | 0.933 |
+| `nvidia/ising-calibration-1.5-31b` | 28/30 | 0.933 |
+| `nvidia/nemotron-3-nano-30b-a3b` | 29/30 | 0.967 |
+| `google/diffusiongemma-26b-a4b-it` | 29/29 | 1.000 |
+| `openai/gpt-oss-20b` | 30/30 | 1.000 |
+| `nvidia/nemotron-3-super-120b-a12b` | 30/30 | 1.000 |
+| `deepseek-ai/deepseek-v4-flash-0731` | 30/30 | 1.000 |
+| `meta/muse-glimmer-30b` | 30/30 | 1.000 |
+
+**Three of the eleven were not measured.** `deepseek-v4-pro-0813`,
+`llama-3.2-90b-vision-instruct` and `nemotron-3-ultra-550b-a55b` had not
+returned twenty minutes in, against about ninety seconds for the models above,
+and the screen was stopped rather than left to run against a 900-second
+per-call timeout. They are larger than models already answering at 1.000, so the
+expectation is that they ceiling too. That is an expectation and it is not a
+measurement, which is the distinction this correction exists to keep.
+
+Two numbers in the table above the correction were also wrong.
+`diffusiongemma` was published as 10 answered of 30; with retries it answers 29
+of 30 and gets all 29 right. The entry's own account of that row, that the first
+25/30 reading was an artefact of counting API failures as wrong answers, was
+right about the cause and wrong about the repaired number.
+
+**The claim the evidence supports:** every model measured here solves the corpus
+with an empty prompt, the weakest at 0.933 against 0.702 for the study's local
+target, and eight of eleven reachable registered models were measured. That is
+enough to kill a screen-tier study on this corpus and it is not the word
+*every*.
+
+Nothing downstream changes. A model at 0.933 with no skill leaves too little
+room for a five-arm study, so the conclusion, the local study's standing and the
+"next move is a harder corpus" all hold on the corrected numbers.

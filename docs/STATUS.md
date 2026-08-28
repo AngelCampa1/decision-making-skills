@@ -921,3 +921,17 @@ removes the mechanism prediction 4 rested on.
 that on this corpus, at this model size, what they hand back does not beat a
 document-shaped control, and that one of them hard-codes a constant the prompt
 already supplies. A harder corpus is the next move and it is a governed change.
+
+### Correction, 2026-08-28: the ceiling screen said "every" on four of eleven
+
+The entry above says every NVIDIA Build model the key reaches solves the corpus
+with an empty prompt. Four models had been screened; eleven reachable models sit
+under a registered `nvbuild/` prefix. Re-screened with accuracy taken over calls
+that answered rather than items asked, and with failed calls retried:
+**eight of eleven measured, all ceilinged, the weakest at 0.933** against 0.702
+for the study's local target. Three did not return inside the screen's budget
+and are unmeasured rather than assumed.
+
+The conclusion is unchanged, since 0.933 with no skill leaves too little room
+for a five-arm study. The word *every* was the defect.
+[Correction in full](../notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md).

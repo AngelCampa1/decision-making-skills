@@ -94,9 +94,12 @@ at +0.041 on the seen set, raw p = 0.034, which Holm takes to 0.102.
 Nothing here moves `SCORECARD.md`. The result is scoped to one 1.7B model under
 these controls.
 
-That limit was measured rather than assumed: every NVIDIA Build model this key
-can reach solves the corpus with an empty prompt, so no screen-tier venue can
-host this study as the corpus currently stands.
+That limit was measured rather than assumed: eight of the eleven reachable
+NVIDIA Build models registered in `arenas.py` solve the corpus with an empty
+prompt, the weakest at 0.933 against 0.702 for this study's target, so no
+screen-tier venue can host this study as the corpus currently stands. The three
+not measured are larger than models already answering at 1.000, which is an
+expectation rather than a reading.
 [`notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md`](../../../notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md)
 
 The design also has a confound the write-up states in full: `placebo` helps on
@@ -114,6 +117,8 @@ belongs to is its `seed`, and `run.json` lists the seeds for each.
   checkpoint so resume could not skip it
 - `analysis.json` — per-set accuracy, the comparisons, the A/A
 - `run.json` — the manifest: arms, shas, seeds, templates, corpus fingerprints
+- `nvbuild-ceiling-screen.json` — the no-skill screen behind the verdict-tier
+  limit above, one row per NVIDIA Build model, accuracy over answered calls
 
 Every number in the tables above recomputes from these files through
 `decision_evals.evolution.study.analyse`.
