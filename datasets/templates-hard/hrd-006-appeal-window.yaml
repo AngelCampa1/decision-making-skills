@@ -1,0 +1,51 @@
+template_id: hrd-006-appeal-window
+question: "Should the appeal be accepted for review, or refused as out of time?"
+options: [accept_appeal, refuse_appeal]
+
+variables:
+  student: {choice: [Ibarra, Nkemdi, Rowntree, Salas]}
+  faculty: {choice: [Law, Marine Science, Architecture, Linguistics]}
+  status: {choice: [taught, research]}
+  days_elapsed: {int: [5, 120]}
+  taught_window_days: {int: [10, 110]}
+  research_window_days: {int: [10, 110]}
+  reply_days: {int: [5, 120]}
+  credits: {int: [15, 180]}
+
+relevant_facts:
+  - id: r1
+    text: "{student} is registered on a {status} programme in {faculty}."
+  - id: r2
+    text: "Taught programmes accept appeals within {taught_window_days} days of the result."
+  - id: r3
+    text: "Research programmes accept appeals within {research_window_days} days of the result."
+  - id: r4
+    text: "The result was published {days_elapsed} days before the appeal was filed."
+
+distractor_facts:
+  - id: d1
+    strength: high
+    collides_with: days_elapsed
+    text: "The faculty office took {reply_days} days to answer the student's initial query."
+  - id: d2
+    strength: medium
+    text: "The programme carries {credits} credits in the current framework."
+  - id: d3
+    strength: medium
+    text: "{faculty} moved to a new results portal this session."
+  - id: d4
+    strength: low
+    text: "The appeal was submitted as a scanned form."
+
+constraints:
+  - "taught_window_days != research_window_days"
+  - "(days_elapsed <= taught_window_days) != (days_elapsed <= research_window_days)"
+
+solution:
+  expr: "'accept_appeal' if days_elapsed <= (taught_window_days if status == 'taught' else research_window_days) else 'refuse_appeal'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4

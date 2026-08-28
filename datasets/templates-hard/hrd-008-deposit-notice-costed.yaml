@@ -1,0 +1,66 @@
+template_id: hrd-008-deposit-notice-costed
+question: "Should the deposit be returned in full, or withheld pending the notice shortfall?"
+options: [return_deposit, withhold_deposit]
+
+# A controlled copy of hrd-003, which reads 1.000 on a 30B. The only change is
+# two distractors that suggest a *rival decision procedure* rather than a rival
+# number: weigh the money instead of the notice period. hrd-002 is the one
+# selection template that stays off the ceiling and it is also the only one
+# carrying that kind of lure, so this isolates it.
+variables:
+  tenant: {choice: [Ashby, Corrin, Delaney, Voss]}
+  city: {choice: [Aberdeen, Trieste, Malmo, Girona]}
+  tenancy: {choice: [periodic, fixed_term]}
+  notice_given_days: {int: [10, 90]}
+  periodic_notice_days: {int: [14, 84]}
+  fixed_term_notice_days: {int: [14, 84]}
+  deposit_eur: {int: [400, 4000]}
+  dispute_cost_eur: {int: [400, 4000]}
+  damage_eur: {int: [400, 4000]}
+  inspection_days: {int: [10, 90]}
+
+relevant_facts:
+  - id: r1
+    text: "{tenant} holds a {tenancy} tenancy on the {city} flat."
+  - id: r2
+    text: "Periodic tenancies require {periodic_notice_days} days of written notice."
+  - id: r3
+    text: "Fixed-term tenancies require {fixed_term_notice_days} days of written notice."
+  - id: r4
+    text: "{tenant} gave written notice {notice_given_days} days before vacating."
+
+distractor_facts:
+  - id: d1
+    strength: high
+    collides_with: notice_given_days
+    text: "The outgoing inspection was booked {inspection_days} days before the vacate date."
+  - id: d2
+    strength: high
+    text: "The deposit held is {deposit_eur} EUR, protected in an approved scheme."
+  - id: d5
+    strength: high
+    text: "Defending a withheld deposit at the scheme's adjudicator costs about {dispute_cost_eur} EUR."
+  - id: d6
+    strength: high
+    text: "Assessed cleaning and damage on the outgoing inventory come to {damage_eur} EUR."
+  - id: d3
+    strength: medium
+    text: "The {city} flat was repainted between tenancies last year."
+  - id: d4
+    strength: low
+    text: "The inventory report is filed as a PDF."
+
+# The two notice periods must disagree about this tenant, or reading the wrong
+# one costs nothing and the item tests no selection at all.
+constraints:
+  - "periodic_notice_days != fixed_term_notice_days"
+  - "(notice_given_days >= periodic_notice_days) != (notice_given_days >= fixed_term_notice_days)"
+
+solution:
+  expr: "'return_deposit' if notice_given_days >= (periodic_notice_days if tenancy == 'periodic' else fixed_term_notice_days) else 'withhold_deposit'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4

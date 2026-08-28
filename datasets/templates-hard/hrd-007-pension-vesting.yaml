@@ -1,0 +1,51 @@
+template_id: hrd-007-pension-vesting
+question: "Should the employer contributions vest on exit, or be forfeited?"
+options: [vest_contributions, forfeit_contributions]
+
+variables:
+  employee: {choice: [Baptiste, Halloran, Okonjo, Vidmar]}
+  site: {choice: [Leeds, Utrecht, Turku, Ljubljana]}
+  scheme: {choice: [legacy, current]}
+  service_months: {int: [6, 140]}
+  legacy_vesting_months: {int: [12, 132]}
+  current_vesting_months: {int: [12, 132]}
+  prior_scheme_months: {int: [6, 140]}
+  contribution_pct: {int: [3, 14]}
+
+relevant_facts:
+  - id: r1
+    text: "{employee} is enrolled in the {scheme} scheme at the {site} site."
+  - id: r2
+    text: "The legacy scheme vests employer contributions after {legacy_vesting_months} months of service."
+  - id: r3
+    text: "The current scheme vests employer contributions after {current_vesting_months} months of service."
+  - id: r4
+    text: "{employee} completed {service_months} months of continuous service."
+
+distractor_facts:
+  - id: d1
+    strength: high
+    collides_with: service_months
+    text: "A predecessor employer credited {prior_scheme_months} months toward an unrelated scheme."
+  - id: d2
+    strength: medium
+    text: "The employer contributes {contribution_pct}% of salary under both schemes."
+  - id: d3
+    strength: medium
+    text: "The {site} site transferred administrators in the last review cycle."
+  - id: d4
+    strength: low
+    text: "Statements are issued annually in printed form."
+
+constraints:
+  - "legacy_vesting_months != current_vesting_months"
+  - "(service_months >= legacy_vesting_months) != (service_months >= current_vesting_months)"
+
+solution:
+  expr: "'vest_contributions' if service_months >= (legacy_vesting_months if scheme == 'legacy' else current_vesting_months) else 'forfeit_contributions'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4

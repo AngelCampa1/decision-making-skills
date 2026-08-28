@@ -99,3 +99,98 @@ separate 0.64 from 1.000 and they do not pin 0.64 against 0.70.
 3. **Adding distractors past four does not move either**, since distractors were
    worth 13 points across their whole range and selection is worth 19 on its
    own.
+
+
+## Correction, same day: prediction 1 is falsified, and the template is measuring the wrong thing
+
+The entry above registered:
+
+> **Six more selection templates land the 30B between 0.60 and 0.75 as a set.**
+> Two instances is not a rate, and the failure mode is a template whose
+> selection cue turns out easy for reasons its author did not see.
+
+Built five more in five domains, all the same structure: two rules stated
+plainly, a category fact deciding which binds, a constraint forcing the two
+rules to disagree about this case, both answers balanced to the item.
+`nemotron-3-nano-30b-a3b`, no skill, four distractors, two seeds.
+
+| template | | 95% CI |
+| --- | --- | --- |
+| `hrd-002-shipping-escalation` | 13/18 = 0.722 | [0.49, 0.88] |
+| `hrd-004-sample-retention` | 17/18 = 0.944 | [0.74, 0.99] |
+| `hrd-003-deposit-notice` | 22/22 = 1.000 | [0.85, 1.00] |
+| `hrd-005-customs-clearance` | 20/20 = 1.000 | [0.84, 1.00] |
+| `hrd-006-appeal-window` | 21/21 = 1.000 | [0.85, 1.00] |
+| `hrd-007-pension-vesting` | 18/18 = 1.000 | [0.82, 1.00] |
+| **set** | **111/117 = 0.949** | **[0.89, 0.98]** |
+
+The registered band was 0.60 to 0.75. Prediction 2 goes untested, because the
+corpus it was about does not exist.
+
+`hrd-002` holds at 0.722, inside the interval of its own earlier 0.639, so that
+measurement was sound. What was wrong is the sentence built on top of it. One
+template does not name its own mechanism. "Policy selection" was my label for
+the only feature I had noticed in it, and the other five carry that feature and
+ceiling anyway.
+
+### The second guess failed too
+
+The remaining difference I could see was that `hrd-002` alone carries money
+facts, which invite weighing cost against cost instead of applying the rule.
+`hrd-008-deposit-notice-costed` is `hrd-003` with two such facts added and
+nothing else changed, at a matched dose: `hrd-002` shows exactly one of them per
+item and `hrd-008` shows one in 21 items of 24.
+
+| | | |
+| --- | --- | --- |
+| `hrd-003-deposit-notice` | 23/23 = 1.000 | [0.86, 1.00] |
+| `hrd-008-deposit-notice-costed` | 23/23 = 1.000 | [0.86, 1.00] |
+
+Nothing. Two designed guesses, two nulls, and `hrd-001` before them.
+
+### What the errors say, which is not what any of the guesses said
+
+`hrd-002` records its variable bindings like every item here, so the errors can
+be cross-tabulated rather than theorised about. 35 answered calls, same model,
+same arm:
+
+| split | | |
+| --- | --- | --- |
+| items wanting `expedite` | 18/18 | 1.000 |
+| items wanting `leave_standard` | 4/17 | 0.235 |
+
+The model answered `expedite` on 31 of 35 items in a set that wanted it on 18.
+Sensitivity 1.000, specificity 0.235, **informedness 0.235**, skew +0.371.
+
+`hrd-002` is not hard. It is **one-sided**. Its accuracy is a response bias
+scored against a balanced key, and 0.63 is roughly what a model that mostly
+picks one option scores on a set that is half that option. Every one of the 13
+errors is on an item where the other tier's rule flips the answer, which reads
+like a selection slip and is equally consistent with never having selected at
+all.
+
+That makes it worse than useless as a study instrument. An arm that merely
+nudged the model toward `leave_standard` would gain about thirty points on this
+template without deciding anything better, and a placebo can nudge. The one
+template on this corpus that keeps a 30B off the ceiling does so by the exact
+mechanism a five-arm study exists to detect.
+
+`hrd-002` stays in the tree, like `hrd-001`, as a measured negative result.
+
+### The instrument spec this buys
+
+A template is worth building only if it is hard in a way that survives the
+decomposition. Three numbers, all computable from records already kept:
+
+- accuracy below the ceiling,
+- **skew near zero**, so the model is answering from the item,
+- **informedness below 1**, so there is discrimination left to gain.
+
+`hrd-002` fails the second and third. `hrd-003` through `hrd-008` sit at
+informedness 1.000 and have no room. Nothing built here yet passes all three,
+which is a cleaner statement of where this work has got to than the entry above
+managed.
+
+Where that decomposition leads on the published corpus and on the five-arm study
+is a separate entry, because it is a finding about the study rather than about
+these templates.

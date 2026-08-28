@@ -1,0 +1,51 @@
+template_id: hrd-004-sample-retention
+question: "Should the sample be discarded, or retained for the remaining hold period?"
+options: [discard_sample, retain_sample]
+
+variables:
+  lab: {choice: [Northgate, Bellhaven, Kirkwall, Ravel]}
+  sample_class: {choice: [clinical, environmental]}
+  age_days: {int: [30, 900]}
+  clinical_hold_days: {int: [60, 850]}
+  environmental_hold_days: {int: [60, 850]}
+  freezer: {choice: [A2, B1, C4]}
+  audit_days: {int: [30, 900]}
+  volume_ml: {int: [2, 90]}
+
+relevant_facts:
+  - id: r1
+    text: "The specimen is logged as a {sample_class} sample at {lab}."
+  - id: r2
+    text: "Clinical samples are held for {clinical_hold_days} days from collection."
+  - id: r3
+    text: "Environmental samples are held for {environmental_hold_days} days from collection."
+  - id: r4
+    text: "This specimen was collected {age_days} days ago."
+
+distractor_facts:
+  - id: d1
+    strength: high
+    collides_with: age_days
+    text: "The last freezer {freezer} audit was {audit_days} days ago."
+  - id: d2
+    strength: medium
+    text: "{volume_ml} ml of the specimen remains after prior aliquots."
+  - id: d3
+    strength: medium
+    text: "Freezer {freezer} was recalibrated during the summer shutdown."
+  - id: d4
+    strength: low
+    text: "The sample label uses the older barcode format."
+
+constraints:
+  - "clinical_hold_days != environmental_hold_days"
+  - "(age_days > clinical_hold_days) != (age_days > environmental_hold_days)"
+
+solution:
+  expr: "'discard_sample' if age_days > (clinical_hold_days if sample_class == 'clinical' else environmental_hold_days) else 'retain_sample'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4

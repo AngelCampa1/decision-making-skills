@@ -1,0 +1,51 @@
+template_id: hrd-005-customs-clearance
+question: "Should the consignment clear on the simplified declaration, or be routed to full entry?"
+options: [clear_simplified, route_full_entry]
+
+variables:
+  broker: {choice: [Calder, Emmet, Sarnia, Thorne]}
+  origin: {choice: [Tallinn, Valencia, Gdansk, Cork]}
+  goods: {choice: [controlled, general]}
+  value_eur: {int: [500, 40000]}
+  controlled_ceiling_eur: {int: [1000, 39000]}
+  general_ceiling_eur: {int: [1000, 39000]}
+  insured_eur: {int: [500, 40000]}
+  cartons: {int: [1, 60]}
+
+relevant_facts:
+  - id: r1
+    text: "{broker} has entered the consignment from {origin} as {goods} goods."
+  - id: r2
+    text: "Controlled goods may clear on a simplified declaration up to {controlled_ceiling_eur} EUR."
+  - id: r3
+    text: "General goods may clear on a simplified declaration up to {general_ceiling_eur} EUR."
+  - id: r4
+    text: "The declared customs value is {value_eur} EUR."
+
+distractor_facts:
+  - id: d1
+    strength: high
+    collides_with: value_eur
+    text: "The consignment is insured for {insured_eur} EUR in transit."
+  - id: d2
+    strength: medium
+    text: "The shipment comprises {cartons} cartons on two pallets."
+  - id: d3
+    strength: medium
+    text: "{broker} filed three amendments on unrelated entries this month."
+  - id: d4
+    strength: low
+    text: "The packing list is printed in duplicate."
+
+constraints:
+  - "controlled_ceiling_eur != general_ceiling_eur"
+  - "(value_eur <= controlled_ceiling_eur) != (value_eur <= general_ceiling_eur)"
+
+solution:
+  expr: "'clear_simplified' if value_eur <= (controlled_ceiling_eur if goods == 'controlled' else general_ceiling_eur) else 'route_full_entry'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4
