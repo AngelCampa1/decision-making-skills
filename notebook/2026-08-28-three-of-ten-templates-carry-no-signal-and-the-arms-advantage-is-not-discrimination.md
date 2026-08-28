@@ -83,11 +83,14 @@ calls. It is on the record here rather than as a prediction because the numbers
 came back while this entry was being written, and a prediction registered
 against data already in hand is not one.
 
-| template | accuracy | skew |
-| --- | --- | --- |
-| `rel-004-inventory-reorder` | 0.857 | −0.143 |
-| `rel-002-deploy-window` | 0.917 | −0.083 |
-| the other seven | 1.000 | +0.000 |
+Skew here is signed toward whichever option sorts first, which is the
+convention the later table drops in favour of signing toward the act.
+
+| template | accuracy | skew | toward |
+| --- | --- | --- | --- |
+| `rel-004-inventory-reorder` | 0.857 | −0.143 | `reorder_now` |
+| `rel-002-deploy-window` | 0.917 | −0.083 | `hold_deploy` |
+| the other seven | 1.000 | +0.000 | — |
 
 `rel-004` is the one template that is both low-signal on the small model and off
 the ceiling on the large one, and it leans the same way on both: 0.667 on the
@@ -133,3 +136,82 @@ confounded quantity.
    more than 0.10**, which is the cheap test of whether the bias is about the
    option or about the scenario, and which no design should have been built
    before running.
+
+
+## Correction, same day: prediction 3 is falsified, and it names the lever
+
+Prediction 3 registered: *reversing which option is stated first in `hrd-002`
+moves its accuracy by more than 0.10*, as the cheap test of whether the bias is
+about the option or about the scenario.
+
+`hrd-009-shipping-escalation-reversed` is `hrd-002` with the question clause and
+the options list both stated the other way round and nothing else touched. Same
+model, same arm, four distractors, two seeds, run against `hrd-002` at the same
+time so the comparison is not against an older reading.
+
+| | `hrd-002` | `hrd-009`, reversed |
+| --- | --- | --- |
+| accuracy | 14/24 = 0.583 | 15/24 = 0.625 |
+| when the answer is `expedite` | 1.000 | 1.000 |
+| when the answer is `leave_standard` | 0.167 | 0.250 |
+| said `expedite` | 0.917 | 0.875 |
+| skew | +0.417 | +0.375 |
+
+The move is 0.042 and the registered threshold was 0.10, so the prediction is
+falsified. Stating `leave_standard` first buys nothing.
+
+**The bias is semantic.** It is now measured three times on this item type, at
+0.629, 0.583 and 0.625, and every one of them answers `expedite` on about nine
+items in ten while getting every `expedite` item right. An overdue shipment
+reads as calling for action, and the model acts.
+
+The obvious next sentence is that this names the difference between `hrd-002`
+and the five that ceiling. `hrd-002` asks whether to **act or leave it alone**:
+`expedite` is an act and `leave_standard` is a refusal to act. `hrd-003` through
+`hrd-008` ask which of two acts applies, return or withhold, clear or hold,
+grant or refuse, and a model that defaults to doing something has nowhere to put
+that default.
+
+The published corpus can check that sentence rather than accept it. Six of its
+ten templates are act-or-wait pairs and three offer two acts, and the skews are
+already computed. Signed toward the acting option, on `qwen3:1.7b`, arm `off`:
+
+| shape | templates | mean signed skew | mean absolute skew |
+| --- | --- | --- | --- |
+| act or wait | 6 | +0.097 | 0.127 |
+| two acts | 3 | +0.065 | 0.172 |
+
+**It does not hold.** Act-or-wait templates lean toward acting by 0.097, which
+is the right sign and is carried almost entirely by
+`rel-004-inventory-reorder` at +0.464; drop that one and the remaining five
+average +0.024. The two-act templates are not less skewed, they are more, and
+`rel-006-refund-request` skews +0.321 with both options being decisions a person
+makes.
+
+So the `hrd-002` result stands and the explanation for it does not. Three
+measurements agree that this scenario pulls a 30B toward `expedite` and that
+option order is not why. Whether the pull is about acting, about shipping, or
+about this template's wording is open, and the corpus that would separate them
+is on a different model from the one the pull was measured on.
+
+The instrument spec keeps its three measured lines. A fourth is a hypothesis and
+gets written as one:
+
+- accuracy below the ceiling,
+- skew near zero,
+- informedness below one,
+- and possibly, untested, that both options should be acts.
+
+`hrd-009` stays in the tree beside `hrd-002` as the measured control.
+
+### Predictions
+
+1. **A symmetric-option rewrite of the `hrd-002` scenario keeps skew above
+   0.25.** The action account says the skew comes from the act-or-wait pairing
+   and would fall; the published corpus says it does not work that way. This is
+   the run that separates them, and it is about twenty-four calls.
+2. **An arm that improves accuracy on `hrd-002` does it by moving skew and not
+   informedness.** That is the whole worry this entry started from, it is about
+   fifty calls across `off` and `placebo`, and a placebo that gains on a biased
+   template is the cleanest demonstration this repository could publish of why
+   accuracy alone is the wrong headline.

@@ -1,0 +1,84 @@
+# `hrd-002` with the two options stated the other way round, and nothing else
+# changed. It reads 0.629 while answering `expedite` on 31 of 35 items in a set
+# that wants it on 18, so its accuracy is a response bias rather than a measure
+# of deciding. This says which bias: positional, in which case the model follows
+# whichever option is named first and this file flips with it, or semantic, in
+# which case an overdue shipment pulls toward acting and this file reads the
+# same 0.63.
+#
+# Registered as prediction 3 of the 2026-08-28 informedness entry before it ran.
+template_id: hrd-009-shipping-escalation-reversed
+question: "Should the shipment be left on the standard service, or expedited at cost?"
+options: [leave_standard, expedite]
+
+# Hypothesis 2, after hrd-001 read 24 of 24 and falsified hypothesis 1. There
+# the rule was stated indirectly and a 30B constructed it without difficulty.
+# Here there are *two* rules and the reader must first work out which one is in
+# force, because they disagree on roughly half the draws. The comparison itself
+# stays trivial on purpose: 2026-08-28 measured that arithmetic difficulty does
+# not survive a capability jump, so nothing is spent on it.
+variables:
+  customer: {choice: [Halden, Orbison, Petrel, Wexley]}
+  route: {choice: [northbound, coastal, inland, transalpine]}
+  # The contract tier decides which of the two policies applies.
+  tier: {choice: [standard, priority]}
+  days_late: {int: [1, 20]}
+  standard_grace_days: {int: [2, 18]}
+  priority_grace_days: {int: [2, 18]}
+  penalty_eur: {int: [200, 9000]}
+  expedite_eur: {int: [200, 9000]}
+  transit_days: {int: [1, 20]}
+
+relevant_facts:
+  - id: r1
+    text: "{customer} holds a {tier} contract for the {route} lane."
+  # The two policies. Only one is in force and both are stated as rules, so the
+  # work is selection rather than construction.
+  - id: r2
+    text: "Standard contracts allow {standard_grace_days} days of delay before the service level is breached."
+  - id: r3
+    text: "Priority contracts allow {priority_grace_days} days of delay before the service level is breached."
+  - id: r4
+    text: "The consignment is currently running {days_late} days late."
+
+distractor_facts:
+  # A day count in the units of the rule. The two grace periods already compete
+  # with each other, but both are relevant facts, so the schema is right that
+  # nothing yet competed from outside the rule.
+  - id: d0
+    strength: high
+    collides_with: days_late
+    text: "Booked transit on the {route} lane is {transit_days} days door to door."
+  # Two euro amounts that invite a cost comparison the policy never asks for.
+  - id: d1
+    strength: high
+    text: "The breach penalty on this lane is {penalty_eur} EUR."
+  - id: d2
+    strength: high
+    text: "Expediting the consignment would cost {expedite_eur} EUR."
+  - id: d3
+    strength: medium
+    text: "The {route} lane changed hauliers at the start of the quarter."
+  - id: d4
+    strength: medium
+    text: "{customer} has never previously invoked a service-level claim."
+  - id: d5
+    strength: low
+    text: "The consignment note is printed on green stock."
+
+# The two policies must disagree about this consignment. Without it the grace
+# periods usually sit on the same side of the delay, both readings give the same
+# answer, and picking the wrong policy costs nothing: measured at 0.21 before
+# this line, so four items in five were not testing selection at all.
+constraints:
+  - "standard_grace_days != priority_grace_days"
+  - "(days_late > standard_grace_days) != (days_late > priority_grace_days)"
+
+solution:
+  expr: "'expedite' if days_late > (priority_grace_days if tier == 'priority' else standard_grace_days) else 'leave_standard'"
+  load_bearing: [r1, r2, r3, r4]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4
