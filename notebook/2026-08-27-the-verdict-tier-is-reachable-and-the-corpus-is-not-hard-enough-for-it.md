@@ -123,3 +123,16 @@ enough to kill a screen-tier study on this corpus and it is not the word
 Nothing downstream changes. A model at 0.933 with no skill leaves too little
 room for a five-arm study, so the conclusion, the local study's standing and the
 "next move is a harder corpus" all hold on the corrected numbers.
+
+## Correction, 2026-08-28: a template change is not a governed path
+
+The last section says a corpus change "is a governed path and a fresh answer
+key". The second half stands and the first is wrong. `GOVERNED` in
+`decisions.py` is `datasets/triggers/`, `datasets/tailoring/`, `skills/` and
+`evals/src/decision_evals/arenas.py`. `datasets/templates/` is not among them,
+so changing a template needs no `docs/DECISIONS.md` entry.
+
+What it does need is `pytest --bless`, because `datasets/golden/` pins the
+generated corpus byte-exact and the diff belongs in review. Checked against the
+source rather than remembered, after the same entry was found overstating a
+different claim on the same day.
