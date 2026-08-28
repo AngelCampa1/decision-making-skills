@@ -1,14 +1,33 @@
-% Bibliography for "Do Agent Skills Actually Work?"
+% Bibliography for "Do Automated Skill Optimisers Survive a Placebo Control?"
 %
-% Seeded from docs/RELATED_WORK.md. Entries marked `% VERIFY` have an arXiv id
-% and title recorded during the literature sweep but an author list that has NOT
-% been checked against the PDF. Verify every one of them before submission --
-% a wrong author list is the cheapest possible way to lose a reviewer's trust,
-% and these are all one download away from being correct.
+% SPDX-License-Identifier: CC-BY-4.0. See paper/LICENSE. Bibliographic data
+% about other people's papers is theirs; the selection, and the quotes recorded
+% here to hold a claim to its source, are covered by that licence.
+%
+% Seeded from docs/RELATED_WORK.md. Eleven entries carried a `% VERIFY` marker:
+% an arXiv id and a title recorded during the literature sweep, with an author
+% list nobody had checked. All eleven were checked against arXiv's own metadata
+% on 2026-08-28 and the markers cleared. Four had a title that did not match the
+% paper at the id recorded beside it, and one of those four was a different
+% paper's title entirely; those are corrected here. Anything added later without
+% that check gets a `% VERIFY` marker of its own.
 
 % ---------------------------------------------------------------------------
 % Skills as an intervention
 % ---------------------------------------------------------------------------
+
+@misc{agentskills2025,
+  author = {{Agent Skills}},
+  title  = {Agent Skills: Client Showcase},
+  year   = {2025},
+  howpublished = {\url{https://agentskills.io/clients}},
+  note   = {Read first-hand 2026-08-28. The showcase listed 46 client products
+            that day, among them Claude Code, ChatGPT and Codex, Cursor, GitHub
+            Copilot, VS Code, Gemini CLI, Amp, OpenCode, Goose, Roo Code and
+            Junie. A web page is a moving source and the count is dated for
+            that reason; docs/RELATED_WORK.md recorded roughly 40 in December
+            2025}
+}
 
 @article{skillsbench2026,
   author = {Xu, Xiaonan and Wu, Wenjing},
@@ -31,7 +50,6 @@
             figure and should travel with the +0.7 whenever both are summarised}
 }
 
-% VERIFY
 @article{skillopt2026,
   author = {Yang, Yifan and Gong, Ziyang and Huang, Weiquan and Yang, Qihao
             and Zhou, Ziwei and Huang, Zisu and Li, Yan and Gao, Xuemei and
@@ -78,16 +96,17 @@
             concentrated-in-expensive-runs claim is likewise unverified}
 }
 
-% VERIFY
 @article{authoringskills2026,
+  author = {Destefanis, Giuseppe},
   title  = {Authoring Agent Skills: A Software-Engineering Approach},
   journal = {arXiv preprint arXiv:2607.25032},
   year   = {2026}
 }
 
-% VERIFY
 @article{skillsmells2026,
-  title  = {From Anatomy to Smells: An Empirical Study of {SKILL.md}},
+  author = {Hong, David Boram and Imani, Aaron and Ahmed, Iftekhar},
+  title  = {From Anatomy to Smells: An Empirical Study of {SKILL.md} in Agent
+            Skills},
   journal = {arXiv preprint arXiv:2607.01456},
   year   = {2026}
 }
@@ -111,7 +130,6 @@
 % Harness variance
 % ---------------------------------------------------------------------------
 
-% VERIFY
 @article{harnessdisclosure2026,
   author = {Zhang, Yunbei and Wang, Janet and Ge, Yingqiang and Xu, Weijie and
             Hamm, Jihun and Reddy, Chandan K.},
@@ -238,10 +256,10 @@
             the mechanism; do not attach a magnitude to it from here}
 }
 
-% VERIFY
 @article{unabletoforget2025,
+  author = {Wang, Chupei and Sun, Jiaqiu Vince},
   title  = {Unable to Forget: Proactive Interference Reveals Working Memory
-            Limits in {LLMs}},
+            Limits in {LLMs} Beyond Context Length},
   journal = {arXiv preprint arXiv:2506.08184},
   year   = {2025}
 }
@@ -466,16 +484,18 @@
   year   = {2022}
 }
 
-% VERIFY
 @article{smece2026,
-  title  = {Debiased Kernel-Smoothed Estimation of Calibration Error},
+  author = {Leznik, Michael},
+  title  = {Soft Mean Expected Calibration Error {(SMECE)}: A Calibration
+            Metric for Probabilistic Labels},
   journal = {arXiv preprint arXiv:2603.14092},
   year   = {2026}
 }
 
-% VERIFY
 @article{calibrationdrift2026,
-  title  = {Calibration Drift Under Reasoning},
+  author = {Hiremath, Prakul Sunil and Hiremath, Harshit R.},
+  title  = {Calibration Drift Under Reasoning: How Chain-of-Thought Budgets
+            Induce Overconfidence in Large Language Models},
   journal = {arXiv preprint arXiv:2606.11211},
   year   = {2026},
   note   = {Calibration improves then degrades past a reasoning-budget
@@ -652,10 +672,10 @@
   note   = {arXiv:2305.14325}
 }
 
-% VERIFY
 @article{costofconsensus2026,
-  title  = {The Cost of Consensus: Isolated Self-Correction Versus Multi-Agent
-            Debate},
+  author = {Bertalanič, Blaž and Fortuna, Carolina},
+  title  = {The Cost of Consensus: Isolated Self-Correction Prevails Over
+            Unguided Homogeneous Multi-Agent Debate},
   journal = {arXiv preprint arXiv:2605.00914},
   year   = {2026}
 }
@@ -681,10 +701,10 @@
   year   = {2024}
 }
 
-% VERIFY
 @article{noclt2025,
-  title  = {Don't Use the {CLT} in {LLM} Evals With Fewer Than a Few Hundred
-            Datapoints},
+  author = {Bowyer, Sam and Aitchison, Laurence and Ivanova, Desi R.},
+  title  = {Position: Don't Use the {CLT} in {LLM} Evals With Fewer Than a Few
+            Hundred Datapoints},
   journal = {arXiv preprint arXiv:2503.01747},
   year   = {2025}
 }
@@ -771,7 +791,6 @@
             what it measured}
 }
 
-% VERIFY
 @article{promptcoinflip2026,
   author = {Zhang, Xing and Wang, Guanghui and Cui, Yanwei and Qiu, Wei and
             Li, Ziyuan and Zhu, Bing and He, Peiyang},
@@ -791,13 +810,18 @@
             finding is restricted to}
 }
 
-% VERIFY
 @inproceedings{gepa2026,
+  author = {Agrawal, Lakshya A and Tan, Shangyin and Soylu, Dilara and
+            Ziems, Noah and Khare, Rishi and Opsahl-Ong, Krista and
+            Singhvi, Arnav and Shandilya, Herumb and Ryan, Michael J and
+            Jiang, Meng and Potts, Christopher and Sen, Koushik and
+            Dimakis, Alexandros G. and Stoica, Ion and Klein, Dan and
+            Zaharia, Matei and Khattab, Omar},
   title  = {{GEPA}: Reflective Prompt Evolution Can Outperform Reinforcement
             Learning},
   booktitle = {International Conference on Learning Representations (ICLR)},
   year   = {2026},
-  note   = {Oral}
+  note   = {Oral. arXiv:2507.19457}
 }
 
 % ---------------------------------------------------------------------------

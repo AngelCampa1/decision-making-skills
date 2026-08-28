@@ -262,7 +262,7 @@ class TestMacros:
         """`newcommand` takes letters. A digit in an arm label breaks the build."""
         run_dir = _write_run(tmp_path, arms=("off", "arm2"))
         with pytest.raises(FigureError, match="letters only"):
-            collect(read_study(run_dir))
+            collect(read_study(run_dir), tmp_path)
 
     def test_every_reported_number_matches_the_published_record(self) -> None:
         """The generator is a renderer, and this is the assertion that says so.
@@ -271,7 +271,7 @@ class TestMacros:
         does not hold is a number nothing checked.
         """
         run_dir = REPO_ROOT / "results" / "evolution-study" / PUBLISHED
-        values = collect(read_study(run_dir))
+        values = collect(read_study(run_dir), REPO_ROOT)
         analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
 
         for item_set in analysis["sets"]:
@@ -285,28 +285,47 @@ class TestMacros:
 
     def test_the_item_counts_are_items_and_not_calls(self) -> None:
         """728 items over five arms is 3,640 readings, and the two are not one."""
-        values = collect(read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED))
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
         assert values["totalItems"] == "728"
         assert values["studyReadings"] == "3640"
         assert values["unseenItems"] == "336"
         assert values["seenItems"] == "392"
 
     def test_the_low_signal_split_adds_back_up(self) -> None:
-        values = collect(read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED))
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
         assert int(values["lowSignalItems"]) + int(values["signalItems"]) == int(
             values["totalItems"]
         )
         assert values["lowSignalTemplates"] == "3"
+        # The paper prints the threshold rather than repeating the constant.
+        assert values["lowSignalThreshold"] == "0.3"
 
     def test_a_run_without_an_aa_pass_defines_no_aa_macros(self, tmp_path: Path) -> None:
         run_dir = _write_run(tmp_path, aa=False)
-        values = collect(read_study(run_dir))
+        values = collect(read_study(run_dir), tmp_path)
         assert not any(name.startswith("aa") for name in values)
 
     def test_an_aa_pass_is_reported_as_disagreements(self, tmp_path: Path) -> None:
-        values = collect(read_study(_write_run(tmp_path)))
+        values = collect(read_study(_write_run(tmp_path)), tmp_path)
         assert values["aaDisagreements"] == "0"
         assert values["aaPairs"] == "12"
+
+    def test_the_aa_separation_counts_the_arms_that_ran_after_the_control(
+        self, tmp_path: Path
+    ) -> None:
+        values = collect(read_study(_write_run(tmp_path)), tmp_path)
+        # ``candidate`` is the only arm after ``on``, over 13 items.
+        assert values["aaSeparation"] == "13"
+
+    def test_the_published_aa_separation_is_two_arms_of_the_full_corpus(self) -> None:
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
+        assert values["aaSeparation"] == str(2 * int(values["totalItems"]))
 
     def test_an_empty_macro_file_is_still_a_macro_file(self) -> None:
         text = render_macros({})
@@ -390,3 +409,20 @@ class TestWriting:
         first = (tmp_path / "paper" / "generated" / "macros.tex").read_bytes()
         write_figures(tmp_path, tmp_path / "paper")
         assert (tmp_path / "paper" / "generated" / "macros.tex").read_bytes() == first
+
+
+class TestPlaceboMatch:
+    """The placebo's fit against the skill, generated rather than typed."""
+
+    def test_a_tree_without_the_skill_bodies_still_builds(self, tmp_path: Path) -> None:
+        values = collect(read_study(_write_run(tmp_path)), tmp_path)
+        assert not any(name.startswith("placeboWords") for name in values)
+
+    def test_the_real_bodies_match_within_the_tolerance(self) -> None:
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
+        skill, placebo = int(values["skillWords"]), int(values["placeboWords"])
+        tolerance = int(values["placeboTolerance"]) / 100
+        assert abs(placebo - skill) <= skill * tolerance
+        assert values["skillSections"] == values["placeboSections"]

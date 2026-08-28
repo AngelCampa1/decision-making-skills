@@ -13,9 +13,15 @@ failures that are indistinguishable, in the results, from a model that got
 everything wrong. That is not hypothetical -- it happened during the harness
 spike, with ``claude auth status`` reporting ``loggedIn: true`` throughout.
 
-**Arms interleave per item.** Running all of ``off`` and then all of ``on``
-would confound the arm with everything that changed in between, including the
-served model and the quota state. The loop's outer dimension is the item.
+**Arms are meant to interleave per item, and in production they do not.**
+Running all of ``off`` and then all of ``on`` confounds the arm with everything
+that changed in between, including the served model and the quota state.
+:func:`iter_items` returns the item-major ordering that prevents it and nothing
+outside the tests calls it, so every run on record ran its arms in blocks. Found
+2026-08-28 while writing the five-arm study's harness appendix against this
+module rather than against the intention, and left standing here rather than
+fixed inside a documentation change. What bounds the exposure for the one
+published study is its A/A pass, which is a measurement and not a design.
 """
 
 from __future__ import annotations
@@ -893,5 +899,10 @@ def iter_items(items: Iterable[Item], arms: Sequence[ArmPrompt]) -> list[tuple[I
 
     A run that completes all of ``off`` on Monday and all of ``on`` on Tuesday
     confounds the arm with everything that changed in between.
+
+    **Nothing outside the tests calls this**, which is the defect and not the
+    design. ``evolution/study.py`` loops arm-major, so the five-arm study ran in
+    blocks. Wiring this in is a change to how a run is scheduled and belongs in
+    its own commit with its own gate.
     """
     return [(item, arm) for item in items for arm in arms]

@@ -2,23 +2,120 @@
 \label{sec:appendix-prompts}
 
 % \citet{biderman2024lessons} is unambiguous: publish the exact prompt
-% formatting, and publish full transcripts rather than scores alone. Cross-paper
-% comparison across differing templates is unreliable, and a paper that reports
-% only aggregates cannot be checked.
+% formatting, and publish full transcripts rather than scores alone.
+% Cross-paper comparison across differing templates is unreliable, and a paper
+% reporting only aggregates cannot be checked.
 
-\TODO{Include verbatim: the four arm system prompts, every evaluated SKILL.md
-at its pre-registered hash, one worked item per template family, and the
-response-format contract.}
+\subsection{The shared prefix, in every arm}
 
-% MUST APPEAR HERE:
-%
-%   - All four arm system prompts, verbatim, including the response-format
-%     contract that is common to every arm.
-%   - The placebo text, verbatim, with its token count next to the skill's.
-%     A placebo the reader cannot inspect is a placebo the reader cannot trust.
-%   - Every evaluated SKILL.md at its pre-registered sha256, so a replicator can
-%     verify they have the same artifact that produced these numbers.
-%   - One fully worked item per template family: variables, rendered prompt,
-%     computed ground truth, and the model's response under each arm.
-%   - A pointer to the published transcript archive and the holdout seed, both
-%     released after the verdict.
+Two blocks precede the arm's body in every system prompt, assembled by one
+function with no way to omit either. The second is the reason: a skill that also
+teaches the model how to format its answer, tested against a control that was
+never told, measures instruction-following.
+
+\begin{quote}\ttfamily\small\noindent
+You are helping someone make a decision. You will be given some background
+facts, a question, and a fixed list of options. Choose the option the facts
+support.
+\end{quote}
+
+\begin{quote}\ttfamily\small\noindent
+Give your reasoning if it helps you, then end your reply with a final line in
+exactly this form:\\
+ANSWER: <one of the listed options>\\
+Use the option text exactly as written in the list.
+\end{quote}
+
+The wording avoids threatening the model with consequences, following the
+trust-framing result in which trust-framed system prompts surfaced 59\% more
+hidden issues while fear-framing showed no gain over no framing at all.
+
+\subsection{The arms}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+arm & body appended to the prefix & content hash \\
+\midrule
+\texttt{off} & none & --- \\
+\texttt{on} & the shipped skill & \texttt{edc3ee70\ldots} \\
+\texttt{placebo} & the matched placebo & \texttt{16ed9ebf\ldots} \\
+\texttt{gepa} & GEPA's frozen winner & \texttt{54f99040\ldots} \\
+\texttt{skillopt} & SkillOpt's frozen winner & \texttt{80d7187a\ldots} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded on
+every row of every record. Three of the five bodies are published and a
+replicator can recompute all three: \texttt{off} is empty, \texttt{on} is
+\texttt{skills/decision-making/SKILL.md}, and \texttt{placebo} is
+\texttt{skills/decision-making/placebo.md}. Both hashes above reproduce from
+those files at the commit this paper is built from.
+
+\textbf{The two evolved bodies are not published and cannot be.} Each search
+wrote its winner into a results directory our \texttt{.gitignore} excludes, so
+neither was ever committed, and the directories are gone. A content-hash search
+of every file on the machine on 2026-08-28 found neither. What survives is the
+hash, on all \NUM{\totalItems} records of each arm, which proves that one fixed
+body produced every reading in that arm and gives nobody a way to obtain it.
+This is a reproducibility failure and we report it as one. The engines, the seed
+skill, the corpus, the split and the search configuration are all published, so
+a replicator can run both searches; what they cannot do is run ours.
+
+\subsection{The placebo, and how closely it matches}
+
+A placebo the reader cannot inspect is a placebo the reader cannot trust, so it
+ships in the repository at \texttt{skills/decision-making/placebo.md} and is
+reproduced there in full rather than paraphrased here.
+
+It is matched on length and on structural shape: \textbf{\NUM{\placeboWords}
+words against the skill's \NUM{\skillWords}, and \NUM{\placeboSections} sections
+against \NUM{\skillSections}}, with neither carrying a code fence. A check
+refuses a placebo outside \NUM{\placeboTolerance}\% of the skill's word count,
+because an unmatched placebo is worse than none: it looks like a control while
+failing to control for the thing it exists to control for.
+
+Both proxies are crude and we say so. They rule out the obvious failure, a
+two-line placebo standing in for a two-page skill. They do not establish that
+the placebo is contentless, and nothing automates that judgement. What the
+placebo contains is decision-shaped prose that names no procedure and gives no
+rule, and the reader is invited to check it.
+
+\subsection{One worked item}
+
+Rendered exactly as the model received it. The user message is arm-independent
+by construction, so the option menu, the single largest known scaffolding effect
+in this literature, is identical in all five arms.
+
+\begin{quote}\ttfamily\small\noindent
+Background:\\
+- The Northwind contract credits SLA penalties only when downtime exceeds 12
+continuous hours.\\
+- Yesterday's incident kept the service unavailable for 17 continuous hours.\\
+- Filing a claim costs nothing and has no effect on renewal terms.\\[0.5em]
+Question: The Northwind outage has ended. Should the team file an SLA claim or
+wait?\\[0.5em]
+Options:\\
+- file\_sla\_claim\\
+- wait
+\end{quote}
+
+Item \texttt{rel-001-vendor-outage\#v0-d0-none} at seed 10226, answer
+\texttt{file\_sla\_claim}, computed by the template's solution expression from
+the sampled variables rather than authored. Facts appear in the order the
+generator arranged them, because distractor position is a stratum and reordering
+would destroy it.
+
+\subsection{Transcripts}
+
+Full transcripts are published, not scores alone. Every record carries the
+model's complete response text alongside the parsed answer and the parse status,
+in \texttt{results/evolution-study/\NUM{\studyRun}/}: one file per arm of
+\NUM{\totalItems} records each, plus the A/A pass in its own file.
+\NUM{\studyReadings} arm records and \NUM{\aaPairs} control records, all
+committed.
+
+Holdout seeds are published with them rather than withheld. Contamination here
+is managed by regeneration between runs rather than by secrecy, so a reader can
+mint the exact item set this study used and a later run does not reuse it.

@@ -197,7 +197,7 @@ it, and whether it has actually run.
 | `results/` | Published run records: raw transcripts and a README per run |
 | `notebook/` | Append-only research log. Predictions go in *before* runs |
 | `docs/` | Protocol, status, the research programme, related work, limitations, and what was rejected. Start at [`docs/README.md`](docs/README.md), or [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit |
-| `paper/` | The write-up, in LaTeX. A draft; see [`paper/CHECKLIST.md`](paper/CHECKLIST.md) |
+| `paper/` | The write-up, in LaTeX: *Do Automated Skill Optimisers Survive a Placebo Control?* Complete, and unsubmitted. Every number about our own runs is written into it by `de figures` from `results/`, never typed. What is still open, including three boxes that need someone outside this repository, is [`paper/CHECKLIST.md`](paper/CHECKLIST.md). CC-BY-4.0, unlike the rest of the tree |
 | `scripts/` | Standalone analysis and runners, including `run_triggers.py`, the script behind every trigger call on record |
 | `tests/` | Unit, integration, property and golden tests |
 | `site/` | The website. It renders the markdown already in this repository in place, so no second copy of a document can disagree with the first |

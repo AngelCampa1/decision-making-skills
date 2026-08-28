@@ -344,6 +344,10 @@ no correction for the many implicit comparisons its accept-if-strictly-better
 ratchet performs; benchmark selection restricted to tasks with crisp automatic
 scoring, and not flagged as a limitation; a target-matched optimiser recovers
 only 56-74% of the gain, which implies an unacknowledged distillation component.
+*Amended 2026-08-28.* That last figure is not in the abstract and nobody here
+has read the section it would come from, so `paper/refs.bib` marks it unverified
+and the paper does not assert it. It stays in this file as a lead worth
+following, not as a finding.
 *This paper and SkillsBench are in direct tension, and adjudicating it is one of
 this project's stated contributions.*
 

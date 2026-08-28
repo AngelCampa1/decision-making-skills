@@ -85,7 +85,7 @@ so a mid-experiment change surfaces as an error rather than as noise.
 
 | Field | Value |
 | --- | --- |
-| Agent | Claude Code CLI, non-interactive (`claude -p`). Every published number. Two further backends exist and neither has produced anything published: `providers/openai_compatible.py` from 2026-08-19, an OpenAI-compatible HTTP server, `dev` arena only; and `providers/antigravity.py` from 2026-08-21, the Antigravity CLI, `screen` arena only. Both are disclosed separately below |
+| Agent | Claude Code CLI, non-interactive (`claude -p`). Every trigger and Track H number. Two further backends are disclosed separately below: `providers/openai_compatible.py` from 2026-08-19, an OpenAI-compatible HTTP server, which carries the five-arm evolution study of 2026-08-27 and every NVIDIA Build screen; and `providers/antigravity.py` from 2026-08-21, the Antigravity CLI, `screen` arena only, which has produced nothing published |
 | CLI version | Recorded per run |
 | Resolved model id | Recorded per run from `--output-format json` |
 | Auth | Subscription OAuth. No API key. `--bare` is unusable: its help states auth is strictly `ANTHROPIC_API_KEY`/`apiKeyHelper` and OAuth is never read. See *Preconditions* below; this is the harness's most fragile assumption |
@@ -102,13 +102,15 @@ would be the error this document exists to avoid.
 | Field | Value |
 | --- | --- |
 | Agent | An OpenAI-compatible HTTP server. Ollama first; the same module reaches vLLM, LM Studio and `llama.cpp` |
-| Arena | `dev` only, enforced in code on the `ollama` model prefix. Emits no verdict |
+| Arena | Per model prefix, enforced in code. `ollama` is `dev` and emits no verdict; the `nvbuild/` prefixes registered on 2026-08-26 are `screen`. One backend, two tiers, because the tier is a property of the weights answering rather than of the transport |
 | Resolved model id | Recorded per call from the response's `model` field, prefixed with the server label |
 | Auth | None locally. A bearer token where an endpoint wants one |
 | Sampling parameters | **Exposed**, unlike the CLI, and defaulted to `temperature=0` |
-| Cost | `0.0`, recorded rather than omitted. Local inference bills nothing and consumes no subscription quota |
+| Cost | `0.0`, recorded rather than omitted. Local inference bills nothing and consumes no subscription quota, and the free hosted tier reports nothing to bill. A run on either is guarded by call count and wall clock, because a dollar cap that reads zero on every call cannot fire |
 | Working directory | Not applicable. Nothing reads the filesystem |
 | Isolation receipt | The model card from Ollama's native `/api/show`, refused when it carries a `SYSTEM` prompt. A Modelfile `SYSTEM` line is the local analogue of a planted `CLAUDE.md`. Where a server offers no card, the absence of a receipt is recorded and is **not** reported as a receipt that passed |
+| Residency | Pinned at `keep_alive: 60m` since 2026-08-27, sent on every request by the provider that builds them. A probe that day found two items answering deterministically to whether the model had just been loaded, which would have put a venue artifact inside the study's A/A control. **Not written into the run manifest**, so a replicator reads it from the provider source; corrected 2026-08-28, this row claimed it was recorded per pass |
+| No receipt from the hosted tier | NVIDIA Build offers no model card, so no receipt is obtainable there. That is recorded as *no receipt obtainable* and never as *isolation verified* |
 | In-situ arm | **Refused.** There is no pre-existing system prompt to append to, so the call would be the isolated arm under another arm's label |
 | Reasoning output | Returned in a field separate from the answer and **recorded**. Measured on `qwen3:4b`, 2026-08-19: 277 completion tokens for a `content` of `"4"`, the other 276 in `reasoning` |
 
@@ -229,14 +231,19 @@ turns within an item are not, and are not meant to be.
 
 | Field | Value |
 | --- | --- |
-| Concurrency | Serial within a cell, and every published number was produced that way; arms interleaved per item so quota drift cannot align with an arm. `run_arm` gained a concurrent path on 2026-08-19 and it defaults to 1 |
+| Concurrency | Serial within a cell, and every published number was produced that way. `run_arm` gained a concurrent path on 2026-08-19 and it defaults to 1 |
+| Arm ordering | **Blocks, not interleaved.** `runner.iter_items` returns item-major pairs and nothing in production calls it. Corrected 2026-08-28; this row read "arms interleaved per item so quota drift cannot align with an arm" until the paper's appendix was written against the code |
 | Checkpointing | Resumable across sessions: rate limits, not dollars, are the budget |
 | Ordering | Item order seeded and recorded |
 | Wall-clock | Recorded but not a metric, since it is not comparable across days on a shared quota |
 
 Interleaving matters more than it looks. A run that completes all `off` items on
 Monday and all `on` items on Tuesday confounds the arm with everything that
-changed in between, including the served model.
+changed in between, including the served model. **The five-arm study did exactly
+that**, over hours rather than days, and its A/A pass is what bounds the damage:
+the control arm repeated 1,456 calls later returned 728 of 728 items identical.
+That is a measurement of the exposure on a local server, and it does not carry
+to a hosted one.
 
 **Concurrency is refused on the one backend where it was measured, and the
 measurement was run twice.** 40 items, three ways, on `ollama/qwen3:4b` at

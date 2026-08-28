@@ -1,30 +1,95 @@
 \section{Limitations}
 \label{sec:limitations}
 
-% SOURCE OF TRUTH: ../docs/LIMITATIONS.md, written before any results existed so
+% SOURCE OF TRUTH: ../docs/LIMITATIONS.md, opened before any results existed so
 % it could not be tuned to flatter them. This section condenses it. Nothing may
 % be dropped between that file and this section without a note saying why.
 
-\TODO{Condense from \texttt{docs/LIMITATIONS.md}. Do not shorten by deletion.}
+\paragraph{One model, and a small one.} The target is \NUM{\studyModel}. The
+choice was forced: every larger model we could reach solves the corpus with an
+empty prompt (\Cref{sec:ceiling}). A 1.7B model fails in ways a frontier model
+does not, and one of the two effects we found larger than noise, runaway
+generations that never conclude, is characteristic of small models. Our result
+does not travel upward without re-measurement, and Prompting
+Inversion~\citep{promptinginversion2025} gives a specific reason to expect it
+might invert.
 
-% The ones that must appear in the paper regardless of how the results land:
-%
-%   - No temperature control. The CLI exposes no sampling parameters. Mitigated
-%     by >=2 repeats per cell with variance reported, not by claiming
-%     determinism.
-%   - Small N. Subscription throughput caps items, and a cluster design effect
-%     of ~2.0 halves the effective count again. Exact and resampling methods
-%     recover validity but not power.
-%   - Self-generated datasets. We avoid contamination and thereby own the item
-%     biases. Realism rested on a 10% human audit, retired 2026-08-18; the
-%     forced-choice replacement cannot run until a human-written source clears
-%     the outside-data rule, so nothing measures realism today.
-%   - The distractor premise is weakened by the 2026 re-audit, whose source is a
-%     re-analysis rather than peer-reviewed work. Flag the confidence.
-%   - Judge panels carry ~2 effective votes regardless of headcount, and drift
-%     between recalibrations.
-%   - Local judge models are weaker; provider diversity is bought at the cost of
-%     individual judge quality.
-%   - Single harness. The paper's own central citation says this limits transfer.
-%   - Tasks with computable ground truth only. This is the same restriction
-%     SkillOpt operates under; the difference is that we state it.
+\paragraph{One harness.} Everything ran through one scaffold. Harness variance
+exceeds model variance by roughly $7.8\times$~\citep{harnessbench2026}, so this
+is a claim about a scaffold as much as about a model. \Cref{sec:appendix-harness}
+gives the full disclosure so the scaffold can be reproduced or blamed.
+
+\paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items, ten
+templates, and templates rather than items are the independent unit. The cluster
+design effect cuts the effective count roughly in half, and
+\Cref{sec:signal} shows \NUM{\lowSignalItems} of those items carry no
+discriminative signal at all. Exact and resampling methods recover validity
+here; they do not recover power that was never purchased. Ten clusters is few,
+and every interval in \Cref{tab:signal} is as wide as that implies.
+
+\paragraph{Two engines, one configuration each, one search budget.} Each engine
+ran once, under a call guard, with an OpenAI-compatible reflection model. A
+different reflector, a larger budget, or a different stopping point could
+produce a different winner. SkillOpt's search stopped itself after nine steps
+and its winner arrived at step one; GEPA's was stopped by the call guard before
+it declared one, so its winner was chosen by our code from its lineage rather
+than by the engine. Both facts are in the run records, and neither is the
+engines' fault.
+
+\paragraph{The two item sets differ in more than exposure.} The placebo helps on
+the seen set and does nothing on the unseen set, and the placebo has no training
+history, so the split confounds ``held out'' with ``different scenarios''. We
+report the sets separately, never pool them, and do not read the difference
+between them as a generalisation gap.
+
+\paragraph{The decomposition is computed over parsed rows.} An arm that parses
+less is measured on the subset it managed to answer. \texttt{gepa} parses least
+at \NUM{\parseRateGepa} and carries the widest interval in \Cref{tab:signal}
+partly for that reason. Treating an unparsed row as a wrong answer would be a
+different estimator with a different bias, and we did not want to choose one
+after seeing the data.
+
+\paragraph{Self-generated items, so we own their biases.} Generating our own
+items removes contamination and buys the ownership of every idiosyncrasy
+instead. The corpus is ten templates from one author in one sitting, so idiom
+and structure are correlated across it in ways that are hard to see from inside.
+No realism measurement exists: the human audit that was the target was retired,
+and the forced-choice comparison replacing it needs a human-written source we
+have not cleared. Nothing measures realism today.
+
+\paragraph{The distractor audit is half done.} A distractor is admitted on
+structural invariance, which is checked. The semantic half, two independent
+auditors agreeing a distractor is genuinely irrelevant rather than plausibly
+foldable into the reasoning, has not run. The 2026 GSM-Symbolic re-audit found
+that exact class produced most of the original effect~\citep{gsmsymbolic2024},
+so this is the gate our distractor premise most needs and least has.
+
+\paragraph{No sampling-parameter control on two of three venues.} The evolution
+searches and the study ran at \texttt{temperature=0} where the backend exposes
+it. Temperature 0 is not deterministic on hosted inference in any case, which is
+why the A/A control is a measurement here rather than an assumption.
+
+\paragraph{The two evolved bodies are gone, and two searches are missing from
+our own call ledger.} Both searches wrote into a results directory our
+\texttt{.gitignore} excludes, so nothing they produced was ever committed and
+the directories no longer exist. The winners' content hashes and their outcomes
+are on the record, and the bodies behind those hashes are not: a content-hash
+search of the machine found neither. So the central artifacts of the two arms
+this paper is named after cannot be inspected by anyone but us, and how many
+calls the searches took is unrecoverable. Every other figure in this paper is
+countable from committed files. \Cref{sec:appendix-prompts} says what a
+replicator can and cannot do with that.
+
+\paragraph{Arms ran in blocks rather than interleaved.} Every item of one arm,
+then every item of the next, which confounds an arm with whatever drifted
+between blocks. We intended item-major ordering and the study path does not do
+it. The A/A pass bounds the damage rather than removing it: it repeated the
+control arm \NUM{\aaSeparation} calls later and returned \NUM{\aaPairs} of
+\NUM{\aaPairs} identical, on a local server with no quota and no served-model
+churn. That is evidence the exposure did not bite here. It is not a defence of
+the design, and a hosted venue would not have offered it.
+
+\paragraph{A verdict is not a usability judgement.} That neither engine beat a
+placebo here does not show the engines do not work. It shows that on this
+corpus, at this model size, what they hand back does not beat a document-shaped
+control. Those are different statements and keeping them apart is the point.

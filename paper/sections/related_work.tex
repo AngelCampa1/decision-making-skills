@@ -2,46 +2,94 @@
 \label{sec:related}
 
 % SOURCE OF TRUTH: ../docs/RELATED_WORK.md. That file is organised by what each
-% finding changed about the design and flags confidence per source. This section
-% is a condensation of it, not a second inventory -- keep them consistent, and
-% when they diverge the docs file is correct.
-%
-% Reviewers will know this neighbourhood well. Position explicitly against:
-% SkillOpt, SkillsBench, the AGENTS.md impact study, and the two harness papers.
+% finding changed about the design and flags confidence per source. This is a
+% condensation of it; where the two diverge, the docs file is correct.
 
-\TODO{Condense from \texttt{docs/RELATED\_WORK.md} once the results fix which
-threads are load-bearing.}
+\subsection{Skills as an intervention, and a live disagreement}
 
-\subsection{Skills as an intervention}
-% The core tension, stated plainly and early. SkillsBench (86 tasks, 11 domains):
-% availability +18.0 to +36.0pp; granularity +0.7pp (GPT-5.5) / -6.7pp
-% (DeepSeek), CIs crossing zero. SkillOpt: +23.5pp from bounded edits to the
-% same prose, evaluated inside Claude Code and Codex CLI harnesses.
-%
-% Be fair to SkillOpt. Its method is sound in outline and its harness choice is
-% the right one. The criticism is narrow and specific: no CIs, no significance
-% tests, and no correction for the many implicit comparisons its
-% accept-if-strictly-better ratchet performs. Its own ablation shows a
-% target-matched optimiser recovering only 56-74% of the gain, which implies a
-% distillation component the paper does not name.
+Two 2026 results on the same object point in opposite directions.
+SkillsBench~\citep{skillsbench2026} runs a 30-task domain-balanced subset across
+two models, six skill conditions and five trials, and separates two questions:
+whether a skill is \emph{available} to the agent, and how its prose is
+\emph{written}. Availability is worth $+18.0$ to $+36.0$ percentage points, the
+union of the two models' ranges. Granularity of the prose is worth $+0.7$ points
+on one model and $-6.7$ on the other, with intervals crossing zero. Read on its
+own, the finding is that the retrieval matters and the writing does not.
 
-\subsection{Context degradation and irrelevant information}
-% GSM-Symbolic, and the 2026 re-audit that kept 117/945 (12.4%) of candidate
-% distractors and found the residual effect indistinguishable from zero. Report
-% the re-audit's provenance honestly -- it is a re-analysis, not peer-reviewed.
-% Then relocate: context rot survives in long-horizon agentic search at 30-50%.
+SkillOpt~\citep{skillopt2026} reports $+23.5$ points from bounded edits to
+exactly that prose. That figure is one harness: GPT-5.5 in direct chat. The same
+sentence gives $+24.8$ inside Codex and $+19.1$ inside Claude Code, and quoting
+the first without the other two is the error that
+\citet{harnessdisclosure2026} exists to name.
 
-\subsection{Harness variance}
-% ~7.8x HV/MV, six ranking reversals in nine comparisons, 23.8-point swing in
-% Harness-Bench. This is what makes "hold the model fixed and vary the markdown"
-% a coherent experiment rather than a curiosity.
+Both cannot hold in the general case, and the disagreement is not obviously
+resolvable from either paper, because neither reports an interval on the
+quantity in dispute. Our design was built to adjudicate it, and this study is a
+partial answer at one model scale.
 
-\subsection{Judges and councils}
-% PoLL -> RoPoLL (unbounded bias under contamination; geometric median). Nine
-% judges, two effective votes (n_eff 2.18). Debate losing to isolated
-% self-correction at 2-3x the token cost. Criteria drift.
+\paragraph{On SkillOpt specifically.}
+Its method is sound in outline and its harness choice is the right one: it
+evaluates inside the agent tools people actually run, which is more than most of
+this literature does. The criticism here is narrow. It reports no confidence
+intervals, no significance tests, and no correction for the many implicit
+comparisons its accept-if-strictly-better ratchet performs. We reproduce its
+engine faithfully and test its output, rather than reanalysing its numbers, and
+where a claim about the paper's contents rests on a section we have not read
+first-hand we leave it out of this paper rather than repeat it.
 
-\subsection{Evaluation methodology}
-% Miller's error bars, qualified by the no-CLT result at our N. Biderman et al.
-% on reproducible evaluation. Murphy decomposition and smECE. The Husain/Shankar
-% bottom-up error-analysis school.
+\paragraph{GEPA.}
+GEPA~\citep{gepa2026} performs reflective whole-prompt evolution with a Pareto
+frontier over rollouts, and reports large gains over reinforcement-learning
+baselines at a fraction of the rollout budget. Its acceptance criterion has the
+same shape: a candidate enters the frontier on observed score. We use it as
+distributed, through its documented adapter interface, with an
+OpenAI-compatible reflection model.
+
+\subsection{Why a placebo arm is the load-bearing control}
+
+The AGENTS.md impact study~\citep{agentsmd2026} and the skill-authoring
+literature~\citep{authoringskills2026} both report that adding an instruction
+artifact helps. Neither compares against an artifact of matched length and
+structure whose content says nothing. Without that comparison, ``the skill
+helped'' and ``a document-shaped block of tokens in the system prompt helped''
+are the same observation.
+
+Our placebo is generated to match the shipped skill on tokens and on structural
+shape, and it ships in the repository beside the skill so the comparison can be
+re-run. \Cref{sec:results} reports it as a first-class arm, and it is the
+control every other arm is tested against rather than a footnote.
+
+\subsection{Harness variance, and what a verdict is worth}
+
+Harness variance exceeds model variance by roughly
+$7.8\times$~\citep{harnessbench2026}, with ranking reversals across harnesses on
+the same models. A result measured inside one scaffold is a claim about that
+scaffold as much as about the model, and almost nobody reports the scaffold in
+enough detail to check. We give the full ETCSOVG
+disclosure~\citep{harnessdisclosure2026} in \Cref{sec:appendix-harness}, and we
+do not assume our result transfers to a different agent harness.
+
+Prompting Inversion~\citep{promptinginversion2025} sharpens this for our case
+specifically: scaffolding tuned against a weak model can become a handicap on a
+strong one. Our engines optimised against a 1.7B model. That is a reason to
+expect the transfer question to have its own answer, and a reason we decline to
+extrapolate from ours.
+
+\subsection{Statistics for evaluations at this scale}
+
+\citet{miller2024errorbars} popularised CLT-based standard errors for
+evaluations. \citet{noclt2025} shows the normal approximation is unreliable
+below a few hundred effectively independent datapoints, which is where a
+clustered design at our item count sits. We use McNemar's exact
+test~\citep{mcnemar1947note} for paired binary outcomes and a cluster bootstrap
+over templates for intervals, and we report the discordant split alongside every
+$p$-value.
+
+The multiplicity problem in this neighbourhood is larger than the reported
+comparisons suggest, because the ratchet inside each engine performs comparisons
+that never reach a table. We cannot correct for those. We correct for ours,
+across a family of three fixed before the first call, with Holm's step-down
+procedure. Benjamini--Hochberg~\citep{benjamini1995fdr} is implemented in the
+same module and controls the false discovery rate rather than the family-wise
+error rate; with three registered comparisons and no rejection at either
+criterion, the choice does not change the result.

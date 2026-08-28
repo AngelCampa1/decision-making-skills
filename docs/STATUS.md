@@ -1037,3 +1037,36 @@ What the failure bought is an admission rule, now in
 informedness below one. No template here passes all three. Seven published
 templates and six hard ones have signal and no room; the one-sided ones have
 room and no signal.
+
+## Appended 2026-08-28: three corrections the paper's own sections found
+
+Writing each section from the code rather than from the intention turned the
+write-up into an audit of this file's neighbours. Three claims elsewhere in the
+documents were false, and one artefact is missing.
+
+**Arms ran in blocks, not interleaved.** `runner.iter_items` returns the
+item-major ordering that makes arms alternate and nothing outside the tests
+calls it, so the five-arm study ran every item of one arm before starting the
+next. `HARNESS_DISCLOSURE.md` said the opposite and now says this. The A/A pass
+bounds the exposure without removing it: it repeated the control arm 1,456 calls
+later and returned 728 of 728 identical.
+
+**The two evolved skill bodies are unrecoverable.** Both searches wrote into a
+gitignored `results/evolution/`, nothing was committed, and the directories are
+gone. A content-hash search of 40,936 files on this machine found neither. Their
+SHA-256 hashes are on every record of the arms they drove, so each arm is
+provably one fixed body, and nobody can obtain either body.
+
+**Residency is pinned and not recorded.** `keep_alive: 60m` is a provider
+default sent on every request and written into no manifest and no record.
+Temperature is in the same position.
+
+Also corrected: `refs.bib` carried eleven unverified author lists, all checked
+against arXiv today and cleared, four of which had a title that did not match
+the id beside it. Two citation notes warning how a number may be quoted were
+being violated by the paper they were written for, and are now honoured.
+
+The paper is complete and unsubmitted at
+[`../paper/`](../paper/). No TeX toolchain exists on this machine, so it has
+never been compiled; [`../paper/CHECKLIST.md`](../paper/CHECKLIST.md) records
+that alongside the two boxes needing the maintainer.

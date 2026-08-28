@@ -1,0 +1,110 @@
+\section{What Accuracy Hides}
+\label{sec:signal}
+
+Everything in this section is recomputed from the records of
+\Cref{sec:results}. No model was called. The records carry the answer key and
+the model's answer on every row, so the rate the model chose an option can be
+compared against the rate the items called for it.
+
+\subsection{The measure}
+
+Accuracy on a balanced two-option key adds together two different quantities:
+how well a model tells the cases apart, and how often it picks one option
+whatever the case. A model that answers the first option nine times in ten
+scores about 0.63 on a set that wants it half the time, and none of that 0.63 is
+discrimination.
+
+Signal detection separates them. \emph{Informedness}, Youden's
+$J = \mathrm{sensitivity} + \mathrm{specificity} - 1$, is zero for any
+constant-answer policy at any base rate and is unmoved by a pure shift in
+preference. It also does not depend on which option is called positive:
+swapping the labels exchanges sensitivity with specificity and leaves the sum
+alone, so a per-template choice nobody can make principally does not have to be
+made. \emph{Skew}, the model's rate for an option minus the rate the items
+wanted it, names the other half directly.
+
+We compute both per template and average over templates, so no template's item
+count decides the answer. Rows the model did not parse are excluded, which is a
+limitation we return to. A template whose key holds a single answer class has no
+informedness at all, and the implementation refuses rather than returning zero:
+recording an undefined cell as zero would put it into a mean as though it were a
+measurement of no discrimination.
+
+\subsection{The study, decomposed}
+
+\begin{table}[h]
+\centering
+\signalTable
+\caption{Discrimination by arm, with cluster-bootstrap intervals resampling
+templates. Parse rate is the share of readings that produced a readable answer;
+everything else is computed over that subset.}
+\label{tab:signal}
+\end{table}
+
+\textbf{The study's conclusion survives the correction and gets slightly
+stronger.} Every arm's discrimination advantage over an empty prompt has an
+interval containing zero, exactly as every accuracy comparison did after Holm.
+SkillOpt keeps first place on both measures, at
+$\Delta J = \NUM{\deltaJSkillopt}$ with an interval of
+$[\NUM{\deltaJSkilloptLow}, \NUM{\deltaJSkilloptHigh}]$, so its accuracy lead is
+discrimination rather than a bias shift, and it is still indistinguishable from
+nothing.
+
+Two things this does not say. Mean skew runs \NUM{\meanSkewGepa} to
+\NUM{\meanSkewOn} in \emph{every} arm including the empty prompt, so the
+response bias here is a property of the model on this corpus rather than
+something an arm introduced. And $J$ is computed over parsed rows, so
+\texttt{gepa}, which parses least at \NUM{\parseRateGepa}, is measured on the
+subset it managed to answer; its interval is the widest in \Cref{tab:signal} and
+that is part of why.
+
+\subsection{Three of ten templates are not measuring anything}
+
+\begin{table}[h]
+\centering
+\templateTable
+\caption{Informedness per template, every arm. Templates marked $\dagger$ sit
+below $J = \NUM{\lowSignalThreshold}$ in all five arms.}
+\label{tab:templates}
+\end{table}
+
+\NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates sit below
+$J = \NUM{\lowSignalThreshold}$ in all five arms, and two of them are
+indistinguishable from zero. On those items the model is not deciding. What
+reaches the headline accuracy is the base rate and whichever way the model
+happens to lean.
+
+They hold \NUM{\lowSignalItems} of the \NUM{\totalItems} items, so the run
+carries the discriminative signal of the other \NUM{\signalItems}. The power
+calculation behind the study assumed \NUM{\totalItems}. That does not change a
+result that failed to reject, since less power only makes rejection harder, but
+a study designed off those numbers would be sized wrong.
+
+One of the three is the template an earlier entry in our own notebook had called
+the hardest in the corpus, on the strength of its low accuracy. It is not hard.
+It is unanswered, and accuracy cannot tell those apart.
+
+\subsection{Why we think this generalises}
+
+The two-option forced choice is the workhorse format of this literature, because
+it makes ground truth cheap and scoring unambiguous. It is also the format in
+which accuracy and response bias are maximally confusable, and the confusion runs
+in the direction that flatters an intervention: an arm that shifts a model's
+preference toward the option the items happen to favour gains accuracy without
+deciding any better.
+
+On our own corpus that mechanism is worth roughly thirty points on a single
+template. We have no evidence about anyone else's corpus, and that is the point:
+neither do they, because the statistic that would show it is not reported. The
+decomposition costs nothing. It runs over records a completed study already
+has, needs no additional calls, and would have taken us from ``ten templates''
+to ``seven templates and three that measure nothing'' before we sized anything.
+
+\subsection{What it changed about our own practice}
+
+The repository's corpus-admission rule was accuracy on the control arm inside
+$[0.35, 0.75]$. That criterion admits a one-sided template, because
+one-sidedness lands squarely inside the band. It has been extended with two
+more: skew near zero, so the model is answering from the item, and informedness
+below one, so there is something left for an arm to gain. Both are computed from
+the calibration run the first criterion already requires.

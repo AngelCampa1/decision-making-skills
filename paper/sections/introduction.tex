@@ -1,45 +1,101 @@
 \section{Introduction}
 \label{sec:intro}
 
-% ARGUMENT (fixed before results; the numbers are not):
-%
-%   1. Markdown "skills" are now a real distribution channel. The Agent Skills
-%      standard has ~40 adopting products and a shared .agents/skills/ path.
-%      Thousands of these files are installed and running.
-%   2. Almost none of them carry evidence. The closest prior art ships 28
-%      skills and its own README concedes none is proven to improve accuracy.
-%   3. The 2026 literature disagrees with itself about whether the content of
-%      such a file even matters: SkillsBench says presence is worth +18-36pp
-%      and prose granularity +0.7pp with CIs crossing zero; SkillOpt reports
-%      +23.5pp from optimising that same prose.
-%   4. Meanwhile harness variance exceeds model variance by ~7.8x, so the
-%      scaffold is the dominant term and almost nobody reports it.
-%   5. So: hold the model fixed, vary one markdown file, and measure it
-%      properly -- placebo arm, CoT arm, paired exact tests, clustered
-%      bootstrap, hash-locked pre-registration.
-%
-% TONE: this is a measurement paper. It does not need to argue that skills are
-% good or bad. It needs to argue that the question is currently unanswered and
-% that the design here can answer it.
+Markdown ``skills'' are a real distribution channel. The Agent Skills standard
+fixes a \texttt{SKILL.md} format and a shared \texttt{.agents/skills/} discovery
+path, and its own client showcase listed forty-six adopting products in August
+2026, among them Claude Code, Codex, Cursor, GitHub Copilot, VS Code, Gemini CLI
+and Amp~\citep{agentskills2025}. These files are installed and running inside
+coding agents today. Almost none of them carry evidence that they help.
 
-\TODO{Draft after the first skill has a verdict (sequencing step 8).}
+A second layer has grown on top of the first. Engines now rewrite skill files
+automatically: GEPA proposes whole-prompt revisions from reflection over failed
+rollouts~\citep{gepa2026}, and Microsoft's SkillOpt makes bounded edits to a
+skill body and keeps any edit that scores better~\citep{skillopt2026}. Both
+accept an edit on a single uncontrolled score improvement, hundreds of times in
+a run.
+
+That acceptance rule is the problem this paper is about. A ratchet that keeps
+every improvement it observes performs an enormous number of implicit
+comparisons, and reports none of them. It has no notion of a difference that
+could have arisen by chance, so it cannot distinguish a skill that got better
+from a skill that got luckier. The engines' own evaluations inherit the gap:
+single-run point estimates on fixed splits, with no repeats, no intervals, no
+significance tests, and no control for what a document-shaped file does when its
+content says nothing at all. Where prompt optimisation has been audited that way
+in a neighbouring setting, 49\% of 72 optimisation runs scored below
+zero-shot~\citep{promptcoinflip2026}.
+
+The literature that these engines are measured against does not agree with
+itself either. SkillsBench reports that making a skill \emph{available} is worth
+$+18$ to $+36$ percentage points, while the \emph{granularity of its prose} is
+worth $+0.7$ points on one model and $-6.7$ on the other, both with intervals
+crossing zero~\citep{skillsbench2026}. SkillOpt reports $+23.5$ points from
+optimising exactly that prose, on GPT-5.5 in direct chat, with $+24.8$ inside
+Codex and $+19.1$ inside Claude Code~\citep{skillopt2026}. Both cannot be right
+in the general case, and neither reports the statistic that would settle it.
+
+\paragraph{What we did.}
+We held the model fixed, evolved a decision-making skill with each engine
+against a training split, froze both winners by content hash, and then minted a
+fresh holdout the engines had never seen. Five arms ran over that holdout at a
+matched token budget: no skill, the hand-written seed skill, a token- and
+structure-matched placebo, and the two evolved winners. Every comparison is
+McNemar's exact test against the placebo, paired by item, with Holm correction
+across a family of three registered before the first call. The prediction was
+committed to git before any data existed, and the run's provenance gate refuses
+a result whose prediction cannot be shown by ancestry to predate it.
+
+\paragraph{What we found.}
+No arm rejects, on either item set, after correction. The best showing is
+SkillOpt's winner at $+\NUM{\effectSeenSkillopt}$ on the scenarios it trained
+against, which does not survive multiplicity. On scenarios neither engine saw,
+GEPA's winner is the only arm in the study that scores below an empty prompt.
+Both winners had written the answer key into their own bodies: one transcribed a
+training template's decision rule, the other appended worked examples whose
+numbers trace back to the training pool.
+
+We also report a result about the measurement rather than the engines.
+Accuracy on a balanced two-option key is the sum of two different quantities,
+how well a model tells the cases apart and how often it picks one option
+regardless, and reporting the sum alone hides both. Separating them left the
+study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
+\NUM{\studyTemplates} templates measure nothing.
 
 \paragraph{Contributions.}
-% Each of these stands whether the skills succeed or fail. That is deliberate:
-% a contribution contingent on a positive result is a bet, not a contribution.
+% Each of these stands whether the engines succeeded or failed. That is
+% deliberate: a contribution contingent on a positive result is a bet.
 \begin{enumerate}
-  \item A harness for evaluating markdown skill artifacts \emph{with the model
-    held fixed}, using the Claude Code CLI itself as the subject under test and
-    reproducible on a consumer subscription with no API key. Configuration is
-    disclosed against the ETCSOVG checklist \citep{harnessdisclosure2026}.
-  \item An adjudication of a live disagreement in the 2026 literature between
-    \citet{skillsbench2026} and \citet{skillopt2026}, with the SkillsBench null
-    \emph{pre-registered as our prediction}.
-  \item Methodological apparatus this literature currently lacks: a
-    token- and structure-matched placebo arm, a plain chain-of-thought arm,
-    paired exact tests with clustered bootstrap intervals, Benjamini--Hochberg
-    control across skills, and hash-locked pre-registration.
-  \item A replication attempt on the distractor effect in an agentic setting,
-    using a two-auditor-filtered dataset, in light of the 2026 re-audit that
-    largely dissolved the original GSM-NoOp magnitude \citep{gsmsymbolic2024}.
+  \item \textbf{The first placebo-controlled evaluation of automated skill
+    optimisation.} A skill that beats an empty prompt but not a length- and
+    structure-matched placebo has demonstrated a length effect, and no engine in
+    this space reports the comparison that would tell the two apart.
+  \item \textbf{An A/A control, reported.} The control arm was scored a second
+    time into a separate checkpoint, and returned \NUM{\aaPairs} of
+    \NUM{\aaPairs} items identical. Every arm difference in
+    \Cref{sec:results} is therefore a difference the prompts caused, and the
+    venue's determinism is a measurement rather than an assumption.
+  \item \textbf{A decomposition that separates discrimination from response
+    bias}, applied to our own published records, showing that a
+    \NUM{\totalItems}-item run carried the discriminative signal of
+    \NUM{\signalItems} (\Cref{sec:signal}). We argue the failure generalises to
+    the two-option evaluations this literature is built on.
+  \item \textbf{A negative result about corpus construction}, reported at the
+    same prominence as the rest: no verdict-bearing replication of this study
+    can be built on this corpus, nine attempts to build a harder one failed, and
+    the way they failed produced an admission rule (\Cref{sec:ceiling}).
+  \item \textbf{Methodological apparatus this literature lacks}, all of it open:
+    hash-locked pre-registration verified by git ancestry, paired exact tests
+    with cluster bootstrap intervals over templates, Holm correction across a
+    registered family, and a generator that computes ground truth from template
+    rules rather than authoring it.
 \end{enumerate}
+
+\paragraph{Scope, stated once and up front.}
+This is one target model, one corpus, one harness. The target is a 1.7B
+parameter local model, chosen because every larger model we could reach solves
+the corpus with an empty prompt (\Cref{sec:ceiling}). The repository's own arena
+rule declines to issue a verdict from a run at that tier, and we honour it: the
+claim here is that on this model, under these controls, neither engine's output
+beat a placebo. Whether it would on a frontier model is open, and
+\Cref{sec:ceiling} is an account of why we could not answer it.

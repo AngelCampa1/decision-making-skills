@@ -38,11 +38,19 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Final
 
+from decision_evals.evolution.run import seed_body
+from decision_evals.solvers.arms import check_placebo_match
 from decision_evals.stats.cluster import cluster_bootstrap_diff
 from decision_evals.stats.signal import DegenerateSignalError, informedness, skew
 
 #: Where published runs of the five-arm study live.
 STUDY_ROOT: Final = "results/evolution-study"
+
+#: The two bodies whose match the paper reports. The skill's body is read
+#: through ``seed_body`` rather than off disk, because that is the function the
+#: study's ``on`` arm used and the frontmatter is not part of what it delivers.
+SEED_SKILL: Final = "skills/decision-making/SKILL.md"
+PLACEBO_SKILL: Final = "skills/decision-making/placebo.md"
 
 #: The arm the decomposition is differenced against. Not the arm the study's own
 #: comparisons use, and deliberately so: ``placebo`` answers "does this beat a
@@ -351,6 +359,32 @@ def read_study(run_dir: Path) -> Study:
     )
 
 
+def placebo_macros(repo_root: Path) -> dict[str, str]:
+    """The placebo's match against the skill it stands in for.
+
+    A property of the two bodies rather than of any run, and reported by the
+    paper, so it is generated here for the same reason everything else is: the
+    match was 612 against 628 words when this was written, and a hand-typed pair
+    of numbers is a pair of numbers that will be wrong after the next edit to
+    either file.
+
+    Returns an empty mapping when either body is absent, so a checkout without
+    the skill still builds.
+    """
+    skill = repo_root / SEED_SKILL
+    placebo = repo_root / PLACEBO_SKILL
+    if not (skill.is_file() and placebo.is_file()):
+        return {}
+    match = check_placebo_match(seed_body(repo_root), placebo.read_text(encoding="utf-8"))
+    return {
+        _macro_name("skill", "words"): str(match.skill_words),
+        _macro_name("placebo", "words"): str(match.placebo_words),
+        _macro_name("skill", "sections"): str(match.skill_sections),
+        _macro_name("placebo", "sections"): str(match.placebo_sections),
+        _macro_name("placebo", "tolerance"): f"{match.tolerance * 100:.0f}",
+    }
+
+
 def _macro_name(*parts: str) -> str:
     """Join parts into a LaTeX control sequence name, letters only.
 
@@ -376,7 +410,7 @@ def _signed(value: float, places: int) -> str:
     return f"{value:+.{places}f}"
 
 
-def collect(study: Study) -> dict[str, str]:
+def collect(study: Study, repo_root: Path) -> dict[str, str]:
     """Every macro the paper defines, as name to already-formatted value.
 
     Formatting to a fixed number of places is the only transformation applied to
@@ -434,10 +468,22 @@ def collect(study: Study) -> dict[str, str]:
     items = {reading.item: reading.template_id for reading in readings if reading.arm == arms[0]}
     quiet_items = sum(template in quiet for template in items.values())
     total_items = len(items)
+
+    if aa is not None:
+        # Arms run in blocks and the A/A pass runs after all of them, so the two
+        # passes of the control arm are separated by every arm that follows it.
+        # The paper reports that distance because it is what the A/A actually
+        # measured: a block design's exposure to drift, over that many calls.
+        after = arms[arms.index(analysis["control"]) + 1 :]
+        values[_macro_name("aa", "separation")] = str(len(after) * total_items)
+
+    values[_macro_name("lowSignal", "threshold")] = _fixed(LOW_SIGNAL_J, 1)
     values[_macro_name("lowSignal", "templates")] = str(len(quiet))
     values[_macro_name("lowSignal", "items")] = str(quiet_items)
     values[_macro_name("signal", "items")] = str(total_items - quiet_items)
     values[_macro_name("total", "items")] = str(total_items)
+
+    values.update(placebo_macros(repo_root))
 
     return values
 
@@ -620,7 +666,7 @@ def write_figures(repo_root: Path, out_dir: Path) -> FiguresResult:
         return FiguresResult(run=None, macros=0, paths=(macros,))
 
     study = read_study(run_dir)
-    values = collect(study)
+    values = collect(study, repo_root)
 
     written: list[Path] = []
     for path, text in (

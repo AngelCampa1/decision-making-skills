@@ -1,52 +1,144 @@
 \section{Results}
 \label{sec:results}
 
-% EVERY number and figure in this section is generated. Nothing is transcribed.
-% `make figures` writes figures/*.pdf and generated/macros.tex from
-% ../results/**/summary.json; if a number appears here that is not a macro from
-% that file, it is a bug.
+% EVERY number in this section is a macro from generated/macros.tex, and both
+% tables are macros from generated/tables.tex, written by `de figures` from
+% ../results. If a number appears here that is not a macro, it is a bug.
 %
-% REPORTING RULES, fixed in advance:
-%
-%   - Report the pre-registered primary first, before anything exploratory.
-%   - Report raw p AND BH-adjusted q for every primary.
-%   - Report every guard, including the ones that passed. A guard table with
-%     only failures is a guard table nobody can check.
-%   - Report means WITH p90 and p99. The AGENTS.md study found the benefit of an
-%     instruction artifact concentrates in a small number of expensive runs; a
-%     mean-only report can hide the effect entirely.
-%   - Report nulls in the same table, same format, same prominence as wins.
-%   - Report the placebo and CoT arms every time. A skill that beats `off` but
-%     not `placebo` is a length effect and must be shown as one.
-%   - Where a comparison is underpowered, report the MDE and label it UNTESTED
-%     rather than presenting it as a null.
+% Reporting rules, fixed in advance and kept:
+%   - the pre-registered primary first, before anything exploratory;
+%   - raw p and adjusted q for every primary;
+%   - every control, including the ones that passed;
+%   - nulls in the same table, same format, same prominence as wins;
+%   - the placebo reported every time, because a skill that beats `off` but not
+%     `placebo` is a length effect and must be shown as one.
 
-\subsection{Main table}
-% One row per skill: verdict, primary metric, effect, 95% CI, p, q, N, model,
-% run id. Mirrors ../SCORECARD.md, which is itself generated -- and `de check`
-% fails the build if the committed scorecard disagrees with the results.
+\subsection{The registered primary}
 
-\TODO{Generated table.}
+\Cref{tab:unseen,tab:seen} carry every arm on both item sets. Effects, wins and
+losses, $p$ and Holm-adjusted $q$ are against \texttt{placebo}, the registered
+control. \texttt{off} is reported alongside without a comparison, because it
+answers a different question by registration.
 
-\subsection{Per-skill detail}
-% For each skill: the four-arm comparison, the guard table, the stratified
-% breakdown (clean vs distractor-present), and the error taxonomy from the
-% bottom-up analysis.
+\begin{table}[h]
+\centering
+\unseenTable
+\caption{Unseen set: three held-out templates, four holdout seeds,
+\NUM{\unseenItems} items. Neither engine saw these templates at any seed.}
+\label{tab:unseen}
+\end{table}
 
-\subsection{Trigger quality}
-% Reported SEPARATELY from task accuracy, against a positive set and a negative
-% set of ~50 turns that superficially resemble triggers. Precision and recall.
-%
-% This is not a secondary curiosity. A suite that improves accuracy by 10pp
-% while firing on 60% of ordinary turns is a net loss in daily use, and an
-% accuracy-only evaluation would not notice.
+\begin{table}[h]
+\centering
+\seenTable
+\caption{Seen set: seven trained templates, two holdout seeds,
+\NUM{\seenItems} items. The templates were visible to both searches; these
+items were not, and were minted after both winners were frozen.}
+\label{tab:seen}
+\end{table}
 
-\subsection{Wiring modes}
-% Auto-trigger vs AGENTS.md workflow wiring vs explicit invocation vs hook.
-% Given SkillsBench's presence-vs-prose result, this is expected to be the
-% larger effect, and it is the one a practitioner can act on.
+\textbf{No arm rejects on either set.} The strongest showing in the study is
+SkillOpt's winner on the seen set at $+\NUM{\effectSeenSkillopt}$, raw
+$p = \NUM{\pSeenSkillopt}$, which Holm takes to $q = \NUM{\qSeenSkillopt}$. On
+the unseen set the same winner reaches $+\NUM{\effectUnseenSkillopt}$ at
+$p = \NUM{\pUnseenSkillopt}$.
 
-\subsection{Run-to-run variance}
-% >=2 independent runs per cell. Report the variance rather than claiming
-% determinism -- sampling parameters are not exposed by the CLI, and temperature
-% 0 is not deterministic on hosted inference in any case.
+Neither table carries an interval on its accuracy effect, and it should. The
+run's analysis wrote the paired test and the effect and not a bootstrap around
+it, and \texttt{de figures} renders that file rather than reanalysing it, so
+adding one here would mean the paper and the published run disagreeing about the
+same comparison. \Cref{tab:signal} does carry cluster-bootstrap intervals over
+templates, on the decomposition rather than on accuracy, which is where the
+width of ten clusters is visible. Recording this as a gap is the honest option
+and it is on the checklist as one.
+
+Three readings deserve to be stated rather than left in the table.
+
+\paragraph{GEPA's winner is worse than writing nothing.} It scores
+\NUM{\accUnseenGepa} on unseen scenarios against \NUM{\accUnseenOff} for an
+empty prompt and \NUM{\accUnseenPlacebo} for the placebo, losing
+\NUM{\lossesUnseenGepa} items to the placebo's \NUM{\winsUnseenGepa}. It is the
+only arm in the study below \texttt{off}. \Cref{sec:whatengines} says why.
+
+\paragraph{The hand-written skill also fails to beat the placebo.} The
+\texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
+below the placebo on both. We wrote that skill, we ship it, and it is reported
+here at the same prominence as the engines' output.
+
+\paragraph{The placebo is not inert.} It reads \NUM{\accSeenPlacebo} on the seen
+set against \NUM{\accSeenOff} for an empty prompt, which is the largest movement
+in \Cref{tab:seen}. A structured document of the right length and shape, whose
+content carries no method, moved this model. Any evaluation without such an arm
+would have attributed that movement to whatever text it happened to be testing.
+
+\subsection{Controls}
+
+\paragraph{A/A: \NUM{\aaPairs} of \NUM{\aaPairs} identical.} The placebo scored
+a second time over every item returned \NUM{\aaDisagreements} disagreements,
+both passes at \NUM{\aaAccuracy}, $p = \NUM{\aaP}$. Every difference between
+arms in \Cref{tab:unseen,tab:seen} is a difference the prompts caused.
+
+The pass ran into its own checkpoint so that resume could not skip it and report
+perfect agreement by construction. It is also only trustworthy because of a
+finding from the day before: two items answered deterministically to whether the
+model had just been reloaded, and pinning residency closed it. A venue treated
+as deterministic without measuring it would have put that artifact inside this
+control.
+
+\paragraph{Falsifier.} The \texttt{off} arm returns \NUM{\accUnseenOff} unseen
+and \NUM{\accSeenOff} seen, so a non-zero score was reachable in every arm and
+the scorer reads the same object in each.
+
+\subsection{What the engines actually produced}
+\label{sec:whatengines}
+
+The scores above are the answer to the registered question. What the winners
+contain is a separate finding and does not depend on a score.
+
+\textbf{Both engines wrote the answer key into the skill body, by different
+routes and onto near-disjoint parts of the corpus.}
+
+GEPA's winner stopped being a decision skill. It is titled \emph{Travel-Connection
+Decision Assistant Instruction Set} and opens by declaring itself a decision aid
+for airline connectivity questions. Its domain section is one training
+template and nothing else, down to naming that template's two option strings,
+and it closes with a worked example whose arithmetic is wrong. That single-template
+specialisation scored 20 of 21 across ten templates during the search, which the
+domain content cannot explain; the format sections earned it. On the unseen set
+it is the worst arm in the study.
+
+SkillOpt's winner is the seed body with its structure intact, plus two appended
+sections. One is headed, in the engine's own words, \emph{Examples from the
+training data}, and lists five scenarios with their values and their verdicts. We
+checked every number in it against the 70 items the search was given, and all of
+them appear there. A second appended section names three more templates,
+bringing it to eight of ten.
+
+Their union is the corpus. Neither engine was asked to memorise, neither
+mechanism is a bug in the engines as implemented, and both are what an
+accept-if-strictly-better ratchet with no held-out check will find.
+
+\paragraph{One real gain, smaller than advertised.} The scorer distinguishes a
+wrong answer from an unreadable one, and that split survives where the totals do
+not. Half the seed skill's validation failures were generations that ran to the
+full token cap without ever emitting an answer line: a 1.7B model talking itself
+out of concluding. Both winners took those to zero. That is the one part of
+either engine's gain larger than the measurement error, and it is a formatting
+fix rather than a reasoning one.
+
+\paragraph{Why the search scores could not have settled anything.} Both runs
+contain repeats nobody planned, because resumption re-asked some candidates the
+same item. Each is a controlled replicate: same body, same item, same model,
+same run. \textbf{Of 49 repeated pairs, 7 disagreed}, a per-item flip rate of
+14.3\% with a Wilson 95\% interval of [7.1\%, 26.7\%]. That puts the standard
+deviation of a 21-item validation score at about 1.2 items. Both winners are
+three items above their seed. The gains each engine accepted on are inside the
+noise of the score it accepted them on, and neither engine measured that noise.
+
+Every figure in this subsection, and every figure above it that describes what
+the searches did, is read off the two search runs, whose directories were never
+committed and no longer exist (\Cref{sec:limitations}). They are typed from the
+dated notebook entries that recorded them rather than generated from records,
+and the reader should weigh them against the five-arm numbers accordingly. The
+tables above, and everything in \Cref{sec:signal}, come from committed records
+through \texttt{de figures}.

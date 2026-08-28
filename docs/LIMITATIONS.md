@@ -62,6 +62,29 @@ scaffold. Do not assume a result here transfers to a different agent harness
 without re-measurement. That is precisely the claim arXiv:2605.23950 makes about
 everyone else's results too.
 
+*Added 2026-08-28.* **The five-arm study ran its arms in blocks, not
+interleaved.** Every item of `off`, then every item of `on`, and so on, with the
+A/A pass after all five. `runner.iter_items` returns item-major pairs and
+`evolution/study.py` never calls it, which nobody noticed until the paper's
+harness appendix was written against the code rather than against the intention.
+Block ordering confounds an arm with whatever drifted between blocks. What
+bounds it here is a measurement rather than an argument: the A/A pass repeated
+the control arm 1,456 calls later and returned 728 of 728 items identical, on a
+local server with no quota and no served-model churn. The exposure did not bite
+in this run. It is still there, and a hosted venue would not have handed us that
+control for free.
+
+*Added 2026-08-28.* **The two evolved skill bodies were never committed and are
+now unrecoverable.** Both searches wrote into `results/evolution/`, which
+`.gitignore` excludes, and the directories are gone. Their SHA-256 hashes are on
+every record of the arms they drove, so the study can prove one fixed body
+produced each arm, and nobody outside this repository can obtain either body or
+check what the write-up says is in it. The seed skill, the placebo, the engines,
+the corpus, the split and the search configuration are all published, so both
+searches can be re-run; these two cannot be reproduced. The fix is to stop
+writing search output under an ignored path, and it does not recover what is
+already lost.
+
 ## The statistics
 
 N is small by ML standards. Subscription throughput caps the item count, and the

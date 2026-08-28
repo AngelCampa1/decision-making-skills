@@ -1,27 +1,84 @@
 \section{Harness disclosure}
 \label{sec:appendix-harness}
 
-% SOURCE OF TRUTH: ../docs/HARNESS_DISCLOSURE.md. Reproduce the ETCSOVG table in
-% full here -- Execution, Tools, Context, Scheduling, Observability,
-% Verification, Governance. This is the appendix that makes the paper
-% reproducible, and it is the one most papers in this area omit entirely.
+% SOURCE OF TRUTH: ../docs/HARNESS_DISCLOSURE.md, which carries the ETCSOVG
+% record for all three backends this project has. Reproduced here for the one
+% backend this study used. Where the two disagree, the docs file is correct.
 
-\TODO{Render the ETCSOVG table from \texttt{docs/HARNESS\_DISCLOSURE.md}, plus
-the per-run \texttt{config.json} schema.}
+A result reported without its harness is not
+reproducible~\citep{harnessbench2026}, and this appendix is the one most papers
+in this area omit. The disclosure follows the ETCSOVG
+checklist~\citep{harnessdisclosure2026}: execution, tools, context, scheduling,
+observability, verification, governance.
 
-% Points worth stating in prose rather than leaving to the table:
-%
-%   - Subscription OAuth, no API key. --bare is unusable because its auth path
-%     is strictly ANTHROPIC_API_KEY/apiKeyHelper and OAuth is never read. The
-%     isolation is assembled from individual flags instead. This is a
-%     reproducibility asset, not a workaround: anyone with a consumer
-%     subscription can rerun the harness.
-%   - Zero tools, no MCP, no settings sources, no session persistence. The skill
-%     is the only intervention, and "the agent looked it up" cannot explain a
-%     difference between arms.
-%   - CLAUDE.md isolation is proven by a canary test that plants a file with a
-%     distinctive instruction in the runner cwd and asserts the model does not
-%     follow it. Isolation that is merely configured is isolation that will
-%     silently break.
-%   - Arms are interleaved per item rather than run in blocks, so quota drift
-%     and served-model changes cannot align with an arm.
+The project has three backends. This study used exactly one, and the other two
+are disclosed separately in the repository because folding them into one table
+would be the error the disclosure exists to prevent.
+
+\paragraph{Execution.} An OpenAI-compatible HTTP server. Ollama's native
+\texttt{/api/chat}, target \NUM{\studyModel}, context window 16{,}384, output
+capped at 4{,}096 tokens, \texttt{temperature=0}, one process at a time.
+\NUM{\studyReadings} arm calls plus \NUM{\aaPairs} for the A/A control. Local,
+so the notional cost is zero and the guard is call count and wall clock rather
+than dollars.
+
+\paragraph{Tools.} None. No tool use, no retrieval, no MCP, no filesystem
+access. Nothing reads a working directory, so the auto-memory and planted-file
+concerns that apply to the CLI backend do not arise here. The skill body is the
+only intervention, and ``the agent looked it up'' cannot explain a difference
+between arms.
+
+\paragraph{Context.} The system prompt is the whole of it: task framing, the
+response-format contract, and the arm's body. There is no host prompt underneath
+and no session history. This also means the project's \texttt{in\_situ} arm is
+\emph{refused} on this backend rather than silently approximated, because with
+no pre-existing system prompt to append to, that call would be the isolated arm
+wearing another arm's label.
+
+\paragraph{Scheduling.} Arms ran in blocks: every item of \texttt{off}, then
+every item of \texttt{on}, and so on, with the A/A pass after all five. We
+intended to interleave by item and did not. The harness carries a helper that
+returns item-major pairs, the study path never calls it, and we found that while
+writing this appendix. Block ordering confounds an arm with whatever drifted
+between blocks, so we report the exposure and then report what bounds it. The
+venue is a local server with no quota and no served-model churn, the run took
+hours rather than days, and the A/A pass ran roughly \NUM{\aaSeparation} calls
+after the placebo pass it duplicates and returned \NUM{\aaPairs} of
+\NUM{\aaPairs} items identical. That last is a measurement across a third of the
+run, and it says the drift this design is exposed to did not occur here. It does
+not say the design is sound. Model residency is pinned at
+\texttt{keep\_alive: 60m}, sent on every request by the provider that makes
+them. That pin is load-bearing: a probe the day before the study found two items
+answering deterministically to whether the model had just been reloaded, which
+without the pin would have put a venue artifact inside the A/A control. It is
+one of the two settings this run does \emph{not} write into its manifest, the
+other being temperature, so a replicator reads both from the provider source
+rather than from the record. We would rather say that than let the disclosure
+imply a receipt it does not hold.
+
+\paragraph{Observability.} Every call writes a record carrying the item id, the
+template id, the seed, the arm, the SHA-256 of the body that arm delivered, the
+answer key, the parsed answer, the parse status, the raw response, the token
+counts, the duration, and the schema version. The records are published beside
+the run. Every number in this paper is recomputed from them by
+\texttt{de figures} at build time.
+
+\paragraph{Verification.} The resolved model id is recorded per call from the
+response's own \texttt{model} field rather than from what was requested.
+Ollama's \texttt{/api/show} card is read as an isolation receipt and the run is
+refused if it carries a \texttt{SYSTEM} prompt, which is the local analogue of a
+planted instruction file. Reasoning output arrives in a field separate from the
+answer and is recorded rather than discarded.
+
+\paragraph{Governance.} The run is checkpointed and resumable, keyed so that a
+resume cannot silently re-run or silently skip. The A/A pass has its own
+checkpoint for that reason. The published directory declares its answer key, its
+corpus fingerprints, its arm hashes and the notebook entry carrying its
+prediction, and a gate refuses the run if that entry's first commit is not a git
+ancestor of the run's commit.
+
+\paragraph{One thing this backend cannot give.} The hosted screen of
+\Cref{sec:ceiling} ran through the same module against a free API tier, which
+publishes no model card. No isolation receipt is obtainable there. That is
+recorded as \emph{no receipt obtainable} and never as \emph{isolation verified},
+which is a distinction we would rather state than quietly collapse.

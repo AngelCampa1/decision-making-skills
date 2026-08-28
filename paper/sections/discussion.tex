@@ -1,38 +1,88 @@
 \section{Discussion}
 \label{sec:discussion}
 
-% Write this from the results, not from the plan. The outline below is what the
-% discussion should ANSWER, not what it should conclude.
+\subsection{What a ratchet without a control can and cannot tell you}
 
-\subsection{What the presence-versus-prose result means for skill authors}
-% If the SkillsBench null replicates, the practical advice inverts most current
-% skill-authoring guidance: effort belongs in the description and the wiring,
-% not in the body. If SkillOpt replicates instead, prose optimisation is worth
-% automating and the field needs the confidence intervals it currently lacks.
-% Both outcomes are actionable; say which one the data supports and how strongly.
+Both engines improved a validation score and both accepted on it. Neither
+improvement survived a placebo. That gap has a mechanical explanation which does
+not require either engine to be badly built.
 
-\subsection{Where the distractor failure mode actually lives}
-% If the flagship's effect is small on distractor-present items but real in
-% long-horizon agentic accumulation, that relocates the failure mode rather than
-% dissolving it -- and that is a more useful finding than either "it is real" or
-% "it was an artifact".
+An accept-if-strictly-better rule performs one comparison per proposal and keeps
+every winner. Over a run of a few hundred rollouts it therefore performs a few
+hundred implicit tests, reports none of them, and has no way to ask whether a
+difference could have arisen by chance. Our own repeat measurement puts the
+standard deviation of a 21-item validation score at about 1.2 items, and both
+winners sit three items above their seed. A ratchet in that regime is a device
+for selecting noise, and it will select noise with perfect reliability given
+enough proposals.
 
-\subsection{Wiring as the dominant term}
-% If trigger quality moves results more than skill content does, the field's
-% unit of analysis is wrong: we have been evaluating documents when we should be
-% evaluating retrieval. Follow this thought honestly even though it partly
-% undercuts the premise of writing skills at all.
+The fix is cheap and neither engine has it: hold out items the ratchet cannot
+see, and require a candidate to beat the incumbent on those before accepting.
+Nothing about either architecture prevents it.
+
+\subsection{Memorisation is the reachable optimum, not a bug}
+
+Both winners wrote training answers into the skill body, by different routes,
+onto near-disjoint parts of the corpus. Neither engine was asked to. Both were
+asked to maximise a score on items they could see, and transcribing the answers
+is the best available way to do that.
+
+This has a design consequence for anyone evaluating these engines. A holdout
+that varies only the random seed of a template will score that transcription as
+generalisation, because the transcribed rule is correct for every seed of the
+template it came from. Our original plan was exactly such a holdout, and a probe
+caught it before the study rather than after. \textbf{Split by template, or the
+evaluation rewards the failure it exists to detect.}
+
+\subsection{The placebo moved the model, which is the more useful finding}
+
+The most actionable number in \Cref{tab:seen} is not either engine's. It is the
+placebo at \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} for an empty prompt.
+A document of the right length and shape, whose content carries no method,
+outperformed both the skill we wrote and one of the two evolved winners.
+
+Read one way this undercuts the premise of writing skills at all, and we follow
+that honestly: on this corpus and this model, a substantial part of what a skill
+does is occupy the system prompt with structured text. Read another way it is a
+warning about every published skill result that lacks this arm, which is nearly
+all of them. Either reading requires the arm.
+
+\subsection{Where this leaves the SkillsBench and SkillOpt disagreement}
+
+Our result is closer to SkillsBench's null than to SkillOpt's $+23.5$ on GPT-5.5
+in direct chat, and we
+report that with the scope it deserves. We tested one corpus, one target model
+at 1.7B parameters, and one task family with computable ground truth. SkillOpt
+evaluates inside agent harnesses on multi-step work, which is a different regime
+in a way that could plausibly matter: an evolved skill that fixes a formatting
+pathology is worth little on a single forced choice and could be worth a great
+deal across a long trajectory.
+
+The one gain we found that exceeded measurement error points that way. Half of
+the seed skill's failures were generations that ran to the token cap without
+concluding, and both winners took those to zero. That is a real effect, larger
+than the noise, and it is a formatting fix. On a single-answer benchmark it is
+worth a few points. In an agent loop it might be worth much more, and nothing
+here measures that.
 
 \subsection{What a verdict is worth}
-% A verdict is a claim about one model version at one point in time, under one
-% harness, on tasks with computable ground truth. Given HV/MV ~ 7.8x, transfer
-% to another harness should not be assumed -- which is the same warning
-% arXiv:2605.23950 issues about everyone else's numbers, applied to ours.
 
-\subsection{Negative results}
-% Any NULL or HARMFUL verdict gets a written entry here: hypothesis, N, observed
-% effect, CI, why we expected otherwise, and what would need to change.
-%
-% This is not ritual self-criticism. Publishing the nulls is what stops a
-% reviewer discounting the wins, and it is the cheapest credibility available to
-% a paper in a neighbourhood this crowded.
+The claim we are entitled to is that on \NUM{\studyModel}, on this corpus, under
+these controls, neither engine's output beat a document-shaped placebo, and one
+scored below an empty prompt. Harness variance exceeds model variance by roughly
+$7.8\times$~\citep{harnessbench2026}, so transfer to another scaffold should not
+be assumed. That is the same warning that literature issues about everyone
+else's numbers, and we apply it to ours.
+
+\subsection{Negative results, at the same prominence}
+
+Reported here rather than in a footnote, because publishing the nulls is what
+stops a reader discounting anything else on the page.
+
+The skill we wrote and ship lost to a placebo on both item sets. Three
+registered predictions about corpus construction were falsified in two days
+(\Cref{sec:ceiling}). Three of our own ten templates measure nothing
+(\Cref{sec:signal}). One earlier run in this project is void, refused on parse
+rate before any prediction was scored. And the headline experiment could not be
+replicated at a tier that would carry a verdict, for a reason that is a property
+of our corpus rather than of the engines.

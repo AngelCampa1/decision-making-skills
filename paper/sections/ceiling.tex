@@ -1,0 +1,118 @@
+\section{The Ceiling, and Nine Templates That Did Not Clear It}
+\label{sec:ceiling}
+
+This section reports a failure. The study above runs on a 1.7B model and is
+formally scoped to it (\Cref{sec:arenas}). The obvious next move is to replicate
+on a larger model, and we could not, because the corpus has no room on one. We
+tried nine times to build room and failed nine times. What the failures produced
+is worth more than the corpus would have been.
+
+One thing to hold while reading it. The eleven-model screen below is a committed
+artifact, \texttt{nvbuild-ceiling-screen.json}, published beside the study's
+records. Everything after it ran as a probe through sub-agents rather than
+through the checkpointed runner, so those passes wrote no records and their
+figures are typed here from the dated notebook entries that recorded them. Each
+prediction was registered before its probe and the entries say so, which is what
+the record here rests on. It is a weaker footing than the five-arm study's and
+we would rather name it than have it inferred.
+
+\subsection{Every hosted model we could reach solves the corpus}
+
+Screened with an empty prompt, eight of the eleven hosted models registered in
+the harness answer this corpus at or near ceiling, the weakest at 0.933 against
+\NUM{\accUnseenOff} for the study's local target. Three did not return inside
+the screen's budget and are recorded as unmeasured rather than assumed; they are
+larger than models already answering at 1.000, so the expectation is clear and
+it is an expectation.
+
+A five-arm study needs headroom for an arm to move into. At 0.933 there is not
+enough for any effect this design could detect, so no verdict-bearing venue can
+host this study as the corpus stands.
+
+\subsection{Nine templates, and how each one failed}
+
+We authored nine harder templates in two days, in distinct domains, each built
+around a rule the model has to select before it can apply: a precedence between
+two thresholds, chosen by a categorical variable stated elsewhere in the item.
+
+Six of the nine ceiling on a 30B model. The registered prediction was that a set
+of six selection templates would land it between 0.60 and 0.75; the set landed
+at 0.949, and five of the six sit at or beside 1.000.
+
+One template held the model off the ceiling, at 0.722. It was the template the
+prediction generalised from, and it turned out to be one-sided rather than hard.
+Measured three times at 0.629, 0.583 and 0.625, it reaches those numbers with
+sensitivity 1.000 against specificity between 0.167 and 0.250: it answers one
+option on about nine items in ten, in a set that wants it on half. An arm that
+merely nudged the model toward the other option would have gained roughly thirty
+points without deciding any better.
+
+Two more templates were built to diagnose that one, and both diagnoses were
+wrong. Adding two high-strength money facts to a ceilinged template, to invite
+weighing cost instead of applying the rule, changed nothing: 23 of 23 against a
+control's 23 of 23. Reversing which option is named first, on the hypothesis
+that the bias was positional, moved accuracy by 0.042 against a registered
+threshold of 0.10.
+
+\subsection{Three registered predictions, all falsified}
+
+Each was written before its run and each stayed in the record saying so.
+
+\begin{enumerate}
+  \item Six further selection templates would land a 30B between 0.60 and 0.75
+    as a set. They landed at 0.949.
+  \item An arm that gains accuracy on the one-sided template would gain it by
+    moving skew. No arm gained, so the premise never occurred: over 36 items and
+    three arms, no skill and the placebo read 0.694 and 0.697, and the seed
+    skill read 0.600.
+  \item Reversing the option order would move accuracy by more than 0.10. It
+    moved 0.042, and the bias is therefore semantic and still unexplained.
+\end{enumerate}
+
+The third arm of prediction 2 is worth reporting on its own, because it is the
+only case in this project where a skill visibly traded one property for another.
+The seed skill cut skew from $+0.306$ to $+0.171$ and cut informedness from
+0.389 to 0.190 at the same time: a smaller lean bought with less discrimination,
+and a net loss of 0.094 accuracy. Every interval crosses zero at 36 items, which
+is the other thing that run showed. It was sized against an expected
+thirty-point gap and cannot see a ten-point one.
+
+\subsection{The admission rule this bought}
+
+``Make the corpus harder'' is not a specification, and following it produced
+nine templates that were either easy or one-sided. Three criteria replace it,
+all computable from the control-arm records a calibration run already produces:
+
+\begin{itemize}
+  \item accuracy below the ceiling, so an arm has somewhere to move;
+  \item skew near zero, so the model is answering from the item;
+  \item informedness below one, so discrimination is left to gain.
+\end{itemize}
+
+\textbf{No template we have passes all three.} Seven published templates and six
+of the nine hard ones have signal and no room, on a large model. The one-sided
+ones have room and no signal. The three templates of \Cref{sec:signal} have
+neither on the small model.
+
+A fourth criterion is untested and we state it as a hypothesis rather than a
+rule: both options should be acts, so neither is the default a model reaches for
+under uncertainty. We tested the nearest version of it and it did not hold.
+Signed toward the act on the 1.7B, six act-or-wait templates average $+0.097$,
+carried almost entirely by one template at $+0.464$; dropping it leaves the rest
+at $+0.024$. Three two-act templates average absolute skew of 0.172, which is
+higher rather than lower. The action-bias explanation is refuted on our data and
+the underlying cause is open.
+
+\subsection{What would actually unblock this}
+
+We record the options rather than pretend we have chosen. A corpus of more than
+two options per item removes the specific confound this section is about, at the
+cost of a harder scoring path and a weaker pairing. A multi-step task, where the
+model must carry a result forward, changes what is being measured rather than
+how hard it is. And a genuinely hard rule-selection template may exist and we
+may simply have failed to write one, which the nine failures make less likely
+without ruling out.
+
+What we will not do is tune a template until a model finds it hard. That
+procedure produces a corpus fitted to one model's weaknesses, and the arena rule
+that scopes this study exists to stop exactly that reading.

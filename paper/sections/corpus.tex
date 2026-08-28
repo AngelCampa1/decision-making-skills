@@ -1,0 +1,67 @@
+\section{The Corpus}
+\label{sec:corpus}
+
+% SOURCE OF TRUTH: ../docs/PROTOCOL.md sec. 6 and ../docs/EVAL_SET_DATASHEET.md.
+
+\subsection{Generation}
+
+Items are minted from parameterised YAML templates with \emph{computed} ground
+truth, in the style of GSM-Symbolic~\citep{gsmsymbolic2024}. Each template
+declares variables, a set of short factual statements, a question, a fixed
+option menu, and a solution expression evaluated against the sampled variables.
+The expression is restricted to a whitelisted abstract syntax tree: no attribute
+access, no subscripts, no lambdas.
+
+The argument for this over authored items is auditability. Checking
+\NUM{\studyTemplates} template rules is tractable; checking
+\NUM{\totalItems} authored answers is not. It also removes the contamination
+question, because items are generated fresh rather than drawn from anything a
+model could have been trained on. The price is that we own the item biases
+instead of inheriting them, which \Cref{sec:signal} is partly about.
+
+Distractors are type-compatible with the decision rule rather than off-topic. An
+earlier build used off-topic distractors, the control arm scored at ceiling, and
+the diagnosis is in the repository's notebook. A distractor qualifies only if
+the computed solution is provably invariant to its removal. Each item is drawn
+from a stratum crossing distractor count with distractor position.
+
+\subsection{Splitting, and what it is a split of}
+
+The split is by \emph{template}, not by seed. Template membership is decided by
+\texttt{sha256("evolution-study-v1:"\,+\,template\_id)}, so it is reproducible
+and was fixed before either engine ran. Seven templates were visible to both
+searches; three were held out entirely.
+
+The alternative, holding out fresh random seeds of the same templates, was the
+original plan and was abandoned after a probe showed it would score
+memorisation as generalisation: an engine that transcribes a template's decision
+rule into the skill body answers every future seed of that template correctly,
+and a seed-varied holdout records that as generalisation. Both engines went on
+to do exactly that (\Cref{sec:whatengines}), so the probe was load-bearing
+rather than cautious.
+
+\subsection{The holdout, minted after the winners were frozen}
+
+Both engines' winners were frozen by content hash first. The test items were
+minted afterwards, from seeds at or above 10{,}000, which the harness's
+\texttt{assert\_evolvable} refuses to hand to a search. The unseen set is
+\NUM{\unseenItems} items over three held-out templates at four holdout seeds;
+the seen set is \NUM{\seenItems} items over the seven trained templates at two
+holdout seeds. Neither set was ever shown to either engine at any seed.
+
+Corpus identity is recorded as a fingerprint rather than a label, because ground
+truth here is computed rather than authored and there is no label set to
+version. Both fingerprints are in the run manifest.
+
+\subsection{The confound the control arm found in the design}
+
+The two item sets differ in more than being held out. The placebo helps on the
+seen set and does nothing on the unseen set, and the placebo has no training
+history at all, so whatever separates the sets is not only exposure. The
+templates differ in difficulty, and the split that produced them was a hash
+rather than a matching.
+
+We report both sets separately throughout and never pool them, and we do not
+read the seen-minus-unseen difference as a generalisation gap. The control arm
+is what surfaced this, from inside the design, which is the argument for having
+one.

@@ -1,66 +1,124 @@
 \section{Method}
 \label{sec:method}
 
-% SOURCE OF TRUTH: ../docs/PROTOCOL.md (versioned; v1 at time of writing).
-% This section is the paper-facing rendering of it. If the protocol is revised
-% mid-project, the paper must state which version each run was conducted under.
+% SOURCE OF TRUTH: ../docs/PROTOCOL.md. That document is at Version 2 as this is
+% written; the run reported here was conducted under Version 1, and the two
+% criteria Version 2 added are the subject of Section 7. Nothing else changed.
+
+The run reported here was conducted under Version 1 of the standing protocol.
+Version 2 added two corpus-admission criteria on 2026-08-28, after the run, and
+\Cref{sec:ceiling} is the account of why. No rule under which this study ran was
+amended retrospectively.
 
 \subsection{Design}
-% Four arms, same items, paired by item:
-%   off      task framing + response-format contract
-%   on       control + skill body
-%   placebo  control + token- and structure-matched contentless filler
-%   cot      control + "Think step by step"
-% Plus a fifth in-situ arm (--append-system-prompt) for ecological validity.
-%
-% THREE THINGS TO STATE EXPLICITLY, because their absence is what makes most
-% skill evaluations uninterpretable:
-%   (a) the response-format contract is in EVERY arm -- otherwise the experiment
-%       measures instruction-following, not decision quality;
-%   (b) the placebo is matched on tokens and structure, and no SHIP verdict is
-%       issued without it;
-%   (c) option menus are held constant across arms, because removing them moved
-%       trajectory accuracy 14-40pp in AgentAtlas -- larger than any effect we
-%       expect to measure.
 
-\subsection{Arenas}
-% dev (local/mock) -> screen (cheap hosted) -> confirm (target model, private
-% holdout, hash-locked). Only confirm emits a verdict. The separation is
-% enforced in code, not by discipline, and the reason is Prompting Inversion:
-% scaffolding tuned against a weak model can become a handicap on a strong one.
+Five arms over the same items, paired by item. Only the system prompt differs.
 
-\subsection{Pre-registration}
-% preregistration/<skill>-v<n>.yaml: hypothesis, primary metric, N, MDE, alpha,
-% guards, stopping rule, skill_sha256, analysis_script_sha256. A confirmation
-% run refuses to start unless the file is committed, is a git ancestor of HEAD,
-% predates every result, and both hashes match.
-%
-% Emphasise the analysis-script lock. A pre-registered metric means nothing if
-% the code computing it can be rewritten after seeing the data, and that is the
-% gap most "pre-registered" ML work leaves open.
-%
-% Fixed N, no interim analysis. The screen/confirm split buys cost control
-% without alpha spending because the stages use disjoint items.
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+arm & system prompt \\
+\midrule
+\texttt{off} & task framing and response-format contract only \\
+\texttt{on} & control plus the hand-written seed skill \\
+\texttt{placebo} & control plus token- and structure-matched filler \\
+\texttt{gepa} & control plus GEPA's frozen winner \\
+\texttt{skillopt} & control plus SkillOpt's frozen winner \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three invariants make this a comparison rather than a demonstration, and their
+absence is what makes most skill evaluations uninterpretable.
+
+\begin{enumerate}
+  \item \textbf{The response-format contract is in every arm.} A skill that
+    also teaches the model how to format an answer, tested against a control
+    that was never told, measures instruction-following.
+  \item \textbf{The placebo is matched on tokens and on structure.} It is the
+    control every comparison is made against. \texttt{off} is reported
+    alongside, outside the family, because it answers a different question:
+    whether any document helps at all.
+  \item \textbf{The option menu is held constant across arms.} Removing option
+    menus moved trajectory accuracy by 14 to 40 points in
+    AgentAtlas~\citep{agentatlas2026}, which is larger than any effect we
+    expected to measure.
+\end{enumerate}
+
+All five arms are built by one function, \texttt{solvers.arms.build\_arm}, and
+told apart in the records by the SHA-256 of the body each carries. An arm that
+silently received the wrong body would be a different content hash in the
+record.
+
+\subsection{Arenas, and why this study emits no verdict}
+\label{sec:arenas}
+
+The harness registers every model against one of three tiers. \texttt{dev} is
+for development and emits no verdict. \texttt{screen} is for cheap hosted models
+and may. \texttt{confirm} is the target model on a private holdout under a
+hash-locked pre-registration.
+
+The separation is enforced in code rather than by discipline, and it cuts
+against us here. Our target, \NUM{\studyModel}, is registered \texttt{dev}. This
+study therefore produces a published, controlled, reproducible result that is
+formally scoped to one small model and moves nothing on the project's scorecard.
+We report it that way throughout. \Cref{sec:ceiling} explains why a
+\texttt{screen}-tier replication does not exist.
+
+\subsection{Pre-registration, verified rather than asserted}
+
+The prediction for this study was committed to the repository's append-only
+notebook before the first call. What makes that more than a claim is a gate: a
+published run declares the notebook entry carrying its prediction, and the
+provenance check refuses the run unless that entry's first commit is a git
+ancestor of the commit the run was made at. Ancestry is not editable after the
+fact without destroying the timestamps the method rests on, and the repository
+refuses commits under any address but one.
+
+The registered family was fixed before any data existed: three comparisons,
+\texttt{on}, \texttt{gepa} and \texttt{skillopt}, each against \texttt{placebo},
+one-sided in the direction of the arm helping. \texttt{off} sits outside the
+family by registration rather than by convenience.
+
+One amendment was appended mid-run, after 143 of \NUM{\studyReadings} calls and
+before any comparison was read: the corpus contains no memorisable constant, so
+the mechanism one prediction rested on could not occur. The amendment is dated
+and in the record, and the prediction it weakened is still there saying so.
 
 \subsection{Statistics}
-% McNemar exact for paired binary; paired permutation for continuous;
-% cluster bootstrap over TEMPLATES for intervals. Not the CLT -- restricted
-% below a few hundred effectively independent datapoints, and a design effect of
-% 1 + (m-1)rho ~ 2.0 at m=6, rho=0.2 puts us squarely in that range.
-%
-% Guards are one-sided non-inferiority tests and are deliberately NOT corrected:
-% correcting a conservative-direction test would make it easier for a harmful
-% skill to pass. State this so it is not mistaken for an oversight.
-%
-% BH at q=0.10 across the pre-registered primaries. Report raw p and adjusted q.
-%
-% Calibration: Murphy decomposition with a hard resolution floor, and smECE
-% rather than binned ECE.
 
-\subsection{Harness disclosure}
-% Full ETCSOVG record in Appendix~\ref{sec:appendix-harness}. Two points belong
-% in the body because they are results-relevant rather than administrative:
-% arms are interleaved per item so quota drift cannot align with an arm, and
-% CLAUDE.md isolation is proven by a canary test rather than assumed.
+Every comparison is McNemar's exact test on the discordant pairs, item-matched,
+one-sided, with Holm applied across the registered family of three. The two item
+sets are analysed separately and never pooled.
 
-\TODO{Draft alongside the first confirmation run, not after it.}
+Intervals come from a cluster bootstrap that resamples \emph{templates}, not
+items. Items minted from one template are correlated, and treating them as
+independent understates variance by the design effect. Ten templates is few
+clusters and the intervals are correspondingly wide; that is the width this
+design supports.
+
+We report the discordant split beside every $p$-value. Two arms can land on
+identical accuracy while disagreeing on a third of the items, and an aggregate
+alone cannot tell agreement from cancellation.
+
+\subsection{Controls run before the results were read}
+
+\paragraph{A/A.} The placebo was scored a second time over all
+\NUM{\totalItems} items, into a separate checkpoint so that resume could not
+skip the pass and report perfect agreement by construction.
+
+\paragraph{Falsifier.} The \texttt{off} arm returns a non-zero score, so some
+possible response scored above zero in every arm and the scorer reads the same
+object in each. This project has shipped four estimators that could not return a
+non-zero value, each producing a clean run and a plausible number, which is why
+the check is standing rather than occasional.
+
+\paragraph{Residency.} Model residency is pinned at 60 minutes on every request.
+A probe the day before the study found two items answering deterministically to
+whether the model had just been loaded, which would have put a venue artifact
+inside the A/A. The pin is a property of the provider rather than of the run
+manifest, which \Cref{sec:appendix-harness} states as the gap it is.
+
+\paragraph{Arm ordering.} Arms ran in blocks rather than interleaved by item.
+That is a design defect, not a choice, and \Cref{sec:limitations} reports what
+bounds it.
