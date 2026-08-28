@@ -395,6 +395,18 @@ the normal approximation is not reliable.
 - **Coefficients refuse to return a number when one is undefined.**
   `DegenerateAgreementError` exists so an agreement statistic cannot silently
   come back as zero or NaN and be read as a finding.
+- **Accuracy on a two-option key is decomposed before it is believed**
+  (`signal.py`). Accuracy adds discrimination to response bias and reports only
+  the sum, so a model answering one option nine times in ten reads as 0.63 and
+  looks like difficulty. Informedness is zero for any constant-answer policy at
+  any base rate and does not depend on which option is called positive; skew
+  names the lean directly. **This has run**, on 2026-08-28, over the five-arm
+  study's published records and at no call cost. It left the study's conclusion
+  standing and found three of ten templates measuring nothing, which took the
+  run's effective item count from 728 to 504. The same module carries
+  `DegenerateSignalError` for the same reason the paragraph above gives: a key
+  holding one answer class has no informedness, and a refusal keeps that out of
+  a mean where a zero would not.
 
 The statistics package sits at 100% line and branch coverage, and roughly fifty
 property-based tests assert the things that matter: the Murphy identity to
@@ -404,7 +416,14 @@ when every cluster is a singleton.
 
 **Benjamini–Hochberg is implemented, exported, property-tested, and nothing
 calls it.** A reproducibility checklist box claiming multiplicity was
-controlled had been ticked; it was un-ticked when this was found. The wiring
+controlled had been ticked; it was un-ticked when this was found.
+
+*Amended 2026-08-28.* Its sibling now has a caller. `evolution/study.py` applies
+Holm across the registered family of three arm comparisons, and the five-arm
+study of 2026-08-27 is the first published run here to correct for multiplicity
+at all: SkillOpt's seen-set p of 0.034 became an adjusted 0.102 and stopped
+rejecting. Benjamini–Hochberg itself is still uncalled, so the sentence above
+stands as written about the function it names. The wiring
 gate in §7 missed it because the *module* is import-reachable, and importable
 is not used. It is at least the third tested function with no caller found
 here; the ledger disagrees with itself on whether it is the third or the
@@ -417,7 +436,7 @@ the larger number.
 
 The organising claim of this repository is that **every confident wrong number
 it has produced was caught by somebody checking, never by somebody being
-careful.** So the checks are mechanical. `de check` runs twenty-two steps at the
+careful.** So the checks are mechanical. `de check` runs twenty-three steps at the
 time of writing, and the count moves as gates are added; the ones that are about
 method rather than lint:
 
@@ -513,6 +532,15 @@ Nothing here measures whether a decision skill improves a decision. Every
 number on record measures something upstream: whether a skill **fires** when it
 should, which decides whether it is worth having installed at all. The section
 is short, and keeping that answer legible is the job.
+
+**Amended 2026-08-27. One run now measures the downstream question.** The
+five-arm evolution study ran the shipped skill as its `on` arm over 728 items
+against an empty prompt and a token- and structure-matched placebo, with an A/A
+control that came back identical on all 728. It scored below the placebo on both
+item sets, and neither difference is significant. It carries no verdict, because
+its target model is `qwen3:1.7b` and `arenas.py` gives a `dev` run none, so
+[`../SCORECARD.md`](../SCORECARD.md) is unmoved. Everything that follows in this
+section is about the upstream question and reads as it did before.
 
 **And as of 2026-08-19, none of it measures the skill that ships.** Two
 procedures were added that day, which rewrote the `description` field the

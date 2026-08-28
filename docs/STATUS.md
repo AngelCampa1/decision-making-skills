@@ -935,3 +935,105 @@ and are unmeasured rather than assumed.
 The conclusion is unchanged, since 0.933 with no skill leaves too little room
 for a five-arm study. The word *every* was the defect.
 [Correction in full](../notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md).
+
+---
+
+## Appended 2026-08-28: what accuracy was hiding, and a ledger short by six thousand calls
+
+Two days of work after the five-arm study, no part of which had reached this
+file. One finding is about the published study, one is about the corpus under
+it, and one is about this ledger.
+
+**The one-line version at the top of this file is superseded in one clause.** It
+says the results on record are "none of them yet an end-to-end skill
+evaluation". The five-arm study is one: the shipped skill ran as its `on` arm
+against an empty prompt and a matched placebo over 728 items, and scored below
+the placebo on both sets. That clause is corrected here rather than in place,
+which is the standing rule for this file, and the summary sentence is left as it
+was written.
+
+### The ledger stopped counting on 2026-08-25
+
+The running total above was last moved by `council`'s 217 calls. Everything
+since is missing from it, including the largest single run this repository has
+ever made. Counted by line and by file so the arithmetic can be checked without
+trusting this paragraph:
+
+| run | calls | from |
+|---|---|---|
+| five-arm evolution study | 4,368 | `2026-08-27-53b4965-five-arm/records-*.jsonl`, six files of 728 |
+| NVIDIA Build ceiling screen | 210 | `2026-08-27-53b4965-five-arm/nvbuild-ceiling-screen.json`, 7 models × 30 |
+| 2026-08-27 probes | 1,534 | residency 217, repeat reliability 189, arm calibration 252, first ceiling screen 756, first model screen 120 |
+| 2026-08-28 probes | 498 | per-template 30B 120, six selection templates 117, error cross-tabulation 35, rival-rule and reversal 48, one-sided screen 74, three arms on `hrd-002` 104 |
+| **new total** | **~19,940** | 13,330 + 4,368 + 210 + 1,534 + 498 |
+
+The first two rows are countable from the repository. The last two are counted
+from the screening scripts' own JSON output, which lives outside the tree
+because those calls were dispatched directly rather than through the
+checkpointed runner, the same arrangement Track H's probes use.
+
+**Two searches are missing from that table and cannot be added.** GEPA and
+SkillOpt each ran an optimisation search before the study, into a results
+directory [`.gitignore`](../.gitignore) excludes. Their records were therefore
+never committed, and the directories are gone from this machine. The study's own
+README names both searches and their winners' hashes, so what they produced is
+on the record; how many calls they took is unrecoverable at any price. Excluding
+a results directory was the right call for checkpoint bulk and the wrong call
+for the ledger, and this is the first run family here whose call count is
+permanently unknown.
+
+### Accuracy on a two-option key was measuring two things
+
+Recomputed from `records-*.jsonl` with no new calls. Accuracy adds discrimination
+to response bias, and informedness separates them: it is zero for any
+constant-answer policy at any base rate.
+
+| arm | parse rate | accuracy | mean J | ΔJ vs `off` | 95% cluster CI |
+|---|---|---|---|---|---|
+| `off` | 0.946 | 0.702 | 0.514 | — | — |
+| `on` | 0.951 | 0.712 | 0.495 | −0.019 | [−0.095, +0.065] |
+| `placebo` | 0.934 | 0.731 | 0.545 | +0.031 | [−0.019, +0.086] |
+| `gepa` | 0.918 | 0.706 | 0.522 | +0.007 | [−0.144, +0.135] |
+| `skillopt` | 0.962 | 0.761 | 0.594 | +0.080 | [−0.069, +0.260] |
+
+**The study's conclusion survives the correction and gets a little stronger.**
+Every arm's discrimination advantage over an empty prompt has an interval
+containing zero, exactly as every accuracy comparison did after Holm. SkillOpt
+keeps first place on both measures, so its lead is discrimination and still
+indistinguishable from nothing. Mean skew runs 0.125 to 0.193 in **every** arm
+including the empty prompt, so the bias is a property of the model on this
+corpus and no arm introduced it.
+[Entry](../notebook/2026-08-28-three-of-ten-templates-carry-no-signal-and-the-arms-advantage-is-not-discrimination.md).
+
+### Three of ten templates carry no signal, so 728 items are worth 504
+
+`rel-004-inventory-reorder`, `rel-006-refund-request` and
+`rel-009-flight-rebook` sit below J = 0.3 on `qwen3:1.7b` in all five arms, and
+two of the three are indistinguishable from zero. They hold 224 of the 728
+items, so the run carries the discriminative signal of the other **504** against
+a power calculation that assumed 728. A failure to reject survives that, since
+less power only makes rejection harder. `rel-009-flight-rebook` is the template
+an earlier entry called the hardest in the corpus. It is unanswered rather than
+hard.
+
+### The harder corpus is blocked, and the block is informative
+
+Nine templates were authored to open room for a screen-tier run that would carry
+a verdict. Every one either sits at the ceiling or holds a model off it by
+answering one-sidedly. `hrd-002-shipping-escalation`, the one template keeping a
+30B off the ceiling at 0.722, does it with sensitivity 1.000 against specificity
+between 0.167 and 0.250: it answers `expedite` on about nine items in ten in a
+set that wants it on half. Measured three times at 0.629, 0.583 and 0.625.
+
+**Three registered predictions were made about it and all three were
+falsified.** Six more selection templates would land the 30B between 0.60 and
+0.75 as a set; they landed at 0.949. An arm gaining accuracy on `hrd-002` would
+gain it by moving skew; no arm gained, so the premise never occurred. Reversing
+which option is named first would move accuracy by more than 0.10; it moved
+0.042. All three stay in `notebook/` saying so.
+
+What the failure bought is an admission rule, now in
+[`PROTOCOL.md`](PROTOCOL.md) v2: accuracy below the ceiling, skew near zero,
+informedness below one. No template here passes all three. Seven published
+templates and six hard ones have signal and no room; the one-sided ones have
+room and no signal.

@@ -2,10 +2,16 @@
 
 **Audience:** the evaluating reader.
 
-Version 1. This is the standing methodology for every skill evaluated in this
+Version 2. This is the standing methodology for every skill evaluated in this
 repository. Changes get a new version number and a dated entry in
 [`../notebook/`](../notebook/); they never silently amend a protocol a completed
 run was conducted under.
+
+**Version 2, 2026-08-28.** Two admission criteria were added to §6 after a
+template passed every Version 1 gate while measuring a preference. Nothing else
+changed. Every run published before this date was conducted under Version 1,
+including the five-arm evolution study of 2026-08-27, and the criteria below do
+not reach back to it.
 
 ## 1. The experiment
 
@@ -263,6 +269,25 @@ control arm only so they cannot bias the treatment-minus-control difference:
    missed *without* distractors are ambiguous, not hard.
 3. Difficulty calibration. Control accuracy on distractor-present items in
    [0.35, 0.75]. Above that there is no headroom and the required N explodes.
+4. Response bias. Skew near zero on the control arm, where skew is the rate the
+   model answers an option minus the rate the items called for it.
+5. Discrimination. Informedness below one on the control arm, so there is
+   something left for an arm to gain.
+
+**Criteria 4 and 5 are new in Version 2, and criterion 3 is why.** A model
+answering one option nine times in ten scores about 0.63 on a balanced
+two-option key, which lands inside [0.35, 0.75] and reads as difficulty.
+`hrd-002-shipping-escalation` did exactly that: 0.722 on a 30B, reached with
+sensitivity 1.000 against specificity between 0.167 and 0.250. Criterion 3
+cannot tell that apart from a template the model is genuinely finding hard, and
+an arm that merely nudged the model toward the other option would have gained
+about thirty points without deciding any better.
+
+Both are computed by `stats/signal.py` over the control arm's own records, so
+they cost no calls beyond the calibration run criterion 3 already needs. No gate
+in `de check` reads them today; a corpus admission gate that enforced them
+**will refuse** a template failing either, and until one exists the criteria are
+applied by hand and the reading is recorded with the corpus.
 
 Templates rather than items are the clustering unit, so the design favours many
 templates with few variants each.

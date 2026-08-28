@@ -216,15 +216,23 @@ installed at all, and it is the question this instrument was built for. The one
 venue built to ask the other question closed instead: Family A, the scalar
 triplet behind `ledger`, `timing` and `fit`, hit an unaided ceiling of J = 1.000
 over 99 blind readings, so there was no headroom left for a procedure to add.
-Nothing here has yet measured whether a decision procedure improves a decision.
 
-No published run has used the placebo or cot arm. Every trigger call on record
-compares variants of the skill's *description*. The four-arm comparison is what
-a confirmation run would do, and no confirmation run has happened.
+**One run has since asked the downstream question.** The five-arm study of
+2026-08-27 put the shipped skill against an empty prompt and a token- and
+structure-matched placebo over 728 items. It scored below the placebo on both
+item sets, and neither difference is significant. That run carries no verdict:
+its target is a 1.7B local model, `arenas.py` registers that tier as `dev`, and
+a `dev` run moves nothing on [`SCORECARD.md`](SCORECARD.md). So the answer
+exists, and it is scoped to one small model.
 
-One of the nineteen published runs is void. It was refused on parse rate before
-any prediction was scored, which is the first registered void condition here to
-fire on its own.
+Every trigger call on record compares variants of the skill's *description*, and
+none of them used the placebo or `cot` arm. The `confirm` arena has still never
+run, and it is the arena a verdict comes from.
+
+Two of the twenty published runs measure something other than a skill. One is
+void, refused on parse rate before any prediction was scored, which is the first
+registered void condition here to fire on its own. The other is the five-arm
+study, which is about the tooling that writes skills.
 
 The description arms measure the shipped description in a proxy venue. N10 ran
 the shipped six-procedure wording against five variants on answer key v6, all of
@@ -249,19 +257,25 @@ hash. `de confirm` reaches the module from the console script, so
 `[tool.decision-evals.unwired]` is now empty. What has never run is the
 `confirm` arena itself, which still refuses for want of a holdout.
 
-**2026-08-27, open on a branch, not merged.** `origin/evolution-study` at
-`5daf654` ran two automated prompt optimizers, GEPA and SkillOpt, on a matched
-budget, and both winning skills had written the answer key into their own
-bodies: one transcribed a training template's rule, the other appended worked
-examples whose numbers trace back to the training pool. The same branch found
-that the runs' own accidental repeated items disagreed 7 times out of 49, a
-14.3% per-item flip rate (Wilson 95% [7.1%, 26.7%]), which puts the noise on a
-21-item score at about 1.2 items, inside which both winners' three-item gains
-sit. It also found that the holdout planned for the next phase, varying only
-the random seed, would have scored memorisation as generalisation, and that
-the split needed is one that holds out whole templates instead. None of this
-is settled and none of it is merged; it is where that track stands as of this
-commit.
+**Landed 2026-08-27: neither skill-evolution engine beat a placebo.** Two
+automated prompt optimizers, GEPA and SkillOpt, each evolved a skill on a
+matched budget. Both winners had written the answer key into their own bodies:
+one transcribed a training template's rule, the other appended worked examples
+whose numbers trace back to the training pool. Tested against a placebo on a
+holdout minted after both were frozen, no arm rejects on either item set after
+Holm. GEPA's winner scores 0.628 on unseen scenarios against 0.685 for **no
+skill at all**, the only arm in the study worse than an empty prompt. The A/A
+control returned 728 of 728 items identical, so every difference between arms is
+one the prompts caused.
+[The run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md).
+
+Two findings from the same line of work cut into the instrument rather than the
+engines. Accuracy on a two-option key adds discrimination to response bias, and
+separating them found **three of ten templates measuring nothing** on the target
+model, which takes a 728-item run down to 504 items of signal. And no
+verdict-bearing replication can be built on this corpus today, because every
+hosted model measured so far solves it with an empty prompt; nine harder
+templates were authored and every one either ceilings or answers one-sidedly.
 
 [`docs/STATUS.md`](docs/STATUS.md) is the ledger: every run, what it showed,
 which measurements turned out to be broken, and which tracks are untouched.

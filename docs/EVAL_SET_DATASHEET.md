@@ -174,15 +174,39 @@ number computed before the change incomparable with every number after it.
 
 ## Known problems
 
-- The first build of this corpus was far too easy, and the rebuild is
-  unmeasured. The original distractors were off-topic rather than
-  type-compatible with the decision rule; the control arm scored at ceiling and
-  the diagnosis is in
+- The first build of this corpus was far too easy. The original distractors were
+  off-topic rather than type-compatible with the decision rule; the control arm
+  scored at ceiling and the diagnosis is in
   [`notebook/2026-08-10-why-the-distractors-do-nothing.md`](../notebook/2026-08-10-why-the-distractors-do-nothing.md).
-  Every distractor was rebuilt to collide. Whether that lands inside
-  [0.35, 0.75] has not yet been measured, and the recorded prediction is that
-  it will not: a single-turn item of six to nine short facts is the wrong
-  venue regardless of distractor quality.
+  Every distractor was rebuilt to collide.
+
+  **Measured 2026-08-27, and the answer depends entirely on the model.** The
+  five-arm study's no-skill arm reads 0.702 on `qwen3:1.7b`, inside the
+  [0.35, 0.75] band. On hosted models the same corpus is solved: eight of eleven
+  reachable NVIDIA Build models answer it with an empty prompt, the weakest at
+  0.933. So the corpus calibrates for one small model and ceilings for
+  everything larger, and the recorded prediction that a single-turn item of six
+  to nine short facts is the wrong venue reads as half right.
+- **Three of the ten templates carry no discriminative signal**, measured
+  2026-08-28 over the five-arm study's own records with no new calls.
+  Informedness on `qwen3:1.7b`, per template, in every arm:
+
+  | template | `off` | `on` | `placebo` | `gepa` | `skillopt` |
+  |---|---|---|---|---|---|
+  | `rel-004-inventory-reorder` | +0.071 | +0.168 | +0.089 | +0.071 | +0.005 |
+  | `rel-006-refund-request` | +0.271 | +0.192 | +0.198 | +0.212 | +0.125 |
+  | `rel-009-flight-rebook` | +0.028 | −0.072 | +0.042 | +0.044 | −0.024 |
+
+  All three sit below 0.3 in all five arms and two are indistinguishable from
+  zero. On those items the model is not deciding, and what reaches a headline
+  accuracy is the base rate plus whichever way the model leans. They hold 224 of
+  728 items, so a full run carries the discriminative signal of **504**.
+  `rel-009-flight-rebook` is the template an earlier entry called the hardest in
+  the corpus; it is unanswered. `rel-006-refund-request` is low-signal on the
+  small model and at ceiling on a 30B, so it is measuring nothing at either end.
+  Any future template is admitted against
+  [`PROTOCOL.md`](PROTOCOL.md) v2 §6, which added skew and informedness
+  criteria for this reason.
 - The semantic half of the distractor audit has not run, and it now matters
   much more than it did. Colliding distractors are built to sit near the line
   between irrelevant and ambiguous, which is exactly the class the 2026 GSM-NoOp

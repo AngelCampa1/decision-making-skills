@@ -9,23 +9,34 @@ inconvenient.
 ## The harness
 
 The Claude Code CLI exposes no sampling parameters, so there is no temperature
-control, and neither does the Antigravity CLI. The OpenAI-compatible backend
-does, and defaults to `temperature=0`; it is `dev`-arena only and has produced
-nothing published, so no number on record was sampled under a temperature this
-harness chose. We run ≥2 independent repeats per cell and report run-to-run
-variance.
+control, and neither does the Antigravity CLI. Every trigger and Track H number
+on record came off one of those two, so it was sampled under a temperature this
+harness never chose. We run ≥2 independent repeats per cell and report
+run-to-run variance.
 That is less of a loss than it sounds: temperature 0 is not deterministic on
 hosted inference anyway, and a stated variance is more honest than an assumed
 constant.
 
-The budget is rate limits, not dollars. Every published call runs on a Claude Max
-subscription; there is no API key. The Antigravity backend added on 2026-08-21 is
-also subscription OAuth with no key, and its quota is **unknown** — no published
-figure was found and none is estimated here, so the first arm run on it will
-discover its own ceiling. The binding constraint is a rolling quota, so runs are
-checkpointed and resumable across days, and a confirmation run may span several
-sessions. Wall-clock timing is not comparable across runs, so we
-do not report it as a metric.
+*Amended 2026-08-28.* The paragraph above said the OpenAI-compatible backend was
+`dev`-arena only and had produced nothing published. Both halves expired on
+2026-08-26, when the venue amendment registered `nvbuild/` prefixes at `screen`
+tier and a free-tier key entered the environment. The five-arm evolution study
+published on 2026-08-27 ran 4,368 calls at `temperature=0` through Ollama, so
+the sampling temperature behind those numbers is one this harness set. What
+stays true is that the value is a floor a hosted service is free to ignore, and
+that repeats and reported variance are what the design leans on.
+
+The budget is rate limits and wall-clock time. Three venues carry model calls:
+the Claude Code CLI on a subscription, a local OpenAI-compatible server, and a
+free-tier API endpoint whose key lives in the environment and never in the tree.
+The Antigravity backend added on 2026-08-21 is subscription OAuth with no key,
+and its quota is **unknown**: no published figure was found and none is
+estimated here, so the first arm run on it will discover its own ceiling. A
+free tier is guarded by call count and wall clock instead of by dollars, because
+a dollar cap that reads zero on every call cannot fire. Runs are checkpointed
+and resumable across days, so a confirmation run may span several sessions.
+Wall-clock timing is not comparable across runs, so we do not report it as a
+metric.
 
 Every dollar figure in this repository is notional. `total_cost_usd` is what
 the same tokens would have cost on the API. We report it as a unit of account
@@ -74,6 +85,29 @@ The cluster bootstrap assumes templates are exchangeable. If template difficulty
 tracks who wrote a template, or the order the templates were written in, the
 interval is optimistic. We generate templates in mixed batches to reduce that,
 which does not eliminate it.
+
+Accuracy on a two-option key measures two things at once, and the design reports
+only their sum. A model that answers one option nine times in ten scores near
+0.63 on a set that wants that option half the time, and none of that 0.63 is
+discrimination. Read as difficulty it is a template that looks hard; read as
+signal detection it is a template that is barely being read. Every accuracy in
+this repository computed over a two-option key carries that ambiguity, and no
+published comparison was designed to separate the halves.
+
+Since 2026-08-28 the separation is available and has been run once, over records
+already on disk. Informedness is zero for any constant-answer policy at any base
+rate; skew names the lean directly. Applied to the five-arm study it left the
+headline standing: every arm's discrimination advantage over an empty prompt has
+an interval containing zero, exactly as every accuracy comparison did after
+Holm. It also found mean skew between 0.125 and 0.193 in **every** arm including
+the empty prompt, so response bias here is a property of the model rather than
+something an arm introduced.
+
+The measure has its own limits. It is computed over parsed rows, so an arm that
+parses less is measured on the part it managed, and `gepa` at 0.918 is the
+widest interval in that table partly for this reason. Ten templates is few
+clusters, so the intervals are wide. And a template whose key holds one answer
+class has no informedness at all, which is a refusal rather than a zero.
 
 ## The datasets
 
@@ -156,6 +190,37 @@ through an agent either way. Anyone who can run the generator with a guessed
 seed could reconstruct items. Regeneration between runs is what manages
 contamination, not secrecy, and that is the only reason the trade is
 affordable.
+
+Three of the ten reliability templates carry no discriminative signal, so the
+corpus is smaller than its item count. Measured on 2026-08-28 over the five-arm
+study's own records, `rel-004-inventory-reorder`, `rel-006-refund-request` and
+`rel-009-flight-rebook` sit below informedness 0.3 on `qwen3:1.7b` in all five
+arms, and two of the three are indistinguishable from zero. On those items the
+model is not deciding, and what reaches the headline is the base rate and
+whichever way the model leans. They hold 224 of 728 items, so a run of that size
+carries the discriminative signal of **504**. The power calculation behind the
+study assumed 728. A failure to reject survives that, since less power only
+makes rejection harder; a run designed off those numbers would not.
+`rel-009-flight-rebook` is the template an earlier entry called the hardest in
+the corpus.
+
+No verdict-bearing run can be built on this corpus as it stands. The arena rule
+gives a verdict only to `screen` and `confirm` tiers, and eight of the eleven
+reachable hosted models solve the corpus with an empty prompt, the weakest at
+0.933 against 0.702 for the study's local target. Nine harder templates were
+authored between 2026-08-27 and 2026-08-28 to open room. Every one of them
+either sits at the ceiling too, or holds a model off the ceiling by being
+one-sided: `hrd-002-shipping-escalation` reads 0.722 on a 30B and gets there
+with sensitivity 1.000 against specificity between 0.167 and 0.250, answering
+one option on about nine items in ten. Three registered predictions about how to
+fix it were falsified in two days, including that reversing which option is
+named first would move accuracy by more than 0.10, which moved it 0.042.
+
+What came out of that is an admission rule for any future template, stated in
+[`PROTOCOL.md`](PROTOCOL.md) v2: accuracy below the ceiling, skew near zero, and
+informedness below one. No template in this repository passes all three today.
+Seven published templates and six hard ones have signal and no room; the
+one-sided templates have room and no signal.
 
 ## The judges
 
