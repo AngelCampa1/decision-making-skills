@@ -66,8 +66,9 @@ contribution to a 0.70 headline is the base rate and the direction the model
 happens to lean, and `rel-009-flight-rebook` is the template an earlier entry
 called the hardest in the corpus. It is not hard. It is unanswered.
 
-A 728-item run therefore carries about the discriminative signal of 510, and the
-power calculation behind the study assumed 728. That does not change a result
+Templates here mint either 56 or 112 items, and the three low-signal ones carry
+224 between them, so a 728-item run carries the discriminative signal of the
+other **504**. The power calculation behind the study assumed 728. That does not change a result
 that failed to reject, since less power only makes rejection harder, but it
 would matter to any run designed off those numbers.
 
