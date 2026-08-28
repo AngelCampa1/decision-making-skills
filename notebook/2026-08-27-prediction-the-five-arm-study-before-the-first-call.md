@@ -162,3 +162,54 @@ templates into 70 is ten items each against Phase 2's seven.
 
 What would have measured it instead: a headroom sweep over pool size, which
 costs a search per point and answers a question this study is not asking.
+
+---
+
+## Amendment, mid-run: the corpus has no memorisable threshold
+
+Written while the study was running, after 143 of 4,368 calls. What had been
+read at that point was one partial count for the `off` arm and nothing else: no
+comparison, no second arm, no test. The predictions above stay exactly as
+written and will be scored as written.
+
+Reading the two frozen winners against the templates they were searched on
+turned up something the registration should have checked and did not.
+
+Both winners hard-code a threshold. GEPA's carries a rules table:
+
+> | Contract renewal | 61 % utilisation of *paid seats* | `Utilisation = ActiveSeats / PaidSeats` | If `Utilisation ≥ 0.61` → **renew** else **renegotiate** |
+
+SkillOpt's carries 63% for the same template, with the arithmetic
+`213/300 = 0.71` beside it. Two engines, two different constants, one rule.
+
+Neither constant is a property of the rule. In
+`datasets/templates/rel-008-contract-renew.yaml` the floor is
+`utilisation_floor: {int: [60, 95]}`, drawn fresh for every item, 36 values
+wide. Then the Background of every item states it outright:
+
+> Policy is to renegotiate whenever utilisation falls below
+> {utilisation_floor}% of paid seats.
+
+All ten templates are built this way. Every `decide.expr` in the corpus compares
+two quantities that are both drawn per item, and every threshold among them
+appears in the prompt. There is no constant anywhere in this corpus worth
+learning.
+
+**This breaks the mechanism prediction 4 rests on.** That prediction said
+memorised rules transfer across seeds, so the seen set should show a gain the
+unseen set does not. Memorised *constants* do not transfer across seeds here,
+because a fresh seed redraws the threshold. On this corpus, holding out
+templates and holding out seeds are the same test against a memorised constant.
+
+Prediction 4 therefore has no mechanism behind it that I can name, and it was
+registered with one. It stays, it will be scored, and if it misses, this is why.
+
+Prediction 3 gains what prediction 4 loses. An arm asserting
+`Utilisation ≥ 0.61` contradicts a fact its own prompt states, for 35 of the 36
+floors it could face. An edit like that can lose items the placebo wins, on both
+sets.
+
+What this does not change: the split, the arms, the denominators, the estimator,
+the bar, or any prediction. A corpus with nothing memorisable is a harder test
+of these engines. A search that writes a constant into the skill anyway is
+exactly the behaviour worth measuring.

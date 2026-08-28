@@ -870,3 +870,54 @@ empty rather than delete it.
 one into the shipped plugin. That is enforced, not aspirational, and it is the
 point of the repository: *"we have not shown this works"* and *"this works"* are
 different statements.
+
+---
+
+## Appended 2026-08-27: the skill-evolution study
+
+A new line of work, and the first result in this repository that is about the
+tooling around skills rather than about a skill.
+
+**Question.** Two open skill-evolution engines, GEPA and microsoft/SkillOpt,
+accept a candidate on a single uncontrolled score improvement. Does what they
+hand back survive a placebo control and a paired test on items neither engine
+saw?
+
+**Answer, on one small local model: no.**
+[`results/evolution-study/2026-08-27-98229a1-five-arm/`](../results/evolution-study/2026-08-27-98229a1-five-arm/)
+is 4,368 calls on `ollama/qwen3:1.7b`, five arms over a frozen holdout minted
+after both winners were frozen. No arm rejects against `placebo` on either set
+after Holm. SkillOpt's winner is the best showing at +0.041 on the seen set,
+raw p = 0.034, adjusted 0.102. GEPA's winner scores **0.628 on unseen scenarios
+against 0.685 for no skill at all**, the only arm in the study worse than an
+empty prompt.
+
+**The A/A returned 728 of 728 items identical**, p = 1.000, so the differences
+between arms are differences the prompts caused. That control only works because
+of a finding from the day before: two items answered deterministically to
+whether Ollama had just reloaded the model, which pinning `keep_alive: 60m`
+closed.
+[Entry](../notebook/2026-08-27-the-venue-is-deterministic-and-one-of-its-inputs-was-not-in-the-record.md).
+
+**Three limits, all measured rather than assumed, all in the write-up:**
+
+- `arenas.py` registers `ollama` as `dev`, so this **emits no verdict** and moves
+  nothing on [`SCORECARD.md`](../SCORECARD.md). Scoped to one 1.7B model.
+- A screen-tier run would carry a verdict and cannot be built on this corpus:
+  every NVIDIA Build model the key reaches solves it with an empty prompt.
+  [Entry](../notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md).
+- The design confounds "held out" with "different scenarios". `placebo` helps on
+  the seen set and does nothing on the unseen set, and `placebo` has no training
+  history, so the two sets differ for reasons that are not about being held out.
+  The control arm found this about the design from inside the design.
+
+**Two of six registered predictions missed**, and the prediction entry carries a
+mid-run amendment written after 143 calls and before any comparison was read,
+recording that the corpus has no memorisable constant in it and that this
+removes the mechanism prediction 4 rested on.
+[Write-up](../notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md).
+
+**What it does not say.** Nothing here shows these engines do not work. It shows
+that on this corpus, at this model size, what they hand back does not beat a
+document-shaped control, and that one of them hard-codes a constant the prompt
+already supplies. A harder corpus is the next move and it is a governed change.

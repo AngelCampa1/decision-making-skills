@@ -1,0 +1,108 @@
+{
+  "request": {
+    "target_model": "ollama/qwen3:1.7b",
+    "sets": [
+      {
+        "label": "unseen",
+        "templates": [
+          "rel-001-vendor-outage",
+          "rel-002-deploy-window",
+          "rel-009-flight-rebook"
+        ],
+        "seeds": [
+          10226,
+          10309,
+          10408,
+          10618
+        ]
+      },
+      {
+        "label": "seen",
+        "templates": [
+          "rel-003-oncall-escalate",
+          "rel-004-inventory-reorder",
+          "rel-005-security-patch",
+          "rel-006-refund-request",
+          "rel-007-capacity-scale",
+          "rel-008-contract-renew",
+          "rel-010-loan-review"
+        ],
+        "seeds": [
+          10662,
+          10794
+        ]
+      }
+    ],
+    "run_aa": true,
+    "num_ctx": 16384,
+    "max_tokens": 4096,
+    "max_calls": 5000,
+    "max_seconds": 86400.0,
+    "alpha": 0.05,
+    "slug": "five-arm"
+  },
+  "git_sha": "98229a14958d0a9ff5874960f4800181f34d6fc6",
+  "arms": [
+    {
+      "label": "off",
+      "kind": "off",
+      "candidate_sha": null
+    },
+    {
+      "label": "on",
+      "kind": "on",
+      "candidate_sha": "edc3ee707754deaf533f924528c8515af891784b61376578b71f7f813c8800de"
+    },
+    {
+      "label": "placebo",
+      "kind": "placebo",
+      "candidate_sha": "16ed9ebfceb94d0faa0839fce607ced7aeb7b3c2129027d33d59b47e922406bb"
+    },
+    {
+      "label": "gepa",
+      "kind": "candidate",
+      "candidate_sha": "54f990401739dc37d12fc02d3489e38716818f7f79506bfe5ac501a960f95e76"
+    },
+    {
+      "label": "skillopt",
+      "kind": "candidate",
+      "candidate_sha": "80d7187aca73ec269c4e0649f74af8d27b5c6961b0a1ae609b3af52f95d48a77"
+    }
+  ],
+  "sets": {
+    "unseen": {
+      "items": 336,
+      "templates": [
+        "rel-001-vendor-outage",
+        "rel-002-deploy-window",
+        "rel-009-flight-rebook"
+      ],
+      "seeds": {
+        "train": 0,
+        "validation": 0,
+        "holdout": 336,
+        "unassigned": 0
+      },
+      "fingerprint": "a9889750c762838f5a329d5193b0d59409737bb39f9086978f3184e256f9704f"
+    },
+    "seen": {
+      "items": 392,
+      "templates": [
+        "rel-003-oncall-escalate",
+        "rel-004-inventory-reorder",
+        "rel-005-security-patch",
+        "rel-006-refund-request",
+        "rel-007-capacity-scale",
+        "rel-008-contract-renew",
+        "rel-010-loan-review"
+      ],
+      "seeds": {
+        "train": 0,
+        "validation": 0,
+        "holdout": 392,
+        "unassigned": 0
+      },
+      "fingerprint": "bb95bfe63c1b29255386c935784787e38667307934b8ac1a0c3cf3c0d0bb4e7d"
+    }
+  }
+}

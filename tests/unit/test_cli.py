@@ -1063,3 +1063,72 @@ class TestDeployedCommand:
             cli, "check_deployed", lambda root: DeployState("unreachable", "no answer")
         )
         assert runner.invoke(app, ["deployed"]).exit_code == 2
+
+
+class TestTheStudyCommandsRefusals:
+    """`de study` spends thousands of calls, so every way it can be misconfigured
+    has to fail before the first one rather than after the last."""
+
+    def test_a_study_with_no_passphrase_is_refused(self) -> None:
+        """The split and the seeds both derive from it. An empty passphrase would
+        draw a test set that cannot be reproduced from anything written down."""
+        result = runner.invoke(
+            app, ["study", "--target", "mockllm/deterministic", "--passphrase", ""]
+        )
+        assert result.exit_code != 0
+        assert "passphrase" in result.output
+
+    def test_a_winner_without_a_path_is_refused(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """`--winner gepa` names an arm with no body. Accepting it would run the
+        control wearing another arm's label."""
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+        result = runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--winner",
+                "gepa",
+            ],
+        )
+        assert result.exit_code != 0
+        assert "label=path" in result.output
+
+    def test_a_study_outside_a_repository_is_refused(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """The run directory carries the commit, which is what lets a reader check
+        the prediction predates the data."""
+        monkeypatch.setattr(cli, "_git_output", lambda args: None)
+        result = runner.invoke(
+            app, ["study", "--target", "mockllm/deterministic", "--passphrase", "x"]
+        )
+        assert result.exit_code == 1
+        assert "no commit" in result.output
+
+
+class TestTheArmBodyReader:
+    def test_frontmatter_is_stripped(self, tmp_path: Path) -> None:
+        path = tmp_path / "skill.md"
+        path.write_text("---\nname: x\n---\n\n# Body\n\nWords.\n", encoding="utf-8")
+        assert cli._body(path) == "# Body\n\nWords.\n"
+
+    def test_a_body_with_no_frontmatter_is_returned_whole(self, tmp_path: Path) -> None:
+        path = tmp_path / "skill.md"
+        path.write_text("# Body\n\nWords.\n", encoding="utf-8")
+        assert cli._body(path) == "# Body\n\nWords.\n"
+
+    def test_an_opening_rule_that_never_closes_is_not_treated_as_frontmatter(
+        self, tmp_path: Path
+    ) -> None:
+        """A body opening on a horizontal rule is not a body with frontmatter, and
+        silently eating everything after it would hand an arm the wrong document."""
+        path = tmp_path / "skill.md"
+        path.write_text("---\n\nJust a rule, no frontmatter.\n", encoding="utf-8")
+        assert "Just a rule" in cli._body(path)
+
+    def test_a_missing_body_exits_rather_than_returning_empty(self, tmp_path: Path) -> None:
+        with pytest.raises(cli.typer.Exit) as caught:
+            cli._body(tmp_path / "absent.md")
+        assert caught.value.exit_code == 2
