@@ -273,7 +273,11 @@ def write_seed(path: Path, body: str) -> Path:
 
 
 def items_for(
-    seeds: Sequence[int], *, limit: int = 0, templates: Collection[str] | None = None
+    seeds: Sequence[int],
+    *,
+    limit: int = 0,
+    templates: Collection[str] | None = None,
+    root: Path | None = None,
 ) -> list[Item]:
     """Generate the corpus at each seed, in seed order.
 
@@ -311,12 +315,19 @@ def items_for(
     redraw the numbers and leave the rules standing. Balance is preserved --
     ``limit`` still spreads the draw across whichever templates remain.
 
+    ``root`` selects which corpus to generate from, defaulting to
+    ``datasets/templates/``. A second corpus lives beside it rather than inside
+    it because ``load_all`` reads a whole directory: dropping harder templates
+    into the published one would change every fingerprint, every golden file and
+    the corpus identity of runs already on disk. Two roots keep a finished study
+    reproducible while a new corpus is being built.
+
     Raises:
         EvolveError: An id was named that no template answers to. A split that
             silently holds out nothing is a split that reports generalisation
             it never tested.
     """
-    loaded = load_all()
+    loaded = load_all(root)
     if templates is not None:
         wanted = set(templates)
         known = {template.template_id for template in loaded}

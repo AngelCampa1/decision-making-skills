@@ -1,0 +1,66 @@
+template_id: hrd-001-warranty-claim
+question: "Should the warranty claim be honoured, or declined as out of term?"
+options: [honour_claim, decline_claim]
+
+# The rule is never stated as a conditional. Two dates and a term length are
+# given as facts and the reader constructs "in term" from them, which is the
+# one kind of difficulty measured to survive a capability jump on 2026-08-28.
+# `rel-003-oncall-escalate` says "triggers when more than X%" and a 30B model
+# scores 1.000 on it; `rel-006-refund-request` states its window as a fact and
+# the same model scores 0.667.
+variables:
+  brand: {choice: [Kestrel, Alder, Mistral, Fenn]}
+  term_months: {int: [12, 60]}
+  owned_months: {int: [1, 72]}
+  part: {choice: [compressor, mainboard, drive belt, pump seal]}
+  extended_months: {int: [12, 60]}
+  typical_life_months: {int: [1, 72]}
+  ticket_no: {int: [10000, 99999]}
+
+relevant_facts:
+  - id: r1
+    text: "{brand} covers this model for {term_months} months from the date of purchase."
+  - id: r2
+    text: "The unit on ticket {ticket_no} was purchased {owned_months} months ago."
+  # The prior that argues the other way. A failed part under a goodwill policy
+  # reads as a reason to say yes, and it decides nothing.
+  - id: r3
+    text: "The {part} has failed in a way {brand} elsewhere describes as a manufacturing fault rather than wear."
+
+distractor_facts:
+  # Both are month counts against which the ownership figure can be compared,
+  # and each yields the opposite answer on roughly half the draws.
+  - id: d1
+    strength: high
+    collides_with: term_months
+    text: "An extended plan of {extended_months} months was offered at the point of sale and declined."
+  - id: d2
+    strength: high
+    collides_with: owned_months
+    text: "{brand} reports that comparable units run for {typical_life_months} months before this part is replaced."
+  - id: d3
+    strength: medium
+    text: "{brand} has moved warranty registration to a new customer portal this quarter."
+  - id: d4
+    strength: medium
+    text: "The {part} is stocked in the regional depot and can ship overnight."
+  - id: d5
+    strength: low
+    text: "The claim was filed on a Tuesday."
+
+# An extended plan quoted at the same length as the standard term is not a
+# distractor at all. Both colliding distractors are quantities that stand on
+# their own, so nothing here has to constrain one date against another: an
+# ordering constraint fought the generator's own robustness sampling and made
+# whole strata unreachable.
+constraints:
+  - "extended_months != term_months"
+
+solution:
+  expr: "'honour_claim' if owned_months <= term_months else 'decline_claim'"
+  load_bearing: [r1, r2]
+
+strata:
+  distractors: [0, 1, 4]
+  position: [early, middle, late]
+variants: 4

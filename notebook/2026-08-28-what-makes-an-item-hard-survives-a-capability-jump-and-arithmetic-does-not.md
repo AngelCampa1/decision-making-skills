@@ -139,3 +139,75 @@ corpus change "a governed path". It is not. `GOVERNED` in `decisions.py` is
 `datasets/templates/` is none of them, so a template change needs no
 `DECISIONS.md` entry. It does need `pytest --bless`, because `datasets/golden/`
 pins the generated corpus byte-exact.
+
+---
+
+## Correction, same day: the two survivors were small-sample noise, and the design built on them failed
+
+The entry above says the 30B numbers rest on 6 to 12 answered calls and that the
+extremes are clear. The extremes were not clear. They moved by about 0.2 when
+measured properly, which is larger than the effect the design was reaching for.
+
+Built `hrd-001-warranty-claim` on the stated principle: a term given as a fact
+rather than a conditional, an everyday prior arguing the other way, four
+distractors, both colliding ones sampled so that using them flips the answer on
+every draw. Structurally it is `rel-006-refund-request` with the lever pulled
+harder.
+
+**The 30B scored 24 of 24 on it.**
+
+That sent me back to the readings the design rested on. Re-run at three seeds
+instead of one, four tries per call, same model, same arm, same stratum:
+
+| template | first reading | re-measured | 95% CI |
+| --- | --- | --- | --- |
+| `rel-009-flight-rebook` | 7/11 = 0.636 | 30/36 = 0.833 | [0.68, 0.92] |
+| `rel-006-refund-request` | 6/9 = 0.667 | 29/34 = 0.853 | [0.70, 0.94] |
+| `rel-003-oncall-escalate` | 9/9 = 1.000 | 35/35 = 1.000 | [0.90, 1.00] |
+
+What survives: an ordering. `oncall-escalate` is perfect and the other two are
+not, and their intervals sit below it. That is a real difference and it is
+small.
+
+What does not survive: the size. The claim that constructed rules put a capable
+model near 0.7 rested on 0.636 and 0.667, and the true figures are 0.833 and
+0.853. **The hardest template in this corpus leaves a 30B at 0.83.** No amount
+of pulling that same lever reaches 0.7, which is what the 24 of 24 was saying.
+
+Prediction 1 is therefore **falsified**, and by the entry's own first attempt at
+building to it. Predictions 2 to 4 were never tested, because the corpus they
+were about does not exist.
+
+The `hrd-001` template stays in the tree as a negative result rather than being
+deleted. It is a clean instance of the lever applied hard, and it reads 1.000.
+
+### What this costs and what it leaves
+
+The finding that arithmetic difficulty evaporates while something else does not
+still stands: three templates go from 0.53 to 1.000 between the two models, and
+two go from about 0.5 to about 0.84 and stay separated from the ceiling. The
+mechanism is real. **The magnitude is nowhere near enough**, and the entry above
+overstated it because it read two numbers off nine and eleven calls.
+
+The lesson is one this repository already had written down and I did not apply
+to my own screen: a per-item ceiling is computed from the items you are about to
+run, not read off whichever sample arrived first. Nine answered calls cannot
+separate 0.65 from 0.85, and the design work that followed was spent on a gap
+that was not there.
+
+### What would actually reach 0.7
+
+Untested, and recorded as the next thing to measure rather than as a finding.
+Every option in this corpus is binary, so chance is 0.500 and a 30B sits at
+0.83, which is 0.33 of the available 0.50 above chance. Moving the ceiling means
+changing the task rather than the wording:
+
+- **More than two options**, which drops chance to 0.25 and moves the whole band
+  down mechanically. Cheapest to try and least interesting.
+- **Two policies with a precedence rule**, so the model must decide which
+  applies before it can compare anything.
+- **A fact that has to be derived across two steps** before the comparison has
+  an operand at all, rather than being stated and then compared.
+
+None of these is the thing this entry claimed. They are hypotheses, and the next
+run measures one of them on more than nine calls.
