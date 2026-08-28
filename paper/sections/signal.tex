@@ -32,7 +32,7 @@ measurement of no discrimination.
 
 \subsection{The study, decomposed}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \signalTable
 \caption{Discrimination by arm, with cluster-bootstrap intervals resampling
@@ -40,6 +40,16 @@ templates. Parse rate is the share of readings that produced a readable answer;
 everything else is computed over that subset.}
 \label{tab:signal}
 \end{table}
+
+\IfFileExists{figures/signal.tex}{%
+\begin{figure}[htbp]
+\centering
+\input{figures/signal}
+\caption{Discrimination against an empty prompt, with cluster-bootstrap
+intervals over templates. Every interval crosses zero. Ten clusters is few, and
+the widths say so.}
+\label{fig:signal}
+\end{figure}}{}
 
 \textbf{The study's conclusion survives the correction and gets slightly
 stronger.} Every arm's discrimination advantage over an empty prompt has an
@@ -60,7 +70,7 @@ that is part of why.
 
 \subsection{Three of ten templates are not measuring anything}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \templateTable
 \caption{Informedness per template, every arm. Templates marked $\dagger$ sit

@@ -21,11 +21,11 @@
   title  = {Agent Skills: Client Showcase},
   year   = {2025},
   howpublished = {\url{https://agentskills.io/clients}},
-  note   = {Read first-hand 2026-08-28. The showcase listed 46 client products
+  verification = {Read first-hand 2026-08-28. The showcase listed 46 client products
             that day, among them Claude Code, ChatGPT and Codex, Cursor, GitHub
             Copilot, VS Code, Gemini CLI, Amp, OpenCode, Goose, Roo Code and
             Junie. A web page is a moving source and the count is dated for
-            that reason; docs/RELATED_WORK.md recorded roughly 40 in December
+            that reason; docs/RELATED\_WORK.md recorded roughly 40 in December
             2025}
 }
 
@@ -38,7 +38,7 @@
   quote  = {Relative to no skill, skill conditions increase task-mean pass
             rate by 26.7 to 36.0 percentage points for GPT-5.5 and by 18.0 to
             26.0 percentage points for DeepSeek V4-Flash.},
-  note   = {Verified first-hand 2026-08-12. SCALE CORRECTED: a 30-task
+  verification = {Verified first-hand 2026-08-12. SCALE CORRECTED: a 30-task
             domain-balanced SkillsBench subset, 2 models, 6 skill conditions,
             5 trials, 1800 rows. Earlier entries here and in RELATED_WORK said
             "86 tasks, 11 domains", which is neither this paper's scale nor
@@ -66,7 +66,7 @@
             lifts the average no-skill accuracy by +23.5 points in direct
             chat, by +24.8 inside the Codex agentic loop, and by +19.1 inside
             Claude Code.},
-  note   = {Verified first-hand 2026-08-13. TITLE CORRECTED: the entry dropped
+  verification = {Verified first-hand 2026-08-13. TITLE CORRECTED: the entry dropped
             the "SkillOpt:" prefix. THE +23.5 IS ONE HARNESS, NOT AN AVERAGE
             OVER THREE: it is the direct-chat figure on GPT-5.5, and the same
             sentence gives +24.8 for Codex and +19.1 for Claude Code. Quoting
@@ -88,7 +88,7 @@
   year   = {2026},
   quote  = {We analyze 10 repositories and 124 pull requests, executing agents
             under two conditions: with and without an AGENTS.md file.},
-  note   = {Verified first-hand 2026-08-12. The abstract's own figures are
+  verification = {Verified first-hand 2026-08-12. The abstract's own figures are
             MEDIANS: runtime -28.64\%, output tokens -16.58\%. The -20.27\% and
             -20.08\% MEANS carried in RELATED_WORK are not in the abstract and
             are unverified against the body; the median runtime figure is the
@@ -121,7 +121,7 @@
   quote  = {Our findings reveal pervasive security risks: 26.1\% of skills
             contain at least one vulnerability, spanning 14 distinct patterns
             across four categories.},
-  note   = {Verified first-hand 2026-08-12. Title corrected. 42,447 skills
+  verification = {Verified first-hand 2026-08-12. Title corrected. 42,447 skills
             collected, 31,132 analysed. Data exfiltration 13.3\%, privilege
             escalation 11.8\%, high-severity 5.2\%}
 }
@@ -152,7 +152,7 @@
             2.5, and 5.0 points for H1, H2, H3. ... Aggregate HV/MV ratio: 7.80x.
             Ranking reversal pairs: 6 out of 9 model-pair/harness-pair
             comparisons.},
-  note   = {Verified first-hand 2026-08-13 -- ABSTRACT AND BODY, and the body
+  verification = {Verified first-hand 2026-08-13 -- ABSTRACT AND BODY, and the body
             visit reversed an earlier retraction. docs/RELATED_WORK.md calls this
             "the premise of the whole project". It IS a position paper and its
             ABSTRACT CONTAINS NO NUMBERS, which an earlier pass took to mean the
@@ -188,7 +188,7 @@
             execution trajectories, we observe substantial variation in
             completion, process quality, efficiency, and failure behavior across
             model-harness pairings.},
-  note   = {Verified first-hand 2026-08-13. 5,194 trajectories and 106 tasks are
+  verification = {Verified first-hand 2026-08-13. 5,194 trajectories and 106 tasks are
             exact. TITLE CORRECTED: the entry read "Disentangling Harness and
             Model Contributions to Agent Performance", which is not this
             paper's title and asserts a disentangling the abstract does not
@@ -220,7 +220,7 @@
             significant performance drops (up to 65\%) across all
             state-of-the-art models, even though the clause doesn't contribute
             to the reasoning chain needed for the final answer.},
-  note   = {Verified first-hand 2026-08-13. docs/RELATED_WORK.md 17-18 is
+  verification = {Verified first-hand 2026-08-13. docs/RELATED_WORK.md 17-18 is
             supported exactly, including "topically-relevant but logically
             irrelevant", which is the paper's "seems relevant ... doesn't
             contribute to the reasoning chain". "up to 65\%" is a MAXIMUM across
@@ -243,7 +243,7 @@
   year   = {2026},
   quote  = {By controlling for query difficulty, we show that the premature
             termination rate is positively correlated with context length.},
-  note   = {Verified first-hand 2026-08-12, and THE 30-50\% FIGURE IS NOT IN
+  verification = {Verified first-hand 2026-08-12, and THE 30-50\% FIGURE IS NOT IN
             THIS PAPER. Three documents here cited it for "context rot is
             documented at 30-50\% in long-horizon settings"; it is not in the
             abstract, was not found in the PDF, and does not appear in any
@@ -277,7 +277,7 @@
             consumption by 8.8\% (from 47.4K to 43.3K). On DeepSearch, it
             achieves a 57.1\% success rate, compared with 53.9\%, while reducing
             token consumption by a factor of 8.},
-  note   = {Verified first-hand 2026-08-13. Every figure in
+  verification = {Verified first-hand 2026-08-13. Every figure in
             docs/RELATED_WORK.md 64-65 and
             notebook/2026-08-10-inline-vs-forked-curation.md 31-32 is exact.
             ONE SCOPE POINT THE PROSE DROPS: the WebArena numbers are
@@ -302,7 +302,8 @@
             consistently outperforming strong baselines: +10.6\% on agents and
             +8.6\% on finance, while significantly reducing adaptation latency
             and rollout cost.},
-  note   = {arXiv:2510.04618. Verified first-hand 2026-08-13. +10.6\% on agents
+  note   = {arXiv:2510.04618.},
+  verification = {arXiv:2510.04618. Verified first-hand 2026-08-13. +10.6\% on agents
             is exact and docs/RELATED_WORK.md 70-72 is supported, including
             brevity bias and context collapse, which are the paper's own terms.
             The +8.6\% finance figure travels with it in the same sentence and is
@@ -331,7 +332,7 @@
             measurement risks: mapped label agreement can change substantially
             when the explicit label menu is removed, and axis choice can change
             apparent rankings.},
-  note   = {Verified first-hand 2026-08-13, AND THE FIGURE WE CITE IS NOT IN
+  verification = {Verified first-hand 2026-08-13, AND THE FIGURE WE CITE IS NOT IN
             THE CURRENT VERSION OF THE PAPER. The 14-40pp figure is verbatim in
             v1 and was REMOVED in v2, where the quantitative claim is replaced
             by "mapped label agreement can change substantially" -- no number,
@@ -376,7 +377,7 @@
             69.40\% task resolve rate, significantly outperforming a standard
             single-agent setup and closing the performance gap with agents
             operating on fully specified instructions.},
-  note   = {Verified first-hand 2026-08-13; the v1 abstract was fetched
+  verification = {Verified first-hand 2026-08-13; the v1 abstract was fetched
             separately after an independent checker contradicted an earlier
             draft of this note, which asserted the 61.2 was not in the paper.
             IT IS -- in v1's abstract, quoted above, and in the body. That
@@ -415,7 +416,7 @@
             solving, surprisingly, we find that reasoning fine-tuning degrades
             abstention (by 24\% on average), even for math and science domains on
             which reasoning models are explicitly trained.},
-  note   = {Verified first-hand 2026-08-13. 24\% and the does-not-scale claim are
+  verification = {Verified first-hand 2026-08-13. 24\% and the does-not-scale claim are
             both exact, and docs/RELATED_WORK.md 77-79 is supported. ONE
             WORDING NOTE: the paper says reasoning FINE-TUNING degrades
             abstention by 24\%; "reasoning-tuned models are ~24\% worse ... than
@@ -437,7 +438,7 @@
             Crucially, fear-framed (PUA) agents showed no significant
             improvement over baseline on any metric (all p > 0.3), demonstrating
             that fear-based motivation is ineffective for AI agents.},
-  note   = {Verified first-hand 2026-08-13. TITLE CORRECTED -- the entry
+  verification = {Verified first-hand 2026-08-13. TITLE CORRECTED -- the entry
             previously read "Framing Effects in Agent System Prompts", which is
             not this paper's title, and dropping "Debugging Depth" drops the
             entire measured domain. THE 59\% IS STUDY 1 AND STUDY 2 DID NOT
@@ -472,7 +473,8 @@
             typically better-calibrated than the model's conditional
             probabilities, often reducing the expected calibration error by a
             relative 50\%.},
-  note   = {arXiv:2305.14975. Quote verified first-hand 2026-08-12. The 50\% is
+  note   = {arXiv:2305.14975.},
+  verification = {arXiv:2305.14975. Quote verified first-hand 2026-08-12. The 50\% is
             RELATIVE and holds on TriviaQA, SciQ and TruthfulQA with RLHF
             models; "~50\% ECE reduction" in REJECTED.md is a fair summary}
 }
@@ -533,7 +535,8 @@
   quote  = {Our results reveal that strong LLM judges like GPT-4 can match both
             controlled and crowdsourced human preferences well, achieving over
             80\% agreement, the same level of agreement between humans.},
-  note   = {arXiv:2306.05685. Verified first-hand 2026-08-13, AND THE DIRECTION
+  note   = {arXiv:2306.05685.},
+  verification = {arXiv:2306.05685. Verified first-hand 2026-08-13, AND THE DIRECTION
             IN OUR PROSE IS NOT THE ABSTRACT'S. docs/RELATED_WORK.md read "GPT-4 judge
             agreement with humans ~85\%, above human-human agreement ~81\%",
             which asserts the judge BEATS human-human agreement. The abstract
@@ -569,7 +572,7 @@
             50\%, RoPoLL dominates PoLL on every biased corruption type: by about
             19\% on cross-dimensional attacks at matched compute, and by orders
             of magnitude on heavy-tailed Byzantine adversaries.},
-  note   = {Verified first-hand 2026-08-13. The unbounded-bias result and the
+  verification = {Verified first-hand 2026-08-13. The unbounded-bias result and the
             ~19\% are exact, and the breakdown point 1/2 for the geometric median
             is the paper's own. TITLE CORRECTED: the entry read "Robust
             Aggregation for Panels of LLM Judges". ONE CONDITION THE PROSE
@@ -594,7 +597,7 @@
             stark: the panel's actual accuracy falls 8-22 percentage points
             short of what independent voting would achieve, and the best single
             judge matches or outperforms the full panel across all conditions.},
-  note   = {Verified first-hand 2026-08-13, and TWO OF THE THREE FIGURES WE
+  verification = {Verified first-hand 2026-08-13, and TWO OF THE THREE FIGURES WE
             CARRY ARE NOT IN THE ABSTRACT. (1) "22pp predicted under
             independence" IS THE TOP OF A RANGE REPORTED AS A POINT VALUE: the
             paper says the shortfall is 8-22 percentage points. Quoting 22
@@ -644,7 +647,8 @@
             independent criteria that can be defined a priori), raising serious
             questions for approaches that assume the independence of evaluation
             from observation of model outputs.},
-  note   = {arXiv:2404.12272. Verified first-hand 2026-08-13. Criteria drift is
+  note   = {arXiv:2404.12272.},
+  verification = {arXiv:2404.12272. Verified first-hand 2026-08-13. Criteria drift is
             verbatim and is the load-bearing citation. THE ABSTRACT CONTAINS NO
             PERCENTAGES: the agreeableness-bias claim in docs/RELATED_WORK.md
             -- "high TPR paired with badly low TNR", "a judge can look >90\%
@@ -779,7 +783,7 @@
   quote  = {Our findings reveal a "Prompting Inversion": Sculpting provides
             advantages on gpt-4o (97\% vs. 93\% for standard CoT), but becomes
             detrimental on gpt-5 (94.00\% vs. 96.36\% for CoT on full benchmark).},
-  note   = {Verified first-hand 2026-08-13. All four figures are exact and the
+  verification = {Verified first-hand 2026-08-13. All four figures are exact and the
             direction in docs/PROTOCOL.md 59-63 and docs/RELATED_WORK.md 523-524
             (LINE NUMBERS CORRECTED 2026-08-14, was 50-52 and 335-336) is right.
             TITLE CORRECTED: the entry read "Prompting Inversion: When
@@ -804,7 +808,7 @@
             zero-shot; on Amazon Nova Lite, the failure rate is even higher.
             ... optimization helps only when the task has exploitable output
             structure: a format the model can produce but does not default to.},
-  note   = {Verified first-hand 2026-08-13. TITLE COMPLETED: the entry carried
+  verification = {Verified first-hand 2026-08-13. TITLE COMPLETED: the entry carried
             only the headline half and dropped ": Diagnosing When It Helps in
             Compound AI Systems", which is the part naming the scope the
             finding is restricted to}
@@ -895,7 +899,7 @@
              "unreliability skyrockets with an average increase of 112\% (more
              than doubling)" ... "we experimented with 15 LLMs, running N=10
              simulations for each pair of model and simulation type"},
-  note    = {Verified from the abstract 2026-08-11. The Sec. 4.2 definitions and
+  verification = {Verified from the abstract 2026-08-11. The Sec. 4.2 definitions and
              the 16\%/112\% split were read from the full text the same day and
              are implemented in stats/reliability.py. The aggregation level of
              S -- pooled across instructions, or per instruction -- was NOT
@@ -920,7 +924,7 @@
   quote   = {We develop MAST through rigorous analysis of 150 traces, guided
              closely by expert human annotators and validated by high
              inter-annotator agreement (kappa = 0.88).},
-  note    = {MAST: 14 failure modes in 3 categories, 1600+ annotated traces,
+  verification = {MAST: 14 failure modes in 3 categories, 1600+ annotated traces,
              inter-annotator kappa 0.88 -- all three verified first-hand
              2026-08-12. NOTE THE QUOTE'S OWN DENOMINATOR: kappa 0.88 is from
              the 150 traces MAST was developed on, not from the 1600+ in
@@ -944,7 +948,7 @@
              deterministic verifiers ... Curated Skills raise the average pass
              rate from 33.9\% to 50.5\% (+16.6 percentage points; 25.5\%
              normalized gain)},
-  note    = {Verified 2026-08-11. DISTINCT from arXiv:2605.31408, which is a
+  verification = {Verified 2026-08-11. DISTINCT from arXiv:2605.31408, which is a
              different real paper on the same topic -- conflating the two is
              how a correct figure was "corrected" into a wrong one. Curated vs
              NO-SKILL is the +16.6pp contrast; self-generated skills are -1.3pp
@@ -958,7 +962,7 @@
   year    = {2026},
   quote   = {performance degrades as libraries grow -- by up to 21\% when
              scaling from a small set of helpful skills to a 202-skill library},
-  note    = {Verified from the abstract 2026-08-11. THE REGIME IS 202 SKILLS.
+  verification = {Verified from the abstract 2026-08-11. THE REGIME IS 202 SKILLS.
              The figures "90\% -> 13.6\% at 11,100 candidates" are this paper
              QUOTING Gan and Sun 2025 on TOOL selection, not its own finding,
              and must not be attributed here. Shadowing dominates context
@@ -972,7 +976,7 @@
   journal = {arXiv preprint arXiv:2606.01139},
   year    = {2026},
   quote   = {improved the base agent's success rate from 36.05\% to 61.63\%},
-  note    = {Verified 2026-08-11. +25.6pp across three benchmarks and five
+  verification = {Verified 2026-08-11. +25.6pp across three benchmarks and five
              LLMs. Measured on SkillsBench, which has EXECUTABLE verification;
              this repository's decision tasks do not, so the prior does not
              transfer cleanly. Describes one-shot LLM-generated skills as
@@ -989,7 +993,7 @@
   year    = {2026},
   quote   = {the evaluated models achieve an average combined pass rate of only
              17.2\% (GPT-5.5 62.0\%)},
-  note    = {Verified first-hand 2026-08-12: 17.2\% average combined pass rate
+  verification = {Verified first-hand 2026-08-12: 17.2\% average combined pass rate
              and GPT-5.5 at 62.0\% are exact, and GPT-5.5 is the best model.
              110 scenarios, 10 topologies, 33 models from 10 companies.
              Direction is established and is the opposite of what an earlier
@@ -1008,7 +1012,7 @@
   quote   = {The orchestrated system fails on 24\% of travel, 9\% of Zoom, and
              17\% of insurance conversations, compared to 11.5\%, 0.5\%, and 5\%
              for the in-context baseline.},
-  note    = {Verified first-hand 2026-08-12: all three failure-rate pairs are
+  verification = {Verified first-hand 2026-08-12: all three failure-rate pairs are
              exact, and "dominated" is the paper's own word. 200 conversations
              per condition, three domains, LLM-as-judge on five criteria. "for Procedural Tasks" is the entire scope and must not
              be dropped from the title}
@@ -1019,7 +1023,7 @@
              {LLM}-Compressed Financial Analysis},
   journal = {arXiv preprint arXiv:2606.29251},
   year    = {2026},
-  note    = {NO QUOTE FIELD: no figure fetched first-hand. Source domain is
+  verification = {NO QUOTE FIELD: no figure fetched first-hand. Source domain is
              FINANCIAL analysis specifically -- Track E3 proposes to replicate
              the effect in our domain and must say what the source domain was}
 }
@@ -1036,7 +1040,7 @@
              shifting the Top-10's mean publication year forward by up to 4.78
              years and moving individual items by as many as 95 ranks in our
              listwise reranking experiments.},
-  note    = {Verified first-hand 2026-08-13, replacing a note that said these
+  verification = {Verified first-hand 2026-08-13, replacing a note that said these
              figures came from a search summary and must be verified before
              asserting. All three are exact: seven models, up to 4.78 years, as
              many as 95 ranks. docs/RESEARCH_PROGRAMME.md 96 (LINE NUMBER
@@ -1060,7 +1064,7 @@
   title   = {Show Your Work: Improved Reporting of Experimental Results},
   journal = {arXiv preprint arXiv:1909.03004},
   year    = {2019},
-  note    = {Report performance as a function of tuning budget, not as a single
+  verification = {Report performance as a function of tuning budget, not as a single
              best number. The reason this repository reports p90/p99 alongside
              means}
 }
@@ -1112,7 +1116,7 @@
   journal = {arXiv preprint arXiv:2406.07791},
   year    = {2024},
   quote   = {testing 15 models across over 150,000 instances},
-  note    = {Verified 2026-08-12}
+  verification = {Verified 2026-08-12}
 }
 
 @article{ye2024calm,
@@ -1146,7 +1150,7 @@
              challenges like hallucination and bias, and evaluate promising
              techniques for reducing sycophancy while maintaining model
              performance.},
-  note    = {Verified first-hand 2026-08-13. THE 63.7\% IS NOT IN THIS PAPER'S
+  verification = {Verified first-hand 2026-08-13. THE 63.7\% IS NOT IN THIS PAPER'S
              ABSTRACT, and the abstract is all that was read -- the stronger
              claim this note used to make, that the figure is not in the paper,
              is not one an abstract can settle.
@@ -1200,7 +1204,7 @@
              believe...") consistently induce higher sycophancy rates than
              third-person framings ("They believe...") by creating stronger
              representational perturbations in deeper layers.},
-  note    = {Verified first-hand 2026-08-13. The first-person/third-person
+  verification = {Verified first-hand 2026-08-13. The first-person/third-person
              result is verbatim and is the one docs/RELATED_WORK.md rests the
              third-person-restatement design decision on. THE ABSTRACT GIVES NO
              RATE: "higher sycophancy rates" is directional, so the 63.7\% that
@@ -1217,7 +1221,7 @@
              hints. ... simple algorithms such as Chain-of-Thought, Thoughts of
              Principles, Ignoring Anchor Hints, and Reflection are not
              sufficient [to mitigate anchoring bias].},
-  note    = {Verified first-hand 2026-08-18 against the arXiv abstract page
+  verification = {Verified first-hand 2026-08-18 against the arXiv abstract page
              (v2, 18 Dec 2024) and the export.arxiv.org API for the author list
              and dates. THE ABSTRACT CARRIES NO HEADLINE NUMBER -- the claim is
              qualitative: LLM judgments are sensitive to a planted anchor hint,
@@ -1243,7 +1247,7 @@
              overestimate the probability that their answer is correct
              between 20\% and 60\%. Humans have accuracy similar to the more
              advanced LLMs, but far lower overconfidence.},
-  note    = {Verified first-hand 2026-08-18 against the arXiv abstract page
+  verification = {Verified first-hand 2026-08-18 against the arXiv abstract page
              (v2, 12 Oct 2025) and the export.arxiv.org API; the abstract text
              is unchanged from v1 (4 May 2025) apart from the revision date, so
              the quote holds in the current version. FIVE LLMS, ALGORITHMICALLY
@@ -1270,7 +1274,7 @@
   year    = {2025},
   quote   = {how 45 large language models exhibit eight established cognitive
              biases across over 2.8 million responses},
-  note    = {Verified 2026-08-12}
+  verification = {Verified 2026-08-12}
 }
 
 @article{yao2025peacemaker,
@@ -1295,7 +1299,7 @@
              uncertainty-guided reward modeling boosts accuracy from 36.5\% to
              65.2\% (3B model) and 36.7\% to 62.9\% (7B model) through
              uncertainty-weighted GRPO training.},
-  note    = {Verified first-hand 2026-08-13. Cited in RELATED_WORK as
+  verification = {Verified first-hand 2026-08-13. Cited in RELATED_WORK as
              SAGE-Agent, which is the method name rather than the title.
              Expected Value of Perfect Information to choose which clarifying
              question to ask. The figures above are this paper's own and are
@@ -1318,7 +1322,7 @@
              single-agent and multi-agent settings show that PromptBridge
              consistently improves downstream accuracy while reducing migration
              effort.},
-  note    = {Verified first-hand 2026-08-13. THE ABSTRACT REPORTS NO NUMBERS --
+  verification = {Verified first-hand 2026-08-13. THE ABSTRACT REPORTS NO NUMBERS --
              "consistently improves downstream accuracy" is the strongest thing
              it says, and "the code will be available soon". Our prose calls it
              "still the current answer for cheap-to-expensive transfer", which
@@ -1358,7 +1362,7 @@
   quote   = {On the When2Call benchmark, six models from three families show
              high call accuracy but much lower no-call accuracy, leaving
              overall accuracy in the 55\%-70\% range.},
-  note    = {Quote from the abstract, added 2026-08-19 after the entry was
+  verification = {Quote from the abstract, added 2026-08-19 after the entry was
              found carrying none. It was cited in
              notebook/2026-08-19-the-item-analysis-this-instrument-never-ran.md
              for "six models in three families", and the citation gate missed
@@ -1381,7 +1385,7 @@
   year   = {2022},
   quote  = {a hierarchical analysis game strategy of confrontation model based
             on OODA ring (Observation, Orientation, Decision, Action) theory},
-  note   = {Verified first-hand 2026-08-12. Cited in
+  verification = {Verified first-hand 2026-08-12. Cited in
             docs/DECISION_FRAMEWORKS.md as the nearest hit for OODA and as a
             NEGATIVE result: it uses the loop as a NetLogo simulation framework
             for two tanks, not as decision advice evaluated on human decision
@@ -1402,7 +1406,7 @@
   quote   = {LLM assistance improved physician management reasoning compared to
              conventional resources, with particular gains in contextual and
              patient-specific decision-making.},
-  note    = {Verified first-hand 2026-08-13. 92 physicians, 46 per arm, 5 case
+  verification = {Verified first-hand 2026-08-13. 92 physicians, 46 per arm, 5 case
              vignettes with expert rubrics. GPT-4 arm 43.0\% vs conventional
              35.7\%, difference 6.5pp (95\% CI 2.7-10.2, p<0.001); the
              case-specific domains alone move 6.2pp (95\% CI 2.4-9.9, p=0.002).
@@ -1421,7 +1425,7 @@
   quote   = {Clinicians fully adhered to the LLM's advice in 195 encounters
              (19.5\%), partially adhered in 573 encounters (57.3\%) and did not
              adhere in 232 encounters (23.2\%).},
-  note    = {Verified first-hand 2026-08-13. 16 primary care facilities in
+  verification = {Verified first-hand 2026-08-13. 16 primary care facilities in
              Kenya, 103 clinical officers cluster-randomized, 9,691 patients,
              April-July 2025. Treatment failure 2.2\% (102/4,693) with LLM vs
              2.0\% (94/4,654) without, aOR 0.77, p=0.13 -- no outcome effect --
@@ -1448,7 +1452,7 @@
   quote   = {As measured by click-through data and expert ratings, ads
              created in the Parallel condition significantly outperformed
              those from the Serial condition.},
-  note    = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
+  verification = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
              Stanford HCI PDF; direct WebFetch of the PDF itself returned
              unparseable binary on three separate hosts). 33 participants,
              between-subjects: Parallel (3 prototypes + feedback, then 2
@@ -1478,7 +1482,7 @@
              sequentially, both when the dominance relationship was
              transparent (Experiment 1) and when it was not (Experiments
              2-3).},
-  note    = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
+  verification = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
              NTU institutional-repository PDF; ResearchGate and
              ScienceDirect both returned a CAPTCHA/verification wall to
              WebFetch). Seven experiments, roughly 2,892 participants total
@@ -1506,7 +1510,7 @@
   year    = {1985},
   quote   = {Alternative designing has a strong positive impact on decision
              quality.},
-  note    = {Verified first-hand 2026-08-14 (r.jina.ai text extraction;
+  verification = {Verified first-hand 2026-08-14 (r.jina.ai text extraction;
              ScienceDirect returned a verification wall to direct WebFetch).
              Archival field study of 83 real top-management decisions from
              one mid-size German firm's executive board (1,380 employees),
@@ -1536,7 +1540,7 @@
   quote   = {The Observe--Orient--Decide--Act (OODA) Loop, a common framework
              in which military decision making is discussed, is no longer
              current with modern theories of human cognition.},
-  note    = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
+  verification = {Verified first-hand 2026-08-14 (r.jina.ai text extraction of the
              Taylor \& Francis abstract page; full text is paywalled and was
              not read beyond the abstract). THEORETICAL critique, not an
              empirical trial: proposes a replacement framework
@@ -1579,7 +1583,7 @@
              r~0.62), and the resulting designer--answerer matrices enable
              scalable audits of format/modality/language fidelity and
              suite-dependent self/family interactions.},
-  note    = {Quote from the abstract, recorded 2026-08-19. READ THE QUOTE
+  verification = {Quote from the abstract, recorded 2026-08-19. READ THE QUOTE
              BEFORE CITING THE NUMBER: the abstract prints `r~0.62` and puts
              the direction in words only -- there is no minus sign in the
              source -- so a citation writing r = -0.62 asserts a character the
@@ -1602,7 +1606,7 @@
              [...] filtering out these tasks with issues shifts model rankings
              and increases average performance on SWE-bench Verified and
              Terminal-Bench 2 by 9.9\% and 9.6\%, respectively.},
-  note    = {Quote from the abstract, recorded 2026-08-19; the two sentences
+  verification = {Quote from the abstract, recorded 2026-08-19; the two sentences
              are separated in the source and are joined here with an elision
              marker. ABA is the paper's abbreviation for Auto Benchmark Audit,
              the framework -- the paper's title is the one in the field above,
@@ -1624,7 +1628,7 @@
   quote   = {Across 17 frontier LLMs in 4 agent harnesses, the best agent
              (Gemini 3.1 Pro) achieves only 59.5\% paired accuracy (correct on
              both the act and abstain sides of each paired task).},
-  note    = {Quote from the abstract, recorded 2026-08-19. "paired accuracy"
+  verification = {Quote from the abstract, recorded 2026-08-19. "paired accuracy"
              is lower case in the source and is not a proper noun. Cited in
              notebook/2026-08-19-the-item-analysis-this-instrument-never-ran.md
              for the SHAPE of the statistic only: this repository's triples

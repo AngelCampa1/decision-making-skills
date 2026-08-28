@@ -7,9 +7,10 @@ work happens rather than the week before submission, and kept in the repository
 so the gap between what is claimed and what exists is visible at every commit.
 
 `[x]` means the artifact exists and is committed; `[ ]` means it does not. A box
-is never ticked on the strength of an intention. Three boxes below are marked
+is never ticked on the strength of an intention. Two boxes below are marked
 **blocked**: they need someone outside this repository, and a blocked box is
-still an open box.
+still an open box. A third was blocked on this machine having no TeX toolchain,
+and installing one closed it.
 
 Last worked through 2026-08-28, against the five-arm study at
 [`../results/evolution-study/2026-08-27-53b4965-five-arm/`](../results/evolution-study/2026-08-27-53b4965-five-arm/).
@@ -225,9 +226,13 @@ Last worked through 2026-08-28, against the five-arm study at
       (Angel Campa, `AngelCampa1`)
 - [x] No `@ventoralabs.com` address anywhere in the source or in the commit
       history. PDF metadata inherits `\author`, which carries no address
-- [ ] **Blocked on this machine.** `make paper` compiles. No TeX toolchain is
-      installed here, so the PDF has never been built. What has been checked
-      without one: every `\input` target exists, every `\label` a `\ref` or
-      `\Cref` names is defined, every `\cite` key is in `refs.bib`, every
-      environment balances, and every `\NUM{\macro}` in the prose resolves
-      against `generated/macros.tex`
+- [x] `make paper` compiles. TinyTeX 2026.08, GNU Make 4.4.1 and poppler 26.02.0
+      are installed per-user outside the repository, and none of it is a
+      dependency of the gate. From a clean worktree the build is 22 pages and
+      408,470 bytes with no overfull or underfull boxes, no LaTeX warnings and
+      no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
+      or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
+      every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`
+      survives into the output. Six defects that only a renderer could find were
+      fixed in the same pass and are listed in
+      [`../docs/STATUS.md`](../docs/STATUS.md)

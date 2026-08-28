@@ -18,6 +18,11 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+% Latin Modern rather than Computer Modern, because T1 CM ships as bitmaps
+% unless cm-super is installed and microtype's font expansion then refuses to
+% run. Naming the scalable font here means a replicator needs one package fewer
+% rather than one more.
+\usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -30,6 +35,36 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[capitalise,noabbrev]{cleveref}
 \usepackage{natbib}
+
+% The PDF's own metadata, which a reader's viewer shows and an indexer reads.
+% Left empty it says "LaTeX with hyperref" and nothing else.
+\hypersetup{
+  pdftitle  = {Do Automated Skill Optimisers Survive a Placebo Control?
+               A Pre-Registered Five-Arm Study of GEPA and SkillOpt},
+  pdfauthor = {Angel Campa},
+  pdfsubject = {Placebo-controlled evaluation of automated agent-skill
+                optimisation},
+  pdfkeywords = {agent skills, prompt optimisation, placebo control,
+                 pre-registration, McNemar, informedness},
+}
+
+% A path is one long unbreakable word to TeX, and several in this paper are
+% wider than the column. `url`, which hyperref already loads, breaks them at
+% their own separators and inserts no hyphen, so a path split across a line is
+% still exactly the path.
+\newcommand{\pth}[1]{\path{#1}}
+
+% Last resort for a line TeX cannot break any other way, and small enough that
+% it cannot rescue a genuinely bad break. Without it a paragraph missing the
+% margin by a fifth of a point still reports as overfull.
+\emergencystretch=1em
+
+% Prompt text, reproduced as the model received it. Ragged right because
+% typewriter text does not hyphenate, so justifying it pushes the last word of
+% a long line past the margin.
+\newenvironment{promptquote}%
+  {\begin{quote}\ttfamily\small\raggedright\noindent}%
+  {\end{quote}}
 
 % Drafting aids. \draftmode is switched off before submission; the TODO macro
 % then expands to nothing, so a stray note cannot silently ship.
@@ -66,20 +101,19 @@
 \title{Do Automated Skill Optimisers Survive a Placebo Control?\\
 \large A Pre-Registered Five-Arm Study of GEPA and SkillOpt}
 
-\author{Angel Campa\\
+% The licence notice rides on \thanks, which is the mechanism designed for a
+% title-page footnote. A bare \footnotetext under an emptied \thefootnote also
+% renders, and leaves hyperref an anchor it cannot name on every build.
+\author{Angel Campa\thanks{\copyright{} 2026 Angel Campa. This paper is licensed
+under a Creative Commons Attribution 4.0 International licence,
+\protect\url{https://creativecommons.org/licenses/by/4.0/}, whose full text is
+in \texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}\\
 \texttt{github.com/AngelCampa1/decision-making-skills}}
 
 \date{\today}
 
 \begin{document}
 \maketitle
-
-\renewcommand{\thefootnote}{}
-\footnotetext{\copyright{} 2026 Angel Campa. This paper is licensed under a
-Creative Commons Attribution 4.0 International licence,
-\url{https://creativecommons.org/licenses/by/4.0/}, whose full text is in
-\texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}
-\renewcommand{\thefootnote}{\arabic{footnote}}
 
 \begin{abstract}
 Two open-source engines, GEPA and Microsoft's SkillOpt, automatically rewrite
@@ -92,7 +126,7 @@ exact against the placebo with Holm correction across a pre-registered family of
 three, on \NUM{\totalItems} items.
 
 \textbf{No arm rejects on either item set.} The best showing is SkillOpt at
-$+\NUM{\effectSeenSkillopt}$ on trained scenarios, raw $p = \NUM{\pSeenSkillopt}$,
+$\NUM{\effectSeenSkillopt}$ on trained scenarios, raw $p = \NUM{\pSeenSkillopt}$,
 which Holm takes to \NUM{\qSeenSkillopt}. On scenarios neither engine saw,
 GEPA's winner scores \NUM{\accUnseenGepa} against \NUM{\accUnseenOff} for an
 empty prompt: worse than no skill at all. An A/A control returned

@@ -28,9 +28,13 @@ from a stratum crossing distractor count with distractor position.
 \subsection{Splitting, and what it is a split of}
 
 The split is by \emph{template}, not by seed. Template membership is decided by
-\texttt{sha256("evolution-study-v1:"\,+\,template\_id)}, so it is reproducible
-and was fixed before either engine ran. Seven templates were visible to both
-searches; three were held out entirely.
+
+\begin{center}
+\texttt{sha256("evolution-study-v1:"\,+\,template\_id)}
+\end{center}
+
+\noindent so it is reproducible and was fixed before either engine ran. Seven
+templates were visible to both searches; three were held out entirely.
 
 The alternative, holding out fresh random seeds of the same templates, was the
 original plan and was abandoned after a probe showed it would score

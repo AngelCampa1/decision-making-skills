@@ -15,9 +15,10 @@ The project has three backends. This study used exactly one, and the other two
 are disclosed separately in the repository because folding them into one table
 would be the error the disclosure exists to prevent.
 
-\paragraph{Execution.} An OpenAI-compatible HTTP server. Ollama's native
-\texttt{/api/chat}, target \NUM{\studyModel}, context window 16{,}384, output
-capped at 4{,}096 tokens, \texttt{temperature=0}, one process at a time.
+\paragraph{Execution.} An OpenAI-compatible HTTP server, reached through
+Ollama's native \pth{/api/chat}. The target is \texttt{\NUM{\studyModel}}, at a
+context window of 16{,}384, output capped at 4{,}096 tokens,
+\texttt{temperature=0}, one process at a time.
 \NUM{\studyReadings} arm calls plus \NUM{\aaPairs} for the A/A control. Local,
 so the notional cost is zero and the guard is call count and wall clock rather
 than dollars.

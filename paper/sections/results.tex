@@ -20,7 +20,7 @@ losses, $p$ and Holm-adjusted $q$ are against \texttt{placebo}, the registered
 control. \texttt{off} is reported alongside without a comparison, because it
 answers a different question by registration.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \unseenTable
 \caption{Unseen set: three held-out templates, four holdout seeds,
@@ -28,7 +28,7 @@ answers a different question by registration.
 \label{tab:unseen}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \seenTable
 \caption{Seen set: seven trained templates, two holdout seeds,
@@ -37,10 +37,20 @@ items were not, and were minted after both winners were frozen.}
 \label{tab:seen}
 \end{table}
 
+\IfFileExists{figures/accuracy.tex}{%
+\begin{figure}[htbp]
+\centering
+\input{figures/accuracy}
+\caption{Accuracy by arm on both item sets. The gap between the two sets is
+larger than the gap between any two arms within a set, which is the shape of the
+whole result.}
+\label{fig:accuracy}
+\end{figure}}{}
+
 \textbf{No arm rejects on either set.} The strongest showing in the study is
-SkillOpt's winner on the seen set at $+\NUM{\effectSeenSkillopt}$, raw
+SkillOpt's winner on the seen set at $\NUM{\effectSeenSkillopt}$, raw
 $p = \NUM{\pSeenSkillopt}$, which Holm takes to $q = \NUM{\qSeenSkillopt}$. On
-the unseen set the same winner reaches $+\NUM{\effectUnseenSkillopt}$ at
+the unseen set the same winner reaches $\NUM{\effectUnseenSkillopt}$ at
 $p = \NUM{\pUnseenSkillopt}$.
 
 Neither table carries an interval on its accuracy effect, and it should. The

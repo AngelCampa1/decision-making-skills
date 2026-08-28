@@ -13,18 +13,18 @@ function with no way to omit either. The second is the reason: a skill that also
 teaches the model how to format its answer, tested against a control that was
 never told, measures instruction-following.
 
-\begin{quote}\ttfamily\small\noindent
+\begin{promptquote}
 You are helping someone make a decision. You will be given some background
 facts, a question, and a fixed list of options. Choose the option the facts
 support.
-\end{quote}
+\end{promptquote}
 
-\begin{quote}\ttfamily\small\noindent
+\begin{promptquote}
 Give your reasoning if it helps you, then end your reply with a final line in
 exactly this form:\\
 ANSWER: <one of the listed options>\\
 Use the option text exactly as written in the list.
-\end{quote}
+\end{promptquote}
 
 The wording avoids threatening the model with consequences, following the
 trust-framing result in which trust-framed system prompts surfaced 59\% more
@@ -48,10 +48,10 @@ arm & body appended to the prefix & content hash \\
 
 Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded on
 every row of every record. Three of the five bodies are published and a
-replicator can recompute all three: \texttt{off} is empty, \texttt{on} is
-\texttt{skills/decision-making/SKILL.md}, and \texttt{placebo} is
-\texttt{skills/decision-making/placebo.md}. Both hashes above reproduce from
-those files at the commit this paper is built from.
+replicator can recompute all three. \texttt{off} is empty; \texttt{on} is
+\pth{skills/decision-making/SKILL.md}; \texttt{placebo} is
+\pth{skills/decision-making/placebo.md}. Both hashes above reproduce from those
+files at the commit this paper is built from.
 
 \textbf{The two evolved bodies are not published and cannot be.} Each search
 wrote its winner into a results directory our \texttt{.gitignore} excludes, so
@@ -88,7 +88,7 @@ Rendered exactly as the model received it. The user message is arm-independent
 by construction, so the option menu, the single largest known scaffolding effect
 in this literature, is identical in all five arms.
 
-\begin{quote}\ttfamily\small\noindent
+\begin{promptquote}
 Background:\\
 - The Northwind contract credits SLA penalties only when downtime exceeds 12
 continuous hours.\\
@@ -99,7 +99,7 @@ wait?\\[0.5em]
 Options:\\
 - file\_sla\_claim\\
 - wait
-\end{quote}
+\end{promptquote}
 
 Item \texttt{rel-001-vendor-outage\#v0-d0-none} at seed 10226, answer
 \texttt{file\_sla\_claim}, computed by the template's solution expression from
@@ -110,11 +110,15 @@ would destroy it.
 \subsection{Transcripts}
 
 Full transcripts are published, not scores alone. Every record carries the
-model's complete response text alongside the parsed answer and the parse status,
-in \texttt{results/evolution-study/\NUM{\studyRun}/}: one file per arm of
-\NUM{\totalItems} records each, plus the A/A pass in its own file.
-\NUM{\studyReadings} arm records and \NUM{\aaPairs} control records, all
-committed.
+model's complete response text alongside the parsed answer and the parse status:
+
+\begin{center}
+\texttt{results/evolution-study/\NUM{\studyRun}/}
+\end{center}
+
+\noindent One file per arm of \NUM{\totalItems} records each, plus the A/A pass
+in its own file. \NUM{\studyReadings} arm records and \NUM{\aaPairs} control
+records, all committed.
 
 Holdout seeds are published with them rather than withheld. Contamination here
 is managed by regeneration between runs rather than by secrecy, so a reader can

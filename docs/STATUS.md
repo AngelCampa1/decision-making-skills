@@ -1070,3 +1070,51 @@ The paper is complete and unsubmitted at
 [`../paper/`](../paper/). No TeX toolchain exists on this machine, so it has
 never been compiled; [`../paper/CHECKLIST.md`](../paper/CHECKLIST.md) records
 that alongside the two boxes needing the maintainer.
+
+## Appended 2026-08-28: the paper compiles, and the compile found six things
+
+A TeX toolchain now exists on this machine, so the sentence above about never
+having compiled the PDF is superseded rather than corrected: it was true when it
+was written. TinyTeX 2026.08, GNU Make 4.4.1 and poppler 26.02.0 are installed
+per-user under `D:\tools\`. None of that is in this repository and none of it is
+a dependency of anything the gate runs. `paper/Makefile` was already written
+against `latexmk`, and it worked unchanged.
+
+`make paper` from a clean worktree produces a 22-page PDF of 408,470 bytes with
+no overfull or underfull boxes, no LaTeX warnings and no BibTeX warnings. Every
+`\NUM{\macro}` resolves, every `\cite` key resolves, and no `??` survives.
+
+The static checks that stood in for a compiler had passed. Six defects were
+still waiting, and every one of them is invisible without a renderer.
+
+**Fifty-one internal audit notes were being typeset into the bibliography.**
+`refs.bib` carried 74 `note` fields. Around fifty of them were our own working
+records: which line numbers we read, what we could not verify, which entry had
+been corrected. `plainnat` prints `note` and silently ignores fields it does not
+know, so those are now `verification` and the 23 that are genuine bibliographic
+detail stay as `note`.
+
+**The strongest effect in the paper rendered with two plus signs.** `_signed()`
+in `figures.py` emits the sign, and four sentences added their own.
+
+**Two generated figures were dead output.** `de figures` writes
+`paper/figures/accuracy.tex` and `paper/figures/signal.tex`, and nothing in the
+document input either. They are now floats in the results and signal sections.
+
+**T1 Computer Modern ships as bitmaps** unless `cm-super` is installed, and
+microtype's font expansion then refuses to run. Naming `lmodern` costs a
+replicator one package fewer rather than one more.
+
+**The licence notice was a hand-rolled footnote** under an emptied
+`\thefootnote`, which renders correctly and leaves hyperref an anchor it cannot
+name on every build. It rides on `\thanks` now, which is the mechanism designed
+for the job.
+
+**The PDF carried no metadata.** A reader's viewer and an indexer both read the
+document information dictionary, and left empty it said "LaTeX with hyperref".
+Title, author, subject and keywords are set. No `@ventoralabs.com` address
+appears in the file.
+
+Two boxes on [`../paper/CHECKLIST.md`](../paper/CHECKLIST.md) remain open, and
+both need the maintainer rather than a machine: arXiv endorsement for `cs.AI` or
+`cs.CL`, and the Zenodo DOI.
