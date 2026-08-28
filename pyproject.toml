@@ -514,6 +514,17 @@ a pure-Python hash comparison and only the deploy workflow builds.\
 The same directory with a trailing slash, which the same sentence also uses. \
 Two spellings of one path rather than two paths.\
 """
+"results/evolution/" = """
+Named in `docs/LIMITATIONS.md` and `docs/STATUS.md`, both of which are about \
+this directory being ignored: the two evolution searches wrote their winners \
+here, `.gitignore` line 79 excludes it, nothing was committed and the \
+directories are gone. `git add -f` is not the better fix this time because \
+there is nothing left to add, which is the case this register exists for. \
+Added 2026-08-28, after two commits landed red in CI and green locally: an \
+empty `results/evolution/` survives on the machine that ran the searches, so \
+the reference resolves in a working directory and cannot resolve in a clean \
+clone. Delete this entry if the searches are ever re-run and published.\
+"""
 
 # --------------------------------------------------------------------------- #
 # When each living document was last read, and by which commit.

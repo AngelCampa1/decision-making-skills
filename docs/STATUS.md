@@ -1097,9 +1097,11 @@ detail stay as `note`.
 **The strongest effect in the paper rendered with two plus signs.** `_signed()`
 in `figures.py` emits the sign, and four sentences added their own.
 
-**Two generated figures were dead output.** `de figures` writes
-`paper/figures/accuracy.tex` and `paper/figures/signal.tex`, and nothing in the
-document input either. They are now floats in the results and signal sections.
+**Two generated figures were dead output.** `de figures` writes an accuracy plot
+and a signal plot into the paper's generated figure directory, which
+`.gitignore` excludes, and nothing in the document ever read either. The paper
+had three tables and no figures. Both are floats now, in the results and signal
+sections, guarded so a checkout with no generated figures still compiles.
 
 **T1 Computer Modern ships as bitmaps** unless `cm-super` is installed, and
 microtype's font expansion then refuses to run. Naming `lmodern` costs a
