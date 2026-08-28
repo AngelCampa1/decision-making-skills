@@ -215,3 +215,47 @@ gets written as one:
    fifty calls across `off` and `placebo`, and a placebo that gains on a biased
    template is the cleanest demonstration this repository could publish of why
    accuracy alone is the wrong headline.
+
+
+## Correction, same day: prediction 2 is falsified, and it had no case to test
+
+Prediction 2 registered: *an arm that improves accuracy on `hrd-002` does it by
+moving skew and not informedness*, on the reasoning that a template scoring 0.63
+by preference offers about thirty points to a prompt that only shifts the
+preference.
+
+Three arms over the same 36 items, `nemotron-3-nano-30b-a3b`, four distractors,
+three seeds. Counts differ because a few calls failed their three tries.
+
+| arm | n | accuracy | skew | informedness |
+| --- | --- | --- | --- | --- |
+| `off` | 36 | 0.694 | +0.306 | 0.389 |
+| `placebo` | 33 | 0.697 | +0.303 | 0.375 |
+| `on` | 35 | 0.600 | +0.171 | 0.190 |
+
+Paired against `off` on the items both answered, one-sided McNemar, and
+bootstrap intervals over items at 20000 draws:
+
+| | Δ accuracy | Δ informedness | Δ \|skew\| | p |
+| --- | --- | --- | --- | --- |
+| `placebo` | +0.003 [−0.091, +0.000] | −0.062 [−0.211, +0.000] | +0.030 | 1.0000 |
+| `on` | −0.114 [−0.257, +0.029] | −0.222 [−0.533, +0.080] | −0.114 | 0.9648 |
+
+**No arm improved accuracy, so the prediction's premise never occurred.** The
+placebo moved nothing on any of the three numbers, which is the behaviour a
+placebo should have and which the five-arm study did not get on the published
+corpus.
+
+The seed skill did the interesting thing and did it in the losing direction. It
+cut skew from +0.306 to +0.171, so it genuinely made the model act less, and it
+cut informedness from 0.389 to 0.190 at the same time. Trading discrimination
+for a smaller lean is a net loss on a balanced key, and that is what the 0.094
+accuracy drop is.
+
+Every interval here crosses zero at these counts, so the ordering is what this
+run supports and the sizes are not. Thirty-six items was chosen to answer a
+question about a thirty-point gap and is far too few for a ten-point one.
+
+The worry that started this entry is therefore unresolved rather than answered.
+Nothing here shows an arm buying accuracy with bias, and nothing here had the
+power to see it.
