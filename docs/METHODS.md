@@ -522,8 +522,13 @@ A published run's README carries an in-place downgrade of its own earlier claim.
 [`HARNESS_DISCLOSURE.md`](HARNESS_DISCLOSURE.md) deletes a citation of its own.
 
 Runs are also checkpointed and resumable, appended to JSONL after every call,
-with completed keys read back on restart. Arms interleave per item rather than
-running in blocks, so arm is not confounded with model drift or quota state.
+with completed keys read back on restart. Arms are *meant* to interleave per
+item, so arm is not confounded with model drift or quota state, and they do not:
+`iter_items` returns that ordering and nothing outside the tests calls it, so
+every run on record ran its arms in blocks. Found 2026-08-28 and corrected here
+2026-08-31, where this said they interleave. `runner.py` carries the same
+correction, and the five-arm study reports it as a design defect bounded by its
+A/A pass.
 Isolation flags are prepended to every call with no way to switch them off,
 after the measured finding that a planted instruction file is still injected
 when the system prompt is fully replaced: **replacing the system prompt is not

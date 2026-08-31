@@ -841,3 +841,42 @@ cycle seven. Two of three this round were mine from the previous round, and the
 mechanism was the same both times: a fix that generalises. "No per-template skew
 macro" became "no macro for skew" because the shorter sentence reads better, and
 the deleted word was carrying the truth of it.
+
+## Cycle thirteen: the prose was clean and I had reported a red gate as green
+
+Cycle thirteen cleared both fix commits by execution — every sentence cycles
+eleven and twelve wrote checks out, and a scan of every decimal literal in
+`paper/sections/*.tex` outside a `\NUM{}` found each one inside an enumerated
+provenance class. The prose vein has closed.
+
+**It found the gate red at HEAD instead.** `de check` exits 1: `docs/METHODS.md`
+names thirteen dependencies that have moved in eleven commits since it was last
+read, over a ceiling of ten. The count was nine at `31ee70a`, ten at `ffed233`
+— exactly the ceiling, still passing — and eleven at `e780118`. Cycle twelve's
+own edit to `method.tex` is the commit that tipped it, and `e780118`'s message
+says "23/23 gate steps".
+
+I ran the gate before committing, saw green, and wrote the number down. The
+drift step counts commits, so a run in the working tree cannot see the commit
+that is about to exist. `CLAUDE.md` has a standing rule for this — commit, do
+not stage, because a gate that runs in the working tree cannot see what the
+commit is missing — and I have now broken it twice in this session, both times
+by reporting a figure I had measured against the wrong object.
+
+**The drift read was not a formality.** `docs/METHODS.md:525` said "Arms
+interleave per item rather than running in blocks, so arm is not confounded with
+model drift or quota state." That is the exact claim `runner.py` was corrected
+for on 2026-08-28, which the paper reports as a design defect and which the run
+README, the limitations section and the harness appendix all now disclose.
+`METHODS.md` had kept the false version through six cycles of auditing, because
+no cycle read it: it is a gated document and the gate that would have surfaced
+it is the one I had been letting run late.
+
+That is the argument for the drift ceiling, made against me. The mechanism found
+a false sentence that thirteen adversarial reviews did not.
+
+## Thirteen cycles
+
+169 defects. The prose is clean, the arithmetic was never wrong, and the last
+defect of the run was a stale claim in a document the gate had been telling me
+to read.
