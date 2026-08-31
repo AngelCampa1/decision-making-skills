@@ -34,19 +34,27 @@ fits the template it came from. Our original plan was exactly such a holdout,
 and a probe caught it before the study rather than after. \textbf{Split by
 template, or the evaluation rewards the failure it exists to detect.}
 
-Our corpus is the case where transcription did not pay, which is worth
-separating from the lesson. The constants both engines lifted are drawn fresh
-per item and restated in every prompt, so a body asserting 61\% is contradicted
-by the item in front of it and the memorisation cost GEPA accuracy instead of
-buying it any. A corpus with a fixed threshold would have rewarded exactly the
-same behaviour, and neither engine would have behaved differently.
+Whether the transcription paid is a question this design cannot answer, which
+is worth separating from the lesson. Both engines lifted constants from
+\texttt{rel-007-capacity-scale} and \texttt{rel-008-contract-renew}, and both
+are training templates, so neither appears in the unseen set at all. On the two
+templates the constants concern, GEPA reads
+\NUM{\accSeenRelZeroZeroEightContractRenewGepa} and
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} against an empty prompt's
+\NUM{\accSeenRelZeroZeroEightContractRenewOff} and
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleOff}: at or above it, not below.
+GEPA's unseen deficit is on \texttt{rel-001-vendor-outage}, which none of the
+constants touch. So the memorisation neither visibly cost nor visibly bought
+accuracy here, and a corpus with a fixed threshold would have rewarded exactly
+the same behaviour while this one merely tolerated it.
 
 \subsection{The placebo moved the model, which is the more useful finding}
 
 The most actionable number in \Cref{tab:seen} is not either engine's. It is the
 placebo at \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} for an empty prompt.
 A document of the right length and shape, whose content carries no method,
-outperformed both the skill we wrote and one of the two evolved winners.
+outperformed the skill we wrote, and on the unseen set it outperformed GEPA's
+winner too.
 
 Read one way this undercuts the premise of writing skills at all, and we follow
 that honestly: on this corpus and this model, a substantial part of what a skill
@@ -93,7 +101,9 @@ checks that would have shown that take a pocket calculator and a registration.
 The first is the $p$-floor. Fix the unit of analysis, count the clusters, and a
 one-sided exact test over $k$ of them cannot return a $p$ below $2^{-k}$. Our
 unseen set is \NUM{\templatesUnseen} templates, so the floor is
-\NUM{\floorUnseen} and no outcome would have cleared $\alpha = \NUM{\mdeAlpha}$.
+\NUM{\floorUnseen}, and no outcome would have cleared the family's
+$\alpha = \NUM{\studyAlpha}$, let alone Holm's tightest step of
+\NUM{\mdeAlpha}.
 The second is the minimum detectable effect, which our registration did compute
 and then computed at a design effect of 1.0 for a corpus built from templates.
 At the \NUM{\protocolDesignEffect} our own protocol specifies, the detectable

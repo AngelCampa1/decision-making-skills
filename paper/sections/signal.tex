@@ -110,9 +110,25 @@ It is unanswered, and accuracy cannot tell those apart.
 
 The two-option forced choice is the workhorse format of this literature, because
 it makes ground truth cheap and scoring unambiguous. It is also the format in
-which a template that measures nothing is hardest to spot, because a corpus of
-them returns a respectable-looking accuracy near the base rate and no other
-number contradicts it.
+which a template that measures nothing is easiest to leave in, for two reasons
+that pull in different directions.
+
+The first is aggregation. On a balanced key accuracy over the parsed rows is
+$(J+1)/2$, so a template at $J = 0$ reads exactly 0.5000 and is obvious the
+moment anyone looks at it per template. Almost nobody does. Pooled over ten
+templates the same corpus returns \NUM{\accSeenOff} for an empty prompt, which
+looks like a corpus that works.
+
+The second is that the metric this study reports is not the parsed one. Counting
+an unreadable answer as wrong breaks the identity, and it breaks the ordering
+with it. \texttt{rel-003-oncall-escalate} discriminates perfectly for
+\texttt{off}, $J = 1.000$ on the
+\NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items it answered, and
+reports \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}.
+\texttt{rel-006-refund-request} barely discriminates at all and reports
+\NUM{\accSeenRelZeroZeroSixRefundRequestOff}, higher. On the published number a
+template that is always right when it answers ranks below one that is mostly
+guessing.
 
 An unbalanced key adds the bias channel on top, and then an arm that shifts a
 model's preference toward the option the items happen to favour gains accuracy

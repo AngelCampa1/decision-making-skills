@@ -123,7 +123,9 @@ the placebo, against \NUM{\unparsedOff}, \NUM{\unparsedOn} and
 \NUM{\unparsedPlacebo} unreadable answers in total. \textbf{The arm with the most
 runaway generations in this study is the one whose document says nothing.}
 Putting text in the system prompt makes a 1.7B model talk itself out of
-concluding, and how much text matters more than what it says. An earlier draft
+concluding. Nothing here ranks length against content: the shortest non-empty
+body produces the most runaways and the longest produces fewer than the seed
+skill, so the ordering is not length. An earlier draft
 of this paper reported the opposite: that runaways were a seed skill pathology
 both evolved winners fixed. GEPA's winner does suppress them, to
 \NUM{\atCapGepa}, while carrying the most unreadable answers of any arm at
@@ -184,12 +186,18 @@ sum against it.
 
 \paragraph{The unseen set could not have rejected.} With $k$ templates a
 one-sided sign-flip cannot return below $2^{-k}$, because the observed sign
-vector is the one that maximises the statistic. The unseen set has
+vector is itself one of the $2^k$ assignments and so always falls inside its own
+tail. Equality holds only when it also maximises the statistic. The unseen set has
 \NUM{\templatesUnseen} templates, so its floor is \NUM{\floorUnseen} —
-above $\alpha = 0.05$ before Holm and further above it after. \emph{No outcome
+above the family's $\alpha = \NUM{\studyAlpha}$ before Holm and further above
+Holm's tightest step of \NUM{\mdeAlpha} after. \emph{No outcome
 of the three unseen comparisons could have been significant.} The seen set has
-\NUM{\templatesSeen} templates and a floor of \NUM{\floorSeen}, which leaves
-room, but only if every template moves the same way and none did.
+\NUM{\templatesSeen} templates and a design floor of \NUM{\floorSeen}, which
+leaves room. The realised floor is higher, because a template that nets zero
+drops out of the test: the seen comparisons ran on
+\NUM{\clustersSeenSkillopt} and \NUM{\clustersSeenOn} live clusters, floors of
+\NUM{\clusteredFloorSeenSkillopt} and \NUM{\clusteredFloorSeenOn}, and the
+second is already above Holm's tightest $\alpha = \NUM{\mdeAlpha}$.
 
 This is a property of the design and not of the data. It was computable when the
 sets were drawn, and we did not compute it. \Cref{sec:limitations} carries what
@@ -230,9 +238,18 @@ capacity headroom at 37\%, and a worked example built on the numbers 2818 and
 2032. Every one of those is a value from a single training item. The catch is
 that \texttt{utilisation\_floor} is drawn fresh per item from the integer range
 60 to 95 and stated in each item's Background, so a body carrying 61\% asserts
-a threshold its own prompt contradicts on almost every item it meets. That arm
-scores \NUM{\accUnseenGepa} on the unseen set against \NUM{\accUnseenOff} for an
-empty prompt, and it is the only arm in the study below no document at all.
+a threshold its own prompt contradicts on almost every item it meets.
+
+Whether that cost anything is a question this split cannot answer. Both
+constants belong to \texttt{rel-008-contract-renew} and
+\texttt{rel-007-capacity-scale}, both are training templates, and neither is in
+the unseen set. On the two templates concerned GEPA reads
+\NUM{\accSeenRelZeroZeroEightContractRenewGepa} and
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} against an empty prompt's
+\NUM{\accSeenRelZeroZeroEightContractRenewOff} and
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleOff}. Its unseen collapse is
+elsewhere, on \texttt{rel-001-vendor-outage}, and has the mechanism
+\Cref{sec:parsefail} gives.
 
 SkillOpt's winner carries 63\% for the same template with the arithmetic
 $213/300$ beside it. Two engines, one training pool, two different constants,

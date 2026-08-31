@@ -346,6 +346,8 @@ def power_macros(analysis: Mapping[str, Any], manifest: Mapping[str, Any]) -> di
     family = max(len(item_set["comparisons"]) for item_set in analysis["sets"])
     alpha = float(manifest["request"]["alpha"]) / family
     values: dict[str, str] = {
+        _macro_name("study", "alpha"): _fixed(float(manifest["request"]["alpha"]), 2),
+        _macro_name("family", "size"): str(family),
         _macro_name("mde", "alpha"): _fixed(alpha, 4),
         _macro_name("mde", "discordance"): _fixed(REGISTERED_DISCORDANCE, 3),
         _macro_name("protocol", "designEffect"): f"{PROTOCOL_DESIGN_EFFECT:.1f}",
@@ -830,6 +832,11 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     for (label, arm), flip in clustered_tests(readings, manifest, analysis["control"]).items():
         values[_macro_name("clustered", label, arm)] = _fixed(flip.p_value, 4)
         values[_macro_name("clusters", label, arm)] = str(flip.n_clusters)
+        # The realised floor, which is above the design floor whenever a
+        # template nets zero and drops out of the test. That is the number a
+        # comparison was actually up against, and it is not knowable until the
+        # data are in, unlike the design floor beside it.
+        values[_macro_name("clusteredFloor", label, arm)] = _fixed(flip.floor, 4)
 
     # The design floor is a property of how many templates the set has, not of
     # how many of them happened to move. A tied template can only raise the

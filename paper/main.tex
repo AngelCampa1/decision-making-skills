@@ -141,19 +141,22 @@ the independent unit, so the unseen set is three clusters, and three clusters
 admit no one-sided $p$ below \NUM{\floorUnseen}. All three unseen primaries were
 unfalsifiable before the first call. The pre-registration had computed a minimum
 detectable effect of \NUM{\mdeUnseen} assuming no clustering; at the design
-effect our own protocol specifies it is \NUM{\mdeClusteredUnseen}, roughly
-\NUM{\mdeRatio} times the largest gain the study went on to observe. Both
+effect our own protocol specifies it is \NUM{\mdeClusteredUnseen}, and the
+smaller of the two clustered figures is still \NUM{\mdeRatio} times the largest
+gain the study went on to observe. Both
 numbers were computable from the registration alone. Neither was carried into
 the paper until this version, and we think that omission, not the null, is the
 transferable finding.
 
-A second measurement result concerns the instrument. Accuracy on a balanced
-two-option key is a function of discrimination alone, so a corpus of templates
-that discriminate nothing returns a respectable figure and no other number
-contradicts it. Decomposing accuracy leaves the headline standing and shows that
-\NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates carry no
-discriminative signal at all, so a \NUM{\totalItems}-item run carries the
-signal of \NUM{\signalItems}. We argue both failure modes are generic to the
+A second measurement result concerns the instrument. Pooled accuracy hides
+which templates discriminate, and the metric this study reports, which counts an
+unreadable answer as wrong, does not even order them: one template answered
+perfectly whenever it was answered reports below one that is mostly guessing.
+Reporting discrimination directly leaves the headline standing and shows
+\NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates below
+$J = \NUM{\lowSignalThreshold}$ in every arm, two of them indistinguishably
+from zero, so a \NUM{\totalItems}-item run carries the signal of
+\NUM{\signalItems}. We argue both failure modes are generic to the
 two-option, template-built evaluations
 this literature is built on.
 \end{abstract}
