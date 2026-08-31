@@ -419,6 +419,17 @@ def per_template_macros(
                 values[_macro_name("acc", label, key, arm)] = _fixed(_accuracy(here), 4)
                 values[_macro_name("accWithout", label, key, arm)] = _fixed(_accuracy(rest), 4)
                 values[_macro_name("parseRate", label, key, arm)] = _fixed(_parse_rate(here), 3)
+                # Accuracy over the parsed subset, and its distance from the
+                # reported figure. On a balanced key the two coincide unless the
+                # unreadable answers land unevenly across it, so this difference
+                # is a direct measure of how selective an arm's parse failure is.
+                read = [r for r in here if r.parsed is not None]
+                if read:
+                    parsed_acc = _accuracy(read)
+                    values[_macro_name("accParsed", label, key, arm)] = _fixed(parsed_acc, 4)
+                    values[_macro_name("gapParsed", label, key, arm)] = _signed(
+                        parsed_acc - _accuracy(here), 4
+                    )
                 answers = [r.parsed for r in here if r.parsed is not None]
                 if answers:
                     top = max(set(answers), key=answers.count)

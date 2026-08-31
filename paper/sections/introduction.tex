@@ -75,11 +75,12 @@ none of them reached the paper until now. We think that is the part worth
 carrying to the next study, and we have put it in front of the null rather than
 in a caveat behind it.
 
-We also report a result about the measurement, not the engines.
-Accuracy on a balanced two-option key is the sum of two different quantities,
-how well a model tells the cases apart and how often it picks one option
-regardless, and reporting the sum alone hides both. Separating them left the
-study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
+We also report a result about the measurement, not the engines. On a balanced
+two-option key, accuracy is a function of discrimination alone, which sounds
+reassuring and is the problem: a template nobody can answer and a template
+everybody can answer at chance both return the base rate, and accuracy cannot
+tell them apart. Computing discrimination directly left the study's conclusion
+standing and revealed that \NUM{\lowSignalTemplates} of our
 \NUM{\studyTemplates} templates measure nothing.
 
 \paragraph{Contributions.}
@@ -101,13 +102,13 @@ study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
   \item \textbf{The arithmetic showing our own registered design was
     undecidable, computed from the registration rather than from the outcome.}
     Three of six primaries could not have rejected at any result, because a
-    one-sided test over \NUM{\clustersUnseenGepa} template clusters has a
+    one-sided test over \NUM{\templatesUnseen} template clusters has a
     $p$-floor of \NUM{\floorUnseen}; and the effect the design could detect was
     larger than the effect it found before the run began. Both checks are two
     lines of arithmetic over a registration, both are absent from every skill
     optimisation paper we read, and either would have stopped this study.
-  \item \textbf{A decomposition that separates discrimination from response
-    bias}, applied to our own published records, showing that a
+  \item \textbf{A discrimination measure reported beside accuracy}, applied to
+    our own published records, showing that a
     \NUM{\totalItems}-item run carried the discriminative signal of
     \NUM{\signalItems} (\Cref{sec:signal}). We argue the failure generalises to
     the two-option evaluations this literature is built on.

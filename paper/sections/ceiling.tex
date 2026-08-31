@@ -43,9 +43,14 @@ One template held the model off the ceiling, at 0.722. It was the template the
 prediction generalised from, and it turned out to be one-sided rather than hard.
 Measured three times at 0.629, 0.583 and 0.625, it reaches those numbers with
 sensitivity 1.000 against specificity between 0.167 and 0.250: it answers one
-option on about nine items in ten, in a set that wants it on half. An arm that
-merely nudged the model toward the other option would have gained roughly thirty
-points without deciding any better.
+option on about nine items in ten, in a set that wants it on half. That is an
+informedness of 0.167 to 0.250, and on a balanced key accuracy is pinned at
+$(J + 1)/2$, which is exactly the 0.583 to 0.625 observed. A nudge toward the
+other option would move both error rates and leave $J$ where it is, so it would
+gain nothing. An earlier draft said it would gain roughly thirty points; that is
+what a bias shift is worth on an \emph{unbalanced} key and it is worth zero
+here. The template is not hard and it is not biased in a way any arm could
+exploit. It is barely discriminating, which is the reason to retire it.
 
 Two more templates were built to diagnose that one, and both diagnoses were
 wrong. Adding two high-strength money facts to a ceilinged template, to invite

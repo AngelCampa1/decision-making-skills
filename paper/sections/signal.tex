@@ -8,11 +8,24 @@ compared against the rate the items called for it.
 
 \subsection{The measure}
 
-Accuracy on a balanced two-option key adds together two different quantities:
-how well a model tells the cases apart, and how often it picks one option
-whatever the case. A model that answers the first option nine times in ten
-scores about 0.63 on a set that wants it half the time, and none of that 0.63 is
+Accuracy on a two-option key adds together two different quantities: how well a
+model tells the cases apart, and how often it picks one option whatever the
+case. A model that answers the first option nine times in ten scores about 0.63
+on a set that wants it two times in three, and none of that 0.63 is
 discrimination.
+
+An earlier version of this section said ``balanced'' there, which is wrong and
+wrong in an instructive direction. Write accuracy as
+$\pi \cdot \mathrm{sens} + (1 - \pi) \cdot \mathrm{spec}$ for a base rate $\pi$.
+At $\pi = 0.5$ that collapses to $(J + 1)/2$, a function of informedness alone,
+so on a balanced key response bias contributes exactly nothing to accuracy and
+there is nothing for a decomposition to recover. Every template in this corpus
+is balanced by construction, and the identity holds in our records to the fourth
+decimal in every cell where no answer went unread. The argument for reporting
+$J$ therefore has to be made on other grounds, and the rest of this section
+makes it: what accuracy hides here is not bias but which templates carry any
+discrimination at all, and what breaks the identity is not bias either but parse
+failure that lands unevenly on the key.
 
 Signal detection separates them. \emph{Informedness}, Youden's
 $J = \mathrm{sensitivity} + \mathrm{specificity} - 1$, is zero for any
@@ -56,17 +69,16 @@ stronger.} Every arm's discrimination advantage over an empty prompt has an
 interval containing zero, exactly as every accuracy comparison did after Holm.
 SkillOpt keeps first place on both measures, at
 $\Delta J = \NUM{\deltaJSkillopt}$ with an interval of
-$[\NUM{\deltaJSkilloptLow}, \NUM{\deltaJSkilloptHigh}]$, so its accuracy lead is
-discrimination rather than a bias shift, and it is still indistinguishable from
-nothing.
+$[\NUM{\deltaJSkilloptLow}, \NUM{\deltaJSkilloptHigh}]$ and the widest interval
+of any arm here. It is still indistinguishable from nothing.
 
 Two things this does not say. Mean skew runs \NUM{\meanSkewGepa} to
 \NUM{\meanSkewOn} in \emph{every} arm including the empty prompt, so the
 response bias here is a property of the model on this corpus rather than
 something an arm introduced. And $J$ is computed over parsed rows, so
 \texttt{gepa}, which parses least at \NUM{\parseRateGepa}, is measured on the
-subset it managed to answer; its interval is the widest in \Cref{tab:signal} and
-that is part of why.
+subset it managed to answer, and \Cref{sec:parsefail} shows that subset is not a
+random half of its items.
 
 \subsection{Three of ten templates are not measuring anything}
 
@@ -98,15 +110,18 @@ It is unanswered, and accuracy cannot tell those apart.
 
 The two-option forced choice is the workhorse format of this literature, because
 it makes ground truth cheap and scoring unambiguous. It is also the format in
-which accuracy and response bias are maximally confusable, and the confusion runs
-in the direction that flatters an intervention: an arm that shifts a model's
-preference toward the option the items happen to favour gains accuracy without
-deciding any better.
+which a template that measures nothing is hardest to spot, because a corpus of
+them returns a respectable-looking accuracy near the base rate and no other
+number contradicts it.
 
-On our own corpus that mechanism is worth roughly thirty points on a single
-template. We have no evidence about anyone else's corpus, and that is the point:
-neither do they, because the statistic that would show it is not reported. The
-decomposition costs nothing. It runs over records a completed study already
+An unbalanced key adds the bias channel on top, and then an arm that shifts a
+model's preference toward the option the items happen to favour gains accuracy
+without deciding any better. Our own corpus is balanced, so that channel is
+closed here and we claim nothing from it. What is open here, and generic, is the
+third channel: an arm whose unreadable answers correlate with the key moves
+accuracy on the parsed subset by \NUM{\gapParsedUnseenRelZeroZeroOneVendorOutageGepa}
+on one template while moving the reported figure the other way
+(\Cref{sec:parsefail}). The decomposition costs nothing. It runs over records a completed study already
 has, needs no additional calls, and would have taken us from ``ten templates''
 to ``seven templates and three that measure nothing'' before we sized anything.
 

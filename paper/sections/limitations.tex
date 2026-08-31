@@ -39,8 +39,9 @@ have rejected at any outcome.
 pre-registration measured discordance at \NUM{\mdeDiscordance} on
 held-out items before the run and computed a minimum detectable effect from it:
 at $\alpha = \NUM{\mdeAlpha}$ and 80\% power, \NUM{\mdeUnseen} on the unseen set
-and \NUM{\mdeSeen} on the seen one. The largest effect anywhere in this study is
-\NUM{\effectSeenSkillopt}. \textbf{Nothing here was powered to detect what it
+and \NUM{\mdeSeen} on the seen one. The largest gain anywhere in this study is
+\NUM{\effectSeenSkillopt}, and the largest movement in either direction is
+GEPA's \NUM{\effectUnseenGepa}, which is also below the detectable effect. \textbf{Nothing here was powered to detect what it
 found}, and no version of this paper should be read as evidence that the true
 effects are zero.
 
@@ -71,8 +72,10 @@ between them as a generalisation gap.
 
 \paragraph{The decomposition is computed over parsed rows.} An arm that parses
 less is measured on the subset it managed to answer. \texttt{gepa} parses least
-at \NUM{\parseRateGepa} and carries the widest interval in \Cref{tab:signal}
-partly for that reason. Treating an unparsed row as a wrong answer would be a
+at \NUM{\parseRateGepa}, and \Cref{sec:parsefail} shows that subset is not a
+random one, which moves its parsed accuracy on one template by
+\NUM{\gapParsedUnseenRelZeroZeroOneVendorOutageGepa} against the figure we
+report. Treating an unparsed row as a wrong answer would be a
 different estimator with a different bias, and we did not want to choose one
 after seeing the data.
 

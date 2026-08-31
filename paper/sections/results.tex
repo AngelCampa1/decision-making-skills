@@ -84,8 +84,8 @@ The mechanism is visible in the same records. On \texttt{rel-001} GEPA gave one
 answer to a share \NUM{\constantShareUnseenRelZeroZeroOneVendorOutageGepa} of
 the \NUM{\parsedCountUnseenRelZeroZeroOneVendorOutageGepa} items it parsed at
 all, against a balanced key: sensitivity 1, specificity 0, and an informedness
-of exactly zero, which is one of two such cells in the study and is already
-printed in \Cref{tab:signal}. Its parse rate there is
+of exactly zero, which is the only such cell in the study and is already
+printed in \Cref{tab:templates}. Its parse rate there is
 \NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
 \NUM{\parseRateUnseenRelZeroZeroOneVendorOutagePlacebo} for the placebo on the
 same items. \Cref{sec:whatengines} describes the body.
@@ -107,11 +107,13 @@ Every arm's unreadable answers are scored wrong. That is the study's convention
 and it is defensible, but it makes accuracy a sum of decision quality and format
 compliance, and the arms differ on the second by more than any effect here.
 
-Two failure modes exist and they are near-disjoint by arm. \texttt{off} and
-\texttt{gepa} fail almost entirely by naming an option not on the menu;
-\texttt{on}, \texttt{placebo} and \texttt{skillopt} fail almost entirely by
-producing no answer line at all. Any document in the system prompt, real or
-placebo, converts off-key answers into missing ones.
+Two failure modes exist and the arms split across them. \texttt{gepa} fails
+almost entirely by naming an option not on the menu and \texttt{off} mostly
+does; \texttt{on}, \texttt{placebo} and \texttt{skillopt} fail almost entirely
+by producing no answer line at all. A content-free or seed-derived document in
+the system prompt converts off-key answers into missing ones. GEPA's winner does
+the reverse and carries more off-key answers than an empty prompt, which
+\Cref{sec:whatengines} explains.
 
 The missing ones have a mechanism, and it is not a property of the document's
 content. A generation that stops exactly at the \NUM{\outputCap}-token output
