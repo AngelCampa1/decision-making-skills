@@ -40,7 +40,11 @@ from typing import Any, Final
 
 from decision_evals.skills import delivered_body
 from decision_evals.solvers.arms import check_placebo_match
-from decision_evals.stats.cluster import cluster_bootstrap_diff
+from decision_evals.stats.cluster import (
+    SignFlipResult,
+    cluster_bootstrap_diff,
+    cluster_sign_flip,
+)
 from decision_evals.stats.signal import DegenerateSignalError, informedness, skew
 
 #: Where published runs of the five-arm study live.
@@ -97,6 +101,7 @@ class Reading:
     seed: int
     expected: str
     parsed: str | None
+    input_tokens: int
 
     @property
     def item(self) -> tuple[int, str]:
@@ -221,11 +226,104 @@ def load_readings(run_dir: Path) -> list[Reading]:
                     seed=int(row["seed"]),
                     expected=row["expected"],
                     parsed=row["parsed"] if row["parse_status"] == "parsed" else None,
+                    input_tokens=int(row["input_tokens"]),
                 )
             )
     if not readings:
         raise FigureError(f"no arm records under {run_dir}")
     return readings
+
+
+def body_tokens(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str, int]:
+    """How many prompt tokens each arm's document actually cost, by arm.
+
+    ``off`` carries the task framing and the format contract and no document, so
+    its input length is the shared prefix and every other arm's document is the
+    difference. The subtraction is exact rather than approximate: the same items
+    run in every arm, so per item the delta against ``off`` has zero variance,
+    and this refuses if that is ever untrue.
+
+    The word-count match in ``placebo_macros`` is a property of two files on
+    disk. This is a property of what the model was sent, and the two disagree:
+    the placebo is matched to the seed skill and to nothing else, while the
+    evolved winners are whatever length the engines chose.
+
+    Raises:
+        FigureError: No ``off`` arm, or an arm whose per-item delta is not
+            constant, which would mean the prefix is not shared.
+    """
+    if BASELINE_ARM not in arms:
+        raise FigureError(f"no {BASELINE_ARM!r} arm to difference against")
+    by_arm: dict[str, dict[tuple[int, str], int]] = defaultdict(dict)
+    for reading in readings:
+        by_arm[reading.arm][reading.item] = reading.input_tokens
+    baseline = by_arm[BASELINE_ARM]
+    sizes: dict[str, int] = {}
+    for arm in arms:
+        shared = baseline.keys() & by_arm[arm].keys()
+        if not shared:
+            raise FigureError(f"{arm!r} and {BASELINE_ARM!r} share no item")
+        deltas = {by_arm[arm][item] - baseline[item] for item in shared}
+        if len(deltas) != 1:
+            raise FigureError(
+                f"{arm!r} differs from {BASELINE_ARM!r} by {len(deltas)} distinct "
+                "amounts, so the prompt prefix is not shared across items"
+            )
+        sizes[arm] = deltas.pop()
+    return sizes
+
+
+def clustered_tests(
+    readings: Sequence[Reading], manifest: Mapping[str, Any], control: str
+) -> dict[tuple[str, str], SignFlipResult]:
+    """The registered comparisons re-run with the template as the unit.
+
+    The registration named an item-matched test and this study reports it. Items
+    minted from one template share a scenario, a rule and a distractor pool, so
+    that test is answering at a unit the design does not have. This sums to one
+    net difference per template and exchanges those signs instead.
+
+    Keyed by ``(set label, arm)``, control arm excluded because it is the thing
+    every arm is differenced against.
+
+    Raises:
+        FigureError: The manifest declares no item sets, or an arm is missing an
+            item another arm has.
+    """
+    sets = manifest.get("request", {}).get("sets")
+    if not sets:
+        raise FigureError("manifest declares no item sets to cluster within")
+    by_arm: dict[str, dict[tuple[int, str], Reading]] = defaultdict(dict)
+    for reading in readings:
+        by_arm[reading.arm][reading.item] = reading
+    results: dict[tuple[str, str], SignFlipResult] = {}
+    for item_set in sets:
+        seeds = set(item_set["seeds"])
+        items = sorted(item for item in by_arm[control] if item[0] in seeds)
+        for arm in by_arm:
+            if arm == control:
+                continue
+            missing = [item for item in items if item not in by_arm[arm]]
+            if missing:
+                raise FigureError(f"{arm!r} is missing {len(missing)} item(s) {control!r} has")
+            differences = [
+                _is_correct(by_arm[arm][item]) - _is_correct(by_arm[control][item])
+                for item in items
+            ]
+            clusters = [by_arm[control][item].template_id for item in items]
+            results[(item_set["label"], arm)] = cluster_sign_flip(
+                differences, clusters, alternative="greater"
+            )
+    return results
+
+
+def _is_correct(reading: Reading) -> int:
+    """One when the arm answered this item correctly, zero otherwise.
+
+    An unparsed answer is zero, which is the study's own convention: the scorer
+    credits nothing it could not read.
+    """
+    return int(reading.parsed is not None and reading.parsed == reading.expected)
 
 
 def arm_order(manifest: Mapping[str, Any]) -> list[str]:
@@ -434,6 +532,13 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
         _macro_name("study", "templates"): str(len({reading.template_id for reading in readings})),
     }
 
+    sizes = body_tokens(readings, arms)
+    control = sizes[analysis["control"]]
+    for arm, size in sizes.items():
+        values[_macro_name("body", arm, "tokens")] = str(size)
+        if size and control:
+            values[_macro_name("body", arm, "ratio")] = f"{size / control:.2f}"
+
     for item_set in analysis["sets"]:
         label = item_set["label"]
         values[_macro_name(label, "items")] = str(item_set["n_items"])
@@ -447,6 +552,20 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
             values[_macro_name("losses", label, arm)] = str(comparison["control_only"])
             values[_macro_name("p", label, arm)] = _fixed(comparison["p_value"], 4)
             values[_macro_name("q", label, arm)] = _fixed(comparison["adjusted"], 4)
+
+    for (label, arm), flip in clustered_tests(readings, manifest, analysis["control"]).items():
+        values[_macro_name("clustered", label, arm)] = _fixed(flip.p_value, 4)
+        values[_macro_name("clusters", label, arm)] = str(flip.n_clusters)
+
+    # The design floor is a property of how many templates the set has, not of
+    # how many of them happened to move. A tied template can only raise the
+    # attainable p, so this is the optimistic bound and it was knowable before
+    # the first call.
+    for item_set in manifest["request"]["sets"]:
+        seeds = set(item_set["seeds"])
+        templates = {r.template_id for r in readings if r.seed in seeds}
+        values[_macro_name("templates", item_set["label"])] = str(len(templates))
+        values[_macro_name("floor", item_set["label"])] = _fixed(2.0 ** -len(templates), 4)
 
     aa = analysis.get("aa")
     if aa is not None:

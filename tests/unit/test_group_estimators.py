@@ -26,6 +26,7 @@ from hypothesis import strategies as st
 from decision_evals.stats import (
     cluster_bootstrap_diff,
     cluster_bootstrap_two_sample,
+    cluster_sign_flip,
 )
 from decision_evals.trigger_arms import (
     ArmError,
@@ -1031,3 +1032,73 @@ class TestClusterFieldRestriction:
         assert not clustered.clustering_is_inert
         assert "CLUSTERING DID NOTHING" in "\n".join(format_rate("per item", per_item))
         assert "CLUSTERING DID NOTHING" not in "\n".join(format_rate("clustered", clustered))
+
+
+class TestClusterSignFlip:
+    """The template-level randomisation test, and the floor it reports."""
+
+    def test_the_floor_is_two_to_the_minus_cluster_count(self) -> None:
+        """Three clusters cannot produce a p below 0.125, whatever the data say.
+
+        This is the property the five-arm study's unseen set fell foul of, and
+        it is knowable from the design before a single call is made.
+        """
+        result = cluster_sign_flip([9.0, 9.0, 9.0], ["a", "b", "c"])
+        assert result.n_clusters == 3
+        assert result.floor == pytest.approx(0.125)
+        assert not result.could_reject
+
+    def test_an_unanimous_result_lands_exactly_on_its_floor(self) -> None:
+        result = cluster_sign_flip([5.0, 3.0, 8.0, 2.0], ["a", "b", "c", "d"])
+        assert result.p_value == pytest.approx(result.floor)
+        assert result.exhaustive
+
+    def test_a_tied_cluster_cannot_move_the_test_and_is_not_counted(self) -> None:
+        """A cluster summing to zero reads the same under either sign."""
+        paired = cluster_sign_flip([4.0, -4.0, 6.0, 5.0], ["a", "a", "b", "c"])
+        without = cluster_sign_flip([6.0, 5.0], ["b", "c"])
+        assert paired.n_clusters == without.n_clusters == 2
+        assert paired.p_value == pytest.approx(without.p_value)
+
+    def test_items_are_summed_within_a_cluster_not_counted_across_them(self) -> None:
+        """Ten items agreeing inside one template are one cluster, not ten."""
+        result = cluster_sign_flip([1.0] * 10, ["a"] * 10)
+        assert result.n_clusters == 1
+        assert result.p_value == pytest.approx(0.5)
+
+    def test_every_cluster_tied_is_no_evidence(self) -> None:
+        result = cluster_sign_flip([1.0, -1.0], ["a", "a"])
+        assert result.n_clusters == 0
+        assert result.p_value == pytest.approx(1.0)
+
+    def test_it_samples_rather_than_enumerating_past_the_limit(self) -> None:
+        values = [float(i + 1) for i in range(12)]
+        labels = [str(i) for i in range(12)]
+        result = cluster_sign_flip(values, labels, n_resamples=2_000, seed=11, exhaustive_limit=8)
+        assert not result.exhaustive
+        assert 0.0 < result.p_value <= 1.0
+
+    def test_the_direction_of_the_alternative_is_respected(self) -> None:
+        greater = cluster_sign_flip([-5.0, -3.0, -8.0], ["a", "b", "c"])
+        less = cluster_sign_flip([-5.0, -3.0, -8.0], ["a", "b", "c"], alternative="less")
+        assert greater.p_value == pytest.approx(1.0)
+        assert less.p_value == pytest.approx(0.125)
+
+    @pytest.mark.parametrize(
+        ("differences", "clusters", "kwargs", "match"),
+        [
+            ([], [], {}, "must not be empty"),
+            ([1.0, 2.0], ["a"], {}, "same length"),
+            ([1.0], ["a"], {"n_resamples": 0}, "n_resamples"),
+            ([1.0], ["a"], {"alternative": "sideways"}, "alternative"),
+        ],
+    )
+    def test_it_refuses_input_it_cannot_test(
+        self,
+        differences: list[float],
+        clusters: list[str],
+        kwargs: dict[str, Any],
+        match: str,
+    ) -> None:
+        with pytest.raises(ValueError, match=match):
+            cluster_sign_flip(differences, clusters, **kwargs)

@@ -18,6 +18,8 @@ from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
 
+from decision_evals.stats.paired import _validate_alternative
+
 
 @dataclass(frozen=True, slots=True)
 class ClusterBootstrapResult:
@@ -491,3 +493,118 @@ def effective_sample_size(n_items: int, mean_cluster_size: float, icc: float) ->
     if n_items < 1:
         raise ValueError(f"n_items must be >= 1, got {n_items}")
     return n_items / design_effect(mean_cluster_size, icc)
+
+
+@dataclass(frozen=True, slots=True)
+class SignFlipResult:
+    """Cluster-level randomisation test on a paired difference.
+
+    Attributes:
+        statistic: Observed sum of per-cluster net differences.
+        p_value: One-sided or two-sided p, per ``alternative``.
+        n_clusters: Clusters with a non-zero net difference. A cluster that ties
+            contributes nothing under either the observed or a flipped sign, so
+            it cannot affect the test and is not counted.
+        floor: The smallest p this test could have returned given
+            ``n_clusters``. Reported because it is a property of the design
+            rather than of the data, and it is knowable before any call is made.
+        exhaustive: Whether every sign vector was enumerated.
+    """
+
+    statistic: float
+    p_value: float
+    n_clusters: int
+    floor: float
+    exhaustive: bool
+
+    @property
+    def could_reject(self) -> bool:
+        """Whether any outcome could have cleared 0.05 at this cluster count."""
+        return self.floor <= 0.05
+
+
+def cluster_sign_flip(
+    differences: npt.ArrayLike,
+    clusters: npt.ArrayLike,
+    *,
+    alternative: str = "greater",
+    n_resamples: int = 100_000,
+    seed: int | None = None,
+    exhaustive_limit: int = 20,
+) -> SignFlipResult:
+    """Randomisation test that exchanges signs by cluster, not by item.
+
+    A paired item-level test asks whether this item moved. With items minted
+    from templates it answers a question nobody asked, because the items inside
+    a template are not independent draws. Summing to one net difference per
+    template and flipping *those* signs is the same test at the unit the design
+    actually has.
+
+    The cost is stark and worth reporting rather than discovering. With ``k``
+    clusters the smallest attainable one-sided p is ``2**-k``, so a comparison
+    over three templates cannot return anything below 0.125 whatever the data
+    say. :attr:`SignFlipResult.floor` carries that number, and
+    :attr:`SignFlipResult.could_reject` reads it against 0.05.
+
+    Enumerates all ``2**k`` sign vectors when ``k <= exhaustive_limit``, which
+    makes the p exact rather than sampled. Above it, samples.
+
+    Args:
+        differences: Per-item signed difference, treatment minus control.
+        clusters: Cluster label per item, same order and length.
+        alternative: ``"greater"``, ``"less"`` or ``"two-sided"``.
+        n_resamples: Sign vectors drawn when not enumerating.
+        seed: Seed for the sampled path. Ignored when enumerating.
+        exhaustive_limit: Largest ``k`` to enumerate. ``2**20`` vectors is the
+            point where enumerating stops being the cheaper option.
+
+    Returns:
+        A :class:`SignFlipResult`.
+
+    Raises:
+        ValueError: On mismatched lengths, empty input, ``n_resamples < 1``, or
+            an unknown ``alternative``.
+    """
+    alt = _validate_alternative(alternative)
+    if n_resamples < 1:
+        raise ValueError(f"n_resamples must be >= 1, got {n_resamples}")
+    diffs = np.asarray(differences, dtype=np.float64)
+    labels = np.asarray(clusters)
+    if diffs.ndim != 1:
+        raise ValueError("differences must be one-dimensional")
+    if diffs.size == 0:
+        raise ValueError("differences must not be empty")
+    if diffs.size != labels.size:
+        raise ValueError(
+            f"differences and clusters must be the same length, got {diffs.size} and {labels.size}"
+        )
+
+    totals = np.array(
+        [diffs[labels == label].sum() for label in np.unique(labels)], dtype=np.float64
+    )
+    live = totals[totals != 0.0]
+    k = int(live.size)
+    if k == 0:
+        return SignFlipResult(0.0, 1.0, 0, 1.0, True)
+
+    observed = float(live.sum())
+    exhaustive = k <= exhaustive_limit
+    if exhaustive:
+        grid = ((np.arange(2**k)[:, None] >> np.arange(k)) & 1).astype(np.float64)
+        resampled = ((1.0 - 2.0 * grid) * live).sum(axis=1)
+    else:
+        rng = np.random.default_rng(seed)
+        signs = rng.choice((-1.0, 1.0), size=(n_resamples, k))
+        resampled = (signs * live).sum(axis=1)
+
+    if alt == "greater":
+        hits = int(np.sum(resampled >= observed))
+    elif alt == "less":
+        hits = int(np.sum(resampled <= observed))
+    else:
+        hits = int(np.sum(np.abs(resampled) >= abs(observed)))
+
+    total = resampled.size
+    p_value = hits / total if exhaustive else (hits + 1) / (total + 1)
+    floor = 2.0**-k if alt != "two-sided" else min(1.0, 2.0 ** (1 - k))
+    return SignFlipResult(observed, float(p_value), k, float(floor), exhaustive)

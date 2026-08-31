@@ -38,9 +38,11 @@ in the general case, and neither reports the statistic that would settle it.
 \paragraph{What we did.}
 We held the model fixed, evolved a decision-making skill with each engine
 against a training split, froze both winners by content hash, and then minted a
-fresh holdout the engines had never seen. Five arms ran over that holdout at a
-matched token budget: no skill, the hand-written seed skill, a token- and
-structure-matched placebo, and the two evolved winners. Every comparison is
+fresh holdout the engines had never seen. Five arms ran over that holdout: no
+skill, the hand-written seed skill, a placebo matched to that skill on word
+count and structure, and the two evolved winners, whose lengths the engines
+chose and which the placebo therefore does not match
+(\Cref{sec:length-confound}). Every comparison is
 McNemar's exact test against the placebo, paired by item, with Holm correction
 across a family of three registered before the first call. The prediction was
 committed to git before any data existed, and the run's provenance gate refuses
@@ -67,14 +69,17 @@ study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
 % deliberate: a contribution contingent on a positive result is a bet.
 \begin{enumerate}
   \item \textbf{The first placebo-controlled evaluation of automated skill
-    optimisation.} A skill that beats an empty prompt but not a length- and
-    structure-matched placebo has demonstrated a length effect, and no engine in
-    this space reports the comparison that would tell the two apart.
+    optimisation we are aware of.} A skill that beats an empty prompt but not a
+    document of matched length and structure whose content says nothing has
+    demonstrated a length effect, and no engine in this space reports the
+    comparison that would tell the two apart. Ours is matched to the seed skill
+    and not to the evolved winners, which \Cref{sec:length-confound} reports as
+    a limit on what the arm controls.
   \item \textbf{An A/A control, reported.} The control arm was scored a second
     time into a separate checkpoint, and returned \NUM{\aaPairs} of
-    \NUM{\aaPairs} items identical. Every arm difference in
-    \Cref{sec:results} is therefore a difference the prompts caused, and the
-    venue's determinism is a measurement rather than an assumption.
+    \NUM{\aaPairs} items identical. The venue's determinism is a measurement
+    rather than an assumption, and it bounds the drift the block ordering
+    exposes the arms to over the stretch the repeat covers.
   \item \textbf{A decomposition that separates discrimination from response
     bias}, applied to our own published records, showing that a
     \NUM{\totalItems}-item run carried the discriminative signal of

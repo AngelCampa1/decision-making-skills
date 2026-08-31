@@ -21,7 +21,7 @@ arm & system prompt \\
 \midrule
 \texttt{off} & task framing and response-format contract only \\
 \texttt{on} & control plus the hand-written seed skill \\
-\texttt{placebo} & control plus token- and structure-matched filler \\
+\texttt{placebo} & control plus word- and structure-matched filler \\
 \texttt{gepa} & control plus GEPA's frozen winner \\
 \texttt{skillopt} & control plus SkillOpt's frozen winner \\
 \bottomrule
@@ -35,10 +35,14 @@ absence is what makes most skill evaluations uninterpretable.
   \item \textbf{The response-format contract is in every arm.} A skill that
     also teaches the model how to format an answer, tested against a control
     that was never told, measures instruction-following.
-  \item \textbf{The placebo is matched on tokens and on structure.} It is the
-    control every comparison is made against. \texttt{off} is reported
+  \item \textbf{The placebo is matched on word count and on structure.} It is
+    the control every comparison is made against. \texttt{off} is reported
     alongside, outside the family, because it answers a different question:
-    whether any document helps at all.
+    whether any document helps at all. The match is \NUM{\placeboWords} words
+    against the skill's \NUM{\skillWords} and \NUM{\placeboSections} headings
+    against \NUM{\skillSections}. It is \emph{not} matched against the evolved
+    winners, whose lengths the engines chose, and
+    \Cref{sec:length-confound} gives the delivered sizes and what they cost.
   \item \textbf{The option menu is held constant across arms.} Removing option
     menus moved trajectory accuracy by 14 to 40 points in
     AgentAtlas~\citep{agentatlas2026}, which is larger than any effect we
@@ -49,6 +53,41 @@ All five arms are built by one function, \texttt{solvers.arms.build\_arm}, and
 told apart in the records by the SHA-256 of the body each carries. An arm that
 silently received the wrong body would be a different content hash in the
 record.
+
+\subsection{What the placebo controls, and what it does not}
+\label{sec:length-confound}
+
+The placebo is matched to the seed skill. It is not matched to the evolved
+winners, whose length each engine chose, and the gap is large enough to report
+in the method rather than the limitations.
+
+Every record carries \texttt{input\_tokens}. The \texttt{off} arm sends the task
+framing and the format contract and no document, so its prompt is the shared
+prefix and each other arm's document is the difference. Per item that difference
+has zero variance, so these are exact sizes and not estimates.
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+arm & body tokens & $\times$ placebo \\
+\midrule
+\texttt{placebo} & \NUM{\bodyPlaceboTokens} & \NUM{\bodyPlaceboRatio} \\
+\texttt{on} & \NUM{\bodyOnTokens} & \NUM{\bodyOnRatio} \\
+\texttt{gepa} & \NUM{\bodyGepaTokens} & \NUM{\bodyGepaRatio} \\
+\texttt{skillopt} & \NUM{\bodySkilloptTokens} & \NUM{\bodySkilloptRatio} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+So the comparison this paper is named after puts a
+\NUM{\bodySkilloptTokens}-token document against a
+\NUM{\bodyPlaceboTokens}-token one. Where an evolved winner beats the placebo,
+length is not controlled and the length reading and the content reading cannot
+be told apart. Where it loses, as GEPA does on the unseen set, length is not the
+available explanation, since the longer document is the one that lost.
+
+A placebo generated per treatment arm would close this. That is a design we did
+not run, and no analysis of these records recovers it.
 
 \subsection{Arenas, and why this study emits no verdict}
 \label{sec:arenas}
@@ -87,15 +126,21 @@ and in the record, and the prediction it weakened is still there saying so.
 
 \subsection{Statistics}
 
-Every comparison is McNemar's exact test on the discordant pairs, item-matched,
-one-sided, with Holm applied across the registered family of three. The two item
-sets are analysed separately and never pooled.
+The registered comparison is McNemar's exact test on the discordant pairs,
+item-matched, one-sided, with Holm applied across the registered family of
+three. The two item sets are analysed separately and never pooled.
 
-Intervals come from a cluster bootstrap that resamples \emph{templates}, not
-items. Items minted from one template are correlated, and treating them as
-independent understates variance by the design effect. Ten templates is few
-clusters and the intervals are correspondingly wide; that is the width this
-design supports.
+That test treats items as independent, and they are not. Items minted from one
+template share a scenario, a rule and a distractor pool, so the independent unit
+is the template. The registration named the item-matched test and we report it
+as registered, but it is the wrong unit and we report a template-level test
+beside it throughout (\Cref{sec:clustered}). Intervals come from a cluster
+bootstrap that resamples \emph{templates}, not items, for the same reason.
+
+Choosing the unit after seeing the data would be the defect this design exists
+to avoid, so both are reported everywhere and neither is presented as the
+headline. Where they disagree, they disagree in the direction of the clustered
+test being the more conservative, and \Cref{sec:clustered} says by how much.
 
 We report the discordant split beside every $p$-value. Two arms can land on
 identical accuracy while disagreeing on a third of the items, and an aggregate

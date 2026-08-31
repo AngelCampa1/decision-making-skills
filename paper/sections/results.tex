@@ -81,12 +81,58 @@ in \Cref{tab:seen}. A structured document of the right length and shape, whose
 content carries no method, moved this model. Any evaluation without such an arm
 would have attributed that movement to whatever text it happened to be testing.
 
+\subsection{The same comparisons at the template level}
+\label{sec:clustered}
+
+\Cref{tab:unseen,tab:seen} treat items as independent. \Cref{sec:method} says
+why they are not. Summing to one net difference per template and exchanging
+those signs instead gives the test at the unit the design has.
+
+\begin{center}
+\begin{tabular}{llrrr}
+\toprule
+set & arm & McNemar $p$ & clustered $p$ & clusters \\
+\midrule
+unseen & \texttt{on} & \NUM{\pUnseenOn} & \NUM{\clusteredUnseenOn} & \NUM{\clustersUnseenOn} \\
+unseen & \texttt{gepa} & \NUM{\pUnseenGepa} & \NUM{\clusteredUnseenGepa} & \NUM{\clustersUnseenGepa} \\
+unseen & \texttt{skillopt} & \NUM{\pUnseenSkillopt} & \NUM{\clusteredUnseenSkillopt} & \NUM{\clustersUnseenSkillopt} \\
+\midrule
+seen & \texttt{on} & \NUM{\pSeenOn} & \NUM{\clusteredSeenOn} & \NUM{\clustersSeenOn} \\
+seen & \texttt{gepa} & \NUM{\pSeenGepa} & \NUM{\clusteredSeenGepa} & \NUM{\clustersSeenGepa} \\
+seen & \texttt{skillopt} & \NUM{\pSeenSkillopt} & \NUM{\clusteredSeenSkillopt} & \NUM{\clustersSeenSkillopt} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Nothing rejects under either unit, so the paper's conclusion does not turn on
+the choice. What the clustered column changes is how close anything came.
+SkillOpt's seen comparison, the study's best showing at
+$p = \NUM{\pSeenSkillopt}$ item-matched, reads
+\NUM{\clusteredSeenSkillopt} clustered. It is one template: the net difference
+is carried by \texttt{rel-005-security-patch} and the remaining six templates
+sum against it.
+
+\paragraph{The unseen set could not have rejected.} With $k$ templates a
+one-sided sign-flip cannot return below $2^{-k}$, because the observed sign
+vector is the one that maximises the statistic. The unseen set has
+\NUM{\templatesUnseen} templates, so its floor is \NUM{\floorUnseen} —
+above $\alpha = 0.05$ before Holm and further above it after. \emph{No outcome
+of the three unseen comparisons could have been significant.} The seen set has
+\NUM{\templatesSeen} templates and a floor of \NUM{\floorSeen}, which leaves
+room, but only if every template moves the same way and none did.
+
+This is a property of the design and not of the data. It was computable when the
+sets were drawn, and we did not compute it. \Cref{sec:limitations} carries what
+that costs the registered predictions.
+
 \subsection{Controls}
 
 \paragraph{A/A: \NUM{\aaPairs} of \NUM{\aaPairs} identical.} The placebo scored
 a second time over every item returned \NUM{\aaDisagreements} disagreements,
-both passes at \NUM{\aaAccuracy}, $p = \NUM{\aaP}$. Every difference between
-arms in \Cref{tab:unseen,tab:seen} is a difference the prompts caused.
+both passes at \NUM{\aaAccuracy}, $p = \NUM{\aaP}$. It bounds the drift between
+blocks over the stretch it covers. It does not license reading every difference
+in \Cref{tab:unseen,tab:seen} as prompt-caused: the pass repeats one arm, and
+the arms ran in blocks (\Cref{sec:limitations}).
 
 The pass ran into its own checkpoint so that resume could not skip it and report
 perfect agreement by construction. It is also only trustworthy because of a
