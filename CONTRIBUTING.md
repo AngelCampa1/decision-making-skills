@@ -15,8 +15,10 @@ Requires Python 3.13+ and [uv](https://docs.astral.sh/uv/).
 uv sync --group dev
 ```
 
-That is the whole install. Publishing the website needs nothing extra, because
-publishing no longer happens here.
+That installs the Python side. `de check` also needs the `claude` CLI on `PATH`
+for the plugin-manifest step, and `de site` needs Node and npm. Publishing the
+website needs nothing extra beyond those, because publishing no longer happens
+here.
 
 ```bash
 uv run de check
@@ -24,8 +26,8 @@ uv run de check
 
 That is the whole gate: lint, format, types, tests, coverage floors, and the
 repository-integrity checks tabled below. It is bound to `pre-commit` (fast subset) and
-`pre-push` (everything), and the same command runs in CI on every push and pull
-request. Run it before you believe anything works.
+`pre-push` (everything), and the same command runs in CI on every pull request
+and every push to `main`. Run it before you believe anything works.
 
 Run it locally anyway, even though CI will. The two are not redundant: local
 tells you the tree in front of you passes, CI tells you the commit passes, and
@@ -38,7 +40,7 @@ disagreed in four places.
 
 | If you | `de check` says |
 | --- | --- |
-| commit under an address other than the GitHub noreply one | the history *is* the pre-registration evidence, and a misattributed commit cannot be rewritten later without destroying the timestamps the method relies on |
+| commit under a `@ventoralabs.com` address, or with `user.name` or `user.email` unset | the history *is* the pre-registration evidence, and a misattributed commit cannot be rewritten later without destroying the timestamps the method relies on |
 | change `datasets/triggers/`, `datasets/tailoring/`, `skills/` or `evals/src/decision_evals/arenas.py` without an entry in [`docs/DECISIONS.md`](docs/DECISIONS.md) | a label move is invisible in a checkpoint and shifts every number already computed from it, and the arena registry decides which runs may become evidence |
 | publish a run without an answer-key version, or with a prediction that cannot be shown to predate its data | a prediction that cannot be shown to predate its data is not evidence |
 | give a module a coverage floor that no entry point reaches | a tested refusal with no caller is inert, and the gate reports green either way |

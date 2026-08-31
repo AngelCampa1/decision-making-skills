@@ -9,7 +9,7 @@
 # nobody is pretending otherwise".
 
 # 365 calls, published 2026-08-12, with a write-up and no prediction entry.
-# This is the run CLAUDE.md describes as "a 365-call run launched with no bands
+# This is the run docs/WHY_THESE_RULES.md describes as "a 365-call run launched with no bands
 # at all" -- one of four pre-registration slips that day, and the reason the
 # provenance gate exists. It cannot be repaired: a prediction written now would
 # postdate its data, which is the precise thing the gate refuses. It stays

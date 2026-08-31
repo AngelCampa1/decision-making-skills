@@ -5,7 +5,7 @@ title: "result: "
 labels: measurement
 ---
 
-Eight measurements have already been caught being broken here, and **every one
+Eleven measurements have already been caught being broken here, and **every one
 produced a clean run, a full checkpoint and a plausible number.** None crashed.
 So this template exists because the failure mode is real and quiet.
 [`docs/STATUS.md`](../../docs/STATUS.md) has the table.

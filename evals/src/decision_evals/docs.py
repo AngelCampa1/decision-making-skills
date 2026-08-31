@@ -5,12 +5,12 @@ checked by reading it, and on 2026-08-13 an audit found the front door making
 three claims that were false at the time it was read:
 
 - ``README.md`` told the reader to run ``de screen`` and ``de confirm``.
-  Neither is a command. ``dev``/``screen``/``confirm`` are an ``Arena`` literal
+  Neither was a command then; both are now. ``dev``/``screen``/``confirm`` are an ``Arena`` literal
   in :mod:`decision_evals.arenas`; the runner behind all 2,555 calls of the one
   working instrument is ``scripts/run_triggers.py``.
-- ``README.md`` listed a ``preregistration/`` component. There is no such
-  directory, and :mod:`decision_evals.prereg` -- the module that would fill it
-  -- is the one entry in ``[tool.decision-evals.unwired]``.
+- ``README.md`` listed a ``preregistration/`` component. There was no such
+  directory then -- it holds three version-stamped YAMLs today -- and :mod:`decision_evals.prereg` -- the module that would fill it
+  -- was then the one entry in ``[tool.decision-evals.unwired]``.
 - The same table omitted ``paper/`` and ``scripts/``, so the two directories a
   newcomer most needs were the two the map did not show.
 
@@ -488,7 +488,7 @@ def check_component_table(repo_root: Path) -> list[DocIssue]:
             "README.md",
             f"the component table lists `{name}/`, which is not a directory. This is the "
             "defect the check was written for: `preregistration/` was advertised as "
-            "holding hypotheses committed before the run, and has never existed.",
+            "holding hypotheses committed before the run, and did not exist.",
         )
         for name in sorted(listed - actual)
     ]

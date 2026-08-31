@@ -12,7 +12,7 @@ is not evidence.
 
 ## Which procedure
 
-`ledger` / `fit` / `cascade` / `timing` — or the router in `SKILL.md` if the
+`ledger` / `fit` / `cascade` / `timing` / `council` / `hinge` — or the router in `SKILL.md` if the
 problem is that the wrong one was chosen.
 
 ## What you asked

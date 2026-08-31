@@ -64,11 +64,13 @@ repos:
 
   - repo: local
     hooks:
-      # Fast subset on every commit: lint, types, skill validation, and the
-      # commit-attribution guard. Under a few seconds, so it does not train
-      # anyone to reach for --no-verify.
+      # Fast subset on every commit: nineteen of the gate's twenty-three steps,
+      # everything but tests, coverage, site and drift. This comment named four
+      # of them until 2026-08-31. It includes the plugin-manifest step, so the
+      # `claude` CLI has to be on PATH for a commit to go through. Under a few
+      # seconds, so it does not train anyone to reach for --no-verify.
       - id: de-check-fast
-        name: de check --fast (lint, types, git identity, skill lint)
+        name: de check --fast (everything but tests, coverage, site and drift)
         entry: python -m uv run de check --fast
         language: system
         pass_filenames: false

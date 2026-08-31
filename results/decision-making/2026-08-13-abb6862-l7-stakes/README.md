@@ -101,3 +101,17 @@ disagrees with the answer key.
 Prediction: [`notebook/2026-08-13-l7-prediction-eager-without-deleting-what-works.md`](../../../notebook/2026-08-13-l7-prediction-eager-without-deleting-what-works.md), committed at `1cfd90b` before either arm ran.
 
 Outcome: [`notebook/2026-08-13-l7-showing-beat-naming-and-nothing-left-the-frontier.md`](../../../notebook/2026-08-13-l7-showing-beat-naming-and-nothing-left-the-frontier.md).
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. Appended rather than edited
+into the tables above, which is the rule for a dated record.
+
+- **The precision column is the v1 answer key, in a README that declares v2.**
+  Recomputed from `../2026-08-12-fe24180-l5/verdicts-*.jsonl` against
+  `datasets/triggers/decision-making.yaml` at `version: 2`: `opener-only`
+  precision is **0.6923**, not 0.735, and `no-exclusions` is **0.8351**, not
+  0.845. Both printed figures are exactly what v1 gives. FPR and recall in the
+  same rows are v2 and are correct. One row mixed two answer keys.
+- **"110 negative observations" is the v1 count.** v2 holds 56 negatives at two
+  repeats, so the figure is **112**.

@@ -315,9 +315,10 @@ const best = Math.max(...arms.map((a) => a.accuracy));
 
     <h2>What we found</h2>
     <p>
-      We have made {shown('total-model-calls')} model calls. Every one asks the same
-      thing. Does the skill turn on at the right time? Not one of them asks yet whether it
-      helps you choose better.
+      We have made {shown('total-model-calls')} model calls. Most ask the same thing:
+      does the skill turn on at the right time? One study, the five-arm run of
+      2026-08-27, asked whether it helps you choose better. It carries no verdict,
+      because its target model is registered to a tier that emits none.
     </p>
 
     <figure class="board plot">
@@ -430,8 +431,9 @@ const best = Math.max(...arms.map((a) => a.accuracy));
       nothing.
     </p>
     <p>
-      The placebo is written, and a check here refuses one of the wrong size or shape. No
-      run has used it yet, or the step-by-step one.
+      The placebo is written, and a check here refuses one of the wrong size or shape.
+      One run has used it, the five-arm study of 2026-08-27, where it was the
+      registered control. No run has used the step-by-step one.
     </p>
     <p>
       We write down what we expect before each run. The date goes into git history, so we

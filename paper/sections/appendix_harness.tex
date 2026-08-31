@@ -61,14 +61,19 @@ and not from the record. We would rather say that than let the disclosure
 imply a receipt it does not hold.
 
 \paragraph{Observability.} Every call writes a record carrying the item id, the
-template id, the seed, the arm, the SHA-256 of the body that arm delivered and null for the
-arm that delivers none, the
-answer key, the parsed answer, the parse status, the raw response, the token
+template id, the seed, the arm kind --- the two evolved arms both record
+\texttt{candidate} and are told apart only by the hash --- the SHA-256 of the
+body that arm delivered and null for the arm that delivers none, the
+answer key, the parsed answer, the parse status, the response text, the token
 counts, the duration, and the schema version. The records are published beside
 the run, and every number this paper draws from the study is recomputed from
 them and from the run's own \texttt{analysis.json} by \texttt{de figures} at
 build time. The accuracies, $p$-values and adjusted $q$-values are the ones the
-run computed and published; everything else here is recomputed from the records. Three classes of figure come from
+run computed and published; everything else here is recomputed from the records.
+The admission-rule subsection of \Cref{sec:ceiling} is the one exception inside
+the study's own figures: its per-template skew is computed from these records and
+typed, because \texttt{de figures} emits no macro for it. Three further classes
+of figure come from
 elsewhere and \texttt{main.tex} enumerates them: figures from cited work,
 configuration constants, and the sub-agent probes of \Cref{sec:ceiling} and the
 search runs of \Cref{sec:whatengines}, both of which say so where they
@@ -76,9 +81,12 @@ appear.
 
 \paragraph{Verification.} The resolved model id is recorded per call from the
 response's own \texttt{model} field, not from what was requested.
-Ollama's \texttt{/api/show} card is read as an isolation receipt and the run is
-refused if it carries a \texttt{SYSTEM} prompt, which is the local analogue of a
-planted instruction file. Reasoning output arrives in a field separate from the
+Ollama's \texttt{/api/show} card can be read as an isolation receipt, and
+\texttt{assert\_isolated} refuses a card carrying a \texttt{SYSTEM} prompt, which
+is the local analogue of a planted instruction file. \textbf{The study path does
+not call it}: the only caller of \texttt{isolation\_receipt} in the repository is
+a test. This run therefore holds no isolation receipt, and we would rather say
+that than let the mechanism's existence read as its use. Reasoning output arrives in a field separate from the
 answer, and \textbf{it is not recorded}. The runner writes the answer text
 only, so a chain that is billed in \texttt{output\_tokens} leaves no other
 trace: for three of the five arms the median generation bills several hundred

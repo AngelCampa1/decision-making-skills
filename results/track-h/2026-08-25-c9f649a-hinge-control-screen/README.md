@@ -242,3 +242,10 @@ on 17 of 40 cases, which is what three samples of one model at default sampling
 look like. That dependence does not reach the 36 of 40 above, which compares one
 pass against a scorer rather than judges against each other. Whether
 `scripts/adjudicate.py` has the same property is being measured separately.
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. "The 82 prompt files" and
+"all 82" are **80**. `plan/` holds 82 files, of which 40 are `system` and 40 are
+`user`; the other two are `manifest.jsonl` and `seed.txt`, which are not prompts
+and do end in a newline.

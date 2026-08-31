@@ -684,3 +684,77 @@ bodies are gone, and nobody can check the split, us included. The paper now says
 so where it makes the claim. Six independent re-derivations have found no
 arithmetic error, and this is the one number in the paper that no re-derivation
 could reach.
+
+## Cycle ten, fourth and fifth reports: the homepage denies the study
+
+Thirty-one more findings across two agents, one auditing the paper's claims
+about mechanisms and one auditing every prose surface no gate reads.
+
+**The project's own homepage contradicts the paper.** `index.astro` says of the
+call ledger: "Every one asks the same thing. Does the skill turn on at the right
+time? Not one of them asks yet whether it helps you choose better." The number
+rendered beside that sentence is generated from a ledger row that includes the
+5-arm study's 4,368 calls, which measure exactly that. A second paragraph says
+"No run has used it yet" of the placebo, which was that study's registered
+control over 728 items. Both paragraphs predate the run by a week and nobody
+swept them. `CITATION.cff` points readers at that page.
+
+**A refusal the paper describes in the present indicative never ran.** The
+harness appendix says Ollama's `/api/show` card "is read as an isolation
+receipt and the run is refused if it carries a `SYSTEM` prompt". The only
+caller of `isolation_receipt` in the repository is a test. The study path goes
+through `evolution/adapter.py` and never reaches it, and neither `run.json` nor
+the run README carries a receipt line. This is the exact failure `CLAUDE.md`
+has a standing rule against — prose naming a mechanism has to name the tense it
+runs in — and it sat under a heading called Verification.
+
+**The records do not carry "the arm".** The Observability paragraph lists it
+among the fields. `records-gepa.jsonl` and `records-skillopt.jsonl` both hold
+`arm: "candidate"` on all 728 rows, and the A/A pass holds `arm: "placebo"`.
+A reader rebuilding the two accuracy tables as the appendix describes cannot
+separate the two evolved arms, or the A/A from its own control. `study.py` says
+so in a comment; the paper did not.
+
+**The paper printed the vacuous version of its own distractor criterion.**
+"A distractor qualifies only if the computed solution is provably invariant to
+its removal." `generators/audit.py` explains at length that this is trivially
+true of every fact in this generator, load-bearing ones included, which is why
+the implemented check is variable overlap instead. The paper published the
+phrasing the code was written to avoid.
+
+**"The repository refuses commits under any address but one"** is false three
+ways: it is a blocklist of one domain, it reads working config at gate time
+rather than any commit, and the log carries two addresses. It was offered as the
+reason ancestry cannot be gamed, which it is not; the ancestry argument stands
+without it.
+
+**And the screen that justifies the model choice ran after it.** Both the
+introduction and the limitations said the 1.7B target was "chosen because" every
+larger model ceilings. `ceiling.tex` says the screen came after the study. In a
+paper whose second headline is that we failed to compute something before a run,
+that ordering had to be stated rather than smoothed.
+
+Eleven more sat in run READMEs and repository furniture: a precision column
+scored to v1 under a README declaring v2, a negative-observation count from the
+same stale key, "380 adjudication calls" that are 361, "five" that is four,
+"18 discards" that are 19, "eight trivial features" that are eleven, "82 prompt
+files" that are 80, a reliability bin holding nothing, an answer key that does
+not cover the item it reports, three scripts and a data file listed as present
+that do not exist, CI described as running on every push, "that is the whole
+install" for an install that also needs the `claude` CLI and npm, and a
+pre-commit comment calling a nineteen-step gate four steps. Run READMEs took
+appended corrections; the rest took edits.
+
+## Ten cycles, final count
+
+160 defects. No arithmetic error in any of them. Seven independent
+re-derivations now, and one of these agents regenerated every artefact under
+`paper/generated/` and `paper/figures/` byte-identical to what is committed, so
+the PDF is not stale against the records.
+
+The thing worth writing down after ten cycles is narrow. The numbers were right
+from the first cycle and have never moved. What was wrong, 160 times, was
+sentences: about what the numbers mean, about what the code does, about what the
+repository contains, and — increasingly, as the cycles went on — about what the
+previous cycle's fix had just established. Reading a claim is not checking it,
+and the checkable ones are the ones you can run.

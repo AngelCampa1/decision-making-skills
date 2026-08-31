@@ -190,3 +190,23 @@ and `format_contract` ever reached a call, under opaque shuffled ids.
 twenty item files with their authoring records. `analysis/` holds the full
 242-line report, the battery before and after the two defect fixes, and the v2
 design note.
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. Appended, not edited in.
+
+- **The declared answer key does not cover the measured corpus.** This README
+  says `items/K*.yaml` holds twenty item files for twenty items. `items/` holds
+  K04 through K13; `draws-index.json` carries eleven ids, K03 through K13. K03
+  is not incidental: its 0.438 is half the recorded-stratum headline of 0.3438.
+  Its item files were never committed, so K03's scenario cannot be read from the
+  directory this file names as the key.
+- **`analysis/README.md` itemises files that do not exist.** `smoke-init.json`
+  is not in the tree, and `primary_runner.py`, `analyse.py` and
+  `council_primary.py` are listed under "What was run" beside files that are.
+  The sibling cascade and hinge READMEs each carry an explicit "the scoring code
+  is not in this directory" paragraph; this one does not, and should.
+- **The notional cost is the one figure not from `records/`.** This README says
+  every number above is computed from those files and that the records win where
+  `report.txt` disagrees. Summing `cost_usd` over the 176 non-duplicate draw
+  files gives **USD 24.38**; the 24.60 above is `analysis/report.txt`.

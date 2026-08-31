@@ -171,3 +171,21 @@ The scoring code is not here. It fails `ruff check` and `ruff format`, and
 reformatting the scorer into something other than the scorer that ran. It lives
 with the run's working files, and the keys plus `readings-*.jsonl` are enough to
 check any label by hand.
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. Appended, not edited in.
+
+- **"380 adjudication calls" is 361.** `wc -l adjudication/judge-calls*.jsonl`
+  gives 120 + 121 + 120. `analysis/INCIDENTS.md` independently says 360
+  judgments over 120 cases and three judges; the 361st is the duplicate from the
+  race that file records. The 500-call total above still decomposes: 120
+  readings, 19 parked, 361 judge calls.
+- **"0.000 on five of them" is four.** Movement is 0.000 on `adjudicated.json`,
+  `-negative`, `-C02` and `-C02-negative`; 0.056 on `-C03` and 0.091 on
+  `-C03-negative`.
+- **"the 18 discards" is 19.** `readings-C03-parked.jsonl` holds 19, the next
+  line of this README says "2 of 19", and `analysis/RESAMPLE.txt` gives 19
+  prompts by arm 9/10. `analysis/INCIDENTS.md`'s "18 readings" and "17 of 18"
+  carry the same error, and the `readings-C03-duplicates.jsonl` it names does
+  not exist.

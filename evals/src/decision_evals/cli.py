@@ -866,7 +866,7 @@ def check_docs_step() -> StepResult:
 
     Added 2026-08-13, after an audit found the README telling readers to run
     ``de screen`` and ``de confirm`` -- neither a command -- and advertising a
-    ``preregistration/`` directory that has never existed, while omitting
+    ``preregistration/`` directory that did not exist then, while omitting
     ``paper/`` and ``scripts/``. ``SCORECARD.md`` had already corrected a
     fourth of the same shape, ``de report``. Four instances, none caught by
     anything, because documentation was the last obligation here checked by

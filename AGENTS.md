@@ -277,8 +277,9 @@ and how a run flows through them. `README.md` carries the component table and
   `scripts/run_triggers.py` reads that field and nothing else, so rewriting it
   makes every published number incomparable. It changes only as a deliberate new
   arm with an entry in [`docs/DECISIONS.md`](docs/DECISIONS.md).
-- Commits are attributed to the GitHub noreply address; `de check` refuses
-  otherwise.
+- Commits are attributed to the GitHub noreply address. `de check` enforces a
+  narrower rule than that: it refuses an unset `user.name` or `user.email`, and
+  an email under the maintainer's employer domain. It is a blocklist of one.
 - Golden files pin the generated corpus byte-exact. Regenerating them needs
   `pytest --bless` and the diff belongs in review.
 - `notebook/` is append-only and dated. Predictions go in before runs, and a

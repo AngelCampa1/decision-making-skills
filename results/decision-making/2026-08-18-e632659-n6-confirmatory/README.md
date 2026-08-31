@@ -127,3 +127,9 @@ were registered days earlier and are unaltered, and `opener-only` was unseen at
 that point — but the sequence is recorded rather than left for a reader to
 reconstruct:
 [`notebook/2026-08-18-n6-two-arms-in-and-the-bands-were-checked-before-i-meant-to-look.md`](../../../notebook/2026-08-18-n6-two-arms-in-and-the-bands-were-checked-before-i-meant-to-look.md).
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. The stump accuracy 0.7054 is
+right; the feature count beside it is not. `stump_accuracy` iterates every key
+of `FEATURES`, and `corpus.py` holds **eleven** at this run's commit, not eight.

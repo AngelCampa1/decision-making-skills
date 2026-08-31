@@ -21,8 +21,12 @@ instead of inheriting them, which \Cref{sec:signal} is partly about.
 
 Distractors are type-compatible with the decision rule rather than off-topic. An
 earlier build used off-topic distractors, the control arm scored at ceiling, and
-the diagnosis is in the repository's notebook. A distractor qualifies only if
-the computed solution is provably invariant to its removal. Each item is drawn
+the diagnosis is in the repository's notebook. A distractor qualifies only if it
+shares no variable with the solution expression, which is a proof over all
+samplings rather than evidence from some of them. The obvious phrasing --- that
+the solution is invariant to its removal --- is vacuous in this generator, where
+answers come from sampled variables and never from fact text, so it would hold
+for load-bearing facts too. Each item is drawn
 from a stratum crossing distractor count with distractor position.
 
 \subsection{Splitting, and what it is a split of}

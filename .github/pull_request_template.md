@@ -15,7 +15,8 @@ published record, so the checklist below is the review.
 
 - [ ] `uv run de check` passes — the full gate, not `--fast`
 - [ ] Commits are attributed to the GitHub noreply address
-- [ ] If this touches `datasets/triggers/` or `skills/`, there is an entry in
+- [ ] If this touches `datasets/triggers/`, `datasets/tailoring/`, `skills/` or
+      `evals/src/decision_evals/arenas.py`, there is an entry in
       [`docs/DECISIONS.md`](../docs/DECISIONS.md) naming these commits
 - [ ] If this changes a skill, `de mirror` was run and the mirrors agree
 - [ ] If this regenerates a golden file, it was done with `pytest --bless` and

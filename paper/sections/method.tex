@@ -114,8 +114,9 @@ notebook before the first call. What makes that more than a claim is a gate: a
 published run declares the notebook entry carrying its prediction, and the
 provenance check refuses the run unless that entry's first commit is a git
 ancestor of the commit the run was made at. Ancestry is not editable after the
-fact without destroying the timestamps the method rests on, and the repository
-refuses commits under any address but one.
+fact without destroying the timestamps the method rests on. The gate also
+refuses a commit made under the maintainer's employer domain, which is a
+blocklist of one and not an allowlist.
 
 The registered family was fixed before any data existed: three comparisons,
 \texttt{on}, \texttt{gepa} and \texttt{skillopt}, each against \texttt{placebo},
@@ -123,8 +124,12 @@ one-sided in the direction of the arm helping. \texttt{off} sits outside the
 family by registration rather than by convenience.
 
 One amendment was appended mid-run, after 143 of \NUM{\studyCalls} calls and
-before any comparison was read: the corpus contains no memorisable constant, so
-the mechanism one prediction rested on could not occur. The amendment is dated
+before any comparison was read: the corpus fixes no constant \emph{across items},
+because every threshold is redrawn per item and restated in the prompt, so the
+mechanism one prediction rested on could not occur. Both winners did transcribe
+constants from the items they trained on (\Cref{sec:whatengines}); what the
+amendment closed is the channel by which such a constant could carry to a fresh
+seed. The amendment is dated
 and in the record, and the prediction it weakened is still there saying so.
 
 \subsection{Statistics}

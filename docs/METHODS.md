@@ -33,8 +33,8 @@ driven from [`../scripts/run_triggers.py`](../scripts/run_triggers.py);
 opens by saying it "computes and does not judge": nothing in that module
 decides an answer is wrong. A second scorer,
 [`../evals/src/decision_evals/scorers/answer.py`](../evals/src/decision_evals/scorers/answer.py),
-serves the four-arm design of §4 and has therefore only ever run on the
-calibration corpus.
+serves the arm design of §4, and the five-arm study of 2026-08-27 is the one
+published run it has scored.
 
 **The judge policy is written and has not been exercised.** No judge panel has
 run here. The only two multi-model procedures in the repository are the
@@ -231,13 +231,18 @@ published effect is a human reading the placebo text. `placebo-council.md`
 records that reading in its `content_review` frontmatter, naming the four
 constructs it was checked against.
 
-**No published run has used the placebo or cot arm.** Every call on record is a
+**No published run used the placebo or cot arm when this was written.** Every call on record is a
 trigger measurement, comparing variants of the skill's *description* against
 each other to ask whether the skill fires when it should. The four-arm
 comparison is what a confirmation run would do, and no confirmation run has
-happened. That describes a design and a written control, not a result: the
-placebo exists, its matching guard runs in `de check`, and it has never stood
-in for anything.
+happened.
+
+**Corrected 2026-08-31.** The paragraph above was true when written and is not
+now. The five-arm evolution study of 2026-08-27, amended into this document
+below, ran the placebo as its registered control over 728 items with a second
+A/A pass, and its 4,368 calls are not trigger measurements. What still holds is
+the narrow version: no `cot` arm has run, and no confirmation run has happened,
+so no run of either kind carries a verdict.
 
 Two structural guards belong to that same unrun path, and they are design
 rather than practice: the format contract is concatenated into every arm's

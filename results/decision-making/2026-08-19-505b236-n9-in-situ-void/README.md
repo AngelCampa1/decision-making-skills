@@ -102,3 +102,12 @@ through `--system-prompt`, which is every other arm on disk.
 
 - `verdicts-in-situ.jsonl` — all 516 records, including the 70 with `fired: null`
   and their full `raw` text.
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. The instrument gap this
+README records as "standing, recorded and not fixed" has since been closed: the
+parse-rate floor now aggregates over every repeat rather than reading repeat 0
+only, and `run_triggers.py`'s own docstring names this run as the one that
+exposed the old behaviour. The line number cited above no longer points at the
+code it described.

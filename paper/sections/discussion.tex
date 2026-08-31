@@ -28,11 +28,13 @@ to. Both were asked to maximise a score on items they could see, and
 transcribing what they saw is the best available way to do that.
 
 This has a design consequence for anyone evaluating these engines. A holdout
-that varies only the random seed of a template will score transcribed
-template-specific material as generalisation, because the transcription still
-fits the template it came from. Our original plan was exactly such a holdout,
-and a probe caught it before the study rather than after. \textbf{Split by
-template, or the evaluation rewards the failure it exists to detect.}
+that varies only the random seed of a template will score a transcribed template
+\emph{rule} as generalisation, because the transcription still fits the template
+it came from. A transcribed \emph{constant} does not survive a seed change on
+this corpus, where every threshold is redrawn per item (\Cref{sec:corpus}), and
+that is the half a mid-run amendment closed. Our original plan was a seed-varying
+holdout and a probe caught it before the study rather than after. \textbf{Split
+by template, or the rule channel stays open.}
 
 Whether the transcription paid is a question this design cannot answer, which
 is worth separating from the lesson. GEPA lifted constants from two training

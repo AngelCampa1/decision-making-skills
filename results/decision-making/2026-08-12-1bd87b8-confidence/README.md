@@ -94,3 +94,11 @@ python scripts/run_triggers.py --confidence
 **Answer key:** [`datasets/triggers/decision-making.yaml`](../../../datasets/triggers/decision-making.yaml) **v1**. Not comparable with a v2 run: on 2026-08-13 one turn moved from the positives to the negatives and recall rose on every arm on disk with no call re-made.
 Prediction: [`notebook/2026-08-12-first-forecast-prediction.md`](../../../notebook/2026-08-12-first-forecast-prediction.md).
 Outcome: [`notebook/2026-08-12-the-first-forecast-outcome.md`](../../../notebook/2026-08-12-the-first-forecast-outcome.md).
+
+## Correction, 2026-08-31
+
+Found during the pre-submission audit of `paper/`. The reliability table has one
+empty bin and one undercount. Recomputed from `verdicts.jsonl` under the
+left-closed binning the table itself uses, `[0.6, 0.7)` holds **0** and not 1,
+and `[0.7, 0.8)` holds **2** and not 1, the values being 0.70 and 0.75. The
+total of 73 and every other row are unchanged, and no aggregate moves.
