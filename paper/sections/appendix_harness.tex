@@ -61,7 +61,8 @@ and not from the record. We would rather say that than let the disclosure
 imply a receipt it does not hold.
 
 \paragraph{Observability.} Every call writes a record carrying the item id, the
-template id, the seed, the arm, the SHA-256 of the body that arm delivered, the
+template id, the seed, the arm, the SHA-256 of the body that arm delivered and null for the
+arm that delivers none, the
 answer key, the parsed answer, the parse status, the raw response, the token
 counts, the duration, and the schema version. The records are published beside
 the run, and every number this paper draws from the study is recomputed from

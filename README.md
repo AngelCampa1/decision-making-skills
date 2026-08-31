@@ -267,9 +267,11 @@ one transcribed a training template's rule, the other appended worked examples
 whose numbers trace back to the training pool. Tested against a placebo on a
 holdout minted after both were frozen, no arm rejects on either item set after
 Holm. GEPA's winner scores 0.628 on unseen scenarios against 0.685 for **no
-skill at all**, the only arm in the study worse than an empty prompt. The A/A
-control returned 728 of 728 items identical, so every difference between arms is
-one the prompts caused.
+skill at all**. On that set the skill we wrote is below an empty prompt too, at
+0.679. The A/A
+control returned 728 of 728 items identical, which bounds the venue drift the
+design is exposed to without removing it: the pass repeats one arm, and the arms
+ran in blocks.
 [The run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md).
 
 Two findings from the same line of work cut into the instrument rather than the

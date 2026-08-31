@@ -39,7 +39,8 @@ from decision_evals.solvers.arms import ArmName, build_arm
 from decision_evals.stats.multiplicity import holm
 from decision_evals.stats.paired import mcnemar_exact
 
-#: The arm every other arm is tested against. Not ``off``: a skill that beats an
+#: The arm every arm in the registered family is tested against. Not ``off``:
+#: a skill that beats an
 #: empty prompt has shown that a document helps, which is a claim about
 #: documents.
 CONTROL: Final = "placebo"

@@ -58,7 +58,8 @@ Last worked through 2026-08-31, against the five-arm study at
       `max_seconds` are in the request recorded in `run.json`, and the
       comparisons were computed once, at the end
 - [x] Control arm and placebo arm specified and run
-- [ ] Plain-CoT arm specified but **not run, and refused on this backend**. A
+- [ ] Plain-CoT arm specified but **not run, and not safely decidable on this
+      backend**. A
       reasoning model reasons whether or not the prompt asks, and emits the
       chain in a separate field, so a `cot` arm here would differ from `off` in
       what was requested and not in what the model did
@@ -270,8 +271,8 @@ Last worked through 2026-08-31, against the five-arm study at
       poppler 26.02.0 combination this box named until 2026-08-31 is the
       Windows machine of `docs/STATUS.md` and built a different, shorter draft.
       None of it is a
-      dependency of the gate. From a clean worktree the build is 28 pages, a
-      little over 439 KB, with no overfull or underfull boxes, no LaTeX warnings and
+      dependency of the gate. From a clean worktree at the commit this box was
+      last checked, 2026-08-31, the build is 29 pages and 443,336 bytes, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`

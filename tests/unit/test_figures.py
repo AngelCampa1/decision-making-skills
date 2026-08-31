@@ -582,7 +582,8 @@ class TestScreenMacros:
         assert screen_macros(_write_run(tmp_path)) == {}
 
     def test_the_count_and_the_extremes_come_from_the_file(self, tmp_path: Path) -> None:
-        """The count is the point: the paper called this an eleven-model screen.
+        """The count is the point: the paper called this an eleven-model screen,
+        and eleven is reachable models, not registered ones.
 
         Eleven is how many models the harness registers. What the artefact holds
         is a different number, and a section citing a committed file should

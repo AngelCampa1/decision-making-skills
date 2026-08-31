@@ -1165,3 +1165,12 @@ two-option key, accuracy is `(J+1)/2` and response bias contributes nothing, so
 the quantity the section claimed to separate out is not in the sum. Every
 template in this corpus is balanced. The measure is still worth reporting and
 the reason is now stated correctly.
+
+**Correction, 2026-08-31: the A/A sentence above says more than the A/A shows.**
+Earlier in this file: "The A/A returned 728 of 728 items identical, p = 1.000,
+so the differences between arms are differences the prompts caused." That does
+not follow. The pass repeats one arm and the arms ran in blocks, so the control
+bounds the venue drift this design is exposed to and does not remove it. The
+paper refuses the strong reading in three places and `README.md` and the run's
+own `README.md` have been corrected to match. This entry is appended rather than
+edited into the sentence above, which is the rule for this file.

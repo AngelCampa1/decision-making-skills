@@ -586,7 +586,8 @@ def screen_macros(run_dir: Path) -> dict[str, str]:
     ``nvbuild-ceiling-screen.json`` is committed, so the figures the ceiling
     section quotes from it are generatable and were typed. The count matters as
     much as the accuracies: the section called this an eleven-model screen, the
-    file holds fewer, and eleven is how many models the harness has registered.
+    file holds fewer, and eleven is how many models this key can reach under a
+    registered ``nvbuild/`` prefix. The harness registers prefixes, not models.
     Absent file is not an error, because a checkout without this run still
     builds the paper.
     """

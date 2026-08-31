@@ -479,3 +479,63 @@ paper and every one of them checked out, which is the first time that pattern
 has come back clean. The pattern that has not exhausted itself is the other one:
 there was still one more surface nobody had opened, and it was the artifact the
 paper cites as its evidence that the numbers are real.
+
+## Cycle nine: a fix introduced a defect, and the citation file had never been read
+
+Fifteen findings, and one of them is mine from cycle eight. I changed the run
+README's "five arms at a matched token budget" to "at a matched word count",
+which corrected the word *token* and left behind a claim that is false either
+way: the five arms do not share a body size, and `method.tex` spends a
+subsection saying so. The right edit was to delete the phrase. A correction that
+repairs the wrong half of a sentence is a new defect wearing the shape of a fix.
+
+**A figure caption asserted a comparison that its own figure refutes.** The
+`fig:accuracy` caption said the gap between the two item sets is larger than the
+gap between any two arms within a set. From the plotted coordinates the largest
+within-set gap is 0.0919 (seen `skillopt` 0.8087 against seen `off` 0.7168) and
+the set-to-set gap is 0.0844 on arm means and below 0.0919 for three of the five
+arms. Nine cycles in, this was the first false claim found in a caption, because
+captions are where nobody looks.
+
+**`CITATION.cff` had never been opened by any cycle, and it ships with the
+arXiv and Zenodo archive.** It says decision quality is not yet measured, where
+`SCORECARD.md` says the shipped skill has been measured on it. It says the
+controlled design "has not run". It says no published run has used the placebo
+arm, beside a committed `records-placebo.jsonl` of 728 lines. The documentation
+gate reads root `*.md` and `docs/`, so a `.cff` file is outside it, which is the
+same reason `paper/CHECKLIST.md` has produced a finding in four cycles running.
+
+**"The harness registers eleven" models.** `arenas.py` registers seven vendor
+*prefixes*; `ModelEntry`'s docstring says prefix rather than exact id, and no
+roster of eleven models exists anywhere in the tree. Eleven is how many models
+this key can reach under those prefixes, which is how `docs/STATUS.md` and
+`docs/LIMITATIONS.md` both word it. The paper was the only surface that
+converted reachability into registration, and `figures.py` had copied it.
+
+**0.722 was attributed to the wrong pass.** `hrd-002` read 23/36 = 0.639 first
+and 13/18 = 0.722 later; the notebook says so in a sentence naming both. The
+paper called 0.722 the first pass and 0.639 appears nowhere in `paper/`.
+
+`SCORECARD.md` said a screen-tier run would carry a verdict, where `arenas.py`
+gives `emits_verdict=True` to `confirm` alone — the load-bearing sentence
+explaining why that table is empty. It also said N7 is running, where
+`docs/STATUS.md` records N7 done on 2026-08-19 and N10 since. And the A/A
+over-claim, retracted in the paper and in the run README, was still standing in
+`README.md` and `docs/STATUS.md`; the latter takes an appended correction by
+standing rule, not an edit.
+
+Fixing all of this took the PDF from 28 pages to 29, which stales the build
+figures in the box I had just corrected. Updated in the same commit and dated
+this time, because a page count without a date is a number that goes wrong
+silently.
+
+## Nine cycles
+
+103 defects. Still no arithmetic error, on a fifth independent re-derivation.
+Two things this cycle establishes that the previous eight only suggested. The
+first is that repair is not merely where defects concentrate: it manufactures
+them, and I have now done it myself in consecutive cycles. The second is
+mechanical and fixable — every surface that has produced a repeat finding
+(`CHECKLIST.md`, `CITATION.cff`, `paper/` itself) sits outside the documentation
+gate's scope of root `*.md` and `docs/`. The gate cannot see the files that
+break most often.

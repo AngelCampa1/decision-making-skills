@@ -3,10 +3,11 @@ title: >-
   decision-making-skills: agent skills for decisions under uncertainty, with an
   evaluation harness that measures whether they work
 message: >-
-  Cite the software entry below. The published results measure whether a skill
-  fires when it should; decision quality is not yet measured, and no skill in
-  this repository carries a verdict. SCORECARD.md holds the verdicts and is
-  empty. `paper/` is a draft, so there is no paper to cite.
+  Cite the software entry below. Most published results measure whether a skill
+  fires when it should; one five-arm study has measured decision quality, and no
+  skill in this repository carries a verdict, because that study's target model
+  is registered to a tier that emits none. SCORECARD.md holds the verdicts and
+  is empty. `paper/` is a draft, so there is no paper to cite.
 type: software
 authors:
   - family-names: Campa
@@ -21,19 +22,20 @@ abstract: >-
   Beside it is a Python evaluation harness (`decision_evals`) that measures
   whether such a skill changes behaviour. Runs are pre-registered, and the
   harness refuses to publish a result whose prediction cannot be shown by git
-  ancestry to predate its data. The four-arm design is written and enforced,
-  and it has not run: a confirmation run compares a skill against four arms on
-  the same items (off, on, a token- and structure-matched placebo, and plain
-  chain-of-thought), so that a skill beating nothing while matching filler is
-  reported as a length effect. `check_placebo_match` refuses a placebo of the
-  wrong size or shape on every local gate run, and no published run has used
-  the placebo or chain-of-thought arm. Labels are re-derived blind by a panel
+  ancestry to predate its data. A controlled design is written and enforced: a
+  run compares a skill against an empty prompt, a word-count- and
+  structure-matched placebo and plain chain-of-thought on the same items, so
+  that a skill beating nothing while matching filler is reported as a length
+  effect. `check_placebo_match` refuses a placebo of the wrong size or shape on
+  every local gate run. One published run, the five-arm study of 2026-08-27,
+  has used the placebo arm and an A/A control; no published run has used the
+  chain-of-thought arm. Labels are re-derived blind by a panel
   of independent model instances, and the panel's agreement is reported
   chance-corrected (Fleiss' kappa, Krippendorff's alpha) alongside the raw
   rate. Statistics are exact and resampling-based, with templates as the
   resampling unit, and calibration goes through the Murphy decomposition.
-  Published results to date measure skill *triggering*, whether a skill fires
-  when it should. Decision quality is not yet measured.
+  Most published results measure skill *triggering*, whether a skill fires when
+  it should. Decision quality has one measurement, and it carries no verdict.
 keywords:
   - agent skills
   - LLM evaluation

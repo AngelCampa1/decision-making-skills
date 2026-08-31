@@ -24,7 +24,7 @@ same study code, and the directory carries the second because that is the one a
 reader can check the prediction against. The prediction's first commit,
 `e882eff`, is an ancestor of `53b4965`.
 
-Five arms at a matched word count, all through `solvers/arms.build_arm`, told
+Five arms, all through `solvers/arms.build_arm`, told
 apart by `candidate_sha`:
 
 | arm | body |

@@ -27,7 +27,7 @@ answers a different question by registration.
 \begin{table}[htbp]
 \centering
 \unseenTable
-\caption{Unseen set: three held-out templates, four holdout seeds,
+\caption{Unseen set: \NUM{\templatesUnseen} held-out templates, four holdout seeds,
 \NUM{\unseenItems} items. Neither engine saw these templates at any seed.}
 \label{tab:unseen}
 \end{table}
@@ -45,9 +45,8 @@ items were not, and were minted after both winners were frozen.}
 \begin{figure}[htbp]
 \centering
 \input{figures/accuracy}
-\caption{Accuracy by arm on both item sets. The gap between the two sets is
-larger than the gap between any two arms within a set, which is the shape of the
-whole result.}
+\caption{Accuracy by arm on both item sets. Every arm scores lower on the
+unseen set than on the seen one, and the two orderings are not the same.}
 \label{fig:accuracy}
 \end{figure}}{}
 
