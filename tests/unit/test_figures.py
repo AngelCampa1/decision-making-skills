@@ -32,12 +32,16 @@ from decision_evals.figures import (
     latest_run,
     load_readings,
     low_signal_templates,
+    per_template_macros,
     read_study,
     render_accuracy_plot,
     render_macros,
     render_signal_plot,
     render_tables,
+    restricted_macros,
+    screen_macros,
     signal_by_arm,
+    template_range_macros,
     write_figures,
 )
 from decision_evals.skills import delivered_body
@@ -568,3 +572,133 @@ class TestAtCap:
     def test_no_readings_is_refused(self) -> None:
         with pytest.raises(FigureError, match="no readings"):
             at_cap_macros([], ARMS)
+
+
+class TestScreenMacros:
+    """The ceiling screen's own artefact, read rather than typed."""
+
+    def test_an_absent_screen_is_not_an_error(self, tmp_path: Path) -> None:
+        """A checkout without this run still builds the paper."""
+        assert screen_macros(_write_run(tmp_path)) == {}
+
+    def test_the_count_and_the_extremes_come_from_the_file(self, tmp_path: Path) -> None:
+        """The count is the point: the paper called this an eleven-model screen.
+
+        Eleven is how many models the harness registers. What the artefact holds
+        is a different number, and a section citing a committed file should
+        report the file.
+        """
+        run_dir = _write_run(tmp_path)
+        (run_dir / "nvbuild-ceiling-screen.json").write_text(
+            json.dumps(
+                [
+                    {"model": "a", "asked": 30, "accuracy": 0.9},
+                    {"model": "b", "asked": 30, "accuracy": 1.0},
+                    {"model": "c", "asked": 30, "accuracy": 1.0},
+                ]
+            ),
+            encoding="utf-8",
+        )
+        values = screen_macros(run_dir)
+        assert values["screenModels"] == "3"
+        assert values["screenWorst"] == "0.900"
+        assert values["screenBest"] == "1.000"
+        assert values["screenAtCeiling"] == "2"
+        assert values["screenItems"] == "30"
+
+    def test_an_empty_screen_is_refused(self, tmp_path: Path) -> None:
+        run_dir = _write_run(tmp_path)
+        (run_dir / "nvbuild-ceiling-screen.json").write_text("[]", encoding="utf-8")
+        with pytest.raises(FigureError, match="no screened models"):
+            screen_macros(run_dir)
+
+
+class TestTemplateRangeMacros:
+    """The bounds an argument about a lifted constant rests on."""
+
+    def test_an_absent_corpus_is_not_an_error(self, tmp_path: Path) -> None:
+        assert template_range_macros(tmp_path) == {}
+
+    def test_each_integer_variable_gives_a_low_and_a_high(self, tmp_path: Path) -> None:
+        root = tmp_path / "datasets" / "templates"
+        root.mkdir(parents=True)
+        (root / "rel-008-contract-renew.yaml").write_text(
+            "variables:\n  utilisation_floor: {int: [60, 95]}\n  label: {choice: [a, b]}\n",
+            encoding="utf-8",
+        )
+        values = template_range_macros(tmp_path)
+        assert values["rangeRelZeroZeroEightContractRenewUtilisationfloorLow"] == "60"
+        assert values["rangeRelZeroZeroEightContractRenewUtilisationfloorHigh"] == "95"
+        # A non-integer variable has no bounds to quote and is left out rather
+        # than given empty ones.
+        assert not any("Label" in name for name in values)
+
+    def test_the_real_corpus_carries_the_bounds_the_paper_argues_from(self) -> None:
+        """The claim is that 63 cannot be rel-007's, because rel-007 draws 10-40."""
+        values = template_range_macros(REPO_ROOT)
+        low = values["rangeRelZeroZeroSevenCapacityScaleHeadroompctLow"]
+        high = values["rangeRelZeroZeroSevenCapacityScaleHeadroompctHigh"]
+        assert not int(low) <= 63 <= int(high)
+        floor_low = values["rangeRelZeroZeroEightContractRenewUtilisationfloorLow"]
+        floor_high = values["rangeRelZeroZeroEightContractRenewUtilisationfloorHigh"]
+        assert int(floor_low) <= 63 <= int(floor_high)
+
+
+class TestRefusalsOnMalformedRuns:
+    """The branches that fire when a run is not shaped the way a run is shaped.
+
+    Each of these ends in a refusal or a skip rather than a number, which is the
+    whole point: a renderer that copes silently emits a macro file missing
+    exactly the figures nobody then checks.
+    """
+
+    def _rewrite(self, run_dir: Path, arm: str, edit: object) -> None:
+        path = run_dir / f"records-{arm}.jsonl"
+        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        kept = [row for row in (edit(row) for row in rows) if row is not None]  # type: ignore[operator]
+        path.write_text("\n".join(json.dumps(row) for row in kept) + "\n", encoding="utf-8")
+
+    def test_an_arm_sharing_no_item_with_the_baseline_is_refused(self, tmp_path: Path) -> None:
+        run_dir = _write_run(tmp_path)
+        self._rewrite(run_dir, "on", lambda row: {**row, "seed": row["seed"] + 5000})
+        with pytest.raises(FigureError, match="share no item"):
+            body_tokens(load_readings(run_dir), ARMS)
+
+    def test_an_arm_missing_items_the_control_has_is_refused(self, tmp_path: Path) -> None:
+        """Pairing on a subset would compare two different item sets."""
+        run_dir = _write_run(tmp_path)
+        manifest = json.loads((run_dir / "run.json").read_text())
+        self._rewrite(
+            run_dir, "candidate", lambda row: None if row["item_id"].endswith("#v0") else row
+        )
+        with pytest.raises(FigureError, match="missing"):
+            clustered_tests(load_readings(run_dir), manifest, "on")
+
+    def test_a_template_an_arm_never_answered_gets_no_parsed_macros(self, tmp_path: Path) -> None:
+        """Zero would be a measurement of an accuracy nothing was measured on."""
+        run_dir = _write_run(tmp_path)
+        self._rewrite(
+            run_dir,
+            "candidate",
+            lambda row: (
+                {**row, "parsed": None, "parse_status": "unparsed"}
+                if row["template_id"] == "t-quiet"
+                else row
+            ),
+        )
+        manifest = json.loads((run_dir / "run.json").read_text())
+        values = per_template_macros(load_readings(run_dir), manifest, "off")
+        assert "parseRateUnseenTQuietCandidate" in values
+        assert "accParsedUnseenTQuietCandidate" not in values
+        assert "constantShareUnseenTQuietCandidate" not in values
+
+    def test_a_comparison_with_no_jointly_parsed_pair_is_skipped(self, tmp_path: Path) -> None:
+        """Not refused: another arm in the same run may still have pairs."""
+        run_dir = _write_run(tmp_path)
+        self._rewrite(
+            run_dir, "candidate", lambda row: {**row, "parsed": None, "parse_status": "unparsed"}
+        )
+        manifest = json.loads((run_dir / "run.json").read_text())
+        values = restricted_macros(load_readings(run_dir), manifest, "on")
+        assert "restrictedUnseenCandidate" not in values
+        assert "restrictedUnseenOff" in values

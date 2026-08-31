@@ -1037,6 +1037,29 @@ class TestClusterFieldRestriction:
 class TestClusterSignFlip:
     """The template-level randomisation test, and the floor it reports."""
 
+    def test_a_two_dimensional_input_is_refused(self) -> None:
+        """A matrix silently flattened would resample the wrong thing."""
+        with pytest.raises(ValueError, match="one-dimensional"):
+            cluster_sign_flip([[1.0, -1.0], [1.0, 1.0]], [["a", "a"], ["b", "b"]])
+
+    def test_two_sided_counts_both_tails(self) -> None:
+        """Its floor is twice the one-sided floor, because both ends qualify.
+
+        Two clusters both moving the same way is the most extreme one-sided
+        outcome available and reads 0.25 there. Two-sided it reads 0.50, because
+        the mirrored assignment is equally extreme and is counted.
+        """
+        one = cluster_sign_flip([1.0, 1.0], ["a", "b"], alternative="greater")
+        both = cluster_sign_flip([1.0, 1.0], ["a", "b"], alternative="two-sided")
+        assert one.p_value == pytest.approx(0.25)
+        assert both.p_value == pytest.approx(0.50)
+        assert both.floor == pytest.approx(2.0 * one.floor)
+
+    def test_a_two_sided_floor_cannot_exceed_one(self) -> None:
+        """One live cluster would give 2**0 * 2 = 2, which is not a p-value."""
+        result = cluster_sign_flip([1.0], ["a"], alternative="two-sided")
+        assert result.floor == 1.0
+
     def test_the_floor_is_two_to_the_minus_cluster_count(self) -> None:
         """Three clusters cannot produce a p below 0.125, whatever the data say.
 

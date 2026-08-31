@@ -116,9 +116,10 @@ that pull in different directions.
 The first is aggregation. On a balanced key accuracy over the parsed rows is
 $(J+1)/2$, so a template at $J = 0$ reads exactly 0.5000 and is obvious the
 moment anyone looks at it per template. Almost nobody does. Pooled over the
-\NUM{\templatesSeen} seen templates, two of which sit at chance, the same corpus
-returns \NUM{\accSeenOff} for an empty prompt, which looks like a corpus that
-works.
+\NUM{\templatesSeen} seen templates, two of which sit below
+$J = \NUM{\lowSignalThreshold}$ in every arm and one of those at chance, the
+same corpus returns \NUM{\accSeenOff} for an empty prompt, which looks like a
+corpus that works.
 
 The second is that the metric this study reports is not the parsed one. Counting
 an unreadable answer as wrong breaks the identity, and it breaks the ordering

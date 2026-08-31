@@ -31,6 +31,7 @@ from the data, which is the failure the arrangement exists to prevent.
 from __future__ import annotations
 
 import json
+import re
 import string
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
@@ -556,6 +557,63 @@ def at_cap_macros(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str,
     return values
 
 
+def screen_macros(run_dir: Path) -> dict[str, str]:
+    """The ceiling screen's own numbers, read off the artefact beside the run.
+
+    ``nvbuild-ceiling-screen.json`` is committed, so the figures the ceiling
+    section quotes from it are generatable and were typed. The count matters as
+    much as the accuracies: the section called this an eleven-model screen, the
+    file holds fewer, and eleven is how many models the harness has registered.
+    Absent file is not an error, because a checkout without this run still
+    builds the paper.
+    """
+    path = run_dir / "nvbuild-ceiling-screen.json"
+    if not path.is_file():
+        return {}
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    if not rows:
+        raise FigureError(f"{path} holds no screened models")
+    accuracies = sorted(float(row["accuracy"]) for row in rows)
+    return {
+        _macro_name("screen", "models"): str(len(rows)),
+        _macro_name("screen", "worst"): _fixed(accuracies[0], 3),
+        _macro_name("screen", "best"): _fixed(accuracies[-1], 3),
+        _macro_name("screen", "atCeiling"): str(sum(a >= 0.999 for a in accuracies)),
+        _macro_name("screen", "items"): str(int(rows[0]["asked"])),
+    }
+
+
+def template_range_macros(repo_root: Path) -> dict[str, str]:
+    """The integer ranges the corpus draws its thresholds from.
+
+    ``sec:whatengines`` argues that a constant a winner transcribed cannot have
+    come from a given template because that template's variable is drawn
+    elsewhere. That argument is only as good as the bounds it quotes, and the
+    bounds are in committed YAML, so they are read rather than typed.
+
+    Parsed with a regex instead of a YAML loader on purpose: this needs two
+    integers from a line whose shape the golden-file tests already pin, and
+    adding a parser dependency to the paper's build to read them would be the
+    larger change.
+    """
+    root = repo_root / "datasets" / "templates"
+    if not root.is_dir():
+        return {}
+    values: dict[str, str] = {}
+    pattern = re.compile(r"^\s*(\w+):\s*\{int:\s*\[\s*(\d+)\s*,\s*(\d+)\s*\]\s*\}")
+    for path in sorted(root.glob("*.yaml")):
+        key = _template_key(path.stem)
+        for line in path.read_text(encoding="utf-8").splitlines():
+            match = pattern.match(line)
+            if match is None:
+                continue
+            name, low, high = match.groups()
+            slug = name[:1].upper() + name[1:]
+            values[_macro_name("range", key, slug, "low")] = low
+            values[_macro_name("range", key, slug, "high")] = high
+    return values
+
+
 def _template_key(template_id: str) -> str:
     """A template id as a macro-name fragment: letters only, digits spelled out.
 
@@ -891,6 +949,8 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values[_macro_name("total", "items")] = str(total_items)
 
     values.update(at_cap_macros(readings, arms))
+    values.update(screen_macros(repo_root / STUDY_ROOT / study.run))
+    values.update(template_range_macros(repo_root))
     values.update(power_macros(analysis, manifest))
     values.update(per_template_macros(readings, manifest, BASELINE_ARM))
     values.update(restricted_macros(readings, manifest, analysis["control"]))

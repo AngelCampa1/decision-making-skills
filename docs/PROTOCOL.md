@@ -21,7 +21,7 @@ One skill, four arms, the same items in every arm, paired by item.
 | --- | --- | --- |
 | `off` | Task framing + response-format contract only | Control |
 | `on` | Control + the skill body | Treatment |
-| `placebo` | Control + token- and structure-matched filler | Isolates the length effect |
+| `placebo` | Control + word- and structure-matched filler | Isolates the length effect |
 | `cot` | Control + "Think step by step" | Isolates the generic-reasoning effect |
 
 Four arms, and the harness names five. The fifth, `in_situ`, holds the
@@ -38,10 +38,18 @@ The response-format contract appears in every arm. If only the treatment is
 told to emit structured output, the experiment measures instruction-following,
 not decision quality.
 
-The placebo is matched on tokens and structure (same approximate length, same
-headings, bullets, and a worked example) but contentless. A skill that beats
+The placebo is matched on word count and structure (same approximate length,
+same headings, bullets, and a worked example) but contentless. A skill that beats
 `off` and not `placebo` is a length effect, and no `SHIP` verdict goes out
 without a passing placebo arm.
+
+Corrected 2026-08-31: this said "matched on tokens", and nothing here has ever
+counted tokens. The delivered bodies of the five-arm study measure 655 prompt
+tokens for the placebo against 778 for the skill it is matched to, and 910 and
+1697 for the two evolved arms, which the placebo was never matched against at
+all. The match is on words and structure, the gap in tokens is a stated
+confound, and a placebo arm bounds the length effect for the arm it was built
+against and no other.
 
 Any option menus are held constant across arms. AgentAtlas
 (arXiv:2605.20530**v1**) found that removing explicit label menus moved
@@ -258,8 +266,10 @@ Parameterised YAML templates with computed ground truth, in the style of
 GSM-Symbolic. Auditing ~50 template rules is tractable; auditing 300 authored
 answers is not.
 
-Three gates before a family is eligible for pre-registration, all run on the
-control arm only so they cannot bias the treatment-minus-control difference:
+Five gates before a family is eligible for pre-registration, all run on the
+control arm only so they cannot bias the treatment-minus-control difference.
+This said three until 2026-08-31; criteria 4 and 5 were added earlier and the
+lead-in was not:
 
 1. Distractor audit. A distractor qualifies only if the computed solution is
    provably invariant to its removal *and* two independent passes agree it is

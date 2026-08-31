@@ -7,9 +7,14 @@ on a larger model, and we could not, because the corpus has no room on one. We
 tried nine times to build room and failed nine times. What the failures produced
 is worth more than the corpus would have been.
 
-One thing to hold while reading it. The eleven-model screen below is a committed
-artifact, \texttt{nvbuild-ceiling-screen.json}, published beside the study's
-records. Everything after it ran as a probe through sub-agents rather than
+One thing to hold while reading it. The screen below is published beside the
+study's records as a committed artifact,
+\pth{nvbuild-ceiling-screen.json}, and it holds \NUM{\screenModels}
+models. The harness registers eleven, eight
+returned inside the screen's budget, and one of those eight is recorded in the
+notebook entry and missing from the file. We report the file's count here and
+leave the artifact alone, because a record that gets edited to match a paper is
+not a record. Everything after it ran as a probe through sub-agents rather than
 through the checkpointed runner, so those passes wrote no records and their
 figures are typed here from the dated notebook entries that recorded them. Each
 prediction was registered before its probe and the entries say so, which is what
@@ -18,14 +23,16 @@ we would rather name it than have it inferred.
 
 \subsection{Every hosted model we could reach solves the corpus}
 
-Screened with an empty prompt, eight of the eleven hosted models registered in
-the harness answer this corpus at or near ceiling, the weakest at 0.933 against
-\NUM{\accUnseenOff} for the study's local target. Three did not return inside
-the screen's budget and are recorded as unmeasured, never assumed; they are
-larger than models already answering at 1.000, so the expectation is clear and
-it is an expectation.
+Screened with an empty prompt on \NUM{\screenItems} items, every model in the
+artifact answers this corpus at or near ceiling: \NUM{\screenAtCeiling} of
+\NUM{\screenModels} at \NUM{\screenBest} and the weakest at
+\NUM{\screenWorst}, against \NUM{\accUnseenOff} for the study's local target.
+Three registered models did not return inside the screen's budget and are
+recorded as unmeasured, never assumed; they are larger than models already
+answering at \NUM{\screenBest}, so the expectation is clear and it is an
+expectation.
 
-A five-arm study needs headroom for an arm to move into. At 0.933 there is not
+A five-arm study needs headroom for an arm to move into. At \NUM{\screenWorst} there is not
 enough for any effect this design could detect, so no verdict-bearing venue can
 host this study as the corpus stands.
 
@@ -101,7 +108,8 @@ room, on a large model. The one-sided ones have room and no signal.
 
 \textbf{And the three criteria do not close the case, which we found by turning
 them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on the
-control arm: reported accuracy \NUM{\accUnseenRelZeroZeroNineFlightRebookOff},
+empty-prompt arm, and on the placebo too: reported accuracy
+\NUM{\accUnseenRelZeroZeroNineFlightRebookOff},
 inside the band and far below any ceiling; skew of $+0.019$, which is as near
 zero as anything we have measured; and informedness of $+0.028$, which is
 certainly below one. It is also one of the three templates \Cref{sec:signal}
@@ -118,8 +126,18 @@ under uncertainty. We tested the nearest version of it and it did not hold.
 Signed toward the act on the 1.7B, six act-or-wait templates average $+0.097$,
 carried almost entirely by one template at $+0.464$; dropping it leaves the rest
 at $+0.024$. Three two-act templates average absolute skew of 0.172, which is
-higher rather than lower. The action-bias explanation is refuted on our data and
-the underlying cause is open.
+higher rather than lower.
+
+Six and three is nine, and the corpus has ten.
+\texttt{rel-005-security-patch} is in neither group: its options are
+\texttt{patch\_immediately} and \texttt{schedule\_patch}, which are both acts
+under one reading and an act against a deferral under the other, and we could
+not classify it without choosing the answer. It carries the largest skew
+magnitude in the corpus, $-0.400$. Putting it in the first group takes $+0.097$
+to $+0.026$; putting it in the second takes 0.172 to 0.230. The direction of the
+comparison survives either placement and the two averages do not, which is the
+honest summary of a nine-template test on a ten-template corpus. The action-bias
+explanation is refuted on our data and the underlying cause is open.
 
 \subsection{What would actually unblock this}
 

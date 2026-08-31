@@ -40,12 +40,18 @@ The alternative, holding out fresh random seeds of the same templates, was the
 original plan and was abandoned after a probe showed it would score
 memorisation as generalisation: an engine that transcribes a template's decision
 rule into the skill body answers every future seed of that template correctly,
-and a seed-varied holdout records that as generalisation. A mid-run amendment
-then found this corpus has no such rule to transcribe, because every threshold
-is redrawn per item and restated in the prompt (\Cref{sec:whatengines}). So the
-probe changed the design for a reason that turned out not to apply here, and we
-would run it again: it costs one probe and the alternative is a holdout that
-cannot detect the failure it exists to detect.
+and a seed-varied holdout records that as generalisation. Both engines went on
+to transcribe template-specific material (\Cref{sec:whatengines}), so the probe
+was load-bearing rather than cautious.
+
+A mid-run amendment narrowed one half of this. What the engines lifted were
+\emph{constants} and not rules, and a memorised constant does not survive a
+seed change here, because every threshold is redrawn per item and restated in
+the prompt. So on this corpus the constant channel is closed and holding out
+seeds would have caught it. The rule channel is not: each template's comparison
+and its load-bearing facts are fixed across every seed, and an engine
+transcribing those would still have been scored as generalising. The probe
+addressed a failure that remains available and we would run it again.
 
 \subsection{The holdout, minted after the winners were frozen}
 
