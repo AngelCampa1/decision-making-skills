@@ -54,7 +54,7 @@ answering deterministically to whether the model had just been reloaded, which
 without the pin would have put a venue artifact inside the A/A control. It is
 one of the two settings this run does \emph{not} write into its manifest, the
 other being temperature, so a replicator reads both from the provider source
-rather than from the record. We would rather say that than let the disclosure
+and not from the record. We would rather say that than let the disclosure
 imply a receipt it does not hold.
 
 \paragraph{Observability.} Every call writes a record carrying the item id, the
@@ -65,11 +65,11 @@ the run. Every number in this paper is recomputed from them by
 \texttt{de figures} at build time.
 
 \paragraph{Verification.} The resolved model id is recorded per call from the
-response's own \texttt{model} field rather than from what was requested.
+response's own \texttt{model} field, not from what was requested.
 Ollama's \texttt{/api/show} card is read as an isolation receipt and the run is
 refused if it carries a \texttt{SYSTEM} prompt, which is the local analogue of a
 planted instruction file. Reasoning output arrives in a field separate from the
-answer and is recorded rather than discarded.
+answer and is kept, not discarded.
 
 \paragraph{Governance.} The run is checkpointed and resumable, keyed so that a
 resume cannot silently re-run or silently skip. The A/A pass has its own
