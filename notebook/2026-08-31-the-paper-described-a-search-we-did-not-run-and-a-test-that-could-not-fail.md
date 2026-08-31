@@ -92,3 +92,35 @@ prediction made after checking is not one.
 
 The two `CHECKLIST.md` boxes that need the maintainer: arXiv endorsement and the
 Zenodo DOI. Neither is a machine's to close.
+
+## Appended the same day: the decomposition contribution rested on false algebra
+
+A second adversarial pass found what the first three missed, and it is worse
+than anything above because it is a contribution and not a caveat.
+
+Accuracy on a two-option key is `pi*sens + (1-pi)*spec`. At `pi = 0.5` that is
+`(J+1)/2`, a function of informedness alone. Response bias contributes exactly
+nothing to accuracy on a balanced key, so there is nothing for a decomposition
+to separate. Every template here is balanced 56/56 or 28/28 by construction,
+and over the 50 template-by-arm cells the identity holds to four decimals in
+every one of the 26 where no answer went unread.
+
+The section's worked example was wrong in both directions. A policy answering
+one option nine times in ten scores 0.50 on a balanced set, not 0.63; 0.63 is
+what it scores at a base rate near two thirds. Two other places claimed a bias
+shift was worth "roughly thirty points" on this corpus. A pure bias shift holds
+J fixed, so on a balanced key it is worth zero, and the corpus-ceiling section
+proved it against itself: sensitivity 1.000 with specificity 0.167 to 0.250
+pins accuracy at 0.583 to 0.625, which is what it measured three times.
+
+What survives is sharper than what it replaces. The identity breaks only when
+unreadable answers land unevenly across the key, and that is measurable:
+`gapParsed` for gepa on `rel-001-vendor-outage` is +0.2784, and the reported
+accuracy for that cell is 1.8 points below chance. So the mechanism costs
+accuracy on the metric we publish while inflating it on the parsed subset,
+which is the opposite of the direction the paper claimed for two drafts.
+
+The lesson for the register: three independent agents recomputed every macro in
+this paper and all three confirmed the arithmetic. None of them checked whether
+the estimator the arithmetic implements answers the question the prose says it
+answers. A number can be correctly computed and still be an answer to nothing.
