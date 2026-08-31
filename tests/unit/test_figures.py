@@ -17,6 +17,8 @@ import pytest
 
 from decision_evals.figures import (
     LOW_SIGNAL_J,
+    PLACEBO_SKILL,
+    SEED_SKILL,
     FigureError,
     Reading,
     arm_order,
@@ -33,6 +35,7 @@ from decision_evals.figures import (
     signal_by_arm,
     write_figures,
 )
+from decision_evals.skills import delivered_body
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PUBLISHED = "2026-08-27-53b4965-five-arm"
@@ -426,3 +429,20 @@ class TestPlaceboMatch:
         tolerance = int(values["placeboTolerance"]) / 100
         assert abs(placebo - skill) <= skill * tolerance
         assert values["skillSections"] == values["placeboSections"]
+
+    def test_both_counts_are_of_the_body_a_model_receives(self) -> None:
+        """Counting frontmatter on one side only published a 628 against 612.
+
+        The tolerance test above cannot see that: it reads the same generator
+        for both numbers, so an asymmetry passes it and stays consistent with
+        itself. This one counts the delivered bodies independently.
+        """
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
+        for macro, source in (
+            ("skillWords", SEED_SKILL),
+            ("placeboWords", PLACEBO_SKILL),
+        ):
+            expected = len(delivered_body(REPO_ROOT / source).split())
+            assert int(values[macro]) == expected, f"{macro} is not the delivered body"

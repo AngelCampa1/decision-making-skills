@@ -38,7 +38,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Final
 
-from decision_evals.evolution.run import seed_body
+from decision_evals.skills import delivered_body
 from decision_evals.solvers.arms import check_placebo_match
 from decision_evals.stats.cluster import cluster_bootstrap_diff
 from decision_evals.stats.signal import DegenerateSignalError, informedness, skew
@@ -46,9 +46,9 @@ from decision_evals.stats.signal import DegenerateSignalError, informedness, ske
 #: Where published runs of the five-arm study live.
 STUDY_ROOT: Final = "results/evolution-study"
 
-#: The two bodies whose match the paper reports. The skill's body is read
-#: through ``seed_body`` rather than off disk, because that is the function the
-#: study's ``on`` arm used and the frontmatter is not part of what it delivers.
+#: The two bodies whose match the paper reports. Both are read through
+#: ``delivered_body``, which strips the frontmatter an arm does not deliver, so
+#: the count here is the count the gate in ``skills.py`` enforces.
 SEED_SKILL: Final = "skills/decision-making/SKILL.md"
 PLACEBO_SKILL: Final = "skills/decision-making/placebo.md"
 
@@ -363,10 +363,13 @@ def placebo_macros(repo_root: Path) -> dict[str, str]:
     """The placebo's match against the skill it stands in for.
 
     A property of the two bodies rather than of any run, and reported by the
-    paper, so it is generated here for the same reason everything else is: the
-    match was 612 against 628 words when this was written, and a hand-typed pair
-    of numbers is a pair of numbers that will be wrong after the next edit to
-    either file.
+    paper, so it is generated here for the same reason everything else is: a
+    hand-typed pair of numbers will be wrong after the next edit to either file.
+
+    Both sides go through ``delivered_body``, which is what ``skills.py`` hands
+    the gate. Stripping frontmatter from the skill and not from the placebo read
+    628 placebo words against 612 until 2026-08-31; the bodies a model receives
+    are 557 and 612, and the paper published the inflated pair.
 
     Returns an empty mapping when either body is absent, so a checkout without
     the skill still builds.
@@ -375,7 +378,7 @@ def placebo_macros(repo_root: Path) -> dict[str, str]:
     placebo = repo_root / PLACEBO_SKILL
     if not (skill.is_file() and placebo.is_file()):
         return {}
-    match = check_placebo_match(seed_body(repo_root), placebo.read_text(encoding="utf-8"))
+    match = check_placebo_match(delivered_body(skill), delivered_body(placebo))
     return {
         _macro_name("skill", "words"): str(match.skill_words),
         _macro_name("placebo", "words"): str(match.placebo_words),
