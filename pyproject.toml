@@ -543,13 +543,13 @@ clone. Delete this entry if the searches are ever re-run and published.\
 # refused, and an entry naming no living document is refused.
 # --------------------------------------------------------------------------- #
 [tool.decision-evals.reviewed]
-"AGENTS.md" = "1f62d17"
-"CONTRIBUTING.md" = "1f62d17"
+"AGENTS.md" = "d019bc1"
+"CONTRIBUTING.md" = "d019bc1"
 "README.md" = "1e67a7f"
 "SCORECARD.md" = "1e67a7f"
 "docs/ACCUMULATION_VENUE.md" = "291548d"
-"docs/ARCHITECTURE.md" = "1f62d17"
-"docs/AUTONOMOUS_WORK_ORDER.md" = "1f62d17"
+"docs/ARCHITECTURE.md" = "d019bc1"
+"docs/AUTONOMOUS_WORK_ORDER.md" = "d019bc1"
 "docs/DECISION_FRAMEWORKS.md" = "291548d"
 "docs/DOCUMENTATION_MAP.md" = "1e67a7f"
 "docs/EVAL_SET_DATASHEET.md" = "1e67a7f"
