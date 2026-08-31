@@ -6,8 +6,9 @@
 % be dropped between that file and this section without a note saying why.
 
 \paragraph{One model, and a small one.} The target is \NUM{\studyModel}. The
-choice was forced: every larger model we could reach solves the corpus with an
-empty prompt (\Cref{sec:ceiling}). A 1.7B model fails in ways a frontier model
+choice was forced: every larger model we measured solves the corpus with an
+empty prompt, and three we registered never returned inside the screen's budget
+(\Cref{sec:ceiling}). A 1.7B model fails in ways a frontier model
 does not, and the clearest signal in this run, generations that never conclude
 (\Cref{sec:parsefail}), is characteristic of small models. Our result
 does not travel upward without re-measurement, and Prompting
@@ -110,7 +111,7 @@ our own call ledger.} Both searches wrote into a results directory our
 the directories no longer exist. The winners' content hashes and their outcomes
 are on the record, and the bodies behind those hashes are not: a content-hash
 search of the machine found neither. So the central artifacts of the two arms
-this paper is named after cannot be inspected by anyone but us, and how many
+this paper is named after cannot be inspected by anyone, ourselves included, and how many
 calls the searches took is unrecoverable. Every other figure this paper draws from the study
 is countable from committed files, with the exceptions
 \texttt{main.tex} enumerates. \Cref{sec:appendix-prompts} says what a

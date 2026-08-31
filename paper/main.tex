@@ -25,11 +25,10 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{booktabs}
-% graphicx is pgfplots' own dependency; amsmath is loaded for \text and the
-% aligned environments the signal section uses. amssymb and siunitx were loaded
-% and never used, and a package a replicator installs for nothing is a cost.
+% graphicx is pgfplots' own dependency. amssymb, siunitx and amsmath were all
+% loaded and never used: the maths here is inline $\pi$ and $J$, which plain TeX
+% sets. A package a replicator installs for nothing is a cost.
 \usepackage{graphicx}
-\usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}

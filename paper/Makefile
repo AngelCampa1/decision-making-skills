@@ -25,8 +25,11 @@ paper: figures
 # generated/macros.tex, generated/tables.tex and figures/*.tex. Everything is
 # TeX rather than PDF: pgfplots draws the pictures, so a figure is a diff a
 # reviewer can read and the build needs no plotting library. With no results
-# present it emits an empty macro file and returns cleanly, so the skeleton
-# compiles before any run has happened.
+# present it emits an empty macro file and returns cleanly, which keeps the
+# generator from erroring on a bare checkout. It does not make the paper build:
+# main.tex inputs the tables that path never writes, and every \NUM would be
+# undefined besides. Checked 2026-08-31; this comment claimed the skeleton
+# compiled.
 #
 # This named ../results/**/summary.json until 2026-08-28. No such file has ever
 # existed anywhere under results/, and nothing noticed for eighteen days,

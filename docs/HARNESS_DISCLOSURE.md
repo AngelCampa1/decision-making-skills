@@ -112,7 +112,7 @@ would be the error this document exists to avoid.
 | Residency | Pinned at `keep_alive: 60m` since 2026-08-27, sent on every request by the provider that builds them. A probe that day found two items answering deterministically to whether the model had just been loaded, which would have put a venue artifact inside the study's A/A control. **Not written into the run manifest**, so a replicator reads it from the provider source; corrected 2026-08-28, this row claimed it was recorded per pass |
 | No receipt from the hosted tier | NVIDIA Build offers no model card, so no receipt is obtainable there. That is recorded as *no receipt obtainable* and never as *isolation verified* |
 | In-situ arm | **Refused.** There is no pre-existing system prompt to append to, so the call would be the isolated arm under another arm's label |
-| Reasoning output | Returned in a field separate from the answer and **recorded**. Measured on `qwen3:4b`, 2026-08-19: 277 completion tokens for a `content` of `"4"`, the other 276 in `reasoning` |
+| Reasoning output | Returned in a field separate from the answer, carried on `CliResult` and **not written to the record**. Measured on `qwen3:4b`, 2026-08-19: 277 completion tokens for a `content` of `"4"`, the other 276 in `reasoning`; the runner writes the answer text only, so the 276 are billed and leave no trace. Corrected 2026-08-31, this row claimed the chain was recorded |
 
 **The `cot` arm is not safely measurable against a reasoning model, and that is
 a live threat to any grid run here.** `solvers/arms.py` compares a

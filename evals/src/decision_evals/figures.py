@@ -195,8 +195,8 @@ def latest_run(repo_root: Path) -> Path | None:
     """The most recent published study directory, or ``None`` if there is none.
 
     Directory names begin with an ISO date, so the plain sort is chronological.
-    A bare checkout with no results is not an error: the Makefile promises the
-    skeleton compiles before any run has happened.
+    A bare checkout with no results is not an error, so the caller decides what
+    to do about it rather than being handed an exception.
     """
     root = repo_root / STUDY_ROOT
     if not root.is_dir():
@@ -467,15 +467,17 @@ def per_template_macros(
                     if r.item in paired and r.template_id == template
                 )
                 values[_macro_name("net", label, key, arm)] = _signed(net, 0)
-            values[_macro_name("gap", label, key, baseline)] = _signed(
-                _accuracy(
-                    [r for r in by_arm["gepa"] if r.seed in seeds and r.template_id == template]
+            # Named for its numerator, not its trailing token. The sibling
+            # family above puts the arm last, so a shared `gap` prefix with the
+            # *baseline* last read as the same shape meaning the opposite
+            # thing. An arm the study did not run leaves the pair out rather
+            # than dividing by zero.
+            gepa = [r for r in by_arm["gepa"] if r.seed in seeds and r.template_id == template]
+            floor = [r for r in by_arm[baseline] if r.seed in seeds and r.template_id == template]
+            if gepa and floor:
+                values[_macro_name("gepaLess", label, key, baseline)] = _signed(
+                    _accuracy(gepa) - _accuracy(floor), 4
                 )
-                - _accuracy(
-                    [r for r in by_arm[baseline] if r.seed in seeds and r.template_id == template]
-                ),
-                4,
-            )
     return values
 
 
@@ -1149,9 +1151,9 @@ def write_figures(repo_root: Path, out_dir: Path) -> FiguresResult:
     """Build every artefact under ``out_dir``, or an empty one if nothing ran.
 
     With no published run this writes a macro file holding no definitions and
-    returns cleanly. ``paper/Makefile`` promises exactly that, so the skeleton
-    compiles from a bare checkout and a reader who has not run anything still
-    gets a PDF.
+    returns cleanly, so a bare checkout gets a generator that exits zero rather
+    than one that raises. It does not get a PDF: no tables are written and every
+    ``\\NUM`` in the paper would be undefined.
     """
     generated = out_dir / "generated"
     figures = out_dir / "figures"

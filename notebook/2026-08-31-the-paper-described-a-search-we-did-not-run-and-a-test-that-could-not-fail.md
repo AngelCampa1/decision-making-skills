@@ -370,3 +370,60 @@ the model, which it did not until this cycle added it.
 cycle's findings sit in prose the previous cycle wrote, plus one surface nobody
 had opened. Cycle six's contribution to the pattern is the sharpest yet — a fix
 applied to half its target, where the half left behind was the false part.
+
+## Cycle seven: the source of truth was the last thing anyone read
+
+Twelve findings, nine of them in the paper as shipped. The cycle also ran the
+strongest check any of these has: an agent recomputed 887 of the 899 generated
+macros from the raw JSONL without importing a line of project code, and found
+zero mismatches. The arithmetic has now been re-derived independently three
+times and has never moved.
+
+**The precedence rule routed the reader to the false claim.** Cycle six fixed
+three paper surfaces to say the reasoning chain is not recorded.
+`appendix_harness.tex` opens by saying that where the appendix and
+`docs/HARNESS_DISCLOSURE.md` disagree, the docs file is correct. The docs file
+still said **recorded**. So the fix that corrected the paper pointed the reader
+at the one place still asserting the opposite, and did it by the paper's own
+rule. That is a worse state than before the fix.
+
+**The half-applied fix, again, and this is three cycles running.** Cycle six
+raised the omitted-settings count from two to five in `appendix_harness.tex` and
+left `CHECKLIST.md` saying two. Same shape as cycle six's own finding about
+cycle five's skew fix.
+
+**A repair that over-generalised.** Cycle six's note about the clustered test
+was right — "two of six go the other way" — and the sentence I wrote from it
+said "on the unseen set it is not [more conservative]", which is wrong for
+`skillopt`, 0.3012 to 0.3750. The commit body was more accurate than the paper.
+
+**Two superlatives and a universal, which is the third pattern holding.**
+"Every hosted model we could reach" — three registered models never returned, so
+*measured* is the word. "Every other arm is tested against [the placebo]" —
+`off` is not, by registration. "The two the model answers perfectly" — those two
+read informedness 1.000, not accuracy 1.000; `rel-003` reports 0.5893.
+
+**We cannot inspect the evolved bodies either.** `limitations.tex` said they
+"cannot be inspected by anyone but us". A content-hash search of the machine
+found neither, which the same paragraph says. Nobody can inspect them.
+
+**The skeleton does not compile from a bare checkout.** `paper/Makefile` and two
+docstrings in `figures.py` promised it. Ran it: the no-run path writes
+`macros.tex` and nothing else, `main.tex` inputs tables that were never written,
+and every `\NUM` would be undefined regardless. Three statements of a claim
+nobody had executed.
+
+**One macro family was named for the wrong operand.** `\gap<Set><Template><Arm>`
+puts the arm last; `\gap<Set><Template><Baseline>` put the *baseline* last while
+always measuring `gepa`. Two families, one prefix, the trailing token meaning
+opposite things. Renamed to `\gepaLess<Set><Template><Baseline>`, value
+unchanged at -0.2589.
+
+## Seven cycles
+
+75 defects and still no arithmetic error, against three independent
+re-derivations of the numbers. The pattern the record now supports is narrow and
+worth stating plainly: this paper's numbers have been right the whole time, and
+its sentences about those numbers have been wrong 75 times. The defects live in
+prose written to fix earlier prose, in the surface nobody has opened yet, and in
+any sentence quantified over a set.

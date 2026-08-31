@@ -205,8 +205,10 @@ Last worked through 2026-08-31, against the five-arm study at
       not remove it, and the paper reports both
 - [x] Absence of sampling-parameter control stated rather than worked around
 - [ ] Every setting that affects a call written into the run manifest.
-      `keep_alive` and `temperature` are provider defaults and are not in
-      `run.json`, so a replicator reads those two from the source
+      `keep_alive`, temperature, the concurrency limit, the request timeout and
+      the endpoint are provider-side and none of the five is in `run.json`, so a
+      replicator reads all five from the source. An earlier version of this box
+      said two
 
 ## Reporting
 
