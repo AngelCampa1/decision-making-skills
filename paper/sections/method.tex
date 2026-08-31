@@ -100,10 +100,14 @@ for development and emits no verdict. \texttt{screen} is for cheap hosted models
 and emits none either. \texttt{confirm} is the target model on a private holdout under a
 hash-locked pre-registration.
 
-The separation is enforced in code rather than by discipline, and it cuts
-against us here. Our target, \NUM{\studyModel}, is registered \texttt{dev}. This
-study therefore produces a published, controlled, reproducible result that is
-formally scoped to one small model and moves nothing on the project's scorecard.
+The separation is a registry the harness reads, and the assertions over it,
+\texttt{assert\_model\_allowed} and \texttt{assert\_may\_emit\_verdict}, are called
+by the trigger runner and by tests. \texttt{de study} calls neither, so no arena
+error could have fired on this run and the scoping here is ours to honour rather
+than the code's to refuse. It cuts against us either way. Our target,
+\NUM{\studyModel}, is registered \texttt{dev}, so this study produces a
+published, controlled, reproducible result that is formally scoped to one small
+model and moves nothing on the project's scorecard.
 We report it that way throughout. \Cref{sec:ceiling} explains why a
 \texttt{screen}-tier replication does not exist.
 

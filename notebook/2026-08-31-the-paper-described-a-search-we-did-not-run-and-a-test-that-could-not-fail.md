@@ -802,3 +802,42 @@ printed in the template table.
 but the composition has not changed at all: from cycle seven onward, the modal
 defect is a sentence written to repair a defect, and the most reliable predictor
 of where the next one is remains "wherever the last fix touched".
+
+## Cycle twelve: three findings, two of them a word I deleted
+
+Five down to three, and two of the three are one edit of mine from cycle eleven.
+
+**I dropped "per-template" and made a true sentence false in three places.**
+Cycle eleven's fix rewrote "emits no per-template skew macro" as "emits no macro
+for skew". `de figures` emits five skew macros — `\meanSkewOff` through
+`\meanSkewSkillopt` — and `signal.tex` cites two of them a page earlier. The
+asymmetry the sentence was reaching for is real and is per template:
+`tables.tex` carries a per-template informedness table and no skew of any kind.
+The qualifier was the whole content of the claim and I removed it as noise.
+
+The same edit also said the informedness beside those skew figures is
+"generated". The figure in question, `+0.028`, is hand-typed with no `\NUM{}`,
+because there is no per-template informedness macro either — only the table. So
+the class-4 entry I had just added to the paper's own typed-number register
+covered skew and left a typed informedness in no class, while asserting it was
+generated.
+
+**And the arena separation is not enforced in code for this run.** `method.tex`
+said "The separation is enforced in code rather than by discipline, and it cuts
+against us here." An AST scan of the whole `evolution/` package finds no import
+of `arenas`; the two mentions are docstrings. `de study` calls neither
+`assert_model_allowed` nor `assert_may_emit_verdict`; their callers are
+`scripts/run_triggers.py` and friends, plus `tests/unit/test_locks.py`. No
+arena error could have fired on this run. The registry is data the authors
+honoured, which is exactly the "discipline" the sentence contrasted itself
+against — and the paper is scrupulous about this distinction in five other
+places, which is what made this one visible.
+
+## Twelve cycles
+
+168 defects, no arithmetic error, seven independent re-derivations. The count is
+converging cleanly now — 31, 5, 3 — and the composition has not moved since
+cycle seven. Two of three this round were mine from the previous round, and the
+mechanism was the same both times: a fix that generalises. "No per-template skew
+macro" became "no macro for skew" because the shorter sentence reads better, and
+the deleted word was carrying the truth of it.
