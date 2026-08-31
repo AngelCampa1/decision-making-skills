@@ -1120,3 +1120,48 @@ appears in the file.
 Two boxes on [`../paper/CHECKLIST.md`](../paper/CHECKLIST.md) remain open, and
 both need the maintainer rather than a machine: arXiv endorsement for `cs.AI` or
 `cs.CL`, and the Zenodo DOI.
+
+## Correction, 2026-08-31: the paper's audit
+
+Appended, not rewritten. The eight defects below were in `paper/` when it was a
+day from submission, and every one of them is now corrected in the tree. None
+was an arithmetic error: three sub-agents recomputed every generated macro and
+all three matched.
+
+**The placebo was described as token-matched in five places.** It is matched to
+the seed skill on word count and structural shape and to nothing else. Delivered
+body sizes are placebo 655, `on` 778, `gepa` 910 and `skillopt` 1697 prompt
+tokens, so the two evolved arms were never length-controlled.
+
+**`\placeboWords` read 628 and should have read 557**, because the generator
+compared a frontmatter-stripped skill against a raw placebo. The gate's own call
+site had been symmetric the whole time.
+
+**Three of six registered primaries could not have rejected at any outcome.**
+The unseen set is three template clusters and a one-sided test over three
+clusters floors at 0.1250.
+
+**The pre-registered minimum detectable effect was absent from the paper**, and
+`paper/CHECKLIST.md` said no such figure existed. It does: 0.0807 unseen, at a
+design effect of 1.0 for a corpus built from templates. At the 2.0 our protocol
+specifies it is 0.1137, about 2.6 times the largest gain observed.
+
+**Section 5.3 described the winners of a search whose output was never tested.**
+Two evolution rounds ran on 2026-08-27, one over ten templates and one over the
+seven training templates, and only the second produced arms. The section was
+typed from the entry about the first.
+
+**The claim that runaway generations were a seed skill pathology both winners
+fixed was already retracted** in the notebook entry it came from, and the
+five-arm records reverse it: at the 4096-token cap the placebo runs away 47
+times against an empty prompt's 9.
+
+**Four citations were attached to works that do not carry the figure beside
+them**, including the 7.8x harness variance ratio and the 2026 GSM-Symbolic
+re-audit.
+
+**The decomposition contribution rested on false algebra.** On a balanced
+two-option key, accuracy is `(J+1)/2` and response bias contributes nothing, so
+the quantity the section claimed to separate out is not in the sum. Every
+template in this corpus is balanced. The measure is still worth reporting and
+the reason is now stated correctly.
