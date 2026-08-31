@@ -53,7 +53,8 @@ def test_the_task_framing_is_in_every_arm(arm: ArmName) -> None:
 
 
 def test_the_option_menu_does_not_vary_by_arm(template_dict: Build) -> None:
-    """AgentAtlas measured 14-40pp from the menu alone -- larger than any effect here.
+    """AgentAtlas v1 measured 14-40pp from the menu alone, which is why it is held
+    constant. v2 withdrew that number, so it justifies the invariant and nothing else.
 
     Rendering is arm-independent by construction; this asserts that stays true.
     """

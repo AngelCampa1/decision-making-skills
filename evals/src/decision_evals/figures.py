@@ -588,8 +588,9 @@ def screen_macros(run_dir: Path) -> dict[str, str]:
     much as the accuracies: the section called this an eleven-model screen, the
     file holds fewer, and eleven is how many models this key can reach under a
     registered ``nvbuild/`` prefix. The harness registers prefixes, not models.
-    Absent file is not an error, because a checkout without this run still
-    builds the paper.
+    Absent file is not an error, because the generator has to exit cleanly on a
+    checkout with no results. The paper does not build from one: these six are
+    among the macros ``ceiling.tex`` would leave undefined.
     """
     path = run_dir / "nvbuild-ceiling-screen.json"
     if not path.is_file():

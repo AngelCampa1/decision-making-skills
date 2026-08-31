@@ -49,8 +49,9 @@ Last worked through 2026-08-31, against the five-arm study at
       Not asserted: `de check`'s `provenance` step refuses a published run
       whose prediction entry's first commit is not a git ancestor of the run's
       commit
-- [x] Skill body hashes locked. Every arm's body is SHA-256'd and the hash is
-      on every one of that arm's 728 records and in `run.json`
+- [x] Skill body hashes locked. Every arm that carries a body is SHA-256'd and
+      the hash is on every one of that arm's 728 records and in `run.json`.
+      `off` is empty and its `candidate_sha` is null on all 728
 - [ ] Analysis script hash locked in the pre-registration. The analysis code is
       committed and the run names its commit, which is weaker: nothing stops a
       later commit from changing `analyse` and nothing would notice
@@ -263,8 +264,9 @@ Last worked through 2026-08-31, against the five-arm study at
       had no author list at all. All are corrected
 - [x] Author, affiliation, and contact match the repository identity
       (Angel Campa, `AngelCampa1`)
-- [x] No `@ventoralabs.com` address anywhere in the source or in the commit
-      history. PDF metadata inherits `\author`, which carries no address
+- [x] No `@ventoralabs.com` address anywhere in the paper source or in the
+      commit history. The literal appears only in the gate that forbids it,
+      `cli.py`'s `FORBIDDEN_EMAIL_DOMAINS` and its tests. PDF metadata inherits `\author`, which carries no address
 - [x] `make paper` compiles. The figures below are from a macOS machine running
       TeX Live 2026 via Homebrew, GNU Make 3.81 and poppler 26.08.0, all
       installed outside the repository; the TinyTeX 2026.08 / Make 4.4.1 /
@@ -272,7 +274,7 @@ Last worked through 2026-08-31, against the five-arm study at
       Windows machine of `docs/STATUS.md` and built a different, shorter draft.
       None of it is a
       dependency of the gate. From a clean worktree at the commit this box was
-      last checked, 2026-08-31, the build is 29 pages and 443,336 bytes, with no overfull or underfull boxes, no LaTeX warnings and
+      last checked, 2026-08-31, the build is 29 pages and 443,396 bytes, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`

@@ -88,8 +88,8 @@ FORMAT_CONTRACT: Final = (
 #: prohibited actions, which cannot be read as forward reasoning while the
 #: candidate list spells the reasoning out -- "Defer the Year 3 amendment until
 #: after the Year 1 assessment window closes" is the insight, printed on the
-#: menu. AgentAtlas measured 14-40pp from menu presence alone with plain option
-#: labels; this menu carries far more than a label. Removing it is the only way
+#: menu. AgentAtlas v1 measured 14-40pp from menu presence alone with plain option
+#: labels, a figure v2 withdrew; this menu carries far more than a label. Removing it is the only way
 #: to tell recognition from generation, and it is the difference between a
 #: publishable negative and an artefact.
 FORMAT_CONTRACT_FREE: Final = (

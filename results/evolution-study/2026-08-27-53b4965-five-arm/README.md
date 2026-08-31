@@ -32,8 +32,8 @@ apart by `candidate_sha`:
 | `off` | none |
 | `on` | `skills/decision-making/SKILL.md` |
 | `placebo` | `skills/decision-making/placebo.md`, word-count- and structure-matched |
-| `gepa` | frozen winner of `results/evolution/2026-08-27-1b24c9d-gepa-seven-templates` |
-| `skillopt` | frozen winner of `results/evolution/2026-08-27-5267516-skillopt-seven-templates` |
+| `gepa` | GEPA's seven-template winner, `candidate_sha 54f99040...`; body never committed and unrecoverable |
+| `skillopt` | SkillOpt's seven-template winner, `candidate_sha 80d7187a...`; same |
 
 Templates were split by `sha256("evolution-study-v1:<template_id>")`. Both
 searches saw only the seven trained templates; both test sets were minted after
@@ -100,7 +100,8 @@ these controls.
 That limit was measured rather than assumed: every one of the seven NVIDIA
 Build models in `nvbuild-ceiling-screen.json` solves the corpus with an empty
 prompt, the weakest at 0.933 against 0.702 for this study's target, so no
-screen-tier venue can host this study as the corpus currently stands. An eighth model returned inside
+NVIDIA Build venue can host this study as the corpus currently stands. The
+other screen-tier backends, `claude_code` and `antigravity`, were not screened. An eighth model returned inside
 budget and is recorded in the notebook entry but not in the file; we report the
 file's count, because a record edited to match a write-up is not a record. The
 three registered models that never returned are larger than models already
@@ -149,3 +150,14 @@ that says where it was wrong.
 - The screen was described as eight of eleven reachable models.
   `nvbuild-ceiling-screen.json` holds seven rows; the eighth is in the notebook
   entry and not in the committed file.
+
+Appended 2026-08-31, second pass.
+
+- The arm table gave both evolved winners as "frozen winner of
+  `results/evolution/2026-08-27-...`". Neither directory exists, neither sha
+  resolves, and `.gitignore:79` excludes `results/evolution/`, so neither ever
+  could have been committed. The cells now give the content hash, which is what
+  is actually on record.
+- The screen paragraph said no screen-tier venue can host this study. The screen
+  covered NVIDIA Build only; `claude_code` and `antigravity` are registered at
+  that tier and were never screened. Scoped.

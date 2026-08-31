@@ -24,10 +24,11 @@ export const SKILL_DESCRIPTION =
  * for a document whose body yields no summary. Same rule as above: no measured
  * number.
  *
- * It read `placebo-controlled` until 2026-08-20. The placebo arm is written and
- * `check_placebo_match` sizes it on every gate run, and no published run has
- * used it, so the present indicative claimed a control that has never stood in
- * for anything. Arms belong here as a design or not at all.
+ * It read `placebo-controlled` until 2026-08-20. The placebo arm was written and
+ * `check_placebo_match` sized it on every gate run, and at that point no
+ * published run had used it, so the present indicative claimed a control that
+ * had never stood in for anything. The five-arm study of 2026-08-27 has since
+ * used it as its registered control. Arms belong here as a design or not at all.
  */
 export const SITE_DESCRIPTION =
   'Agent skills for decisions under uncertainty, and the evaluation harness ' +

@@ -1,6 +1,7 @@
 """The experimental arms.
 
-Four arms plus an ecological-validity fifth. The whole design rests on three
+Four arms, an ecological-validity fifth, and a sixth for machine-written
+bodies. The whole design rests on three
 rules, and each is enforced here rather than left to whoever assembles a run.
 
 **The response-format contract appears in every arm.** If only the treatment is

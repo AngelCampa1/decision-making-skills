@@ -82,7 +82,7 @@ jobs:
         run: python -m pip install --upgrade uv
 
       # `de check`'s plugin-manifest step shells out to `claude plugin
-      # validate`, and `test_a_missing_cli_fails_the_gate` pins that a missing
+      # validate`, and `test_reports_a_missing_claude_cli` pins that a missing
       # CLI *fails* rather than skips -- a deliberate choice, so the runner gets
       # the CLI instead of the gate getting an exemption. Validation reads local
       # JSON and needs no auth, which is why this works without a key.

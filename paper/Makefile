@@ -27,9 +27,10 @@ paper: figures
 # reviewer can read and the build needs no plotting library. With no results
 # present it emits an empty macro file and returns cleanly, which keeps the
 # generator from erroring on a bare checkout. It does not make the paper build:
-# main.tex inputs the tables that path never writes, and every \NUM would be
-# undefined besides. Checked 2026-08-31; this comment claimed the skeleton
-# compiled.
+# main.tex guards both \input targets with \IfFileExists, so the missing tables
+# are skipped silently, and what stops the build is that every \NUM would be
+# undefined. Checked 2026-08-31; this comment first claimed the skeleton
+# compiled, then gave the wrong reason it does not.
 #
 # This named ../results/**/summary.json until 2026-08-28. No such file has ever
 # existed anywhere under results/, and nothing noticed for eighteen days,

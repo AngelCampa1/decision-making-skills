@@ -539,3 +539,61 @@ mechanical and fixable — every surface that has produced a repeat finding
 (`CHECKLIST.md`, `CITATION.cff`, `paper/` itself) sits outside the documentation
 gate's scope of root `*.md` and `docs/`. The gate cannot see the files that
 break most often.
+
+## Cycle ten, first report: five of thirteen were mine
+
+An agent auditing the surfaces outside the documentation gate's scope returned
+thirteen findings. Five are defects my own cycle-eight and cycle-nine fixes
+created or left behind, which is the clearest measurement yet of the pattern
+these cycles keep finding.
+
+**The run's provenance artifact pointed at two directories that never existed.**
+The arm table gave each evolved winner as "frozen winner of
+`results/evolution/2026-08-27-1b24c9d-...`". Neither directory exists, neither
+sha resolves, and `.gitignore:79` excludes `results/evolution/`, so neither
+could ever have been committed. Three other surfaces say the bodies are gone;
+only the artifact a reader is sent to said they were locatable. Nobody had
+checked, in nine cycles, whether a path in a table resolves.
+
+**My Makefile comment gave the wrong reason.** Cycle eight found the false claim
+that the skeleton compiles from a bare checkout, ran it, and replaced it with a
+reason that is also wrong: `main.tex` guards *both* `\input` targets with
+`\IfFileExists`, so the missing tables are skipped silently. What stops the
+build is the undefined `\NUM` macros alone. The comment carried "Checked
+2026-08-31" two lines below the sentence the check missed.
+
+**And the same claim survived in two test docstrings and one more in
+`figures.py`**, which cycle eight did not sweep for.
+
+**My cycle-nine edit contradicted itself inside one docstring.** I added
+"eleven is reachable models, not registered ones" to a test and left the next
+paragraph saying "Eleven is how many models the harness registers".
+
+**My cycle-nine rewrite kept an over-generalisation.** The run README says no
+screen-tier venue can host this study. `arenas.py` registers three backends at
+that tier and the screen covered one of them. The paper made the same move at
+`ceiling.tex` with "no verdict-bearing venue", now scoped to what was screened.
+
+The rest were surfaces nobody had opened: `site/src/lib/site.ts` still said no
+published run has used the placebo arm, four days after one did; a CI comment
+named a test that does not exist; `arms.py`'s opening line counts five arms
+against a six-arm tuple, which is the exact defect its own `ARM_PURPOSE`
+comment was written to prevent; the hash-lock checklist box says every arm's
+body is hashed, where `off` carries null on all 728 records; and two files
+outside the gate make the AgentAtlas magnitude comparison that `refs.bib`
+records as withdrawn by v2.
+
+## Ten cycles, and what the record now says
+
+116 defects. Still no arithmetic error. The distribution is now unambiguous and
+it is not flattering: the defects are concentrated in the repairs, and I am the
+one making them. Cycle nine caught one of mine, cycle ten caught five. A fix
+lands on the sentence it was aimed at and leaves the sibling, or corrects the
+wrong half, or states a new reason that is wrong in a new way.
+
+The mechanical part of this is fixable and worth recording for whoever picks it
+up: every surface that has produced a repeat finding sits outside the
+documentation gate's scope of root `*.md` and `docs/`. `paper/` entirely,
+`paper/CHECKLIST.md`, `CITATION.cff`, `results/**/README.md`, `.py` docstrings,
+`Makefile`, `.github/`, `site/src/`. The gate cannot see the files that break
+most often, and no gate reads whether a sentence is true in any of them.

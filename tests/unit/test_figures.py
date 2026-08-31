@@ -178,7 +178,11 @@ def _write_run(root: Path, *, arms: tuple[str, ...] = ARMS, aa: bool = True) -> 
 
 class TestFindingARun:
     def test_no_results_directory_is_not_an_error(self, tmp_path: Path) -> None:
-        """A bare checkout still builds the paper, which the Makefile promises."""
+        """A bare checkout gets a generator that exits zero rather than raising.
+
+        It does not get a PDF: no tables are written and every ``\\NUM`` in the
+        paper would be undefined.
+        """
         assert latest_run(tmp_path) is None
 
     def test_a_results_directory_holding_no_run_is_not_an_error(self, tmp_path: Path) -> None:
@@ -578,16 +582,17 @@ class TestScreenMacros:
     """The ceiling screen's own artefact, read rather than typed."""
 
     def test_an_absent_screen_is_not_an_error(self, tmp_path: Path) -> None:
-        """A checkout without this run still builds the paper."""
+        """A checkout without this run gets an empty mapping, not an exception."""
         assert screen_macros(_write_run(tmp_path)) == {}
 
     def test_the_count_and_the_extremes_come_from_the_file(self, tmp_path: Path) -> None:
         """The count is the point: the paper called this an eleven-model screen,
         and eleven is reachable models, not registered ones.
 
-        Eleven is how many models the harness registers. What the artefact holds
-        is a different number, and a section citing a committed file should
-        report the file.
+        Eleven is how many models the key can reach under a registered
+        ``nvbuild/`` prefix; the registry holds seven vendor prefixes and not
+        eleven models. What the artefact holds is a different number again, and
+        a section citing a committed file should report the file.
         """
         run_dir = _write_run(tmp_path)
         (run_dir / "nvbuild-ceiling-screen.json").write_text(
