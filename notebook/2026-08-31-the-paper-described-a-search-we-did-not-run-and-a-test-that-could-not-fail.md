@@ -661,3 +661,26 @@ sentence. The first: a claim about code is only checked when someone runs the
 code, and "two blocks precede the body" survived ten readings because reading is
 not running. The second: a fix is a new claim and inherits none of the
 verification of the sentence it replaces.
+
+## Cycle ten, third report: two already fixed, and one thing we cannot check
+
+Four findings, two of which the second report's fixes had already closed: the
+lost-directories sentence and the 300 KB bound on the content-hash search. A
+machine-wide search confirmed the stronger version of the first — no search-run
+directory survives anywhere, not the two tested seven-template winners and not
+the four earlier ones.
+
+**The implicit-test count was stated per rollout and belongs per proposal.** The
+discussion said a run of a few hundred rollouts performs a few hundred implicit
+tests. The rule fires once per proposal, and `results.tex` gives the proposal
+counts two pages earlier: nine candidates for SkillOpt, twelve for GEPA. The
+argument does not need the inflated number and is stronger without it, because
+the point is that the count scales with the budget and nobody reports it.
+
+**And one caveat that is not a defect but belongs in the paper.** The
+three-and-three split of six frozen winners cannot be enumerated from any
+record. Our notebook names three of the six; the other three are unnamed, the
+bodies are gone, and nobody can check the split, us included. The paper now says
+so where it makes the claim. Six independent re-derivations have found no
+arithmetic error, and this is the one number in the paper that no re-derivation
+could reach.

@@ -7,10 +7,10 @@ Both engines improved a validation score and both accepted on it. Neither
 improvement survived a placebo. That gap has a mechanical explanation which does
 not require either engine to be badly built.
 
-An accept-if-strictly-better rule performs one comparison per proposal and keeps
-every winner. Over a run of a few hundred rollouts it therefore performs a few
-hundred implicit tests, reports none of them, and has no way to ask whether a
-difference could have arisen by chance. SkillOpt accepted its winner on 21 of 21
+An accept-if-strictly-better rule performs one implicit test per proposal, keeps
+every winner, reports none of the tests, and has no way to ask whether a
+difference could have arisen by chance. The number scales with the proposal
+budget, and ours were small: nine candidates for SkillOpt and twelve for GEPA. SkillOpt accepted its winner on 21 of 21
 validation items against a seed's 18, with no interval on either. GEPA accepted
 its winner on three items and never scored it on the pool at all. A ratchet in
 that regime is a device for selecting noise, and it will select noise with
