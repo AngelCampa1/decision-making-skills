@@ -161,3 +161,44 @@ The pattern worth carrying: each cycle's errors were in what the previous cycle
 had just written. Three cycles in, the defect rate in untouched prose is zero
 and the defect rate in freshly repaired prose has been the highest in the paper
 both times.
+
+## Appended: cycle three, and the rule that admits our worst template
+
+The pattern held a third time. Cycle three's findings were in what cycle two had
+written, plus one file no cycle had touched.
+
+**The admission rule the paper offers as a contribution admits the corpus's own
+worst template.** The three criteria are accuracy below ceiling, skew near zero,
+informedness below one. `rel-009-flight-rebook` on the control arm reads 0.4911,
+skew +0.019, informedness +0.028. It passes all three, and it is one of the
+three templates the five-arm study found measures nothing. A coin has zero skew
+and zero informedness too. The third criterion bounds discrimination above and
+never below, and the paper had claimed "No template we have passes all three".
+A lower bound on `J` is the obvious repair and nothing has been run against one,
+so the section now says the criteria are necessary, demonstrably not sufficient,
+and better than the band they replace. `PROTOCOL.md` takes the same correction.
+
+**The memorisation paragraph reported half its evidence.** It quoted GEPA, where
+the constants bought nothing, and omitted SkillOpt, where they may have bought a
+great deal. SkillOpt lifted 63% from `rel-008-contract-renew` and reads 0.9821
+there against an empty prompt's 0.7679, and that single template carries 8 of
+the 16 net items behind the study's largest gain. Half the headline sits on the
+template the winner memorised a threshold for. The hedges are real and stated:
+`rel-005-security-patch` carries +17 with no constant lifted from it, and the
+comparison was never registered. But writing a self-critical sentence and
+checking it are different acts, and the first one had happened.
+
+**SkillOpt did not lift from `rel-007`.** Its 63 cannot come from a variable
+drawn between 10 and 40. Three places said both engines lifted from both
+templates.
+
+**`corpus.tex` was the file no cycle had opened.** It still pointed at section
+5.3 for a transcription claim that section now contradicts: the rewrite of 5.3
+moved the ground under a cross-reference two sections away, and nothing checks
+that. Four smaller ones went with it, including a seven-template denominator
+called ten and a phrase cycle two had retired everywhere except limitations.
+
+Three cycles, 27 defects, and the defect rate in prose a cycle has just repaired
+remains the highest in the paper. The corollary is the uncomfortable one: a
+fourth cycle is not optional because a third one was clean, it is required
+because the third one was not.
