@@ -202,3 +202,62 @@ Three cycles, 27 defects, and the defect rate in prose a cycle has just repaired
 remains the highest in the paper. The corollary is the uncomfortable one: a
 fourth cycle is not optional because a third one was clean, it is required
 because the third one was not.
+
+## Appended: cycle four, and the first defect a fix created two files away
+
+Six more, four of them in what cycle three wrote. The one worth naming is the
+mechanism rather than the fact.
+
+Cycle three narrowed the corpus section's seed-holdout paragraph to say this
+corpus has "no such rule to transcribe". The amendment it cited says
+*constant*, not *rule*, and on this corpus that is the whole claim: every
+template's comparison and its load-bearing facts are fixed across seeds, and
+only the threshold value is redrawn. So the constant channel is closed here and
+the rule channel is open, an engine transcribing a rule would still have been
+scored as generalising, and the probe addressed a failure that is still
+available. The discussion had been saying that all along. A one-word
+generalisation in one file made it contradict a section two files away, and
+nothing in the gate reads for that.
+
+**The screen is seven models, not eleven.** The harness registers eleven, eight
+returned inside the budget, and `nvbuild-ceiling-screen.json` holds seven. The
+section called the committed artefact an eleven-model screen, so a reader
+opening the file it names finds neither number. `screen_macros` reads the file
+now. The eighth model is in a notebook entry and not in the artefact, and the
+artefact stays as it is: a record edited to match a paper is not a record.
+
+**The act-or-wait test covers nine of ten templates.** Six plus three is nine.
+`rel-005-security-patch` is in neither group and carries the largest skew
+magnitude in the corpus at -0.400. Its options are `patch_immediately` and
+`schedule_patch`, which cannot be classified as act-or-wait or two-act without
+choosing the answer. Placing it moves +0.097 to +0.026, or 0.172 to 0.230. The
+direction survives either placement and the two averages do not.
+
+Four smaller: only one *seen* template sits at chance, because rel-006 reads J
+0.271 with an interval excluding zero and the second chance template is unseen;
+the placebo has no row in the comparison column it was said to top, being the
+control; "+8 of +16" reads as a share of a partition when the positives sum to
+25; and a forward reference pointed at a section whose answer cycle three had
+deleted.
+
+Two typed-number classes are now generated. `screen_macros` reads the ceiling
+screen and `template_range_macros` reads the integer bounds that the argument
+about which template a lifted constant came from rests on. Both sources were
+committed and both were being read by eye.
+
+`PROTOCOL.md` said "three gates" over a five-item list, and still called the
+placebo token-matched, which is the defect this audit opened with. The source of
+truth was carrying the error the document it governs had been corrected for.
+
+## The count, four cycles in
+
+33 defects. None was an arithmetic error and the generated macros were right
+every time. The distribution is the finding: every cycle's defects were
+concentrated in prose the previous cycle had just written, and the one file no
+cycle had opened was defective too. Repair is not a safe operation, and a paper
+that has been reviewed four times is not the same as a paper that is correct.
+
+The full gate rather than the fast one caught two more: `figures.py` and
+`stats/` had fallen off their 100% floors, on the refusal branches the new code
+added. `de check --fast` skips tests and coverage, so eleven commits went by
+green while the branch that raises on an unshared prompt prefix had never run.
