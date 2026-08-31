@@ -120,7 +120,7 @@ Two open-source engines, GEPA and Microsoft's SkillOpt, automatically rewrite
 the markdown ``skill'' files that agent tools load, and both accept an edit on a
 single uncontrolled score improvement. We evolved a decision-making skill with
 each engine, then tested five arms against each other on a holdout minted after
-both winners were frozen: no skill, the hand-written seed skill, a token- and
+both winners were frozen: no skill, the hand-written seed skill, a
 structure-matched placebo, and the two evolved winners. Comparisons are McNemar
 exact against the placebo with Holm correction across a pre-registered family of
 three, on \NUM{\totalItems} items.
@@ -135,13 +135,25 @@ three and reverses on the other two. An A/A control returned \NUM{\aaPairs} of
 exposes them to without removing it. Both winners had written the answer key
 into their own bodies.
 
-We also report a measurement result about the instrument. Accuracy on a
-two-option key adds discrimination to response bias and reports only their sum.
-Decomposing it leaves the headline standing and shows that \NUM{\lowSignalTemplates}
-of \NUM{\studyTemplates} templates carry no discriminative signal at all, so a
+\textbf{The more useful result is that we can show the design could not have
+answered its own question.} Items are drawn from templates and the template is
+the independent unit, so the unseen set is three clusters, and three clusters
+admit no one-sided $p$ below \NUM{\floorUnseen}. All three unseen primaries were
+unfalsifiable before the first call. The pre-registration had computed a minimum
+detectable effect of \NUM{\mdeUnseen} assuming no clustering; at the design
+effect our own protocol specifies it is \NUM{\mdeClusteredUnseen}, roughly
+\NUM{\mdeRatio} times the largest effect the study went on to observe. Both
+numbers were computable from the registration alone. Neither was carried into
+the paper until this version, and we think that omission, not the null, is the
+transferable finding.
+
+A second measurement result concerns the instrument. Accuracy on a two-option
+key adds discrimination to response bias and reports only their sum. Decomposing
+it leaves the headline standing and shows that \NUM{\lowSignalTemplates} of
+\NUM{\studyTemplates} templates carry no discriminative signal at all, so a
 \NUM{\totalItems}-item run carries the signal of \NUM{\signalItems}. We argue
-this failure mode is generic to the two-option evaluations this literature is
-built on.
+both failure modes are generic to the two-option, template-built evaluations
+this literature is built on.
 \end{abstract}
 
 \input{sections/introduction}

@@ -57,6 +57,23 @@ Both winners had written the answer key into their own bodies: one transcribed a
 training template's decision rule, the other appended worked examples whose
 numbers trace back to the training pool.
 
+Then a null is only worth reading if the study could have returned something
+else, so we checked, and it could not have. Our items come from templates and
+our own limitations section says the template is the independent unit. Under
+that unit the unseen set is three clusters, a one-sided test over three clusters
+cannot return a $p$ below \NUM{\floorUnseen}, and all three of our registered
+unseen comparisons were therefore unfalsifiable at any outcome. The seen set
+survives the same check but its headline does not: SkillOpt's
+$p = \NUM{\pSeenSkillopt}$ becomes \NUM{\clusteredSeenSkillopt} once templates
+rather than items are resampled. The pre-registration had also computed a
+minimum detectable effect and put it at \NUM{\mdeUnseen} on the unseen set,
+which is already above anything the study found; recomputed at the clustering
+our protocol specifies it is \NUM{\mdeClusteredUnseen}. Every one of those
+numbers was available from the registration before a single call was made, and
+none of them reached the paper until now. We think that is the part worth
+carrying to the next study, and we have put it in front of the null rather than
+in a caveat behind it.
+
 We also report a result about the measurement rather than the engines.
 Accuracy on a balanced two-option key is the sum of two different quantities,
 how well a model tells the cases apart and how often it picks one option
@@ -80,6 +97,14 @@ study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
     \NUM{\aaPairs} items identical. The venue's determinism is a measurement
     rather than an assumption, and it bounds the drift the block ordering
     exposes the arms to over the stretch the repeat covers.
+  \item \textbf{The arithmetic showing our own registered design was
+    undecidable, computed from the registration rather than from the outcome.}
+    Three of six primaries could not have rejected at any result, because a
+    one-sided test over \NUM{\clustersUnseenGepa} template clusters has a
+    $p$-floor of \NUM{\floorUnseen}; and the effect the design could detect was
+    larger than the effect it found before the run began. Both checks are two
+    lines of arithmetic over a registration, both are absent from every skill
+    optimisation paper we read, and either would have stopped this study.
   \item \textbf{A decomposition that separates discrimination from response
     bias}, applied to our own published records, showing that a
     \NUM{\totalItems}-item run carried the discriminative signal of
@@ -91,9 +116,9 @@ study's conclusion standing and revealed that \NUM{\lowSignalTemplates} of our
     the way they failed produced an admission rule (\Cref{sec:ceiling}).
   \item \textbf{Methodological apparatus this literature lacks}, all of it open:
     hash-locked pre-registration verified by git ancestry, paired exact tests
-    with cluster bootstrap intervals over templates, Holm correction across a
-    registered family, and a generator that computes ground truth from template
-    rules rather than authoring it.
+    reported beside cluster sign-flip tests and bootstrap intervals over
+    templates, Holm correction across a registered family, and a generator that
+    computes ground truth from template rules rather than authoring it.
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}
