@@ -261,3 +261,59 @@ The full gate rather than the fast one caught two more: `figures.py` and
 `stats/` had fallen off their 100% floors, on the refusal branches the new code
 added. `de check --fast` skips tests and coverage, so eleven commits went by
 green while the branch that raises on an unshared prompt prefix had never run.
+
+## Appended: cycle five, and a green gate I reported that had since gone red
+
+The first finding was about the record rather than the paper. I reported the
+full gate green, and it was, at the commit I ran it on. A rebase then pulled in
+another session's commit removing `README.md`'s `**Audience:**` line, which the
+documentation step refuses, and I committed a notebook appendix without
+rebuilding the site. Both landed after the run I was quoting, so the claim was
+true when made and false when read. The notebook entry reporting a green gate is
+what turned it red.
+
+The lesson is narrow and worth keeping: a gate result is a statement about a
+commit, not about a branch, and a rebase invalidates it silently.
+
+**A false clause survived four cycles.** `results.tex` said SkillOpt "is not
+above the placebo" on the seen set. It reads 0.8087 against 0.7679, it is the
+paper's own headline arm, and the table saying so is on the same page. What
+SkillOpt does not do is clear the placebo *after correction*. Cycle four rewrote
+the sentence around that clause and left it in place, which is the sharpest
+version of the pattern these cycles keep finding.
+
+**Three superlatives, all false, all in one section.** `ceiling.tex` said
+`PROTOCOL.md` "still carries" the thirty-point sentence, in a clause added by
+the same commit that deleted it. It called `rel-005`'s -0.400 the largest skew
+magnitude in the corpus, nine lines below quoting `rel-004` at +0.464. And it
+called rel-009's +0.019 as near zero as anything measured, where `rel-003` and
+`rel-007` both read exactly 0.000. A superlative is a claim over a set, and none
+of the three had been checked against the set.
+
+**`related_work.tex` and `appendix_prompts.tex` were the unaudited files this
+time**, as `corpus.tex` was last time. The first said neither paper reports an
+interval on the quantity in dispute, eleven lines after reporting SkillsBench's,
+and asserted what SkillOpt's full text does not contain three lines before
+promising not to make claims about sections nobody read. `refs.bib` flags that
+exact sentence as unverifiable from an abstract, and had done all along.
+
+Four figures and two docstrings corrected besides. The one worth naming: the
+bootstrap constant's docstring claimed the paper reproduces the notebook's
+published intervals "rather than near-misses of them", and three of the four
+differ in the third decimal. A comment asserting a property nothing checks is
+the same failure as prose asserting one, and it had been sitting in the module
+whose entire purpose is that the paper cannot disagree with the records.
+
+## Five cycles
+
+47 defects. Still no arithmetic error, and every generated macro has been right
+every time. Three stable patterns:
+
+Repair is the highest-risk operation. Every cycle's defects concentrated in
+prose the previous cycle had just written, five times out of five.
+
+Files nobody has opened end to end are the second-highest risk, and there is
+always one more of them than you think.
+
+And a superlative is a claim over a set. This paper contained five of them that
+nobody had checked against the set, and four were false.
