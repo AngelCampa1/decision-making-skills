@@ -758,3 +758,47 @@ sentences: about what the numbers mean, about what the code does, about what the
 repository contains, and — increasingly, as the cycles went on — about what the
 previous cycle's fix had just established. Reading a claim is not checking it,
 and the checkable ones are the ones you can run.
+
+## Cycle eleven: five findings, four of them in cycle ten's own prose
+
+Thirty-one down to five, and the shape is unchanged. Four of the five are
+sentences the previous cycle wrote that afternoon.
+
+**The isolation-receipt fix corrected one paragraph and left the same claim
+twenty lines below it.** Cycle ten rewrote the Verification paragraph to say the
+study path never calls `isolation_receipt` and that we would rather say so than
+let the mechanism's existence read as its use. The closing paragraph of the same
+appendix then said the hosted tier's absent card "is recorded as *no receipt
+obtainable*". Nothing is recorded: `grep -ril receipt results/evolution-study/`
+returns nothing, and the screen artifact's schema has no such field. The fix
+stated the principle and then broke it in the next paragraph.
+
+**The colliding-pair fix resolved one pair.** Cycle ten's own commit message
+named both — the two evolved arms record `candidate`, and the A/A pass records
+`placebo` — and the prose it wrote covered only the first, presenting the hash
+as the disambiguator. For the A/A pass the hash does not disambiguate either:
+`records-aa.jsonl` and `records-placebo.jsonl` are identical in both fields,
+`16ed9ebfceb9` on all 728 rows of each. `figures.py` says it in bold: the arm is
+the file name, not the record's `arm` field.
+
+**"Refuses a commit" survived its own diagnosis.** Cycle ten's commit message
+said the gate reads "working config rather than any commit, over a log carrying
+two addresses", and the replacement sentence it wrote still said the gate
+"refuses a commit". `check_git_identity` runs `git config user.email`. In CI the
+workflow sets that value itself two lines before invoking the gate, so there the
+check validates what the workflow just wrote.
+
+**And the exception the same commit added was one of two.** The appendix called
+the admission-rule subsection "the one exception" among typed study figures;
+`method.tex` types a second, `gepa` by 0.35, which is two study macros
+subtracted. Replaced with the two macros, which removes the exception rather
+than documenting it. The counterpart sentences also disagreed about scope: one
+said skew, the other skew and informedness, and informedness is generated and
+printed in the template table.
+
+## Eleven cycles
+
+165 defects. Still no arithmetic error. The convergence is real — 31, then 5 —
+but the composition has not changed at all: from cycle seven onward, the modal
+defect is a sentence written to repair a defect, and the most reliable predictor
+of where the next one is remains "wherever the last fix touched".

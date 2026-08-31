@@ -62,7 +62,9 @@ imply a receipt it does not hold.
 
 \paragraph{Observability.} Every call writes a record carrying the item id, the
 template id, the seed, the arm kind --- the two evolved arms both record
-\texttt{candidate} and are told apart only by the hash --- the SHA-256 of the
+\texttt{candidate} and are told apart only by the hash, and the A/A pass records
+\texttt{placebo} under the control's own hash and is told apart only by its file,
+which is where \texttt{de figures} reads the arm from --- the SHA-256 of the
 body that arm delivered and null for the arm that delivers none, the
 answer key, the parsed answer, the parse status, the response text, the token
 counts, the duration, and the schema version. The records are published beside
@@ -70,9 +72,10 @@ the run, and every number this paper draws from the study is recomputed from
 them and from the run's own \texttt{analysis.json} by \texttt{de figures} at
 build time. The accuracies, $p$-values and adjusted $q$-values are the ones the
 run computed and published; everything else here is recomputed from the records.
-The admission-rule subsection of \Cref{sec:ceiling} is the one exception inside
-the study's own figures: its per-template skew is computed from these records and
-typed, because \texttt{de figures} emits no macro for it. Three further classes
+The admission-rule subsection of \Cref{sec:ceiling} is the exception inside the
+study's own figures: its per-template skew is computed from these records and
+typed, because \texttt{de figures} emits no macro for skew. The informedness
+beside it is generated and printed in \Cref{tab:templates}. Three further classes
 of figure come from
 elsewhere and \texttt{main.tex} enumerates them: figures from cited work,
 configuration constants, and the sub-agent probes of \Cref{sec:ceiling} and the
@@ -104,6 +107,9 @@ ancestor of the run's commit.
 
 \paragraph{One thing this backend cannot give.} The hosted screen of
 \Cref{sec:ceiling} ran through the same module against a free API tier, which
-publishes no model card. No isolation receipt is obtainable there. That is
-recorded as \emph{no receipt obtainable} and never as \emph{isolation verified},
-which is a distinction we would rather state than quietly collapse.
+publishes no model card, so no isolation receipt is obtainable there. The
+harness has a function that would return \emph{no receipt obtainable} rather
+than \emph{isolation verified}, and the screen path does not call it either: the
+screen's committed artifact carries no receipt field, and neither does any
+record of the study. We state the distinction because it is the one we would
+want, and not because this run made it.

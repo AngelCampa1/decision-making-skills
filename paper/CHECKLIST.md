@@ -274,7 +274,7 @@ Last worked through 2026-08-31, against the five-arm study at
       Windows machine of `docs/STATUS.md` and built a different, shorter draft.
       None of it is a
       dependency of the gate. From a clean worktree at the commit this box was
-      last checked, 2026-08-31, the build is 29 pages and 445,722 bytes, with no overfull or underfull boxes, no LaTeX warnings and
+      last checked, 2026-08-31, the build is 29 pages and 446,500 bytes, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`

@@ -115,8 +115,9 @@ published run declares the notebook entry carrying its prediction, and the
 provenance check refuses the run unless that entry's first commit is a git
 ancestor of the commit the run was made at. Ancestry is not editable after the
 fact without destroying the timestamps the method rests on. The gate also
-refuses a commit made under the maintainer's employer domain, which is a
-blocklist of one and not an allowlist.
+refuses a working tree configured to commit under the maintainer's employer
+domain: a blocklist of one, read from the configuration rather than from any
+commit's author, and enforced locally by a pre-commit hook.
 
 The registered family was fixed before any data existed: three comparisons,
 \texttt{on}, \texttt{gepa} and \texttt{skillopt}, each against \texttt{placebo},
@@ -151,7 +152,8 @@ Choosing the unit after seeing the data would be the defect this design exists
 to avoid, so both are reported and neither is presented as the headline. They do
 not disagree in one direction: on the seen set the clustered test is the more
 conservative throughout, and on the unseen set two of the three go the other
-way, \texttt{gepa} by 0.35. \Cref{sec:clustered} gives both columns.
+way, \texttt{gepa} furthest, from $p = \NUM{\pUnseenGepa}$ to
+\NUM{\clusteredUnseenGepa}. \Cref{sec:clustered} gives both columns.
 
 We report the discordant split beside every registered $p$-value. Two arms can land on
 identical accuracy while disagreeing on a third of the items, and an aggregate

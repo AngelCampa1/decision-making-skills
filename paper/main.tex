@@ -85,8 +85,9 @@
 % stale becomes an undefined control sequence and fails the build, which is the
 % intended failure.
 %
-% Three classes of number are typed, because no committed record can generate
-% them, and each is identifiable in the prose:
+% Four classes of number are typed. Three because no committed record can
+% generate them; the fourth because a record generates it and de figures emits
+% no macro for it. Each is identifiable in the prose:
 %   1. Figures from cited work. They carry a citation and refs.bib carries the
 %      quote they came from.
 %   2. Configuration constants (context window, token cap, seed floor, model
@@ -101,6 +102,10 @@
 %      say so. The ceiling *screen* is not in this class: it wrote
 %      nvbuild-ceiling-screen.json, which is committed and which `de figures`
 %      reads, so those six figures are macros like any other.
+%   4. Per-template skew in section \ref{sec:ceiling}'s admission-rule
+%      subsection. Computed from the study's committed records, typed because
+%      de figures emits macros for informedness and not for skew. That
+%      subsection says so, and so does the harness appendix.
 %      Section \ref{sec:whatengines} also names the numbers it withdrew when a
 %      2026-08-31 audit found they came from a search whose winners were never
 %      tested.
