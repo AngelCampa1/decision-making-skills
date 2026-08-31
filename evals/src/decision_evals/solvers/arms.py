@@ -134,7 +134,7 @@ def build_arm(
             body that reached the model through a different code path from a
             written one would confound authorship with delivery, which is the
             one comparison the ``candidate`` arm exists to make.
-        placebo_body: Token- and structure-matched filler. Required by
+        placebo_body: Word-count- and structure-matched filler. Required by
             ``placebo``.
 
     Raises:

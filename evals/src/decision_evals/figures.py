@@ -706,7 +706,7 @@ def signal_by_arm(readings: Sequence[Reading], order: Sequence[str]) -> dict[str
     templates here mint either 56 or 112 items, so a pooled figure lets the
     larger ones decide the answer.
 
-    A template whose parsed answers hold a single class has no informedness, and
+    A template whose *key* holds a single answer class has no informedness, and
     :func:`~decision_evals.stats.signal.informedness` refuses rather than
     returning zero. Such a template is dropped from that arm's mean and its
     skew is still counted, because skew stays defined where J does not.

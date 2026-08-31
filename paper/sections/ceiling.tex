@@ -46,9 +46,12 @@ backends registered at that tier, which bounds what this rules out.
 
 \subsection{Nine templates, and how each one failed}
 
-We authored nine harder templates in two days, in distinct domains, each built
-around a rule the model has to select before it can apply: a precedence between
-two thresholds, chosen by a categorical variable stated elsewhere in the item.
+We authored nine harder templates in one morning, across seven domains: two of
+the nine are variants built to diagnose a third and share its scenario. Eight are
+built around a rule the model has to select before it can apply, a precedence
+between two thresholds chosen by a categorical variable stated elsewhere in the
+item. \texttt{hrd-001-warranty-claim} is the exception and carries a single
+threshold with no selector.
 
 Six of the nine ceiling on a 30B model. The registered prediction was that a set
 of six selection templates would land it between 0.60 and 0.75; the set landed
@@ -64,8 +67,9 @@ against specificity of 0.235, 0.167 and 0.250: it answers one option on about
 nine items in ten, in a set that wants it on half. That is an
 informedness of 0.167 to 0.250, and on a balanced key accuracy is pinned at
 $(J + 1)/2$, which is exactly the two balanced measurements, 0.583 and 0.625.
-The third ran on a realised 18/17 split, where the identity gives 0.618 against
-the 0.629 observed. A nudge toward the other option would move both error rates
+The first ran on a realised 18/17 split, where the identity gives 0.618 against
+the 0.629 observed; the other two are balanced 12/12, which is why they land on
+the identity exactly. A nudge toward the other option would move both error rates
 and leave $J$ where it is, so it would gain nothing. An earlier draft said it
 would gain roughly thirty points, which is worth zero on a balanced key.
 \texttt{docs/PROTOCOL.md} carried the same sentence and now records its
@@ -114,8 +118,10 @@ all computable from the control-arm records a calibration run already produces:
   \item informedness below one, so discrimination is left to gain.
 \end{itemize}
 
-Seven published templates and six of the nine hard ones have signal and no
-room, on a large model. The one-sided ones have room and no signal.
+Seven published templates and six of the nine hard ones have signal and no room,
+on a large model. The two one-sided ones have room and no signal.
+\texttt{hrd-001} is in neither group: the 30B scored 24 of 24 on it, so it has no
+room either, and it is the one template of the nine built without a selector.
 
 \textbf{And the three criteria do not close the case, which we found by turning
 them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on the

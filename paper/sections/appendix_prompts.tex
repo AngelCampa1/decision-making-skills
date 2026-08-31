@@ -8,8 +8,9 @@
 
 \subsection{The shared prefix, in every arm}
 
-Two blocks precede the arm's body in every system prompt, assembled by one
-function with no way to omit either. The second is the reason: a skill that also
+Two blocks bracket the arm's body in every system prompt, the first before it
+and the second after, assembled by one function with no way to omit either. The
+second is the reason: a skill that also
 teaches the model how to format its answer, tested against a control that was
 never told, measures instruction-following.
 
@@ -53,7 +54,7 @@ arm & body appended to the prefix & content hash \\
 
 Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded on
 every row of every arm that carries a body. Three of the five bodies are published and a
-replicator can recompute the two that carry a hash. \texttt{off} is empty and
+replicator can recompute the two of those that carry a hash. \texttt{off} is empty and
 its \texttt{candidate\_sha} is null; \texttt{on} is
 \pth{skills/decision-making/SKILL.md}; \texttt{placebo} is
 \pth{skills/decision-making/placebo.md}. Both hashes above reproduce from those
@@ -62,7 +63,8 @@ files at the commit this paper is built from.
 \textbf{The two evolved bodies are not published and cannot be.} Each search
 wrote its winner into a results directory our \texttt{.gitignore} excludes, so
 neither was ever committed, and the directories are gone. A content-hash search
-of every file on the machine on 2026-08-28 found neither. What survives is the
+of every file on the machine under 300\,KB on 2026-08-28, 40,936 of them, found
+neither. What survives is the
 hash, on all \NUM{\totalItems} records of each arm, which proves that one fixed
 body produced every reading in that arm and gives nobody a way to obtain it.
 This is a reproducibility failure and we report it as one. The engines, the seed

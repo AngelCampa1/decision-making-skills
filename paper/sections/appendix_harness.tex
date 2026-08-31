@@ -66,7 +66,9 @@ arm that delivers none, the
 answer key, the parsed answer, the parse status, the raw response, the token
 counts, the duration, and the schema version. The records are published beside
 the run, and every number this paper draws from the study is recomputed from
-them by \texttt{de figures} at build time. Three classes of figure come from
+them and from the run's own \texttt{analysis.json} by \texttt{de figures} at
+build time. The accuracies, $p$-values and adjusted $q$-values are the ones the
+run computed and published; everything else here is recomputed from the records. Three classes of figure come from
 elsewhere and \texttt{main.tex} enumerates them: figures from cited work,
 configuration constants, and the sub-agent probes of \Cref{sec:ceiling} and the
 search runs of \Cref{sec:whatengines}, both of which say so where they

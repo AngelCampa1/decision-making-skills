@@ -597,3 +597,67 @@ documentation gate's scope of root `*.md` and `docs/`. `paper/` entirely,
 `paper/CHECKLIST.md`, `CITATION.cff`, `results/**/README.md`, `.py` docstrings,
 `Makefile`, `.github/`, `site/src/`. The gate cannot see the files that break
 most often, and no gate reads whether a sentence is true in any of them.
+
+## Cycle ten, second report: a replicator following the appendix builds the wrong prompt
+
+Thirteen more, from an agent that executed every claim the paper makes about the
+repository rather than reading it.
+
+**The prompt appendix gives the wrong assembly order.** "Two blocks precede the
+arm's body in every system prompt." `arms.py:149-162` builds `[BASE_FRAMING]`,
+appends the body, then appends `FORMAT_CONTRACT`. One block precedes and one
+follows. This is the appendix whose whole purpose is to let a replicator rebuild
+the prompt, and a replicator following it puts the body last and reproduces a
+different prompt in every arm. Ten cycles read that section for what it claimed
+and none of them ran the function.
+
+**The paper claims a recomputation that does not happen.** The Observability
+paragraph says every number the paper draws from the study is recomputed from
+the records by `de figures`. `figures.py` opens by saying the opposite in bold —
+"This is a renderer and never a second analysis" — and reads accuracies,
+p-values and adjusted q-values straight out of `analysis.json`. `results.tex`
+states it correctly. The appendix asserted a universal with three named
+exceptions and the largest class was not among them.
+
+**Three false claims in one sentence about the nine hard templates.** "Nine
+harder templates in two days, in distinct domains, each built around a rule the
+model has to select." Git says all nine were added on 2026-08-28 between 09:26
+and 11:30. `hrd-008` carries `hrd-003`'s solution expression byte for byte and
+`hrd-009` carries `hrd-002`'s, which the section says itself four paragraphs
+later: two of them were built to diagnose a third. And `hrd-001` is
+`'honour_claim' if owned_months <= term_months else 'decline_claim'`, one
+threshold and no selector, where the other eight all carry the
+`(X if category else Y)` form. The partition two subsections down leaves the
+same template unaccounted: six plus the two one-sided ones is eight of nine.
+
+**"The third ran on a realised 18/17 split."** 18 + 17 is 35, and the sentence
+quotes 0.629, which the enumeration two sentences earlier gives as the 35-item
+measurement. It is the first. The other two are balanced 12/12, which is why
+they land on the identity exactly.
+
+**The estimator count is not supported by any of our records.** The paper says
+four estimators that could not return a non-zero value, two producing clean runs
+and one caught in source. Four separate notebook entries and documents give
+four, four, five and three, and the one that gives four says *two* were caught
+in source. The paper picked a count and added a split nothing supports. Replaced
+with the shape of the claim and an admission that our own records disagree,
+which is a better argument for the check than a number would be.
+
+Two of the thirteen were fixes from earlier this cycle that had not been swept:
+the introduction still carried "no verdict-bearing replication can be built on
+this corpus" after `ceiling.tex` was scoped that morning, and cycle eight's
+narrowing of "Every figure here" was still wrong for a third search.
+
+## Ten cycles, closing count
+
+129 defects. No arithmetic error in any of them, and this agent independently
+re-derived the fourth-criterion paragraph, the parse-failure split, the at-cap
+counts, the balanced-key identity in all sixteen fully-parsed cells and the
+worked appendix item, which renders byte-identically from the template at seed
+10226. Six independent re-derivations now.
+
+The two findings worth carrying out of this cycle are not about any one
+sentence. The first: a claim about code is only checked when someone runs the
+code, and "two blocks precede the body" survived ten readings because reading is
+not running. The second: a fix is a new claim and inherits none of the
+verification of the sentence it replaces.

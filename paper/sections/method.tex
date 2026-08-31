@@ -160,9 +160,10 @@ skip the pass and report perfect agreement by construction.
 
 \paragraph{Falsifier.} The \texttt{off} arm returns a non-zero score, so some
 possible response scored above zero in every arm and the scorer reads the same
-object in each. This project has shipped four estimators that could not return a
-non-zero value. Two of them produced a clean run and a plausible number before
-anyone noticed; one was caught in source before it made a call. That is why the
+object in each. This project has shipped several estimators that could not
+return a non-zero value. Some produced a clean run and a plausible number before
+anyone noticed, and others were caught in source before making a call; our own
+records disagree on the count, which is its own argument for the check. That is why the
 check is standing rather than occasional.
 
 \paragraph{Residency.} Model residency is pinned at 60 minutes on every request.
