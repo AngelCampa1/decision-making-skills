@@ -880,3 +880,50 @@ a false sentence that thirteen adversarial reviews did not.
 169 defects. The prose is clean, the arithmetic was never wrong, and the last
 defect of the run was a stale claim in a document the gate had been telling me
 to read.
+
+## Cycle fourteen: zero blocking findings
+
+The first cycle to return clean. It re-derived the two stamps rather than
+trusting them — a stamp recording a read that did not happen would make a
+register the project depends on false — and confirmed both: every clause of the
+new `docs/METHODS.md` sentence checks against `runner.py` and `study.py`, and
+none of the four documents stamped at `39731e3` makes a claim that anything
+moving under them falsifies. Then a referee's pass over the PDF end to end:
+abstract against sections, six contributions against the sections that deliver
+them, and the places redundancy hides contradiction. Nothing.
+
+**One correction to `39731e3`'s commit message.** It says three files moved
+under the four documents. Four did: `site/build-manifest.json` is a fourth, a
+generated hash manifest no document makes a claim about. The stamps stand and
+the message undercounts. Recorded here because a commit message is not editable
+and this register is the thing the drift gate rests on.
+
+## What fourteen cycles cost and what they bought
+
+169 defects. Not one of them was a number. Seven independent agents recomputed
+every macro from the raw JSONL and one regenerated every artefact under
+`paper/generated/` and `paper/figures/` byte-identical to what is committed, so
+the arithmetic was right on the day it was written and never moved.
+
+What was wrong, 169 times, was sentences: about what the numbers mean, what the
+code does, what the repository contains, and — from cycle seven onward, more
+than any other class — about what the previous cycle's fix had just established.
+The defect rate per cycle fell 31, 5, 3, 1, 0. The *composition* never changed.
+
+Three things worth carrying:
+
+**Reading a claim is not checking it.** "Two blocks precede the arm's body"
+survived ten readings of the prompt appendix and died the first time somebody
+ran `build_arm`. Every one of the highest-severity findings in this run was a
+claim about the repository that nobody had executed.
+
+**A fix is a new claim.** It inherits none of the verification of the sentence
+it replaces, and it is written under the confidence of having just been right
+about something. The specific mechanism, seen four times: a fix that
+generalises. "No per-template skew macro" became "no macro for skew" because the
+shorter sentence read better, and the deleted word was carrying the truth.
+
+**The gate found what fourteen adversarial reviews did not.** `docs/METHODS.md`
+had said arms interleave per item since long before the study proved otherwise.
+No cycle opened that file. The drift ceiling had been naming it every run, and I
+had been treating the worklist as bookkeeping.
