@@ -20,11 +20,14 @@ Last worked through 2026-08-31, against the five-arm study at
 - [x] Every claim in the abstract and introduction is supported by a numbered
       result or a citation. Numbers about our own runs are `\NUM{\macro}` from
       `generated/macros.tex`; numbers from other people's papers carry a
-      citation whose `refs.bib` entry carries the quote they came from
+      citation whose `refs.bib` entry carries the quote they came from. The
+      abstract carries no citation because it asserts nothing from anyone
+      else's work; every figure in it is a macro
 - [x] The scope of the claims matches the experiments: one harness, one model
       at 1.7B parameters, tasks with computable ground truth. Stated in the
-      abstract, again at the end of the introduction, and enforced by the arena
-      rule that declines to issue a verdict from this tier
+      abstract as of 2026-08-31, which until then named no model at all; again
+      at the end of the introduction; and enforced by the arena rule that
+      declines to issue a verdict from this tier
 - [x] Limitations are stated in the paper, not only in the repository:
       `sections/limitations.tex`.
       Source: [`../docs/LIMITATIONS.md`](../docs/LIMITATIONS.md)
@@ -92,8 +95,10 @@ Last worked through 2026-08-31, against the five-arm study at
       the effect, because the run's analysis did not compute one and
       `de figures` renders that file rather than reanalysing it. Closing this
       means re-running the analysis, not editing the paper
-- [x] Underpowered comparisons reported as `UNTESTED` with their MDE, not as
-      nulls. This box read "`stats/power.py` computes an MDE and this study did
+- [x] Underpowered comparisons reported with their MDE, not as nulls. The word
+      `UNTESTED` is the repository's verdict vocabulary and appears nowhere in
+      the paper; what the paper does is report every failure to reject as a
+      failure to reject, beside the effect the design could have seen. This box read "`stats/power.py` computes an MDE and this study did
       not report one" until 2026-08-31, and that was false about the
       pre-registration: the MDE was computed before the first call, at 0.081
       unseen and 0.075 seen, and recorded in the prediction entry. What was true
@@ -107,9 +112,11 @@ Last worked through 2026-08-31, against the five-arm study at
       `figures.py`.
       Benjamini-Hochberg is a thin wrapper around `statsmodels`, not an
       independent implementation checked against it, so nothing here pins
-      against `statsmodels`; that self-referential test was deliberately
-      removed (`tests/property/test_stats_properties.py`,
-      `TestBenjaminiHochberg.test_rejections_agree_with_the_adjusted_values`)
+      against `statsmodels`. The test that did compare our own step-up against
+      it was removed with the implementation it checked;
+      `TestBenjaminiHochberg.test_rejections_agree_with_the_adjusted_values`
+      (`tests/property/test_stats_properties.py`) is its replacement and
+      asserts that rejections agree with the adjusted values
 - [ ] Coverage simulation: 1,000 simulated clustered datasets with known Δ,
       empirical 95% CI coverage in [0.93, 0.97]
 - [x] **One unit of analysis, named before the run and used after it.** Added
@@ -145,7 +152,8 @@ Last worked through 2026-08-31, against the five-arm study at
       models, and the 2026 GSM-Symbolic re-audit says it is the half that
       matters
 - [ ] Difficulty gates run on the control arm only, and stated as such. The
-      criteria exist as of protocol v2 and nothing computes them yet, so this
+      criteria exist as of protocol v2 and `figures.py` computes both on every
+      arm, but no step of `de check` reads them, so a corpus gate enforcing them
       **will refuse** a template rather than refuses one
 - [x] Split committed. Templates are split by
       `sha256("evolution-study-v1:<template_id>")` and both sides are listed in
@@ -189,8 +197,8 @@ Last worked through 2026-08-31, against the five-arm study at
       Nothing plants a file and checks it is ignored here, because nothing
       here reads the filesystem
 - [ ] ≥2 independent runs per cell, with variance reported. One pass per arm.
-      The control arm has a second pass, the A/A, and it is the only cell with
-      a repeat
+      The `placebo` arm, which is this study's registered control, has a second
+      pass in the A/A, and it is the only cell with a repeat
 - [ ] **Arms interleaved per item, not run in blocks.** Arms ran in blocks.
       `runner.iter_items` returns the item-major ordering and the study path
       never calls it, found 2026-08-28. The A/A bounds the exposure and does
@@ -204,9 +212,14 @@ Last worked through 2026-08-31, against the five-arm study at
 
 - [x] Exact prompt text published for every arm, in the paper's appendix, with
       the shared prefix, one fully rendered item, and the content hash per arm
-- [x] Full transcripts published, not scores alone. Every record carries the
-      complete response text, the parsed answer and the parse status: 3,640 arm
-      records and 728 A/A records, committed
+- [ ] Full transcripts published, not scores alone. Every record carries the
+      answer text, the parsed answer and the parse status, over 3,640 arm
+      records and 728 A/A records, all committed. It does **not** carry the
+      reasoning chain: the backend returns it in a separate field, the runner
+      writes only the answer, and for three of the five arms the median
+      generation bills several hundred `output_tokens` against a recorded
+      response of a few. This box read `[x]` until 2026-08-31. These are
+      transcripts of the answers, not of the generations
 - [x] Placebo text published beside the skill it stands in for, with its length
       and section count reported against the skill's. The match is checked on
       word count within 15%; a token count would be the better measure and is
@@ -249,8 +262,12 @@ Last worked through 2026-08-31, against the five-arm study at
       (Angel Campa, `AngelCampa1`)
 - [x] No `@ventoralabs.com` address anywhere in the source or in the commit
       history. PDF metadata inherits `\author`, which carries no address
-- [x] `make paper` compiles. TinyTeX 2026.08, GNU Make 4.4.1 and poppler 26.02.0
-      are installed per-user outside the repository, and none of it is a
+- [x] `make paper` compiles. The figures below are from a macOS machine running
+      TeX Live 2026 via Homebrew, GNU Make 3.81 and poppler 26.08.0, all
+      installed outside the repository; the TinyTeX 2026.08 / Make 4.4.1 /
+      poppler 26.02.0 combination this box named until 2026-08-31 is the
+      Windows machine of `docs/STATUS.md` and built a different, shorter draft.
+      None of it is a
       dependency of the gate. From a clean worktree the build is 28 pages, a
       little over 439 KB, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`

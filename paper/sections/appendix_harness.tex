@@ -7,9 +7,11 @@
 
 A result reported without its harness is not
 reproducible~\citep{harnessdisclosure2026}, and this appendix is the one most papers
-in this area omit. The disclosure follows the ETCSOVG
-checklist~\citep{harnessdisclosure2026}: execution, tools, context, scheduling,
-observability, verification, governance.
+in this area omit. The disclosure is organised under seven headings we named
+ETCSOVG for our own use — execution, tools, context, scheduling, observability,
+verification, governance — and keep against the disclosure
+\citet{harnessdisclosure2026} argues for. The acronym is ours; the requirement
+is theirs.
 
 The project has three backends. This study used exactly one, and the other two
 are disclosed separately in the repository because folding them into one table
@@ -49,11 +51,12 @@ after the placebo pass it duplicates and returned \NUM{\aaPairs} of
 run, and it says the drift this design is exposed to did not occur here. It does
 not say the design is sound. Model residency is pinned at
 \texttt{keep\_alive: 60m}, sent on every request by the provider that makes
-them. That pin is load-bearing: a probe the day before the study found two items
+them. That pin is load-bearing: a probe run hours before the study found two items
 answering deterministically to whether the model had just been reloaded, which
 without the pin would have put a venue artifact inside the A/A control. It is
-one of the two settings this run does \emph{not} write into its manifest, the
-other being temperature, so a replicator reads both from the provider source
+one of several settings this run does \emph{not} write into its manifest.
+Temperature, the concurrency limit, the request timeout and the endpoint are the
+others, so a replicator reads them from the provider source
 and not from the record. We would rather say that than let the disclosure
 imply a receipt it does not hold.
 
@@ -61,15 +64,25 @@ imply a receipt it does not hold.
 template id, the seed, the arm, the SHA-256 of the body that arm delivered, the
 answer key, the parsed answer, the parse status, the raw response, the token
 counts, the duration, and the schema version. The records are published beside
-the run. Every number in this paper is recomputed from them by
-\texttt{de figures} at build time.
+the run, and every number this paper draws from the study is recomputed from
+them by \texttt{de figures} at build time. Three classes of figure come from
+elsewhere and \texttt{main.tex} enumerates them: figures from cited work,
+configuration constants, and the sub-agent probes of \Cref{sec:ceiling} and the
+search runs of \Cref{sec:whatengines}, both of which say so where they
+appear.
 
 \paragraph{Verification.} The resolved model id is recorded per call from the
 response's own \texttt{model} field, not from what was requested.
 Ollama's \texttt{/api/show} card is read as an isolation receipt and the run is
 refused if it carries a \texttt{SYSTEM} prompt, which is the local analogue of a
 planted instruction file. Reasoning output arrives in a field separate from the
-answer and is kept, not discarded.
+answer, and \textbf{it is not recorded}. The runner writes the answer text
+only, so a chain that is billed in \texttt{output\_tokens} leaves no other
+trace: for three of the five arms the median generation bills several hundred
+tokens against a recorded response of a few. That is the largest gap between
+what this study spent and what it published, and \citet{biderman2024lessons},
+which we cite for publishing transcripts rather than scores, is the standard it
+misses.
 
 \paragraph{Governance.} The run is checkpointed and resumable, keyed so that a
 resume cannot silently re-run or silently skip. The A/A pass has its own

@@ -114,8 +114,13 @@ would destroy it.
 
 \subsection{Transcripts}
 
-Full transcripts are published, not scores alone. Every record carries the
-model's complete response text alongside the parsed answer and the parse status:
+Every record carries the model's answer text, the parsed answer and the parse
+status. It does not carry the reasoning chain: the backend returns that in a
+separate field, the runner does not write it, and it is counted in
+\texttt{output\_tokens} and nowhere else (\Cref{sec:appendix-harness}). So
+these are transcripts of the answers and not of the generations, which is less
+than \citet{biderman2024lessons} asks for and we would rather name than
+imply:
 
 \begin{center}
 \texttt{results/evolution-study/\NUM{\studyRun}/}

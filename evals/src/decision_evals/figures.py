@@ -395,7 +395,7 @@ def power_macros(analysis: Mapping[str, Any], manifest: Mapping[str, Any]) -> di
 
 
 def per_template_macros(
-    readings: Sequence[Reading], manifest: Mapping[str, Any], baseline: str
+    readings: Sequence[Reading], manifest: Mapping[str, Any], baseline: str, control: str
 ) -> dict[str, str]:
     """Accuracy and parse rate per template, and each arm with one dropped.
 
@@ -451,6 +451,22 @@ def per_template_macros(
                     values[_macro_name("countOn", label, key, arm, slug)] = str(total)
         for template in templates:
             key = _template_key(template)
+            # Net items against the *control*, which is what every reported
+            # effect is measured against. An aggregate effect is a signed sum
+            # over templates and not a partition of them, so this is what shows
+            # which template carried one and which pulled the other way.
+            for arm in by_arm:
+                if arm == control:
+                    continue
+                here = [r for r in by_arm[arm] if r.seed in seeds]
+                there = [r for r in by_arm[control] if r.seed in seeds]
+                paired = {r.item: r for r in there}
+                net = sum(
+                    _is_correct(r) - _is_correct(paired[r.item])
+                    for r in here
+                    if r.item in paired and r.template_id == template
+                )
+                values[_macro_name("net", label, key, arm)] = _signed(net, 0)
             values[_macro_name("gap", label, key, baseline)] = _signed(
                 _accuracy(
                     [r for r in by_arm["gepa"] if r.seed in seeds and r.template_id == template]
@@ -538,9 +554,10 @@ def at_cap_macros(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str,
     """Per arm, how many generations ran to the output cap without concluding.
 
     The cap is read off the records as the largest ``output_tokens`` any arm
-    reached, because the run manifest does not carry it and a hard-coded 4096
-    would silently report zero the day the cap changes. A generation that stops
-    exactly at the ceiling did not choose to stop.
+    reached. The manifest carries ``max_tokens`` and would do, but a cap read
+    from the records is a cap some generation actually hit, and a hard-coded
+    4096 would silently report zero the day either one changes. A generation
+    that stops exactly at the ceiling did not choose to stop.
 
     This exists because the paper twice claimed runaway generations were a seed
     skill pathology that both evolved winners fixed. In this run the placebo
@@ -963,7 +980,7 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values.update(screen_macros(repo_root / STUDY_ROOT / study.run))
     values.update(template_range_macros(repo_root))
     values.update(power_macros(analysis, manifest))
-    values.update(per_template_macros(readings, manifest, BASELINE_ARM))
+    values.update(per_template_macros(readings, manifest, BASELINE_ARM, analysis["control"]))
     values.update(restricted_macros(readings, manifest, analysis["control"]))
     values.update(placebo_macros(repo_root))
 

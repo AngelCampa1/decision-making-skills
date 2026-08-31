@@ -386,8 +386,9 @@ so current protocols "systematically misattribute harness-level gains to model
 improvements". Its support is a control-theoretic formalisation, a survey of
 published benchmarks and deployments, and a controlled variance decomposition in
 which harness-induced variance "can substantially exceed" model-induced
-variance, "including cases of model ranking reversal". It supplies the ETCSOVG
-disclosure checklist. *This is the premise of the whole project: the scaffold is
+variance, "including cases of model ranking reversal". It argues for harness
+disclosure; the seven-heading ETCSOVG scheme we disclose under is ours and not
+the paper's, corrected 2026-08-31. *This is the premise of the whole project: the scaffold is
 the dominant variable, and it is the one nobody reports.*
 
 The variance decomposition is the authors' own experiment, and its numbers are

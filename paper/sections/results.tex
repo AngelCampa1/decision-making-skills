@@ -67,7 +67,8 @@ Three readings deserve stating and not leaving in the table.
 three.} It scores \NUM{\accUnseenGepa} on unseen scenarios against
 \NUM{\accUnseenOff} for an empty prompt and \NUM{\accUnseenPlacebo} for the
 placebo, losing \NUM{\lossesUnseenGepa} items to the placebo's
-\NUM{\winsUnseenGepa}. It is the only arm in the study below \texttt{off}.
+\NUM{\winsUnseenGepa}. It is the arm furthest below \texttt{off} on that set; the seed skill is also
+below it, at \NUM{\accUnseenOn}.
 
 That aggregate is one template. On \texttt{rel-001-vendor-outage} GEPA reads
 \NUM{\accUnseenRelZeroZeroOneVendorOutageGepa} against \texttt{off}'s
@@ -98,9 +99,9 @@ below the placebo on both. We wrote that skill and we ship it.
 seen set against \NUM{\accSeenOff} for an empty prompt. The placebo is the
 control and so has no row in the comparison column of \Cref{tab:seen}; that gap
 is wider than every effect in it. It is not the widest gap over an empty prompt
-in the table, because SkillOpt's winner sits further above \texttt{off} still at
-\NUM{\accSeenSkillopt}; what SkillOpt does not do is clear the placebo after
-correction. A structured document of the right length and shape, whose content
+in the table: SkillOpt's winner sits further above \texttt{off} at
+\NUM{\accSeenSkillopt} and GEPA's is above the placebo too at
+\NUM{\accSeenGepa}. What neither does is clear the placebo after correction. A structured document of the right length and shape, whose content
 carries no method, moved this model. Any evaluation without such an arm would
 have attributed that movement to whatever text it happened to be testing.
 
@@ -220,7 +221,7 @@ the arms ran in blocks (\Cref{sec:limitations}).
 
 The pass ran into its own checkpoint so that resume could not skip it and report
 perfect agreement by construction. It is also only trustworthy because of a
-finding from the day before: two items answered deterministically to whether the
+finding from hours earlier: two items answered deterministically to whether the
 model had just been reloaded, and pinning residency closed it. A venue treated
 as deterministic without measuring it would have put that artifact inside this
 control.
@@ -263,11 +264,12 @@ SkillOpt is the harder case and we report it against ourselves. On
 \texttt{rel-008-contract-renew}, the one template it lifted a constant from, it
 reads \NUM{\accSeenRelZeroZeroEightContractRenewSkillopt} against
 \NUM{\accSeenRelZeroZeroEightContractRenewOff} for an empty prompt, and that
-template carries $+8$ of the $+16$ net items behind
-\NUM{\effectSeenSkillopt}. That net is a signed sum over templates and not a
-partition, so $+8$ of $+16$ is a share of the total and not of the positives:
-\texttt{rel-005-security-patch} carries $+17$ with no constant lifted from it,
-and the other five templates sum against both. What is left is that the second
+template carries \NUM{\netSeenRelZeroZeroEightContractRenewSkillopt} of the
+net items behind \NUM{\effectSeenSkillopt}. That net is a signed sum over
+templates and not a partition, so this is a share of the total and not of the
+positives: \texttt{rel-005-security-patch} carries
+\NUM{\netSeenRelZeroZeroFiveSecurityPatchSkillopt} with no constant lifted from
+it, and the other five templates sum against both. What is left is that the second
 largest contribution to the study's largest gain sits on the one template its
 winner memorised a threshold for. One template, one engine, an unregistered
 comparison: a fact and not a finding.

@@ -707,7 +707,7 @@ class TestRefusalsOnMalformedRuns:
             ),
         )
         manifest = json.loads((run_dir / "run.json").read_text())
-        values = per_template_macros(load_readings(run_dir), manifest, "off")
+        values = per_template_macros(load_readings(run_dir), manifest, "off", "on")
         assert "parseRateUnseenTQuietCandidate" in values
         assert "accParsedUnseenTQuietCandidate" not in values
         assert "constantShareUnseenTQuietCandidate" not in values

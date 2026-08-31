@@ -25,10 +25,11 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{booktabs}
+% graphicx is pgfplots' own dependency; amsmath is loaded for \text and the
+% aligned environments the signal section uses. amssymb and siunitx were loaded
+% and never used, and a package a replicator installs for nothing is a cost.
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{siunitx}
 \usepackage{xcolor}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -90,7 +91,9 @@
 %   1. Figures from cited work. They carry a citation and refs.bib carries the
 %      quote they came from.
 %   2. Configuration constants (context window, token cap, seed floor, model
-%      size). These are settings, not results.
+%      size). These are settings, not results. Two of them are in run.json and
+%      could be generated; they are typed because a setting a replicator needs
+%      to read in prose is not a figure that can go stale against the data.
 %   3. The corpus-ceiling probes of section \ref{sec:ceiling} and the two
 %      evolution searches read off in section \ref{sec:whatengines}. The probes
 %      ran through sub-agents and the searches wrote into a gitignored directory
@@ -123,8 +126,9 @@ in \texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}\\
 Two open-source engines, GEPA and Microsoft's SkillOpt, automatically rewrite
 the markdown ``skill'' files that agent tools load, and both accept an edit on a
 single uncontrolled score improvement. We evolved a decision-making skill with
-each engine, then tested five arms against each other on a holdout minted after
-both winners were frozen: no skill, the hand-written seed skill, a
+each engine on one corpus of computable-ground-truth decisions, against one
+target model, \NUM{\studyModel}, inside one harness. We then tested five arms
+against each other on a holdout minted after both winners were frozen: no skill, the hand-written seed skill, a
 structure-matched placebo, and the two evolved winners. Comparisons are McNemar
 exact against the placebo with Holm correction across a pre-registered family of
 \NUM{\familySize}, on \NUM{\unseenItems} and \NUM{\seenItems} items analysed separately.

@@ -97,7 +97,7 @@ not run, and no analysis of these records recovers it.
 
 The harness registers every model against one of three tiers. \texttt{dev} is
 for development and emits no verdict. \texttt{screen} is for cheap hosted models
-and may. \texttt{confirm} is the target model on a private holdout under a
+and emits none either. \texttt{confirm} is the target model on a private holdout under a
 hash-locked pre-registration.
 
 The separation is enforced in code rather than by discipline, and it cuts
@@ -137,13 +137,16 @@ That test treats items as independent, and they are not. Items minted from one
 template share a scenario, a rule and a distractor pool, so the independent unit
 is the template. The registration named the item-matched test and we report it
 as registered, but it is the wrong unit and we report a template-level test
-beside it throughout (\Cref{sec:clustered}). Intervals come from a cluster
-bootstrap that resamples \emph{templates}, not items, for the same reason.
+beside it in \Cref{sec:clustered}. The informedness intervals of
+\Cref{tab:signal} come from a cluster bootstrap that resamples \emph{templates},
+not items, for the same reason; the two accuracy tables carry no interval at
+all, which \Cref{sec:results} records as a gap.
 
 Choosing the unit after seeing the data would be the defect this design exists
-to avoid, so both are reported everywhere and neither is presented as the
-headline. Where they disagree, they disagree in the direction of the clustered
-test being the more conservative, and \Cref{sec:clustered} says by how much.
+to avoid, so both are reported and neither is presented as the headline. They do
+not disagree in one direction: on the seen set the clustered test is the more
+conservative and on the unseen set it is not, and \Cref{sec:clustered} gives
+both columns.
 
 We report the discordant split beside every $p$-value. Two arms can land on
 identical accuracy while disagreeing on a third of the items, and an aggregate
@@ -158,11 +161,12 @@ skip the pass and report perfect agreement by construction.
 \paragraph{Falsifier.} The \texttt{off} arm returns a non-zero score, so some
 possible response scored above zero in every arm and the scorer reads the same
 object in each. This project has shipped four estimators that could not return a
-non-zero value, each producing a clean run and a plausible number, which is why
-the check is standing rather than occasional.
+non-zero value. Two of them produced a clean run and a plausible number before
+anyone noticed; one was caught in source before it made a call. That is why the
+check is standing rather than occasional.
 
 \paragraph{Residency.} Model residency is pinned at 60 minutes on every request.
-A probe the day before the study found two items answering deterministically to
+A probe run hours before the study found two items answering deterministically to
 whether the model had just been loaded, which would have put a venue artifact
 inside the A/A. The pin is a property of the provider rather than of the run
 manifest, which \Cref{sec:appendix-harness} states as the gap it is.
