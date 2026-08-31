@@ -94,14 +94,15 @@ same items. \Cref{sec:whatengines} describes the body.
 \texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
 below the placebo on both. We wrote that skill and we ship it.
 
-\paragraph{The placebo is not inert.} It reads \NUM{\accSeenPlacebo} on the seen
-set against \NUM{\accSeenOff} for an empty prompt. The placebo is the control and so has no
-row in the comparison column of \Cref{tab:seen}; that gap is wider than every
-effect in it. It is not the widest gap over an empty prompt in the table,
-because SkillOpt's winner is further above \texttt{off} still, and is not above
-the placebo. A structured document of the right length and shape,
-whose content carries no method, moved this model. Any evaluation without such an arm
-would have attributed that movement to whatever text it happened to be testing.
+\paragraph{The placebo is not inert.} It reads \NUM{\accSeenPlacebo} on the
+seen set against \NUM{\accSeenOff} for an empty prompt. The placebo is the
+control and so has no row in the comparison column of \Cref{tab:seen}; that gap
+is wider than every effect in it. It is not the widest gap over an empty prompt
+in the table, because SkillOpt's winner sits further above \texttt{off} still at
+\NUM{\accSeenSkillopt}; what SkillOpt does not do is clear the placebo after
+correction. A structured document of the right length and shape, whose content
+carries no method, moved this model. Any evaluation without such an arm would
+have attributed that movement to whatever text it happened to be testing.
 
 \subsection{An off-key answer is scored as a wrong answer, and it is not random}
 \label{sec:parsefail}

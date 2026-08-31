@@ -66,9 +66,13 @@ PLACEBO_SKILL: Final = "skills/decision-making/placebo.md"
 #: rather than assumed here.
 BASELINE_ARM: Final = "off"
 
-#: Resampling draws for the cluster bootstrap. Matches the notebook entry of
-#: 2026-08-28, so the paper reproduces the intervals published there rather than
-#: near-misses of them.
+#: Resampling draws for the cluster bootstrap, matching the notebook entry of
+#: 2026-08-28. It does not reproduce that entry's intervals exactly: the paper
+#: publishes skillopt at [-0.068, +0.259] against the notebook's
+#: [-0.069, +0.260], and gepa and on differ in the third decimal too. Same
+#: estimator, same draws, a different resampling order, and an interval quoted
+#: to three decimals is not stable at that resolution. The paper's figures are
+#: the generated ones; the notebook is the dated record of what was seen first.
 BOOTSTRAP_DRAWS: Final = 20_000
 
 #: Seed for those draws. A published interval that moves between builds is not
@@ -574,12 +578,19 @@ def screen_macros(run_dir: Path) -> dict[str, str]:
     if not rows:
         raise FigureError(f"{path} holds no screened models")
     accuracies = sorted(float(row["accuracy"]) for row in rows)
+    asked = {int(row["asked"]) for row in rows}
     return {
         _macro_name("screen", "models"): str(len(rows)),
         _macro_name("screen", "worst"): _fixed(accuracies[0], 3),
         _macro_name("screen", "best"): _fixed(accuracies[-1], 3),
         _macro_name("screen", "atCeiling"): str(sum(a >= 0.999 for a in accuracies)),
-        _macro_name("screen", "items"): str(int(rows[0]["asked"])),
+        _macro_name("screen", "items"): str(asked.pop()) if len(asked) == 1 else "varied",
+        # Accuracy in this artefact is correct over *answered*, not over asked,
+        # and one row answered fewer than it was asked. Reporting the gap keeps
+        # a perfect score on a short denominator from reading as a perfect score.
+        _macro_name("screen", "unanswered"): str(
+            sum(int(row["asked"]) - int(row["answered"]) for row in rows)
+        ),
     }
 
 

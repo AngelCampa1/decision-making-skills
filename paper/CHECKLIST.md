@@ -12,7 +12,7 @@ is never ticked on the strength of an intention. Two boxes below are marked
 still an open box. A third was blocked on this machine having no TeX toolchain,
 and installing one closed it.
 
-Last worked through 2026-08-28, against the five-arm study at
+Last worked through 2026-08-31, against the five-arm study at
 [`../results/evolution-study/2026-08-27-53b4965-five-arm/`](../results/evolution-study/2026-08-27-53b4965-five-arm/).
 
 ## Claims
@@ -251,8 +251,8 @@ Last worked through 2026-08-28, against the five-arm study at
       history. PDF metadata inherits `\author`, which carries no address
 - [x] `make paper` compiles. TinyTeX 2026.08, GNU Make 4.4.1 and poppler 26.02.0
       are installed per-user outside the repository, and none of it is a
-      dependency of the gate. From a clean worktree the build is 22 pages and
-      408,470 bytes with no overfull or underfull boxes, no LaTeX warnings and
+      dependency of the gate. From a clean worktree the build is 28 pages, a
+      little over 439 KB, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`

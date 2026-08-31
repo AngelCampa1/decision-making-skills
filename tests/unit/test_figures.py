@@ -592,9 +592,12 @@ class TestScreenMacros:
         (run_dir / "nvbuild-ceiling-screen.json").write_text(
             json.dumps(
                 [
-                    {"model": "a", "asked": 30, "accuracy": 0.9},
-                    {"model": "b", "asked": 30, "accuracy": 1.0},
-                    {"model": "c", "asked": 30, "accuracy": 1.0},
+                    {"model": "a", "asked": 30, "answered": 30, "accuracy": 0.9},
+                    {"model": "b", "asked": 30, "answered": 30, "accuracy": 1.0},
+                    # A perfect score over a short denominator, which is the case
+                    # the artefact actually contains and the reason the macro
+                    # reports the shortfall.
+                    {"model": "c", "asked": 30, "answered": 29, "accuracy": 1.0},
                 ]
             ),
             encoding="utf-8",
@@ -605,6 +608,23 @@ class TestScreenMacros:
         assert values["screenBest"] == "1.000"
         assert values["screenAtCeiling"] == "2"
         assert values["screenItems"] == "30"
+        assert values["screenUnanswered"] == "1"
+
+    def test_an_uneven_screen_refuses_to_print_one_row_as_the_denominator(
+        self, tmp_path: Path
+    ) -> None:
+        """Row zero's count is not the screen's count when the rows disagree."""
+        run_dir = _write_run(tmp_path)
+        (run_dir / "nvbuild-ceiling-screen.json").write_text(
+            json.dumps(
+                [
+                    {"model": "a", "asked": 30, "answered": 30, "accuracy": 1.0},
+                    {"model": "b", "asked": 20, "answered": 20, "accuracy": 1.0},
+                ]
+            ),
+            encoding="utf-8",
+        )
+        assert screen_macros(run_dir)["screenItems"] == "varied"
 
     def test_an_empty_screen_is_refused(self, tmp_path: Path) -> None:
         run_dir = _write_run(tmp_path)

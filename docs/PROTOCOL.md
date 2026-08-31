@@ -287,8 +287,12 @@ lead-in was not:
 **Criteria 4 and 5 are new in Version 2, and criterion 3 is why.** A model
 answering one option nine times in ten scores about 0.63 on a two-option key
 whose base rate is near two thirds, which lands inside [0.35, 0.75] and reads as
-difficulty. `hrd-002-shipping-escalation` did exactly that: 0.722 on a 30B,
-reached with sensitivity 1.000 against specificity between 0.167 and 0.250.
+difficulty. `hrd-002-shipping-escalation` did exactly that: 0.583 and 0.625 on
+a 30B across two 24-item passes, reached with sensitivity 1.000 against
+specificity of 0.167 and 0.250. Corrected 2026-08-31: this quoted 0.722, an
+18-item reading from a different pass, beside the sensitivity and specificity of
+the 24-item ones. On a balanced key those cap accuracy at (0.250 + 1) / 2 =
+0.625, so 0.722 was not reachable from the figures printed next to it.
 Criterion 3 cannot tell that apart from a template the model is genuinely
 finding hard.
 

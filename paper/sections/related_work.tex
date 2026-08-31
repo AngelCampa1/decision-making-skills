@@ -23,16 +23,19 @@ the first without the other two is the error that
 \citet{harnessdisclosure2026} exists to name.
 
 Both cannot hold in the general case, and the disagreement is not obviously
-resolvable from either paper, because neither reports an interval on the
-quantity in dispute. Our design was built to adjudicate it, and this study is a
+resolvable from either paper: SkillOpt reports no interval on the quantity in
+dispute, and SkillsBench's crosses zero. Our design was built to adjudicate it, and this study is a
 partial answer at one model scale.
 
 \paragraph{On SkillOpt specifically.}
 Its method is sound in outline and its harness choice is the right one: it
 evaluates inside the agent tools people actually run, which is more than most of
-this literature does. The criticism here is narrow. It reports no confidence
-intervals, no significance tests, and no correction for the many implicit
-comparisons its accept-if-strictly-better ratchet performs. We reproduce its
+this literature does. The criticism here is narrow, and narrower than an
+earlier draft made it. Its abstract reports no confidence interval, no
+significance test and no correction for the many implicit comparisons its
+accept-if-strictly-better ratchet performs, and we did not read the full paper,
+so what we can say is that the headline figure travels without them and not
+that the paper contains none. We reproduce its
 engine faithfully and test its output, rather than reanalysing its numbers, and
 where a claim about the paper's contents rests on a section we have not read
 first-hand we leave it out of this paper instead of repeating it.

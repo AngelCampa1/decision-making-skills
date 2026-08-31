@@ -13,6 +13,8 @@
 
 </div>
 
+**Audience:** the cold reader.
+
 A set of decision procedures an AI coding agent can load on demand, and the evaluation harness
 built to find out whether they actually work.
 

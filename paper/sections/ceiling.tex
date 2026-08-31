@@ -23,10 +23,13 @@ we would rather name it than have it inferred.
 
 \subsection{Every hosted model we could reach solves the corpus}
 
-Screened with an empty prompt on \NUM{\screenItems} items, every model in the
-artifact answers this corpus at or near ceiling: \NUM{\screenAtCeiling} of
+Screened with an empty prompt on \NUM{\screenItems} items each, every model in
+the artifact answers this corpus at or near ceiling: \NUM{\screenAtCeiling} of
 \NUM{\screenModels} at \NUM{\screenBest} and the weakest at
 \NUM{\screenWorst}, against \NUM{\accUnseenOff} for the study's local target.
+Accuracy there is over answered items and not asked ones, and
+\NUM{\screenUnanswered} call across the whole screen returned nothing, so one
+of the perfect scores is over one item fewer.
 Three registered models did not return inside the screen's budget and are
 recorded as unmeasured, never assumed; they are larger than models already
 answering at \NUM{\screenBest}, so the expectation is clear and it is an
@@ -46,19 +49,22 @@ Six of the nine ceiling on a 30B model. The registered prediction was that a set
 of six selection templates would land it between 0.60 and 0.75; the set landed
 at 0.949, and five of the six sit at or beside 1.000.
 
-One template held the model off the ceiling, at 0.722. It was the template the
-prediction generalised from, and it turned out to be one-sided rather than hard.
-Measured three times at 0.629, 0.583 and 0.625, it reaches those numbers with
-sensitivity 1.000 against specificity between 0.167 and 0.250: it answers one
-option on about nine items in ten, in a set that wants it on half. That is an
+One template held the model off the ceiling, reading 0.722 on the eighteen
+items of its first pass. It was the template the prediction generalised from,
+and it turned out to be one-sided rather than hard. The bias was then measured
+three times on this \emph{item type} rather than on that template alone, at
+0.629 on 35 items of it, 0.583 on 24, and 0.625 on 24 items of a reversed
+variant built to test it. Each reaches its number with sensitivity 1.000
+against specificity of 0.235, 0.167 and 0.250: it answers one option on about
+nine items in ten, in a set that wants it on half. That is an
 informedness of 0.167 to 0.250, and on a balanced key accuracy is pinned at
 $(J + 1)/2$, which is exactly the two balanced measurements, 0.583 and 0.625.
 The third ran on a realised 18/17 split, where the identity gives 0.618 against
 the 0.629 observed. A nudge toward the other option would move both error rates
 and leave $J$ where it is, so it would gain nothing. An earlier draft said it
 would gain roughly thirty points, which is worth zero on a balanced key.
-\texttt{docs/PROTOCOL.md} still carries that sentence and is corrected by this
-one. The template is not hard and it is not biased in a way any arm could
+\texttt{docs/PROTOCOL.md} carried the same sentence and now records its
+retraction. The template is not hard and it is not biased in a way any arm could
 exploit. It is barely discriminating, which is the reason to retire it.
 
 Two more templates were built to diagnose that one, and both diagnoses were
@@ -108,7 +114,7 @@ room, on a large model. The one-sided ones have room and no signal.
 
 \textbf{And the three criteria do not close the case, which we found by turning
 them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on the
-empty-prompt arm, and on the placebo too: reported accuracy
+empty-prompt arm: reported accuracy
 \NUM{\accUnseenRelZeroZeroNineFlightRebookOff},
 inside the band and far below any ceiling; skew of $+0.019$, which is as near
 zero as anything we have measured; and informedness of $+0.028$, which is
@@ -132,9 +138,9 @@ Six and three is nine, and the corpus has ten.
 \texttt{rel-005-security-patch} is in neither group: its options are
 \texttt{patch\_immediately} and \texttt{schedule\_patch}, which are both acts
 under one reading and an act against a deferral under the other, and we could
-not classify it without choosing the answer. It carries the largest skew
-magnitude in the corpus, $-0.400$. Putting it in the first group takes $+0.097$
-to $+0.026$; putting it in the second takes 0.172 to 0.230. The direction of the
+not classify it without choosing the answer. It carries the second-largest skew
+magnitude in the corpus at $-0.400$, behind the $+0.464$ quoted just above. Putting it in the first group takes $+0.097$
+to $+0.026$; putting it in the second takes 0.172 to 0.229. The direction of the
 comparison survives either placement and the two averages do not, which is the
 honest summary of a nine-template test on a ten-template corpus. The action-bias
 explanation is refuted on our data and the underlying cause is open.

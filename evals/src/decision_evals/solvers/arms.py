@@ -9,9 +9,11 @@ rather than decision quality, and the treatment wins for a reason that has
 nothing to do with the skill. :data:`FORMAT_CONTRACT` is concatenated into every
 arm's system prompt with no way to omit it.
 
-**The option menu is held constant.** AgentAtlas found that removing explicit
-option menus moved trajectory accuracy by 14-40pp across all eight models
-tested -- larger than any effect we expect to measure. The menu lives in
+**The option menu is held constant.** AgentAtlas v1 found that removing
+explicit option menus moved trajectory accuracy by 14-40pp across all eight
+models tested. v2 withdrew the number and cautioned against reading the study
+as a model comparison, so the figure justifies holding the menu constant and
+nothing else; it is not compared against our own effects. The menu lives in
 :func:`render_item`, which is arm-independent, so it cannot vary by construction.
 
 **The placebo is matched on tokens and structure.** A skill that beats ``off``
@@ -164,8 +166,9 @@ def render_item(item: Item) -> str:
     """Render the user-facing item text.
 
     Arm-independent by construction. Everything that varies between arms lives
-    in the system prompt, so the option menu -- the single largest known
-    scaffolding effect in the literature -- is identical in all five.
+    in the system prompt, so the option menu is identical in all five. Held
+    constant for the reason above, and not because we have ranked it against
+    anything.
 
     Facts are presented in the order the generator arranged them, because
     position is a stratum and reordering here would destroy it.
