@@ -1,7 +1,7 @@
 \section{Results}
 \label{sec:results}
 
-% EVERY number in this section is a macro from generated/macros.tex, and both
+% EVERY number in this section is a macro from generated/macros.tex, and the
 % tables are macros from generated/tables.tex, written by `de figures` from
 % ../results. The one exception is \subsection{What the engines actually
 % produced}, which reads off two searches whose directories no longer exist:
@@ -19,10 +19,11 @@
 
 \subsection{The registered primary}
 
-\Cref{tab:unseen,tab:seen} carry every arm on both item sets. Effects, wins and
-losses, $p$ and Holm-adjusted $q$ are against \texttt{placebo}, the registered
-control. \texttt{off} is reported alongside without a comparison, because it
-answers a different question by registration.
+\Cref{tab:unseen,tab:seen} carry every arm on both item sets, and
+\Cref{fig:accuracy} plots them. Effects, wins and losses, $p$ and Holm-adjusted
+$q$ are against \texttt{placebo}, the registered control. \texttt{off} is
+reported alongside without a comparison, because it answers a different
+question by registration.
 
 \begin{table}[htbp]
 \centering
@@ -56,112 +57,56 @@ $p = \NUM{\pSeenSkillopt}$, which Holm takes to $q = \NUM{\qSeenSkillopt}$. On
 the unseen set the same winner reaches $\NUM{\effectUnseenSkillopt}$ at
 $p = \NUM{\pUnseenSkillopt}$.
 
-Neither table carries an interval on its accuracy effect, and it should. The
-run's analysis wrote the paired test and the effect and not a bootstrap around
-it, and \texttt{de figures} renders that file rather than reanalysing it, so
-adding one here would mean the paper and the published run disagreeing about the
-same comparison. \Cref{tab:signal} does carry cluster-bootstrap intervals over
-templates, on the decomposition and not on accuracy, which is where the
-width of ten clusters is visible. The gap is on the checklist as one.
-
-Three readings deserve stating and not leaving in the table.
+Neither table carries an interval on its accuracy effect, and each should.
+The run's analysis wrote the paired test and the effect without a bootstrap
+around it, and the build refuses to reanalyse a published run, so the tables
+carry only what the run computed. The intervals this paper adds are in
+\Cref{tab:signal}, computed fresh over templates on the discrimination
+measure, which is where the width of ten clusters is visible.
 
 \paragraph{GEPA's winner is worse than writing nothing, on one template of
 three.} It scores \NUM{\accUnseenGepa} on unseen scenarios against
 \NUM{\accUnseenOff} for an empty prompt and \NUM{\accUnseenPlacebo} for the
 placebo, losing \NUM{\lossesUnseenGepa} items to the placebo's
-\NUM{\winsUnseenGepa}. It is the arm furthest below \texttt{off} on that set; the seed skill is also
-below it, at \NUM{\accUnseenOn}.
+\NUM{\winsUnseenGepa}. It is the arm furthest below \texttt{off} on that set;
+the seed skill is also below it, at \NUM{\accUnseenOn}.
 
 That aggregate is one template. On \texttt{rel-001-vendor-outage} GEPA reads
 \NUM{\accUnseenRelZeroZeroOneVendorOutageGepa} against \texttt{off}'s
 \NUM{\accUnseenRelZeroZeroOneVendorOutageOff}, a gap of
-\NUM{\gepaLessUnseenRelZeroZeroOneVendorOutageOff}. Drop that one template and GEPA
-becomes the \emph{best} unseen arm, at
+\NUM{\gepaLessUnseenRelZeroZeroOneVendorOutageOff}. Drop that one template and
+GEPA becomes the \emph{best} unseen arm, at
 \NUM{\accWithoutUnseenRelZeroZeroOneVendorOutageGepa} against \texttt{off}'s
 \NUM{\accWithoutUnseenRelZeroZeroOneVendorOutageOff} and the placebo's
 \NUM{\accWithoutUnseenRelZeroZeroOneVendorOutagePlacebo}. With
-\NUM{\templatesUnseen} unseen templates a directional claim about the set is not
-available either way, which is what \Cref{sec:clustered} reports as a floor.
+\NUM{\templatesUnseen} unseen templates a directional claim about the set is
+not available either way, which is what \Cref{sec:clustered} reports as a
+floor.
 
 The mechanism is visible in the same records. On \texttt{rel-001} GEPA gave one
 answer to a share \NUM{\constantShareUnseenRelZeroZeroOneVendorOutageGepa} of
 the \NUM{\parsedCountUnseenRelZeroZeroOneVendorOutageGepa} items it parsed at
 all, against a balanced key: sensitivity 1, specificity 0, and an informedness
-of exactly zero, which is the only such cell in the study and is already
-printed in \Cref{tab:templates}. Its parse rate on that template is
-\NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
+(Youden's $J$, defined in \Cref{sec:signal}) of exactly zero, the only such
+cell in the study, printed in \Cref{tab:templates}. Its parse rate on that
+template is \NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
 \NUM{\parseRateUnseenRelZeroZeroOneVendorOutagePlacebo} for the placebo on the
 same items. \Cref{sec:whatengines} describes the body.
 
 \paragraph{The hand-written skill also fails to beat the placebo.} The
 \texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
-below the placebo on both. We wrote that skill and we ship it.
+below the placebo on both. We wrote that skill.
 
 \paragraph{The placebo is not inert.} It reads \NUM{\accSeenPlacebo} on the
 seen set against \NUM{\accSeenOff} for an empty prompt. The placebo is the
-control and so has no row in the comparison column of \Cref{tab:seen}; that gap
-is wider than every effect in it. It is not the widest gap over an empty prompt
-in the table: SkillOpt's winner sits further above \texttt{off} at
+control and so has no row in the comparison column of \Cref{tab:seen}; that
+gap is wider than every effect in it. It is not the widest gap over an empty
+prompt in the table: SkillOpt's winner sits further above \texttt{off} at
 \NUM{\accSeenSkillopt} and GEPA's is above the placebo too at
-\NUM{\accSeenGepa}. What neither does is clear the placebo after correction. A structured document of the right length and shape, whose content
-carries no method, moved this model. Any evaluation without such an arm would
-have attributed that movement to whatever text it happened to be testing.
-
-\subsection{An off-key answer is scored as a wrong answer, and it is not random}
-\label{sec:parsefail}
-
-Every arm's unreadable answers are scored wrong. That is the study's convention
-and it is defensible, but it makes accuracy a sum of decision quality and format
-compliance, and on the unseen set the arms differ on the second by more than
-any effect here.
-
-Two failure modes exist and the arms split across them. \texttt{gepa} fails
-almost entirely by naming an option not on the menu and \texttt{off} mostly
-does; \texttt{on}, \texttt{placebo} and \texttt{skillopt} fail almost entirely
-by producing no answer line at all. A content-free or seed-derived document in
-the system prompt converts off-key answers into missing ones. GEPA's winner does
-the reverse and carries more off-key answers than an empty prompt, and nothing
-in this study explains why: its body is gone (\Cref{sec:limitations}) and the
-records carry no trace of it.
-
-The missing ones have a mechanism, and it is not a property of the document's
-content. A generation that stops exactly at the \NUM{\outputCap}-token output
-cap did not choose to stop, and counting those per arm gives \NUM{\atCapOff} for
-an empty prompt, \NUM{\atCapOn} for the seed skill and \NUM{\atCapPlacebo} for
-the placebo, against \NUM{\unparsedOff}, \NUM{\unparsedOn} and
-\NUM{\unparsedPlacebo} unreadable answers in total. \textbf{The arm with the most
-runaway generations in this study is the one whose document says nothing.}
-Putting text in the system prompt makes a 1.7B model talk itself out of
-concluding. Nothing here ranks length against content: the shortest non-empty
-body produces the most runaways and the longest produces fewer than the seed
-skill, so the ordering is not length. An earlier draft
-of this paper reported the opposite: that runaways were a seed skill pathology
-both evolved winners fixed. GEPA's winner does suppress them, to
-\NUM{\atCapGepa}, while carrying the most unreadable answers of any arm at
-\NUM{\unparsedGepa}; SkillOpt's does not, at \NUM{\atCapSkillopt}.
-
-\textbf{Parse failure is selective on the answer key.} The key on
-\texttt{rel-001-vendor-outage} is balanced,
-\NUM{\countOnUnseenRelZeroZeroOneVendorOutageGepaWait} items each way. GEPA
-fails to produce a readable answer on
-\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaWait} of the items whose correct
-answer is \texttt{wait} and on
-\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaFileSlaClaim} of the items whose
-answer is \texttt{file\_sla\_claim}. When the right answer is to hold back, it
-neither holds back nor abstains: it answers off-key. The same shape appears for
-\texttt{off} on \texttt{rel-003-oncall-escalate}.
-
-That has a consequence for any repair. Restricting to items both arms parsed
-removes exactly the items an arm systematically fails, so it conditions on a
-post-treatment variable that correlates with the key. We report the restriction
-because it moves things — SkillOpt's unseen advantage over the placebo becomes
-\NUM{\restrictedUnseenSkillopt} on a
-\NUM{\restrictedWinsUnseenSkillopt}--\NUM{\restrictedLossesUnseenSkillopt} split,
-and GEPA's seen comparison goes from $p = \NUM{\pSeenGepa}$ to
-$\NUM{\restrictedPSeenGepa}$ — and we do not offer it as the corrected analysis.
-Both readings are biased, in opposite directions, and this design cannot say
-which is nearer.
+\NUM{\accSeenGepa}. What neither does is clear the placebo after correction. A
+structured document of the right length and shape, whose content carries no
+method, moved this model. Any evaluation without such an arm would have
+attributed that movement to whatever text it happened to be testing.
 
 \subsection{The same comparisons at the template level}
 \label{sec:clustered}
@@ -196,48 +141,200 @@ sum against it.
 
 \paragraph{The unseen set could not have rejected.} With $k$ templates a
 one-sided sign-flip cannot return below $2^{-k}$, because the observed sign
-vector is itself one of the $2^k$ assignments and so always falls inside its own
-tail. Equality holds only when it also maximises the statistic. The unseen set has
-\NUM{\templatesUnseen} templates, so its floor is \NUM{\floorUnseen} —
+vector is itself one of the $2^k$ assignments and so always falls inside its
+own tail. Equality holds only when it also maximises the statistic. The unseen
+set has \NUM{\templatesUnseen} templates, so its floor is \NUM{\floorUnseen},
 above the family's $\alpha = \NUM{\studyAlpha}$ before Holm and further above
-Holm's tightest step of \NUM{\mdeAlpha} after. \emph{No outcome
-of the three unseen comparisons could have been significant.} The seen set has
+Holm's tightest step of \NUM{\mdeAlpha} after. \emph{No outcome of the three
+unseen comparisons could have been significant.} The seen set has
 \NUM{\templatesSeen} templates and a design floor of \NUM{\floorSeen}, which
 leaves room. The realised floor is higher, because a template that nets zero
-drops out of the test: the seen comparisons ran on
-\NUM{\clustersSeenSkillopt} and \NUM{\clustersSeenOn} live clusters, floors of
-\NUM{\clusteredFloorSeenSkillopt} and \NUM{\clusteredFloorSeenOn}, and the
-second is already above Holm's tightest $\alpha = \NUM{\mdeAlpha}$.
+drops out of the test: the three seen comparisons ran on
+\NUM{\clustersSeenSkillopt}, \NUM{\clustersSeenGepa} and
+\NUM{\clustersSeenOn} live clusters, floors of
+\NUM{\clusteredFloorSeenSkillopt} for the first two and
+\NUM{\clusteredFloorSeenOn} for the third, and the last is already above
+Holm's tightest $\alpha = \NUM{\mdeAlpha}$.
 
-This is a property of the design and not of the data. It was computable when the
-sets were drawn, and we did not compute it. \Cref{sec:limitations} carries what
-that costs the registered predictions.
+This is a property of the design, not of the data. It was computable when the
+sets were drawn, and we did not compute it. \Cref{sec:limitations} carries
+what that costs the registered predictions, and the companion check, a minimum
+detectable effect recomputed at the design's own clustering, sits beside it
+there.
 
-\subsection{Controls}
+\subsection{An off-key answer is scored as a wrong answer, and it is not random}
+\label{sec:parsefail}
 
-\paragraph{A/A: \NUM{\aaPairs} of \NUM{\aaPairs} identical.} The placebo scored
-a second time over every item returned \NUM{\aaDisagreements} disagreements,
-both passes at \NUM{\aaAccuracy}, $p = \NUM{\aaP}$. It bounds the drift between
-blocks over the stretch it covers. It does not license reading every difference
-in \Cref{tab:unseen,tab:seen} as prompt-caused: the pass repeats one arm, and
-the arms ran in blocks (\Cref{sec:limitations}).
+Every arm's unreadable answers are scored wrong. That is the study's
+convention and it is defensible, but it makes accuracy a sum of decision
+quality and format compliance, and on the unseen set the arms differ on the
+second by more than any effect here.
 
-The pass ran into its own checkpoint so that resume could not skip it and report
-perfect agreement by construction. It is also only trustworthy because of a
-finding from hours earlier: two items answered deterministically to whether the
-model had just been reloaded, and pinning residency closed it. A venue treated
-as deterministic without measuring it would have put that artifact inside this
-control.
+Two failure modes exist and the arms split across them. \texttt{gepa} fails
+almost entirely by naming an option not on the menu and \texttt{off} mostly
+does; \texttt{on}, \texttt{placebo} and \texttt{skillopt} fail almost entirely
+by producing no answer line at all. A content-free or seed-derived document in
+the system prompt converts off-key answers into missing ones. GEPA's winner
+does the reverse and carries more off-key answers than an empty prompt, and
+nothing in this study explains why: its body is gone
+(\Cref{sec:limitations}) and the records carry no trace of it.
 
-\paragraph{Falsifier.} The \texttt{off} arm returns \NUM{\accUnseenOff} unseen
-and \NUM{\accSeenOff} seen, so a non-zero score was reachable in every arm and
-the scorer reads the same object in each.
+The missing ones have a mechanism, and it is not a property of the document's
+content. A generation that stops exactly at the \NUM{\outputCap}-token output
+cap did not choose to stop. Counting those per arm gives \NUM{\atCapOff} for
+an empty prompt, \NUM{\atCapOn} for the seed skill and \NUM{\atCapPlacebo} for
+the placebo, against \NUM{\unparsedOff}, \NUM{\unparsedOn} and
+\NUM{\unparsedPlacebo} unreadable answers in total. \textbf{The placebo
+produces the most runaway generations of any arm: the document whose content
+says nothing provokes the most generations that never conclude.} Putting text
+in the system prompt makes a 1.7B model talk itself out of concluding.
+Nothing here ranks length against content: the shortest non-empty body
+produces the most runaways and the longest produces fewer than the seed
+skill, so the ordering is not length. The two winners split on it: GEPA's
+suppresses runaways, to \NUM{\atCapGepa}, while carrying the most unreadable
+answers of any arm at \NUM{\unparsedGepa}; SkillOpt's does not, at
+\NUM{\atCapSkillopt}.
+
+\textbf{Parse failure is selective on the answer key.} The key on
+\texttt{rel-001-vendor-outage} is balanced,
+\NUM{\countOnUnseenRelZeroZeroOneVendorOutageGepaWait} items each way. GEPA
+fails to produce a readable answer on
+\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaWait} of the items whose
+correct answer is \texttt{wait} and on
+\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaFileSlaClaim} of the items
+whose answer is \texttt{file\_sla\_claim}. When the right answer is to hold
+back, it neither holds back nor abstains: it answers off-key. The same shape
+appears for \texttt{off} on \texttt{rel-003-oncall-escalate}.
+
+That has a consequence for any repair. Restricting to items both arms parsed
+removes exactly the items an arm systematically fails, so it conditions on a
+post-treatment variable that correlates with the key. We report the
+restriction because it moves things: SkillOpt's unseen advantage over the
+placebo becomes \NUM{\restrictedUnseenSkillopt} on a
+\NUM{\restrictedWinsUnseenSkillopt}--\NUM{\restrictedLossesUnseenSkillopt}
+split, and GEPA's seen comparison goes from $p = \NUM{\pSeenGepa}$ to
+$\NUM{\restrictedPSeenGepa}$. We do not offer it as the corrected analysis.
+Both readings are biased, in opposite directions, and this design cannot say
+which is nearer.
+
+\subsection{What accuracy hides}
+\label{sec:signal}
+
+Everything in this subsection is recomputed from the records above. No model
+was called. The records carry the answer key and the model's answer on every
+row, so the rate the model chose an option can be compared against the rate
+the items wanted it.
+
+\paragraph{The measure.} Accuracy on a two-option key adds together two
+different quantities: how well a model tells the cases apart, and how often it
+picks one option whatever the case. Write accuracy as
+$\pi \cdot \mathrm{sens} + (1 - \pi) \cdot \mathrm{spec}$ for a base rate
+$\pi$. At $\pi = 0.5$ that collapses to $(J + 1)/2$, a function of
+informedness alone, where informedness is Youden's
+$J = \mathrm{sensitivity} + \mathrm{specificity} - 1$: zero for any
+constant-answer policy at any base rate, unmoved by a pure shift in
+preference, and symmetric in which option is called positive. Every template
+in this corpus is balanced by construction, and the identity holds in our
+records to the fourth decimal in every cell where no answer went unread. So on
+this corpus response bias contributes nothing to accuracy, and the case for
+reporting $J$ rests on two other things it exposes: which templates carry any
+discrimination at all, and what happens when parse failure breaks the
+identity by landing unevenly on the key (\Cref{sec:parsefail}). \emph{Skew},
+the model's rate for an option minus the rate the items wanted it, names the
+bias half directly; we report the mean of its absolute value over templates.
+
+We compute both per template and average over templates, so no template's item
+count decides the answer. Rows the model did not parse are excluded, a
+limitation \Cref{sec:limitations} carries. A template whose key holds a single
+answer class has no informedness at all, and the implementation refuses to
+return a value for it: recording an undefined cell as zero would put it into a
+mean as though it were a measurement of no discrimination.
+
+\begin{table}[htbp]
+\centering
+\signalTable
+\caption{Discrimination by arm, with cluster-bootstrap intervals resampling
+templates. Parse rate is the share of readings that produced a readable
+answer; everything else is computed over that subset.}
+\label{tab:signal}
+\end{table}
+
+\IfFileExists{figures/signal.tex}{%
+\begin{figure}[htbp]
+\centering
+\input{figures/signal}
+\caption{Discrimination against an empty prompt, with cluster-bootstrap
+intervals over templates. Every interval crosses zero. Ten clusters is few,
+and the widths say so.}
+\label{fig:signal}
+\end{figure}}{}
+
+\paragraph{The decomposition, by arm.} \Cref{tab:signal} and
+\Cref{fig:signal} carry it. The study's conclusion survives the correction
+and gets slightly stronger: every arm's discrimination advantage over an
+empty prompt has an interval containing zero, exactly as every accuracy
+comparison did after Holm. SkillOpt keeps first place on both measures, at
+$\Delta J = \NUM{\deltaJSkillopt}$ with an interval of
+$[\NUM{\deltaJSkilloptLow}, \NUM{\deltaJSkilloptHigh}]$ and the widest
+interval of any arm here. It is still indistinguishable from nothing.
+
+Two things this does not say. Mean skew runs \NUM{\meanSkewGepa} to
+\NUM{\meanSkewOn} in \emph{every} arm including the empty prompt, so the
+response bias here is a property of the model on this corpus and no arm
+introduced it. And $J$ is computed over parsed rows, so \texttt{gepa}, which
+parses least at \NUM{\parseRateGepa}, is measured on the subset it managed to
+answer, and \Cref{sec:parsefail} shows that subset is not a random half of
+its items.
+
+\paragraph{Three of ten templates are not measuring anything.}
+
+\begin{table}[htbp]
+\centering
+\templateTable
+\caption{Informedness per template, every arm. Templates marked $\dagger$ sit
+below $J = \NUM{\lowSignalThreshold}$ in all five arms.}
+\label{tab:templates}
+\end{table}
+
+\NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates sit below
+$J = \NUM{\lowSignalThreshold}$ in all five arms, and two of them are
+indistinguishable from zero. On those items the model is not deciding. What
+reaches the headline accuracy is the base rate and whichever way the model
+happens to lean.
+
+They hold \NUM{\lowSignalItems} of the \NUM{\totalItems} items, so the run
+carries the discriminative signal of the other \NUM{\signalItems}. The power
+calculation behind the study assumed \NUM{\totalItems}. That does not change
+a result that failed to reject, since less power only makes rejection harder,
+but a study designed off those numbers would be sized wrong. One of the three
+is a template our records had ranked the hardest in the corpus, on the
+strength of its low accuracy. It is not hard. It is unanswered, and accuracy
+cannot tell those apart.
+
+\paragraph{The published metric does not even order the templates.} Counting
+an unreadable answer as wrong breaks the $(J+1)/2$ identity, and it breaks
+the ordering with it. \texttt{rel-003-oncall-escalate} discriminates
+perfectly for \texttt{off} in \Cref{tab:templates}, on the
+\NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items it answered,
+and reports \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}.
+\texttt{rel-006-refund-request} barely discriminates at all and reports
+\NUM{\accSeenRelZeroZeroSixRefundRequestOff}, higher. On the published number
+a template that is always right when it answers ranks below one that is
+mostly guessing.
 
 \subsection{What the engines actually produced}
 \label{sec:whatengines}
 
 The scores above are the answer to the registered question. What the winners
 contain is a separate finding and does not depend on a score.
+
+\paragraph{Provenance, first.} The two winners' bodies were written into a
+results directory our \texttt{.gitignore} excludes, were never committed, and
+no longer exist (\Cref{sec:limitations}). The descriptions of their contents
+below are typed from the dated notebook entries that recorded them at the
+time, and a reader should weigh them as that. The figures describing how the
+winners then \emph{scored} are macros from the study's committed records and
+carry the same provenance as every other number in this section.
 
 \textbf{Both of the winners we tested had written training-item constants into
 the skill body, and both engines accepted them on evidence too thin to have
@@ -246,16 +343,16 @@ noticed.}
 GEPA's winner carries a rules table asserting renewal at 61\% utilisation and
 capacity headroom at 37\%, and a worked example built on the numbers 2818 and
 2032. Every one of those is a value from a single training item. The catch is
-that \texttt{utilisation\_floor} is drawn fresh per item from the integer range
-\NUM{\rangeRelZeroZeroEightContractRenewUtilisationfloorLow} to
-\NUM{\rangeRelZeroZeroEightContractRenewUtilisationfloorHigh} and stated in each
-item's Background, so a body carrying 61\% asserts
-a threshold its own prompt contradicts on almost every item it meets.
+that \texttt{utilisation\_floor} is drawn fresh per item from the integer
+range \NUM{\rangeRelZeroZeroEightContractRenewUtilisationfloorLow} to
+\NUM{\rangeRelZeroZeroEightContractRenewUtilisationfloorHigh} and stated in
+each item's Background, so a body carrying 61\% asserts a threshold its own
+prompt contradicts on almost every item it meets.
 
 Whether that cost anything is a question this split cannot answer. Both
 constants belong to \texttt{rel-008-contract-renew} and
-\texttt{rel-007-capacity-scale}, both are training templates, and neither is in
-the unseen set. On the two templates concerned GEPA reads
+\texttt{rel-007-capacity-scale}, both are training templates, and neither is
+in the unseen set. On the two templates concerned GEPA reads
 \NUM{\accSeenRelZeroZeroEightContractRenewGepa} and
 \NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} against an empty prompt's
 \NUM{\accSeenRelZeroZeroEightContractRenewOff} and
@@ -263,62 +360,63 @@ the unseen set. On the two templates concerned GEPA reads
 collapse is elsewhere, on \texttt{rel-001-vendor-outage}, which none of the
 constants touch.
 
-SkillOpt is the harder case and we report it against ourselves. On
-\texttt{rel-008-contract-renew}, the one template it lifted a constant from, it
-reads \NUM{\accSeenRelZeroZeroEightContractRenewSkillopt} against
+SkillOpt is the harder case. On
+\texttt{rel-008-contract-renew}, the one template it lifted a constant from,
+it reads \NUM{\accSeenRelZeroZeroEightContractRenewSkillopt} against
 \NUM{\accSeenRelZeroZeroEightContractRenewOff} for an empty prompt, and that
 template carries \NUM{\netSeenRelZeroZeroEightContractRenewSkillopt} of the
 net items behind \NUM{\effectSeenSkillopt}. That net is a signed sum over
-templates and not a partition, so this is a share of the total and not of the
+templates, not a partition, so this is a share of the total and not of the
 positives: \texttt{rel-005-security-patch} carries
-\NUM{\netSeenRelZeroZeroFiveSecurityPatchSkillopt} with no constant lifted from
-it, and the other five templates sum against both. What is left is that the second
-largest contribution to the study's largest gain sits on the one template its
-winner memorised a threshold for. One template, one engine, an unregistered
-comparison: a fact and not a finding.
+\NUM{\netSeenRelZeroZeroFiveSecurityPatchSkillopt} with no constant lifted
+from it, and the other five templates sum against both. What is left is that
+the second largest contribution to the study's largest gain sits on the one
+template its winner memorised a threshold for. One template, one engine, an
+unregistered comparison.
 
-SkillOpt's winner carries 63\% for \texttt{rel-008-contract-renew} with the
-arithmetic $213/300$ beside it. Two engines, one training pool, two different
-constants for one rule. GEPA also lifted from
+SkillOpt's winner carries 63\% for \texttt{rel-008-contract-renew}, written
+into the body with the worked arithmetic $213/300$ beside it. Two engines,
+one training pool, two different constants for one rule. GEPA also lifted from
 \texttt{rel-007-capacity-scale}; SkillOpt did not, and 63 could not have come
 from that template, whose own variable is drawn from
 \NUM{\rangeRelZeroZeroSevenCapacityScaleHeadroompctLow} to
 \NUM{\rangeRelZeroZeroSevenCapacityScaleHeadroompctHigh}.
 
-The generalisation is weaker than the pair suggests and worth stating at its
-real strength. Six frozen winners were on disk across this project's searches
-when we counted, and none of those directories survives
-(\Cref{sec:limitations}). Three carry constants lifted from single training
-items and three carry none, so this is a common outcome of an
-accept-if-strictly-better ratchet with no held-out check and not a certain one.
-That split is the weakest thing in this paper: our notebook names three of the
-six, the bodies are gone, and nobody can now check it, ourselves included. Neither engine was asked to memorise and neither
-mechanism is a defect in the engines as implemented.
+How far the pair generalises is bounded by what survives. Six frozen winners
+were on disk across this project's searches when we counted; the notebook
+records three carrying constants lifted from single training items and three
+carrying none, it names three of the six, and the bodies behind all six are
+gone, so nobody can now re-derive that split, ourselves included. On that
+record, memorisation is a common outcome of an accept-if-strictly-better
+ratchet, and not a certain one. Neither engine was asked to memorise.
 
 \paragraph{What each engine accepted its winner on.} SkillOpt scored all nine
 of its candidates on all 21 validation items: seed 18, winner 21. GEPA scored
-its generation-zero candidate on 21 items and every candidate after it on three.
-Its \texttt{winner.json} closes at score $1.000$ over $n = 3$, with
+its generation-zero candidate on 21 items and every candidate after it on
+three. Its \texttt{winner.json} closes at score $1.000$ over $n = 3$, with
 \texttt{winner\_source = engine}: the search ran to completion, so GEPA's own
-acceptance rule chose, and it chose on three items answered correctly. GEPA's
-$1.000$ and its seed's $0.762$ are therefore not the same measurement and cannot
-be differenced. This is not a defect in our harness either. A
-\texttt{\_best\_validated} path exists and picks a body scored on the whole pool,
-and it is used only when a search is budget-stopped. An engine's acceptance rule
-is part of what the engine is, and this study tests what an engine hands you.
-What GEPA handed us is a document selected on three items that then lost to an
-empty prompt on \NUM{\unseenItems}.
+acceptance rule chose, and it chose on three items answered correctly. That
+diverges from the return rule GEPA's paper documents, which hands back the
+best aggregate scorer on the validation pool; whatever the cause, the record
+shows what this search returned, and that is what we tested. GEPA's
+$1.000$ and its seed's $0.762$ are therefore not the same measurement and
+cannot be differenced. The harness offers a \texttt{\_best\_validated} path
+that picks a body scored on the whole pool, and it is used only when a
+search is budget-stopped; this search was not. An engine's
+acceptance rule is part of what the engine is, and this study tests what an
+engine hands you. What GEPA handed us is a document selected on three items
+that then lost to an empty prompt on \NUM{\unseenItems}.
 
-\paragraph{Provenance, because this subsection is the weak one.} Every figure
-here that is not a macro is read off this project's evolution searches, whose
-directories were gitignored and no longer exist (\Cref{sec:limitations}). Those
-are typed from the dated notebook entries that recorded them, not generated from committed
-records, and a reader should weigh them accordingly. The figures that describe
-how the winners then \emph{scored} are macros from the study's own records and
-carry the provenance every other section's do. An earlier draft of this subsection described a
-different pair of winners: the ones from an earlier search over all ten
-templates, which the pre-registration had already ruled out as arms. Its
-travel-scenario specialisation, its ``20 of 21'', its ``eight of ten'' and its
-14.3\% validation flip rate all belong to that search and are withdrawn here.
-The tables above, and everything in \Cref{sec:signal}, come from committed
-records through \texttt{de figures} and were never affected.
+\subsection{Controls}
+
+\paragraph{A/A: \NUM{\aaPairs} of \NUM{\aaPairs} identical.} The placebo
+scored a second time over every item (\Cref{sec:method}) returned
+\NUM{\aaDisagreements} disagreements, both passes at \NUM{\aaAccuracy},
+$p = \NUM{\aaP}$. It bounds the drift between blocks over the stretch it
+covers. It does not license reading every difference in
+\Cref{tab:unseen,tab:seen} as prompt-caused: the pass repeats one arm, and the
+arms ran in blocks (\Cref{sec:limitations}).
+
+\paragraph{Falsifier.} The \texttt{off} arm returns \NUM{\accUnseenOff} unseen
+and \NUM{\accSeenOff} seen, so a non-zero score was reachable in every arm and
+the scorer reads the same object in each.

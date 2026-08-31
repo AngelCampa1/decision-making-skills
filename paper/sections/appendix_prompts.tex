@@ -8,11 +8,10 @@
 
 \subsection{The shared prefix, in every arm}
 
-Two blocks bracket the arm's body in every system prompt, the first before it
-and the second after, assembled by one function with no way to omit either. The
-second is the reason: a skill that also
-teaches the model how to format its answer, tested against a control that was
-never told, measures instruction-following.
+Two blocks bracket the arm's body in every system prompt, the first before
+it and the second after, assembled by one function with no way to omit
+either. The second is the format contract whose place in every arm
+\Cref{sec:method} explains.
 
 \begin{promptquote}
 You are helping someone make a decision. You will be given some background
@@ -28,13 +27,13 @@ Use the option text exactly as written in the list.
 \end{promptquote}
 
 The wording avoids threatening the model with consequences, following
-\citet{trustoverfear2026}, where trust-framed system prompts surfaced 59\% more
-hidden issues while fear-framing showed no gain over no framing at all. The
-59\% is that paper's first study, nine debugging scenarios on a single model;
-its automated replication over 135 scenario-level points lands at $+25$\%. We
-take the direction and not the magnitude, and the domain is debugging rather
-than multiple choice, so this is a reason to avoid one wording and not evidence
-about ours.
+\citet{trustoverfear2026}, where trust-framed system prompts surfaced 59\%
+more hidden issues while fear-framing showed no gain over no framing at all.
+The 59\% is that paper's first study, nine debugging scenarios on a single
+model; its automated replication over 135 scenario-level points lands at
+$+25$\%. We take the direction and not the magnitude, and the domain is
+debugging rather than multiple choice, so this is a reason to avoid one
+wording, never evidence about ours.
 
 \subsection{The arms}
 
@@ -44,7 +43,7 @@ about ours.
 arm & body appended to the prefix & content hash \\
 \midrule
 \texttt{off} & none & --- \\
-\texttt{on} & the shipped skill & \texttt{edc3ee70\ldots} \\
+\texttt{on} & the seed skill & \texttt{edc3ee70\ldots} \\
 \texttt{placebo} & the matched placebo & \texttt{16ed9ebf\ldots} \\
 \texttt{gepa} & GEPA's frozen winner & \texttt{54f99040\ldots} \\
 \texttt{skillopt} & SkillOpt's frozen winner & \texttt{80d7187a\ldots} \\
@@ -52,49 +51,52 @@ arm & body appended to the prefix & content hash \\
 \end{tabular}
 \end{center}
 
-Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded on
-every row of every arm that carries a body. Three of the five bodies are published and a
-replicator can recompute the two of those that carry a hash. \texttt{off} is empty and
-its \texttt{candidate\_sha} is null; \texttt{on} is
+Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded
+on every row of every arm that carries a body. \texttt{off} is empty and its
+\texttt{candidate\_sha} is null; \texttt{on} is
 \pth{skills/decision-making/SKILL.md}; \texttt{placebo} is
-\pth{skills/decision-making/placebo.md}. Both hashes above reproduce from those
+\pth{skills/decision-making/placebo.md}. Both hashes reproduce from those
 files at the commit this paper is built from.
 
-\textbf{The two evolved bodies are not published and cannot be.} Each search
-wrote its winner into a results directory our \texttt{.gitignore} excludes, so
-neither was ever committed, and the directories are gone. A content-hash search
-of every file on the machine under 300\,KB on 2026-08-28, 40,936 of them, found
-neither. What survives is the
-hash, on all \NUM{\totalItems} records of each arm, which proves that one fixed
-body produced every reading in that arm and gives nobody a way to obtain it.
-This is a reproducibility failure and we report it as one. The engines, the seed
-skill, the corpus, the split and the search configuration are all published, so
-a replicator can run both searches; what they cannot do is run ours.
+\textbf{The two evolved bodies are not published and cannot be}
+(\Cref{sec:limitations}). A content-hash search of every file on the machine
+under 300\,KB on 2026-08-28, 40{,}936 of them, found neither. What survives
+is the hash, on all \NUM{\totalItems} records of each arm, which proves that
+one fixed body produced every reading in that arm and gives nobody a way to
+obtain it. The engines, the seed skill, the corpus, the split and the search
+configuration are all published, so a replicator can run both searches; what
+they cannot do is rerun ours.
 
 \subsection{The placebo, and how closely it matches}
 
-A placebo the reader cannot inspect is a placebo the reader cannot trust, so it
-ships in the repository at \texttt{skills/decision-making/placebo.md} and is
-reproduced there in full, not paraphrased here.
+A placebo the reader cannot inspect is a placebo the reader cannot trust, so
+it ships in the repository at \pth{skills/decision-making/placebo.md} and is
+reproduced there in full. \Cref{sec:method} gives the word and section
+match; a check refuses a placebo outside \NUM{\placeboTolerance}\% of the
+skill's word count, because an unmatched placebo is worse than none: it
+looks like a control while failing to control for the thing it exists to
+control for.
 
-It is matched on length and on structural shape: \textbf{\NUM{\placeboWords}
-words against the skill's \NUM{\skillWords}, and \NUM{\placeboSections} sections
-against \NUM{\skillSections}}, with neither carrying a code fence. A check
-refuses a placebo outside \NUM{\placeboTolerance}\% of the skill's word count,
-because an unmatched placebo is worse than none: it looks like a control while
-failing to control for the thing it exists to control for.
+Both proxies are crude. They rule out the obvious failure, a two-line
+placebo standing in for a two-page skill. They do not establish that the
+placebo is contentless, and nothing automates that judgement. What the
+placebo contains is decision-shaped prose that names no procedure and gives
+no rule. Its opening is representative:
 
-Both proxies are crude and we say so. They rule out the obvious failure, a
-two-line placebo standing in for a two-page skill. They do not establish that
-the placebo is contentless, and nothing automates that judgement. What the
-placebo contains is decision-shaped prose that names no procedure and gives no
-rule, and the reader is invited to check it.
+\begin{promptquote}
+People bring decisions when something matters to them and the way forward is
+not obvious. That is worth treating with care. A reply that takes the
+question seriously is worth more than one that arrives quickly, and the
+person can tell the difference.
+\end{promptquote}
+
+\noindent The reader is invited to check the rest.
 
 \subsection{One worked item}
 
-Rendered exactly as the model received it. The user message is arm-independent
-by construction, so the option menu is identical in all five arms, for the
-reason \Cref{sec:method} gives.
+Rendered exactly as the model received it. The user message is
+arm-independent by construction, so the option menu is identical in all five
+arms, for the reason \Cref{sec:method} gives.
 
 \begin{promptquote}
 Background:\\
@@ -110,29 +112,27 @@ Options:\\
 \end{promptquote}
 
 Item \texttt{rel-001-vendor-outage\#v0-d0-none} at seed 10226, answer
-\texttt{file\_sla\_claim}, computed by the template's solution expression from
-the sampled variables, never authored. Facts appear in the order the
-generator arranged them, because distractor position is a stratum and reordering
-would destroy it.
+\texttt{file\_sla\_claim}, computed by the template's solution expression
+from the sampled variables, never authored. Facts appear in the order the
+generator arranged them, because distractor position is a stratum and
+reordering would destroy it.
 
 \subsection{Transcripts}
 
-Every record carries the model's answer text, the parsed answer and the parse
-status. It does not carry the reasoning chain: the backend returns that in a
-separate field, the runner does not write it, and it is counted in
-\texttt{output\_tokens} and nowhere else (\Cref{sec:appendix-harness}). So
-these are transcripts of the answers and not of the generations, which is less
-than \citet{biderman2024lessons} asks for and we would rather name than
-imply:
+Every record carries the model's answer text, the parsed answer and the
+parse status. It does not carry the reasoning chain
+(\Cref{sec:appendix-harness}), so these are transcripts of the answers and
+not of the generations, which is less than \citet{biderman2024lessons} asks
+for:
 
 \begin{center}
 \texttt{results/evolution-study/\NUM{\studyRun}/}
 \end{center}
 
-\noindent One file per arm of \NUM{\totalItems} records each, plus the A/A pass
-in its own file. \NUM{\studyReadings} arm records and \NUM{\aaPairs} control
-records, all committed.
+\noindent One file per arm of \NUM{\totalItems} records each, plus the A/A
+pass in its own file. \NUM{\studyReadings} arm records and \NUM{\aaPairs}
+control records, all committed.
 
-Holdout seeds are published with them, not withheld. Contamination here
-is managed by regeneration between runs rather than by secrecy, so a reader can
-mint the exact item set this study used and a later run does not reuse it.
+Holdout seeds are published with them. Contamination here is managed by
+regeneration between runs: a reader can mint the exact item set this study
+used, and a later run does not reuse it.

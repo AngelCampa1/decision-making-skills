@@ -1,92 +1,109 @@
 \section{Related Work}
 \label{sec:related}
 
-% SOURCE OF TRUTH: ../docs/RELATED_WORK.md. That file is organised by what each
-% finding changed about the design and flags confidence per source. This is a
-% condensation of it; where the two diverge, the docs file is correct.
+% ../docs/RELATED_WORK.md is the repository's fuller survey. The
+% characterisations in this section were verified first-hand against the full
+% texts of the cited papers on 2026-08-31 (SkillOpt, the Xu-Wu SkillsBench
+% study, GEPA, the coin-flip audit, both harness papers, the AGENTS.md study,
+% the authoring paper, and Prompting Inversion); where this section and the
+% docs file diverge, this section is the more recently checked.
 
-\subsection{Skills as an intervention, and a live disagreement}
+\subsection{Skills as an intervention, and where the tension is}
 
-Two 2026 results on the same object point in opposite directions.
-SkillsBench~\citep{skillsbench2026} runs a 30-task domain-balanced subset across
-two models, six skill conditions and five trials, and separates two questions:
-whether a skill is \emph{available} to the agent, and how its prose is
-\emph{written}. Availability is worth $+18.0$ to $+36.0$ percentage points, the
-union of the two models' ranges. Granularity of the prose is worth $+0.7$ points
-on one model and $-6.7$ on the other, with intervals crossing zero. Read on its
-own, the finding is that the retrieval matters and the writing does not.
+The controlled evidence on skill files separates two questions. A study on a
+30-task oracle-validated SkillsBench subset~\citep{skillsbench2026} runs two
+models, six skill conditions and five trials, and splits whether a skill is
+\emph{available} from how its prose is \emph{written}. Availability is a
+large, robust effect: $+18.0$ to $+36.0$ percentage points over no skill,
+taking the union of the two models' ranges, with every bootstrap interval
+above zero. Presentation granularity, tested through content-controlled
+rewrites of the same skills, is worth $+0.7$ points on one model and $-6.7$
+on the other, both intervals crossing zero. The retrieval matters; the
+tested rewrites of the writing do not.
 
-SkillOpt~\citep{skillopt2026} reports $+23.5$ points from bounded edits to
-exactly that prose. That figure is one harness: GPT-5.5 in direct chat. The same
-sentence gives $+24.8$ inside Codex and $+19.1$ inside Claude Code, and quoting
-the first without the other two is the error that
-\citet{harnessdisclosure2026} exists to name.
+SkillOpt~\citep{skillopt2026} reports $+23.5$ points from optimising exactly
+that prose. The figure is one harness, GPT-5.5 in direct chat; the same
+sentence gives $+24.8$ inside Codex and $+19.1$ inside Claude Code, and
+quoting the first without the other two is the error
+\citet{harnessdisclosure2026} exists to name. The two results are in tension
+at exactly one point: the granularity null
+says rewriting a skill's prose while holding its content fixed moves little,
+and SkillOpt's gains come from rewrites that are free to change content,
+selection and emphasis at once. An optimiser that earns $+23.5$ points is
+therefore either adding content or exploiting something no
+presentation-controlled rewrite can reach, and neither paper's design can say
+which. Our design holds the model and corpus fixed, adds the control both
+lack, and tests what the optimisers actually hand back.
 
-Both cannot hold in the general case, and the disagreement is not obviously
-resolvable from either paper: SkillOpt's headline travels without an interval,
-and SkillsBench's crosses zero. Our design was built to adjudicate it.
-\Cref{sec:clustered} shows it could not: the three unseen comparisons were
-unfalsifiable before the first call. What this study contributes is a control
-arm and an arithmetic, not a verdict.
+\paragraph{SkillOpt's method, and the narrow criticism.} SkillOpt makes
+bounded add, delete and replace edits to a single skill document, gates each
+edit on a selection split disjoint from the rollouts the edit was generated
+from, and accepts on strictly-better; committed edits per run number 11 to
+44. Its harness choice is the right one: it evaluates inside the agent tools
+people actually run. The criticism here is narrow. Every acceptance is a
+single unreplicated evaluation, the same selection items are reused for
+every decision in the run, and no confidence interval, significance test or
+multiplicity correction appears anywhere in the paper: every reported result
+is a point estimate from a single run on fixed splits. None of its baselines
+is a document of matched length whose content says nothing. We reproduce its
+engine faithfully and test its output.
 
-\paragraph{On SkillOpt specifically.}
-Its method is sound in outline and its harness choice is the right one: it
-evaluates inside the agent tools people actually run, which is more than most of
-this literature does. The criticism here is narrow, and narrower than an
-earlier draft made it. Its abstract reports no confidence interval, no
-significance test and no correction for the many implicit comparisons its
-accept-if-strictly-better ratchet performs, and we did not read the full paper,
-so what we can say is that the headline figure travels without them and not
-that the paper contains none. We reproduce its
-engine faithfully and test its output, rather than reanalysing its numbers, and
-where a claim about the paper's contents rests on a section we have not read
-first-hand we leave it out of this paper instead of repeating it.
-
-\paragraph{GEPA.}
-GEPA~\citep{gepa2026} performs reflective whole-prompt evolution with a Pareto
-frontier over rollouts, and reports large gains over reinforcement-learning
-baselines at a fraction of the rollout budget. Its acceptance criterion has the
-same shape: a candidate enters the frontier on observed score. We use it as
-distributed, through its documented adapter interface, with an
-OpenAI-compatible reflection model.
+\paragraph{GEPA.} GEPA~\citep{gepa2026} evolves prompts by sampling
+rollouts, reflecting on successes and failures in natural language, and
+proposing wholesale revisions of a module's instruction, with candidate
+diversity maintained by a per-instance Pareto frontier. It reports
+outperforming a reinforcement-learning baseline by 6\% on average and by up
+to 20\%, at up to $35\times$ fewer rollouts. Its acceptance has the same
+shape as SkillOpt's: a candidate enters the pool when its score on a
+reflection minibatch, three items by default, beats its parent's, and no
+significance notion appears in the algorithm or the evaluation. We use it as
+distributed, through the library's documented adapter interface, with an
+OpenAI-compatible reflection model; the skill here is a single document, so
+a module revision is a whole-prompt revision.
 
 \subsection{Why a placebo arm is the load-bearing control}
 
-The AGENTS.md impact study~\citep{agentsmd2026} and the skill-authoring
-literature~\citep{authoringskills2026} both report that adding an instruction
-artifact helps. Neither compares against an artifact of matched length and
-structure whose content says nothing. Without that comparison, ``the skill
-helped'' and ``a document-shaped block of tokens in the system prompt helped''
-are the same observation.
+Presence-versus-absence designs dominate this literature. The AGENTS.md
+impact study~\citep{agentsmd2026} compares repositories with and without the
+file and reports efficiency gains; its two conditions are the file present
+and the file removed. The skill-authoring
+literature~\citep{authoringskills2026} prescribes how to write skills and
+reports no comparisons at all. The SkillsBench benchmark
+itself~\citep{skillsbench2026li} measures curated skills against a no-skill
+baseline, and its authors flag that the observed gains could partly reflect
+added context length, calling for length-matched baselines of random or
+irrelevant text as future work. In a design without that baseline, ``the
+skill helped'' and ``a document-shaped block of tokens in the system prompt
+helped'' are the same observation.
 
 Our placebo is generated to match the shipped skill on word count and on
 structural shape, and it ships in the repository beside the skill so the
-comparison can be re-run. \Cref{sec:results} reports it as a first-class arm,
-and every arm in the registered family is tested against it. It matches the shipped skill and not
-the evolved winners, and \Cref{sec:length-confound} gives the sizes.
+comparison can be re-run. \Cref{sec:results} reports it as a first-class
+arm, every arm in the registered family is tested against it, and
+\Cref{sec:length-confound} reports what it does and does not control for the
+evolved winners.
 
 \subsection{Harness variance, and what a verdict is worth}
 
 \citet{harnessdisclosure2026} run three frontier models across three harness
 configurations on a stratified subset of SWE-bench Verified and report an
-aggregate harness-to-model variance ratio of $7.8\times$, with the ranking of
-models reversing in six of nine comparisons. One $3\times3$ design on one task
-distribution: we read the direction as transferring and the ratio as not.
-\citet{harnessbench2026} reach the qualitative half of the same conclusion over
-5{,}194 trajectories on 106 sandboxed tasks, where completion, process quality
-and failure behaviour all vary substantially across model-harness pairings. A
-result measured inside one scaffold is a claim about that scaffold as much as
-about the model, and almost nobody reports the scaffold in enough detail to
-check. We give a full disclosure in \Cref{sec:appendix-harness}, under our own
-seven-heading scheme, against the requirement
-\citet{harnessdisclosure2026} sets, and we do not assume our result transfers to a
-different agent harness.
+aggregate harness-to-model variance ratio of $7.8\times$, with the ranking
+of models reversing in six of nine comparisons. One $3\times3$ design on one
+task distribution: we read the direction as transferring and the ratio as
+not. \citet{harnessbench2026} reach the qualitative half of the same
+conclusion over 5{,}194 trajectories on 106 sandboxed tasks, where
+completion, process quality and failure behaviour all vary substantially
+across model-harness pairings. A result measured inside one scaffold is a
+claim about that scaffold as much as about the model. We give a full
+disclosure in \Cref{sec:appendix-harness}, against the seven-layer
+requirement \citet{harnessdisclosure2026} sets, and we do not assume our
+result transfers to a different agent harness.
 
-Prompting Inversion~\citep{promptinginversion2025} sharpens this for our case
-specifically: scaffolding tuned against a weak model can become a handicap on a
-strong one. Our engines optimised against a 1.7B model. That is a reason to
-expect the transfer question to have its own answer, and a reason we decline to
-extrapolate from ours.
+Prompting Inversion~\citep{promptinginversion2025} sharpens this for our
+case: prompting strategies that helped a mid-tier model became detrimental
+on a frontier one. Our engines optimised against a 1.7B model. That is a
+reason to expect the transfer question to have its own answer, and a reason
+we decline to extrapolate from ours.
 
 \subsection{Statistics for evaluations at this scale}
 
@@ -94,15 +111,20 @@ extrapolate from ours.
 evaluations. \citet{noclt2025} shows the normal approximation is unreliable
 below a few hundred effectively independent datapoints, which is where a
 clustered design at our item count sits. We use McNemar's exact
-test~\citep{mcnemar1947note} for paired binary outcomes and a cluster bootstrap
-over templates for intervals, and we report the discordant split alongside every
-$p$-value.
+test~\citep{mcnemar1947note} for paired binary outcomes and a cluster
+bootstrap over templates for intervals, and we report the discordant split
+alongside every $p$-value.
 
-The multiplicity problem in this neighbourhood is larger than the reported
-comparisons suggest, because the ratchet inside each engine performs comparisons
-that never reach a table. We cannot correct for those. We correct for ours,
-across a family of three fixed before the first call, with Holm's step-down
-procedure. Benjamini--Hochberg~\citep{benjamini1995fdr} is implemented in the
-same module and controls the false discovery rate rather than the family-wise
-error rate; with three registered comparisons and no rejection at either
-criterion, the choice does not change the result.
+Audited head-to-head, prompt optimisation itself is close to a coin flip:
+across six optimisers, none of them GEPA, on four single-agent tasks under
+equal compute, 49\% of 72 optimisation runs scored below
+zero-shot~\citep{promptcoinflip2026}. The multiplicity problem in this
+neighbourhood is larger than the reported comparisons suggest, because the
+ratchet inside each engine performs comparisons that never reach a table. We
+cannot correct for those. We correct for ours, across a family of three per
+item set fixed before the first call, with Holm's step-down procedure.
+
+Benjamini--Hochberg~\citep{benjamini1995fdr} is implemented in the same
+module and controls the false discovery rate rather than the family-wise
+error rate; with no rejection at either criterion, the choice does not
+change the result.

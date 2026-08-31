@@ -3,12 +3,14 @@
 
 % SOURCE OF TRUTH: ../docs/PROTOCOL.md. That document is at Version 2 as this is
 % written; the run reported here was conducted under Version 1, and the two
-% criteria Version 2 added are the subject of Section 7. Nothing else changed.
+% criteria Version 2 added are the subject of the ceiling post-mortem
+% (Appendix~C). Nothing else changed.
 
 The run reported here was conducted under Version 1 of the standing protocol.
-Version 2 added two corpus-admission criteria on 2026-08-28, after the run, and
-\Cref{sec:ceiling} is the account of why. No rule under which this study ran was
-amended retrospectively.
+Version 2 added two corpus-admission criteria on 2026-08-28, after the run,
+for reasons \Cref{sec:noreplication} summarises and \Cref{sec:ceiling}
+reports in full. No rule under which this study ran was amended
+retrospectively.
 
 \subsection{Design}
 
@@ -28,8 +30,7 @@ arm & system prompt \\
 \end{tabular}
 \end{center}
 
-Three invariants make this a comparison rather than a demonstration, and their
-absence is what makes most skill evaluations uninterpretable.
+Three invariants hold across every arm.
 
 \begin{enumerate}
   \item \textbf{The response-format contract is in every arm.} A skill that
@@ -47,9 +48,9 @@ absence is what makes most skill evaluations uninterpretable.
     explicit label menu moved trajectory accuracy by 14 to 40 points in
     AgentAtlas v1~\citep{agentatlas2026}. We cite v1 because v2 withdrew the
     number and replaced it with ``mapped label agreement can change
-    substantially'', alongside a caution against reading its synthetic study as
-    a model comparison. So the figure justifies holding the menu constant and
-    nothing else; we do not compare it to our own effects.
+    substantially'', alongside a caution against reading its synthetic study
+    as a model comparison. The figure therefore justifies holding the menu
+    constant and nothing else; we do not compare it to our own effects.
 \end{enumerate}
 
 All five arms are built by one function, \texttt{solvers.arms.build\_arm}, and
@@ -62,12 +63,12 @@ record.
 
 The placebo is matched to the seed skill. It is not matched to the evolved
 winners, whose length each engine chose, and the gap is large enough to report
-in the method rather than the limitations.
+here in the method.
 
 Every record carries \texttt{input\_tokens}. The \texttt{off} arm sends the task
 framing and the format contract and no document, so its prompt is the shared
 prefix and each other arm's document is the difference. Per item that difference
-has zero variance, so these are exact sizes and not estimates.
+has zero variance, so these are exact sizes.
 
 \begin{center}
 \begin{tabular}{lrr}
@@ -92,24 +93,16 @@ available explanation, since the longer document is the one that lost.
 A placebo generated per treatment arm would close this. That is a design we did
 not run, and no analysis of these records recovers it.
 
-\subsection{Arenas, and why this study emits no verdict}
+\subsection{Scope of the verdict}
 \label{sec:arenas}
 
-The harness registers every model against one of three tiers. \texttt{dev} is
-for development and emits no verdict. \texttt{screen} is for cheap hosted models
-and emits none either. \texttt{confirm} is the target model on a private holdout under a
-hash-locked pre-registration.
-
-The separation is a registry the harness reads, and the assertions over it,
-\texttt{assert\_model\_allowed} and \texttt{assert\_may\_emit\_verdict}, are called
-by the trigger runner and by tests. \texttt{de study} calls neither, so no arena
-error could have fired on this run and the scoping here is ours to honour rather
-than the code's to refuse. It cuts against us either way. Our target,
-\NUM{\studyModel}, is registered \texttt{dev}, so this study produces a
-published, controlled, reproducible result that is formally scoped to one small
-model and moves nothing on the project's scorecard.
-We report it that way throughout. \Cref{sec:ceiling} explains why a
-\texttt{screen}-tier replication does not exist.
+The project that ran this study registers every model against a tier that
+decides whether a run on it may support a public claim about the shipped
+skill, and the study's target, \NUM{\studyModel}, is registered at the
+development tier. The result here is therefore published and controlled, and
+scoped to one small model; it supports no claim about the skill at large.
+\Cref{sec:noreplication} explains why a larger-model replication does not
+exist.
 
 \subsection{Pre-registration, verified rather than asserted}
 
@@ -118,71 +111,70 @@ notebook before the first call. What makes that more than a claim is a gate: a
 published run declares the notebook entry carrying its prediction, and the
 provenance check refuses the run unless that entry's first commit is a git
 ancestor of the commit the run was made at. Ancestry is not editable after the
-fact without destroying the timestamps the method rests on. The gate also
-refuses a working tree configured to commit under the maintainer's employer
-domain: a blocklist of one, read from the configuration rather than from any
-commit's author, and enforced locally by a pre-commit hook.
+fact without destroying the timestamps the method rests on.
 
 The registered family was fixed before any data existed: three comparisons,
 \texttt{on}, \texttt{gepa} and \texttt{skillopt}, each against \texttt{placebo},
-one-sided in the direction of the arm helping. \texttt{off} sits outside the
-family by registration rather than by convenience.
+one-sided in the direction of the arm helping, applied to each item set
+separately. That is a family of three per set and six registered comparisons in
+all, and the two sets are never pooled. \texttt{off} sits outside the family by
+registration.
 
 One amendment was appended mid-run, after 143 of \NUM{\studyCalls} calls and
-before any comparison was read: the corpus fixes no constant \emph{across items},
-because every threshold is redrawn per item and restated in the prompt, so the
-mechanism one prediction rested on could not occur. Both winners did transcribe
-constants from the items they trained on (\Cref{sec:whatengines}); what the
-amendment closed is the channel by which such a constant could carry to a fresh
-seed. The amendment is dated
-and in the record, and the prediction it weakened is still there saying so.
+before any comparison was read: the corpus fixes no constant \emph{across
+items}, because every threshold is redrawn per item and restated in the prompt,
+so the mechanism one prediction rested on could not occur
+(\Cref{sec:corpus}). The amendment is dated and in the record, and the
+prediction it weakened is still there saying so.
 
 \subsection{Statistics}
 
 The registered comparison is McNemar's exact test on the discordant pairs,
 item-matched, one-sided, with Holm applied across the registered family of
-three. The two item sets are analysed separately and never pooled.
+three within each item set.
 
 That test treats items as independent, and they are not. Items minted from one
-template share a scenario, a rule and a distractor pool, so the independent unit
-is the template. The registration named the item-matched test and we report it
-as registered, but it is the wrong unit and we report a template-level test
-beside it in \Cref{sec:clustered}. The informedness intervals of
-\Cref{tab:signal} come from a cluster bootstrap that resamples \emph{templates},
-not items, for the same reason; the two accuracy tables carry no interval at
-all, which \Cref{sec:results} records as a gap.
+template share a scenario, a rule and a distractor pool, so the independent
+unit is the template. The registration named the item-matched test and we
+report it as registered, but it is the wrong unit and we report a
+template-level test beside it in \Cref{sec:clustered}. The informedness
+intervals of \Cref{tab:signal} come from a cluster bootstrap that resamples
+\emph{templates} for the same reason; the two accuracy tables carry no interval
+at all, which \Cref{sec:results} records as a gap.
 
 Choosing the unit after seeing the data would be the defect this design exists
-to avoid, so both are reported and neither is presented as the headline. They do
-not disagree in one direction: on the seen set the clustered test is the more
-conservative throughout, and on the unseen set two of the three go the other
-way, \texttt{gepa} furthest, from $p = \NUM{\pUnseenGepa}$ to
+to avoid, so both are reported and neither is presented as the headline. They
+do not disagree in one direction: on the seen set the clustered test is the
+more conservative throughout, and on the unseen set two of the three go the
+other way, \texttt{gepa} furthest, from $p = \NUM{\pUnseenGepa}$ to
 \NUM{\clusteredUnseenGepa}. \Cref{sec:clustered} gives both columns.
 
-We report the discordant split beside every registered $p$-value. Two arms can land on
-identical accuracy while disagreeing on a third of the items, and an aggregate
-alone cannot tell agreement from cancellation.
+We report the discordant split beside every registered $p$-value. Two arms can
+land on identical accuracy while disagreeing on a third of the items, and an
+aggregate alone cannot tell agreement from cancellation.
 
 \subsection{Controls run before the results were read}
 
 \paragraph{A/A.} The placebo was scored a second time over all
 \NUM{\totalItems} items, into a separate checkpoint so that resume could not
-skip the pass and report perfect agreement by construction.
+skip the pass and report perfect agreement by construction. \Cref{sec:results}
+reports the outcome.
 
-\paragraph{Falsifier.} The \texttt{off} arm returns a non-zero score, so some
-possible response scored above zero in every arm and the scorer reads the same
-object in each. This project has shipped several estimators that could not
-return a non-zero value. Some produced a clean run and a plausible number before
-anyone noticed, and others were caught in source before making a call; our own
-records disagree on the count, which is its own argument for the check. That is why the
-check is standing rather than occasional.
+\paragraph{Falsifier.} A standing rule of the protocol, checked by hand
+before any comparison was read: some possible response must score above zero
+for every arm, and the scorer must read the same object in each. The rule
+exists because an estimator that cannot return a non-zero value produces a
+clean run and a plausible number, and nothing else about the run looks
+wrong. \Cref{sec:results} reports the observation that satisfies it.
 
-\paragraph{Residency.} Model residency is pinned at 60 minutes on every request.
-A probe run hours before the study found two items answering deterministically to
-whether the model had just been loaded, which would have put a venue artifact
-inside the A/A. The pin is a property of the provider rather than of the run
-manifest, which \Cref{sec:appendix-harness} states as the gap it is.
+\paragraph{Residency.} Model residency is pinned at 60 minutes on every
+request. A probe run hours before the study found two items answering
+deterministically to whether the model had just been loaded, which without the
+pin would have put a venue artifact inside the A/A control. The pin is a
+property of the provider, and \Cref{sec:appendix-harness} states which other
+settings share that status.
 
-\paragraph{Arm ordering.} Arms ran in blocks rather than interleaved by item.
-That is a design defect, not a choice, and \Cref{sec:limitations} reports what
-bounds it.
+\paragraph{Arm ordering.} Arms ran in blocks, every item of one arm and then
+every item of the next. We intended item-major interleaving and the study path
+does not do it. \Cref{sec:limitations} reports the exposure and what bounds
+it.

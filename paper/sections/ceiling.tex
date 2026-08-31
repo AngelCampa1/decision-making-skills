@@ -1,172 +1,147 @@
-\section{The Ceiling, and Nine Templates That Did Not Clear It}
+\section{The ceiling screen and the nine-template post-mortem}
 \label{sec:ceiling}
 
-This section reports a failure. The study above runs on a 1.7B model and is
-formally scoped to it (\Cref{sec:arenas}). The obvious next move is to replicate
-on a larger model, and we could not, because the corpus has no room on one. We
-tried nine times to build room and failed nine times. What the failures produced
-is worth more than the corpus would have been.
+% Provenance: the screen is a committed artifact (nvbuild-ceiling-screen.json,
+% read by `de figures`, so its numbers are macros). The nine-template probes
+% ran through sub-agents rather than the checkpointed runner, wrote no records,
+% and their figures are typed here from the dated notebook entries that
+% registered each prediction before its probe. Class 3 in main.tex.
 
-One thing to hold while reading it. The screen below is published beside the
-study's records as a committed artifact,
-\pth{nvbuild-ceiling-screen.json}, and it holds \NUM{\screenModels}
-models. Eleven models this key can reach fall under a registered
-\texttt{nvbuild/} prefix, eight returned inside the screen's budget, and one of
-those eight is recorded in the notebook entry and missing from the file. We report the file's count here and
-leave the artifact alone, because a record that gets edited to match a paper is
-not a record. The nine-template work after it ran as a probe through sub-agents
-rather than through the checkpointed runner, so those passes wrote no records
-and their figures are typed here from the dated notebook entries that recorded
-them. The admission-rule subsection is the exception: it turns the criteria on
-our own corpus, so its skew and informedness figures come from the five-arm
-study's committed records and are typed, because \texttt{de figures} emits a
-per-template informedness table and no per-template skew macro at all.
-\Cref{tab:templates} prints the same informedness, generated. Each
-prediction was registered before its probe and the entries say so, which is what
-the record here rests on. It is a weaker footing than the five-arm study's and
-we would rather name it than have it inferred.
+\Cref{sec:noreplication} states the outcome: this study cannot be replicated
+on a model large enough to carry a verdict, because the corpus has no
+headroom on one. This appendix reports the evidence and what the repair
+attempt produced.
+
+Provenance first, because it is mixed. The model screen is published beside
+the study's records as a committed artifact,
+\pth{nvbuild-ceiling-screen.json}, holding \NUM{\screenModels} models, and
+its figures are generated macros like any other. The nine-template work after
+it ran as probes through sub-agents rather than through the checkpointed
+runner, so those passes wrote no records, and their figures are typed here
+from the dated notebook entries that registered each prediction before its
+probe ran. The admission-rule subsection turns the criteria on the study's
+own corpus, so its skew and informedness figures come from the five-arm
+study's committed records; they are typed because \texttt{de figures} emits a
+per-template informedness table (\Cref{tab:templates} prints the same
+values) and no per-template skew macro.
 
 \subsection{Every hosted model we measured solves the corpus}
 
-Screened with an empty prompt on \NUM{\screenItems} items each, every model in
-the artifact answers this corpus at or near ceiling: \NUM{\screenAtCeiling} of
-\NUM{\screenModels} at \NUM{\screenBest} and the weakest at
-\NUM{\screenWorst}, against \NUM{\accUnseenOff} for the study's local target.
-Accuracy there is over answered items and not asked ones, and
+Screened with an empty prompt on \NUM{\screenItems} items each, every model
+in the artifact answers this corpus at or near ceiling:
+\NUM{\screenAtCeiling} of \NUM{\screenModels} at \NUM{\screenBest} and the
+weakest at \NUM{\screenWorst}, against \NUM{\accUnseenOff} for the study's
+local target. Accuracy there is over answered items, and
 \NUM{\screenUnanswered} call across the whole screen returned nothing, so one
-of the perfect scores is over one item fewer.
-Three registered models did not return inside the screen's budget and are
-recorded as unmeasured, never assumed; they are larger than models already
-answering at \NUM{\screenBest}, so the expectation is clear and it is an
-expectation.
+of the perfect scores is over one item fewer. Eleven models the screen's key
+can reach fall under the \texttt{nvbuild/} namespace, a free-tier hosted
+endpoint whose vendor prefixes are registered in the harness; eight returned
+inside the screen's budget, and one of those
+eight is recorded in the notebook entry and missing from the committed file.
+We report the file's count, because a record that gets edited to match a
+paper is not a record. Three reachable registered models did not return inside the budget and are
+recorded as unmeasured; they are larger than models already answering at
+\NUM{\screenBest}, so the expectation is clear and it is an expectation.
 
-A five-arm study needs headroom for an arm to move into. At \NUM{\screenWorst} there is not
-enough for any effect this design could detect, so no venue we screened can
-host this study as the corpus stands. The screen covered one of the three
-backends registered at that tier, which bounds what this rules out.
+A five-arm study needs headroom for an arm to move into. At
+\NUM{\screenWorst} there is not enough for any effect this design could
+detect, so no venue we screened can host this study as the corpus stands. The
+screen covered one of the three backends registered at that tier, which
+bounds what this rules out.
 
-\subsection{Nine templates, and how each one failed}
+\subsection{Nine harder templates, and how they failed}
 
-We authored nine harder templates in one morning, across seven domains: two of
-the nine are variants built to diagnose a third and share its scenario. Eight are
-built around a rule the model has to select before it can apply, a precedence
-between two thresholds chosen by a categorical variable stated elsewhere in the
-item. \texttt{hrd-001-warranty-claim} is the exception and carries a single
-threshold with no selector.
+We authored nine harder templates in one sitting, across seven domains; two
+of the nine were built to diagnose a third.
+Eight are built around a rule the model has to select before it can apply, a
+precedence between two thresholds chosen by a categorical variable stated
+elsewhere in the item. \texttt{hrd-001-warranty-claim} is the exception and
+carries a single threshold with no selector. The probes ran on
+\texttt{nvidia/nemotron-3-nano-30b-a3b}, the 30B model from the screen above.
 
-Six of the nine ceiling on a 30B model. The registered prediction was that a set
-of six selection templates would land it between 0.60 and 0.75; the set landed
-at 0.949, and five of the six sit at or beside 1.000.
+Three predictions were registered, each before its probe, and each was
+falsified.
 
-One template held the model off the ceiling, reading 0.722 on the eighteen
-items of its second pass. It was the template the prediction generalised from,
-and it turned out to be one-sided rather than hard. The bias was then measured
-three times on this \emph{item type} rather than on that template alone, at
-0.629 on 35 items of it, 0.583 on 24, and 0.625 on 24 items of a reversed
-variant built to test it. Each reaches its number with sensitivity 1.000
-against specificity of 0.235, 0.167 and 0.250: it answers one option on about
-nine items in ten, in a set that wants it on half. That is an
-informedness of 0.167 to 0.250, and on a balanced key accuracy is pinned at
-$(J + 1)/2$, which is exactly the two balanced measurements, 0.583 and 0.625.
-The first ran on a realised 18/17 split, where the identity gives 0.618 against
-the 0.629 observed; the other two are balanced 12/12, which is why they land on
-the identity exactly. A nudge toward the other option would move both error rates
-and leave $J$ where it is, so it would gain nothing. An earlier draft said it
-would gain roughly thirty points, which is worth zero on a balanced key.
-\texttt{docs/PROTOCOL.md} carried the same sentence and now records its
-retraction. The template is not hard and it is not biased in a way any arm could
-exploit. It is barely discriminating, which is the reason to retire it.
+\emph{First: a set of six selection templates would land the 30B between
+0.60 and 0.75.} The set landed at 0.949, and five of the six sit at or
+beside 1.000.
 
-Two more templates were built to diagnose that one, and both diagnoses were
-wrong. Adding two high-strength money facts to a ceilinged template, to invite
-weighing cost instead of applying the rule, changed nothing: 23 of 23 against a
-control's 23 of 23. Reversing which option is named first, on the hypothesis
-that the bias was positional, moved accuracy by 0.042 against a registered
-threshold of 0.10.
+\emph{Second: an arm that gains accuracy on the one template that held the
+model off the ceiling would gain it by moving skew.} That template read 0.722
+on the eighteen items of its second pass, and it turned out to be one-sided
+rather than hard. Measured three times on the item type, at 0.629 on 35
+items, 0.583 on 24, and 0.625 on 24 items of a reversed variant, it reaches
+each number with sensitivity 1.000 against specificity of 0.235, 0.167 and
+0.250: the model answers one option on about nine items in ten, in a set that
+wants it on half. That is an informedness of 0.167 to 0.250, and on a
+balanced key accuracy is pinned at $(J+1)/2$, which is exactly the two
+balanced measurements, 0.583 and 0.625; the first pass ran on a realised
+18/17 split, where the identity gives 0.618 against the 0.629 observed. A
+nudge toward the other option would move both error rates and leave $J$
+where it is, so no arm could gain from it. The premise never occurred: over
+36 items and three arms, no skill and the placebo read 0.694 and 0.697, and
+the seed skill read 0.600. That third arm is the one case in this project
+where a skill visibly traded one property for another: it cut skew from
+$+0.306$ to $+0.171$ and cut informedness from 0.389 to 0.190 at the same
+time, a smaller lean bought with less discrimination, at a net loss of 0.094
+accuracy. Every interval crosses zero at 36 items.
 
-\subsection{Three registered predictions, all falsified}
-
-Each was written before its run and each stayed in the record saying so.
-
-\begin{enumerate}
-  \item Six further selection templates would land a 30B between 0.60 and 0.75
-    as a set. They landed at 0.949.
-  \item An arm that gains accuracy on the one-sided template would gain it by
-    moving skew. No arm gained, so the premise never occurred: over 36 items and
-    three arms, no skill and the placebo read 0.694 and 0.697, and the seed
-    skill read 0.600.
-  \item Reversing the option order would move accuracy by more than 0.10. It
-    moved 0.042, and the bias is therefore semantic and still unexplained.
-\end{enumerate}
-
-The third arm of prediction 2 is worth reporting on its own, because it is the
-only case in this project where a skill visibly traded one property for another.
-The seed skill cut skew from $+0.306$ to $+0.171$ and cut informedness from
-0.389 to 0.190 at the same time: a smaller lean bought with less discrimination,
-and a net loss of 0.094 accuracy. Every interval crosses zero at 36 items, which
-is the other thing that run showed. It was sized against an expected
-thirty-point gap and cannot see a ten-point one.
+\emph{Third: reversing which option is named first would move accuracy by
+more than 0.10.} It moved 0.042, so the bias is semantic rather than
+positional, and its cause is open. A companion probe that added two
+high-strength money facts to a ceilinged template, to invite weighing cost
+instead of applying the rule, changed nothing: 23 of 23 against a control's
+23 of 23.
 
 \subsection{The admission rule this bought}
 
 ``Make the corpus harder'' is not a specification, and following it produced
 nine templates that were either easy or one-sided. Three criteria replace it,
-all computable from the control-arm records a calibration run already produces:
+all computable from the control-arm records a calibration run already
+produces: accuracy below the ceiling, so an arm has somewhere to move; skew
+near zero, so the model is answering from the item; and informedness below
+one, so discrimination is left to gain.
 
-\begin{itemize}
-  \item accuracy below the ceiling, so an arm has somewhere to move;
-  \item skew near zero, so the model is answering from the item;
-  \item informedness below one, so discrimination is left to gain.
-\end{itemize}
+Seven published templates and six of the nine hard ones have signal and no
+room, on a large model. The two one-sided ones have room and no signal.
+\texttt{hrd-001} has signal and no room either, at 24 of 24 on the 30B, and
+it is the one template of the nine built without a selector.
 
-Seven published templates and six of the nine hard ones have signal and no room,
-on a large model. The two one-sided ones have room and no signal.
-\texttt{hrd-001} is in neither group: the 30B scored 24 of 24 on it, so it has no
-room either, and it is the one template of the nine built without a selector.
-
-\textbf{And the three criteria do not close the case, which we found by turning
-them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on the
-empty-prompt arm: reported accuracy
-\NUM{\accUnseenRelZeroZeroNineFlightRebookOff},
-inside the band and far below any ceiling; skew of $+0.019$, nearer zero than
-every template in the corpus but the two that read exactly $0.000$; and
-informedness of $+0.028$, which is certainly below one. It is also one of the three templates \Cref{sec:signal}
-marks as measuring nothing. A coin has zero skew and zero informedness too. The
-third criterion bounds discrimination above and not below, and a lower bound is
+\textbf{The three criteria do not close the case, which we found by turning
+them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on
+the empty-prompt arm: reported accuracy
+\NUM{\accUnseenRelZeroZeroNineFlightRebookOff}, inside the band and far
+below any ceiling; skew of $+0.019$, nearer zero than every template in the
+corpus but the two that read exactly $0.000$; and informedness of $+0.028$,
+below one. It is also one of the three templates \Cref{sec:signal} marks as
+measuring nothing. A coin has zero skew and zero informedness too. The third
+criterion bounds discrimination above and not below, and a lower bound is
 the obvious repair, but we have not run a corpus against one and will not
-present an untested rule as a result. What this section delivers is a criterion
-set that is necessary, demonstrably not sufficient, and better than the accuracy
-band it replaces.
+present an untested rule as a result. What this appendix delivers is a
+criterion set that is necessary and demonstrably not sufficient.
 
-A fourth criterion is untested and we state it as a hypothesis rather than a
-rule: both options should be acts, so neither is the default a model reaches for
-under uncertainty. We tested the nearest version of it and it did not hold.
-Signed toward the act on the 1.7B, six act-or-wait templates average $+0.097$,
-carried almost entirely by one template at $+0.464$; dropping it leaves the rest
-at $+0.024$. Three two-act templates average absolute skew of 0.172, which is
-higher rather than lower.
+A fourth criterion, that both options should be acts so neither is the
+default a model reaches for under uncertainty, is stated as a hypothesis and
+the nearest testable version of it did not hold on our data. Signed toward
+the act on the 1.7B, six act-or-wait templates average $+0.097$, carried
+almost entirely by one template at $+0.464$; three two-act templates average
+absolute skew of 0.172, higher rather than lower.
+\texttt{rel-005-security-patch} resists the classification, since
+\texttt{patch\_immediately} against \texttt{schedule\_patch} is two acts
+under one reading and an act against a deferral under the other, and it
+carries the second-largest skew magnitude in the corpus at $-0.400$.
+Putting it in the first group takes $+0.097$ to $+0.026$; putting it in the
+second takes 0.172 to 0.229. The direction of the comparison survives
+either placement and the two averages do not. The action-bias explanation
+is refuted on our data and the underlying cause is open.
 
-Six and three is nine, and the corpus has ten.
-\texttt{rel-005-security-patch} is in neither group: its options are
-\texttt{patch\_immediately} and \texttt{schedule\_patch}, which are both acts
-under one reading and an act against a deferral under the other, and we could
-not classify it without choosing the answer. It carries the second-largest skew
-magnitude in the corpus at $-0.400$, behind the $+0.464$ quoted just above. Putting it in the first group takes $+0.097$
-to $+0.026$; putting it in the second takes 0.172 to 0.229. The direction of the
-comparison survives either placement and the two averages do not, which is the
-honest summary of a nine-template test on a ten-template corpus. The action-bias
-explanation is refuted on our data and the underlying cause is open.
+\subsection{What would unblock a replication}
 
-\subsection{What would actually unblock this}
-
-We record the options instead of pretending we have chosen. A corpus of more than
-two options per item removes the specific confound this section is about, at the
-cost of a harder scoring path and a weaker pairing. A multi-step task, where the
-model must carry a result forward, changes what is being measured rather than
-how hard it is. And a genuinely hard rule-selection template may exist and we
-may simply have failed to write one, which the nine failures make less likely
-without ruling out.
-
-What we will not do is tune a template until a model finds it hard. That
-procedure produces a corpus fitted to one model's weaknesses, and the arena rule
-that scopes this study exists to stop exactly that reading.
+Three options are open and none is chosen. A corpus of more than two options
+per item removes the ceiling confound at the cost of a harder scoring path
+and a weaker pairing. A multi-step task changes what is being measured. And a
+genuinely hard rule-selection template may exist that we failed to write,
+which nine failures make less likely without ruling out. What we will not do
+is tune a template until a model finds it hard: that procedure produces a
+corpus fitted to one model's weaknesses, and the scoping rule of
+\Cref{sec:arenas} exists to stop exactly that reading.

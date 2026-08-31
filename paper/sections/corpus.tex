@@ -8,30 +8,30 @@
 Items are minted from parameterised YAML templates with \emph{computed} ground
 truth, in the style of GSM-Symbolic~\citep{gsmsymbolic2024}. Each template
 declares variables, a set of short factual statements, a question, a fixed
-option menu, and a solution expression evaluated against the sampled variables.
-The expression is restricted to a whitelisted abstract syntax tree: no attribute
-access, no subscripts, no lambdas.
+two-option menu, and a solution expression evaluated against the sampled
+variables. The expression is restricted to a whitelisted abstract syntax tree:
+no attribute access, no subscripts, no lambdas.
 
 The argument for this over authored items is auditability. Checking
 \NUM{\studyTemplates} template rules is tractable; checking
-\NUM{\totalItems} authored answers is not. It also removes the contamination
-question, because items are generated fresh rather than drawn from anything a
-model could have been trained on. The price is that we own the item biases
-instead of inheriting them, which \Cref{sec:signal} is partly about.
+\NUM{\totalItems} authored answers is not. Generated items also settle the
+contamination question, because they are minted fresh and never drawn from
+anything a model could have trained on. The price is that we own every item
+bias ourselves, and \Cref{sec:signal} measures what that cost.
 
-Distractors are type-compatible with the decision rule rather than off-topic. An
-earlier build used off-topic distractors, the control arm scored at ceiling, and
-the diagnosis is in the repository's notebook. A distractor qualifies only if it
-shares no variable with the solution expression, which is a proof over all
-samplings rather than evidence from some of them. The obvious phrasing --- that
-the solution is invariant to its removal --- is vacuous in this generator, where
-answers come from sampled variables and never from fact text, so it would hold
-for load-bearing facts too. Each item is drawn
-from a stratum crossing distractor count with distractor position.
+Distractors are type-compatible with the decision rule. A pilot build of this
+corpus used off-topic distractors and the control arm scored at ceiling: an
+item whose irrelevant facts are visibly irrelevant is solvable without reading
+the rule. A distractor qualifies only if it shares no variable with the
+solution expression, which is a proof over all samplings. The obvious phrasing,
+that the solution is invariant to the distractor's removal, is vacuous in this
+generator: answers come from sampled variables and never from fact text, so
+invariance would hold for load-bearing facts too. Each item is drawn from a
+stratum crossing distractor count with distractor position.
 
-\subsection{Splitting, and what it is a split of}
+\subsection{The split is by template, and the probe that made it so}
 
-The split is by \emph{template}, not by seed. Template membership is decided by
+Template membership is decided by
 
 \begin{center}
 \texttt{sha256("evolution-study-v1:"\,+\,template\_id)}
@@ -40,22 +40,23 @@ The split is by \emph{template}, not by seed. Template membership is decided by
 \noindent so it is reproducible and was fixed before either engine ran. Seven
 templates were visible to both searches; three were held out entirely.
 
-The alternative, holding out fresh random seeds of the same templates, was the
-original plan and was abandoned after a probe showed it would score
-memorisation as generalisation: an engine that transcribes a template's decision
-rule into the skill body answers every future seed of that template correctly,
-and a seed-varied holdout records that as generalisation. Both engines went on
-to transcribe template-specific material (\Cref{sec:whatengines}), so the probe
-was load-bearing rather than cautious.
+The original plan was the more common design: hold out fresh random seeds of
+the same templates. A probe run before the study showed that design scores
+memorisation as generalisation. An engine that transcribes a template's
+decision rule into the skill body answers every future seed of that template
+correctly, and a seed-varied holdout records that as generalisation. Both
+engines went on to transcribe template-specific material into their winners
+(\Cref{sec:whatengines}), so the probe was load-bearing.
 
-A mid-run amendment narrowed one half of this. What the engines lifted were
-\emph{constants} and not rules, and a memorised constant does not survive a
-seed change here, because every threshold is redrawn per item and restated in
-the prompt. So on this corpus the constant channel is closed and holding out
-seeds would have caught it. The rule channel is not: each template's comparison
-and its load-bearing facts are fixed across every seed, and an engine
-transcribing those would still have been scored as generalising. The probe
-addressed a failure that remains available and we would run it again.
+The channel splits in two, and the two halves resolve differently on this
+corpus. What the engines lifted in the end were \emph{constants}, and a
+memorised constant does not survive a seed change here, because every
+threshold is redrawn per item and restated in the item's own prompt. A
+mid-run amendment to the registration recorded exactly that
+(\Cref{sec:method}). The \emph{rule} channel stays open: each template's
+comparison and its load-bearing facts are fixed across every seed, so an
+engine transcribing those would still be scored as generalising under a
+seed-varied holdout. Splitting by template closes both.
 
 \subsection{The holdout, minted after the winners were frozen}
 
@@ -66,19 +67,19 @@ minted afterwards, from seeds at or above 10{,}000, which the harness's
 the seen set is \NUM{\seenItems} items over the seven trained templates at two
 holdout seeds. Neither set was ever shown to either engine at any seed.
 
-Corpus identity is recorded as a fingerprint and not a label, because ground
-truth here is computed rather than authored and there is no label set to
-version. Both fingerprints are in the run manifest.
+Corpus identity is recorded as a fingerprint, because ground truth here is
+computed and there is no authored label set to version. Both fingerprints are
+in the run manifest.
 
 \subsection{The confound the control arm found in the design}
 
 The two item sets differ in more than being held out. The placebo helps on the
 seen set and does nothing on the unseen set, and the placebo has no training
 history at all, so whatever separates the sets is not only exposure. The
-templates differ in difficulty, and the split that produced them was a hash
-rather than a matching.
+templates differ in difficulty, and the split that produced them was a hash,
+never a matching.
 
-We report both sets separately throughout and never pool them, and we do not
-read the seen-minus-unseen difference as a generalisation gap. The control arm
-is what surfaced this, from inside the design, which is the argument for having
+We report both sets separately throughout, never pool them, and do not read
+the seen-minus-unseen difference as a generalisation gap. The control arm is
+what surfaced this, from inside the design, which is the argument for having
 one.

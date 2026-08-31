@@ -1,116 +1,93 @@
 \section{Harness disclosure}
 \label{sec:appendix-harness}
 
-% SOURCE OF TRUTH: ../docs/HARNESS_DISCLOSURE.md, which carries the ETCSOVG
-% record for all three backends this project has. Reproduced here for the one
-% backend this study used. Where the two disagree, the docs file is correct.
+% SOURCE OF TRUTH: ../docs/HARNESS_DISCLOSURE.md, which carries the record for
+% all three backends this project has. Reproduced here for the one backend
+% this study used. Where the two disagree, the docs file is correct.
 
 A result reported without its harness is not
-reproducible~\citep{harnessdisclosure2026}, and this appendix is the one most papers
-in this area omit. The disclosure is organised under seven headings we named
-ETCSOVG for our own use — execution, tools, context, scheduling, observability,
-verification, governance — and keep against the disclosure
-\citet{harnessdisclosure2026} argues for. The acronym is ours; the requirement
-is theirs.
-
-The project has three backends. This study used exactly one, and the other two
-are disclosed separately in the repository because folding them into one table
+reproducible~\citep{harnessdisclosure2026}. This appendix discloses the
+harness under the seven layers that paper requires: execution, tools,
+context, scheduling, observability, verification, governance. The project
+has three backends; this study used exactly one, and the other two are
+disclosed separately in the repository, because folding them into one table
 would be the error the disclosure exists to prevent.
 
 \paragraph{Execution.} An OpenAI-compatible HTTP server, reached through
-Ollama's native \pth{/api/chat}. The target is \texttt{\NUM{\studyModel}}, at a
-context window of 16{,}384, output capped at 4{,}096 tokens,
-\texttt{temperature=0}, one process at a time.
-\NUM{\studyReadings} arm calls plus \NUM{\aaPairs} for the A/A control. Local,
-so the notional cost is zero and the guard is call count and wall clock rather
-than dollars.
+Ollama's native \pth{/api/chat}. The target is \texttt{\NUM{\studyModel}}, at
+a context window of 16{,}384, output capped at 4{,}096 tokens,
+\texttt{temperature=0}, one process at a time. \NUM{\studyReadings} arm calls
+plus \NUM{\aaPairs} for the A/A control. The server is local, so the
+notional cost is zero and the guard is call count and wall clock.
 
 \paragraph{Tools.} None. No tool use, no retrieval, no MCP, no filesystem
-access. Nothing reads a working directory, so the auto-memory and planted-file
-concerns that apply to the CLI backend do not arise here. The skill body is the
-only intervention, and ``the agent looked it up'' cannot explain a difference
-between arms.
+access. Nothing reads a working directory, so the auto-memory and
+planted-file concerns that apply to the CLI backend do not arise here. The
+skill body is the only intervention, and ``the agent looked it up'' cannot
+explain a difference between arms.
 
 \paragraph{Context.} The system prompt is the whole of it: task framing, the
-response-format contract, and the arm's body. There is no host prompt underneath
-and no session history. This also means the project's \texttt{in\_situ} arm is
-\emph{refused} on this backend rather than silently approximated, because with
-no pre-existing system prompt to append to, that call would be the isolated arm
-wearing another arm's label.
+response-format contract, and the arm's body. There is no host prompt
+underneath and no session history. An arm that appends a skill to a
+pre-existing host prompt is therefore refused on this backend rather than
+silently approximated, because with no host prompt to append to, that call
+would be the isolated arm wearing another arm's label.
 
 \paragraph{Scheduling.} Arms ran in blocks: every item of \texttt{off}, then
 every item of \texttt{on}, and so on, with the A/A pass after all five. We
-intended to interleave by item and did not. The harness carries a helper that
-returns item-major pairs, the study path never calls it, and we found that while
-writing this appendix. Block ordering confounds an arm with whatever drifted
-between blocks, so we report the exposure and then report what bounds it. The
-venue is a local server with no quota and no served-model churn, the run took
-hours rather than days, and the A/A pass ran roughly \NUM{\aaSeparation} calls
-after the placebo pass it duplicates and returned \NUM{\aaPairs} of
-\NUM{\aaPairs} items identical. That last is a measurement across a third of the
-run, and it says the drift this design is exposed to did not occur here. It does
-not say the design is sound. Model residency is pinned at
+intended to interleave by item; the harness carries a helper that returns
+item-major pairs and the study path never calls it. \Cref{sec:limitations}
+reports the exposure and what bounds it. Model residency is pinned at
 \texttt{keep\_alive: 60m}, sent on every request by the provider that makes
-them. That pin is load-bearing: a probe run hours before the study found two items
-answering deterministically to whether the model had just been reloaded, which
-without the pin would have put a venue artifact inside the A/A control. It is
-one of several settings this run does \emph{not} write into its manifest.
-Temperature, the concurrency limit, the request timeout and the endpoint are the
-others, so a replicator reads them from the provider source
-and not from the record. We would rather say that than let the disclosure
-imply a receipt it does not hold.
+them, for the reason \Cref{sec:method} gives. The pin, the temperature, the
+concurrency limit, the request timeout and the endpoint are properties of
+the provider source and are \emph{not} written into the run manifest, so a
+replicator reads them from the provider source and the disclosure of them
+here does not amount to a machine-checkable receipt.
 
-\paragraph{Observability.} Every call writes a record carrying the item id, the
-template id, the seed, the arm kind --- the two evolved arms both record
-\texttt{candidate} and are told apart only by the hash, and the A/A pass records
-\texttt{placebo} under the control's own hash and is told apart only by its file,
-which is where \texttt{de figures} reads the arm from --- the SHA-256 of the
-body that arm delivered and null for the arm that delivers none, the
-answer key, the parsed answer, the parse status, the response text, the token
-counts, the duration, and the schema version. The records are published beside
-the run, and every number this paper draws from the study is recomputed from
-them and from the run's own \texttt{analysis.json} by \texttt{de figures} at
-build time. The accuracies, $p$-values and adjusted $q$-values are the ones the
-run computed and published; everything else here is recomputed from the records.
-The admission-rule subsection of \Cref{sec:ceiling} is the exception inside the
-study's own figures: its per-template skew is computed from these records and
-typed, because \texttt{de figures} emits no per-template skew macro. The
-informedness beside it is typed from the same records; \Cref{tab:templates} is
-generated and prints the same value. Three further classes
-of figure come from
-elsewhere and \texttt{main.tex} enumerates them: figures from cited work,
-configuration constants, and the sub-agent probes of \Cref{sec:ceiling} and the
-search runs of \Cref{sec:whatengines}, both of which say so where they
-appear.
+\paragraph{Observability.} Every call writes a record. Its fields are the
+item id, the template id, the seed, the arm kind, the SHA-256 of the body
+the arm delivered (null for \texttt{off}), the answer key, the parsed
+answer, the parse status, the response text, the token counts, the duration,
+and the schema version. Two ambiguities in the arm-kind field are resolved
+by other fields: the evolved arms both record \texttt{candidate} and are
+told apart by the hash, and the A/A pass records \texttt{placebo} under the
+control's own hash and is told apart by its file, which is where
+\texttt{de figures} reads the arm from. The records are published beside the
+run. The accuracies, $p$-values and adjusted $q$-values in this paper are
+the ones the run's own \texttt{analysis.json} computed and published;
+everything else is recomputed from the records by \texttt{de figures} at
+build time. The exceptions, numbers typed rather than generated, are
+enumerated in \texttt{main.tex}: figures from cited work, configuration
+constants, the probe and search figures of \Cref{sec:ceiling} and
+\Cref{sec:whatengines}, and the per-template skew beside
+\Cref{tab:templates}'s informedness.
 
-\paragraph{Verification.} The resolved model id is recorded per call from the
-response's own \texttt{model} field, not from what was requested.
-Ollama's \texttt{/api/show} card can be read as an isolation receipt, and
-\texttt{assert\_isolated} refuses a card carrying a \texttt{SYSTEM} prompt, which
-is the local analogue of a planted instruction file. \textbf{The study path does
-not call it}: the only caller of \texttt{isolation\_receipt} in the repository is
-a test. This run therefore holds no isolation receipt, and we would rather say
-that than let the mechanism's existence read as its use. Reasoning output arrives in a field separate from the
-answer, and \textbf{it is not recorded}. The runner writes the answer text
-only, so a chain that is billed in \texttt{output\_tokens} leaves no other
-trace: for three of the five arms the median generation bills several hundred
-tokens against a recorded response of a few. That is the largest gap between
-what this study spent and what it published, and \citet{biderman2024lessons},
-which we cite for publishing transcripts rather than scores, is the standard it
-misses.
+\paragraph{Verification.} The resolved model id is recorded per call from
+the response's own \texttt{model} field, not from what was requested.
+Ollama's \pth{/api/show} card can be read as an isolation receipt, and
+\texttt{assert\_isolated} refuses a card carrying a \texttt{SYSTEM} prompt,
+the local analogue of a planted instruction file. The study path does not
+call it: the only callers of \texttt{isolation\_receipt} in the repository
+are tests, so this run holds no isolation receipt. Reasoning output arrives in
+a field separate from the answer, and it is not recorded. The runner writes
+the answer text only, so a chain that is billed in \texttt{output\_tokens}
+leaves no other trace: for three of the five arms the median generation
+bills several hundred tokens against a recorded response of a few. That is
+the largest gap between what this study spent and what it published, and
+\citet{biderman2024lessons}, which we cite for publishing transcripts
+rather than scores, is the standard it misses.
 
-\paragraph{Governance.} The run is checkpointed and resumable, keyed so that a
-resume cannot silently re-run or silently skip. The A/A pass has its own
-checkpoint for that reason. The published directory declares its answer key, its
-corpus fingerprints, its arm hashes and the notebook entry carrying its
-prediction, and a gate refuses the run if that entry's first commit is not a git
-ancestor of the run's commit.
+\paragraph{Governance.} The run is checkpointed and resumable, keyed so that
+a resume cannot silently re-run or silently skip. The A/A pass has its own
+checkpoint for that reason. The published directory declares its answer key,
+its corpus fingerprints, its arm hashes and the notebook entry carrying its
+prediction, and a gate refuses the run if that entry's first commit is not a
+git ancestor of the run's commit.
 
 \paragraph{One thing this backend cannot give.} The hosted screen of
-\Cref{sec:ceiling} ran through the same module against a free API tier, which
-publishes no model card, so no isolation receipt is obtainable there. The
-harness has a function that would return \emph{no receipt obtainable} rather
-than \emph{isolation verified}, and the screen path does not call it either: the
-screen's committed artifact carries no receipt field, and neither does any
-record of the study. We state the distinction because it is the one we would
-want, and not because this run made it.
+\Cref{sec:ceiling} ran through the same module against a free API tier,
+which publishes no model card, so no isolation receipt is obtainable there.
+The harness has a function that would return \emph{no receipt obtainable}
+rather than \emph{isolation verified}; the screen path does not call it
+either, and no record of the study carries a receipt field.

@@ -1,137 +1,122 @@
 \section{Introduction}
 \label{sec:intro}
 
-Markdown ``skills'' are a real distribution channel. The Agent Skills standard
-fixes a \texttt{SKILL.md} format and a shared \texttt{.agents/skills/} discovery
-path, and its own client showcase listed forty-six adopting products in August
-2026, among them Claude Code, Codex, Cursor, GitHub Copilot, VS Code, Gemini CLI
-and Amp~\citep{agentskills2025}. These files are installed and running inside
+Markdown ``skills'' are a real distribution channel. The Agent Skills
+standard fixes a \texttt{SKILL.md} format and a shared
+\texttt{.agents/skills/} discovery path, and its own client showcase listed
+forty-six adopting products in August 2026, among them Claude Code, Codex,
+Cursor, GitHub Copilot, VS Code, Gemini CLI and
+Amp~\citep{agentskills2025}. These files are installed and running inside
 coding agents today. Almost none of them carry evidence that they help.
 
-A second layer has grown on top of the first. Engines now rewrite skill files
-automatically: GEPA proposes whole-prompt revisions from reflection over failed
+A second layer has grown on top of the first. Engines now rewrite skill
+files automatically: GEPA proposes revised instructions from reflection over
 rollouts~\citep{gepa2026}, and Microsoft's SkillOpt makes bounded edits to a
-skill body and keeps any edit that scores better~\citep{skillopt2026}. Both
-accept an edit on a single uncontrolled score improvement, hundreds of times in
-a run.
+skill body and keeps any edit that scores strictly
+better~\citep{skillopt2026}. Both accept an edit on a single unreplicated
+score comparison, with no notion of a difference that could have arisen by
+chance.
 
-That acceptance rule is the problem this paper is about. A ratchet that keeps
-every improvement it observes performs an enormous number of implicit
-comparisons, and reports none of them. It has no notion of a difference that
-could have arisen by chance, so it cannot distinguish a skill that got better
-from a skill that got luckier. The engines' own evaluations inherit the gap:
-single-run point estimates on fixed splits, with no repeats, no intervals, no
-significance tests, and no control for what a document-shaped file does when its
-content says nothing at all. Where prompt optimisation has been audited that way
-in a neighbouring setting, 49\% of 72 optimisation runs scored below
-zero-shot~\citep{promptcoinflip2026}.
-
-The literature that these engines are measured against does not agree with
-itself either. SkillsBench reports that making a skill \emph{available} is worth
-$+18$ to $+36$ percentage points, while the \emph{granularity of its prose} is
-worth $+0.7$ points on one model and $-6.7$ on the other, both with intervals
-crossing zero~\citep{skillsbench2026}. SkillOpt reports $+23.5$ points from
-optimising exactly that prose, on GPT-5.5 in direct chat, with $+24.8$ inside
-Codex and $+19.1$ inside Claude Code~\citep{skillopt2026}. Both cannot be right
-in the general case, and neither headline travels with the statistic that would
-settle it.
+This paper is about the two controls that acceptance rule is missing, and
+about what happens when they are added. The first is a placebo: no engine in
+this space compares its output against a document of matched length and
+structure whose content says nothing, so a gain from an evolved skill and a
+gain from any structured text in the system prompt are indistinguishable in
+every published number. The second is power arithmetic computed from the
+design before the run: how small a $p$-value the design can produce at all,
+and how large an effect it could detect. Both are cheap, and this study is
+evidence for both: we ran it with the placebo in place and computed the
+arithmetic only afterwards.
 
 \paragraph{What we did.}
 We held the model fixed, evolved a decision-making skill with each engine
-against a training split, froze both winners by content hash, and then minted a
-fresh holdout the engines had never seen. Five arms ran over that holdout: no
-skill, the hand-written seed skill, a placebo matched to that skill on word
-count and structure, and the two evolved winners, whose lengths the engines
-chose and which the placebo therefore does not match
-(\Cref{sec:length-confound}). Every comparison is
-McNemar's exact test against the placebo, paired by item, with Holm correction
-across a family of \NUM{\familySize} registered before the first call. The prediction was
-committed to git before any data existed, and the run's provenance gate refuses
-a result whose prediction cannot be shown by ancestry to predate it.
+against a training split, froze both winners by content hash, and then
+minted a fresh holdout the engines had never seen. Five arms ran over that
+holdout: no skill, the hand-written seed skill, a placebo matched to that
+skill on word count and structure, and the two evolved winners, whose
+lengths the engines chose and which the placebo therefore does not match
+(\Cref{sec:length-confound}). Every comparison is McNemar's exact test
+against the placebo, paired by item, with Holm correction across a family of
+three per item set, six registered comparisons in all, fixed before the
+first call. The prediction was committed to git before any data existed, and
+the run's provenance gate refuses a result whose prediction cannot be shown
+by ancestry to predate it.
 
 \paragraph{What we found.}
 No arm rejects, on either item set, after correction. The best showing is
 SkillOpt's winner at $\NUM{\effectSeenSkillopt}$ on the scenarios it trained
-against, which does not survive multiplicity. On scenarios neither engine saw,
-GEPA's winner falls furthest below an empty prompt, and the skill we wrote falls
-below it too.
-Both winners had written training-item constants into their own bodies, and each
-asserted a different threshold for the same rule on a variable the corpus draws
-fresh for every item. GEPA accepted its winner on three items, by its own
-acceptance rule, and never scored it on the validation pool at all.
+against, which does not survive multiplicity. On scenarios neither engine
+saw, GEPA's winner falls furthest below an empty prompt, and the skill we
+wrote falls below the placebo too. Both winners had written training-item
+constants into their own bodies, each asserting a different threshold for
+the same rule on a variable the corpus redraws for every item. GEPA accepted
+its winner on three items, by its own acceptance rule, and never scored it
+on its validation pool.
 
-Then a null is only worth reading if the study could have returned something
-else, so we checked, and it could not have. Our items come from templates and
-our own limitations section says the template is the independent unit. Under
-that unit the unseen set is three clusters, a one-sided test over three clusters
-cannot return a $p$ below \NUM{\floorUnseen}, and all three of our registered
+A null is only worth reading if the study could have returned something
+else, so we checked, and half of it could not have. Our items come from
+templates, and the template is the independent unit. Under that unit the
+unseen set is three clusters, a one-sided test over three clusters cannot
+return a $p$ below \NUM{\floorUnseen}, and all three of our registered
 unseen comparisons were therefore unfalsifiable at any outcome. The seen set
 survives the same check but its headline does not: SkillOpt's
-$p = \NUM{\pSeenSkillopt}$ becomes \NUM{\clusteredSeenSkillopt} once templates
-rather than items are resampled. The pre-registration had also computed a
-minimum detectable effect and put it at \NUM{\mdeUnseen} on the unseen set,
-which is already above anything the study found; recomputed at the clustering
-our protocol specifies it is \NUM{\mdeClusteredUnseen}. Every one of those
-numbers was available from the registration before a single call was made, and
-none of them reached the paper until now. We think that is the part worth
-carrying to the next study, and we have put it in front of the null rather than
-in a caveat behind it.
+$p = \NUM{\pSeenSkillopt}$ becomes \NUM{\clusteredSeenSkillopt} under a
+template-level sign-flip test. The pre-registration had computed minimum
+detectable effects of \NUM{\mdeUnseen} unseen and \NUM{\mdeSeen} seen, the
+first already above anything the study found, and computed both at a design
+effect of 1.0; at the clustering our own protocol specifies they rise to
+\NUM{\mdeClusteredUnseen} and \NUM{\mdeClusteredSeen}, and the smaller is
+\NUM{\mdeRatio} times the largest gain the study went on to observe. Every
+one of those numbers was available from the registration before a single
+call was made.
 
-We also report a result about the measurement, not the engines. A pooled
-accuracy says nothing about which templates in a corpus discriminate, and the
-metric this study reports, which scores an unreadable answer as wrong, does not
-rank them either: our best-discriminating template reports below one of our
-worst. Computing discrimination per template left the study's conclusion
-standing and put \NUM{\lowSignalTemplates} of our \NUM{\studyTemplates}
-templates below $J = \NUM{\lowSignalThreshold}$ in every arm.
+The same records also say something about the instrument. Pooled accuracy
+hides which templates discriminate, and the reported metric, which counts an
+unreadable answer as wrong, does not even order them: a template that is
+always right when it answers reports below one that is mostly guessing.
+Computing discrimination per template left the study's conclusion standing
+and put \NUM{\lowSignalTemplates} of our \NUM{\studyTemplates} templates
+below $J = \NUM{\lowSignalThreshold}$ in every arm, so a
+\NUM{\totalItems}-item run carries the discriminative signal of
+\NUM{\signalItems}.
 
 \paragraph{Contributions.}
 % Each of these stands whether the engines succeeded or failed. That is
 % deliberate: a contribution contingent on a positive result is a bet.
 \begin{enumerate}
   \item \textbf{The first placebo-controlled evaluation of automated skill
-    optimisation we are aware of.} A skill that beats an empty prompt but not a
-    document of matched length and structure whose content says nothing has
-    demonstrated a length effect, and no engine in this space reports the
-    comparison that would tell the two apart. Ours is matched to the seed skill
-    and not to the evolved winners, which \Cref{sec:length-confound} reports as
-    a limit on what the arm controls.
-  \item \textbf{An A/A control, reported.} The control arm was scored a second
-    time into a separate checkpoint, and returned \NUM{\aaPairs} of
-    \NUM{\aaPairs} items identical. The venue's determinism is a measurement
-    rather than an assumption, and it bounds the drift the block ordering
-    exposes the arms to over the stretch the repeat covers.
+    optimisation we are aware of}, with an A/A determinism control reported
+    beside it. The placebo is not inert: it beats the skill we wrote on both
+    item sets, and on the seen set it beats the empty prompt by more than
+    any registered gain in the study (\Cref{sec:results}).
   \item \textbf{The arithmetic showing our own registered design was
-    undecidable, computed from the registration rather than from the outcome.}
-    Three of six primaries could not have rejected at any result, because a
-    one-sided test over \NUM{\templatesUnseen} template clusters has a
-    $p$-floor of \NUM{\floorUnseen}; and the effect the design could detect was
-    larger than the effect it found before the run began. Both checks are two
-    lines of arithmetic over a registration, both are absent from every skill
-    optimisation paper we read, and either would have stopped this study.
-  \item \textbf{A discrimination measure reported beside accuracy}, applied to
-    our own published records, showing that a
-    \NUM{\totalItems}-item run carried the discriminative signal of
-    \NUM{\signalItems} (\Cref{sec:signal}). We argue the failure generalises to
-    the two-option evaluations this literature is built on.
-  \item \textbf{A negative result about corpus construction}, reported at the
-    same prominence as the rest: no venue we screened can host a replication of
-    this study on this corpus, nine attempts to build a harder one failed, and
-    the way they failed produced an admission rule (\Cref{sec:ceiling}).
-  \item \textbf{Methodological apparatus this literature lacks}, all of it open:
-    hash-locked pre-registration verified by git ancestry, paired exact tests
-    reported beside cluster sign-flip tests and bootstrap intervals over
-    templates, Holm correction across a registered family, and a generator that
-    computes ground truth from template rules rather than authoring it.
+    undecidable, computable from the registration alone.} A one-sided test over
+    \NUM{\templatesUnseen} template clusters has a $p$-floor of
+    \NUM{\floorUnseen}, so three of our six primaries could not have
+    rejected at any result; and the minimum detectable effect at our
+    protocol's own design effect exceeds the largest observed gain by
+    \NUM{\mdeRatio} times. Both checks are two lines of arithmetic over a
+    registration, and either would have stopped this study
+    (\Cref{sec:clustered}, \Cref{sec:limitations}).
+  \item \textbf{A discrimination measure reported beside accuracy}, applied
+    to our own published records, showing that three templates measure
+    nothing in any arm and that the published metric does not order the
+    others by what they measure (\Cref{sec:signal}).
+  \item \textbf{Both winners memorised, and both were accepted on evidence
+    too thin to notice.} Two engines, one training pool, two different
+    constants written into the skill body for the same redrawn-per-item
+    rule; one winner accepted on a score over three items
+    (\Cref{sec:whatengines}). A pre-study probe anticipated exactly this
+    channel, and the holdout was rebuilt to catch it before either engine
+    ran (\Cref{sec:corpus}).
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}
 This is one target model, one corpus, one harness. The target is a 1.7B
-parameter local model. Every larger model we \emph{later} measured solves the
-corpus with an empty prompt, so no replication above that tier exists, and that
-screen should have run before the registration rather than after the study
-(\Cref{sec:ceiling}). The repository's own arena
-rule declines to issue a verdict from a run at that tier, and we honour it: the
-claim here is that on this model, under these controls, neither engine's output
-beat a placebo. Whether it would on a frontier model is open, and
-\Cref{sec:ceiling} is an account of why we could not answer it.
+parameter local model, and every larger model we later screened solves the
+corpus with an empty prompt, so no replication above that tier exists
+(\Cref{sec:noreplication}). The claim is that on this model, under these
+controls, neither engine's output beat a placebo. Whether it would on a
+frontier model is open, and the screen that says why is itself a result:
+every hosted model we measured solves this corpus with an empty prompt
+(\Cref{sec:noreplication}).

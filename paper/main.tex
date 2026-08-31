@@ -9,6 +9,9 @@
 % CLI, with trigger-quality and wiring-mode ablations. That study lost its venue
 % and never ran. The outline is preserved verbatim at
 % ../docs/superpowers/plans/2026-08-28-the-flagship-skill-paper.md.
+% Restructured 2026-08-31: one thesis, signal folded into results, the ceiling
+% post-mortem moved to an appendix. A dated notebook entry records the
+% restructure and the first-hand re-verification of the cited papers.
 %
 % Licence: CC-BY-4.0, in paper/LICENSE. It covers this directory only; the rest
 % of the repository is Apache-2.0.
@@ -94,22 +97,23 @@
 %      size). These are settings, not results. Two of them are in run.json and
 %      could be generated; they are typed because a setting a replicator needs
 %      to read in prose is not a figure that can go stale against the data.
-%   3. The sub-agent probes of section \ref{sec:ceiling} and the two evolution
-%      searches read off in section \ref{sec:whatengines}. The probes ran
-%      outside the checkpointed runner and the searches wrote into a gitignored
-%      directory that no longer exists, so neither wrote records to generate
-%      from and the source for both is a dated notebook entry. Both sections
-%      say so. The ceiling *screen* is not in this class: it wrote
-%      nvbuild-ceiling-screen.json, which is committed and which `de figures`
-%      reads, so those six figures are macros like any other.
-%      Section \ref{sec:whatengines} also names the numbers it withdrew when a
-%      2026-08-31 audit found they came from a search whose winners were never
-%      tested.
-%   4. Per-template skew and informedness in section \ref{sec:ceiling}'s
-%      admission-rule subsection. Computed from the study's committed records
-%      and typed: de figures emits a per-template informedness *table* and no
-%      per-template skew macro at all, so neither figure has a macro to cite.
-%      That subsection says so, and so does the harness appendix.
+%   3. The sub-agent probes of the ceiling post-mortem (Appendix
+%      \ref{sec:ceiling}) and the two evolution searches read off in section
+%      \ref{sec:whatengines}. The probes ran outside the checkpointed runner
+%      and the searches wrote into a gitignored directory that no longer
+%      exists, so neither wrote records to generate from and the source for
+%      both is a dated notebook entry. Both places say so; the search figures
+%      are echoed in the abstract, introduction and discussion, and the
+%      mid-run amendment's call count (143) in the method section is typed
+%      from the same notebook record. The ceiling
+%      *screen* is not in this class: it wrote nvbuild-ceiling-screen.json,
+%      which is committed and which `de figures` reads, so those six figures
+%      are macros like any other.
+%   4. Per-template skew and informedness in the appendix's admission-rule
+%      subsection. Computed from the study's committed records and typed: de
+%      figures emits a per-template informedness *table* and no per-template
+%      skew macro at all, so neither figure has a macro to cite. That
+%      subsection says so, and so does the harness appendix.
 \IfFileExists{generated/macros.tex}{\input{generated/macros}}{}
 \IfFileExists{generated/tables.tex}{\input{generated/tables}}{}
 
@@ -132,58 +136,61 @@ in \texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}\\
 
 \begin{abstract}
 Two open-source engines, GEPA and Microsoft's SkillOpt, automatically rewrite
-the markdown ``skill'' files that agent tools load, and both accept an edit on a
-single uncontrolled score improvement. We evolved a decision-making skill with
-each engine on one corpus of computable-ground-truth decisions, against one
-target model, \NUM{\studyModel}, inside one harness. We then ran five arms over
-a holdout minted after both winners were frozen: no skill, the hand-written seed skill, a
-structure-matched placebo, and the two evolved winners. Comparisons are McNemar
-exact against the placebo with Holm correction across a pre-registered family of
-\NUM{\familySize}, on \NUM{\unseenItems} and \NUM{\seenItems} items analysed separately.
+the markdown ``skill'' files that agent tools load, and both accept an edit on
+a single unreplicated score comparison. Their evaluations, and the wider
+skill-evaluation literature, lack two cheap controls: a placebo, a document of
+matched length and structure whose content says nothing, and power arithmetic
+computed from the design before the run. We report the first
+placebo-controlled evaluation of automated skill optimisation we are aware
+of, pre-registered under a gate that refuses any published run whose
+prediction cannot be shown by git ancestry to predate its data. The placebo
+was in place from the first call; the power arithmetic we computed only
+afterwards, and both verdicts are here.
+
+We evolved a decision-making skill with each engine on one corpus of
+computable-ground-truth decisions, against one target model,
+\NUM{\studyModel}, inside one harness, then ran five arms over a holdout
+minted after both winners were frozen: no skill, the hand-written seed skill,
+a structure-matched placebo, and the two evolved winners. Comparisons are
+McNemar exact against the placebo with Holm correction across a family of
+\NUM{\familySize} per item set, on \NUM{\unseenItems} unseen and
+\NUM{\seenItems} seen items analysed separately.
 
 \textbf{No arm rejects on either item set.} The best showing is SkillOpt at
-$\NUM{\effectSeenSkillopt}$ on trained scenarios, raw $p = \NUM{\pSeenSkillopt}$,
-which Holm takes to \NUM{\qSeenSkillopt}. On scenarios neither engine saw,
-GEPA's winner scores \NUM{\accUnseenGepa} against \NUM{\accUnseenOff} for an
-empty prompt: worse than no skill at all, though that deficit is one template of
-three and reverses on the other two. An A/A control returned \NUM{\aaPairs} of
-\NUM{\aaPairs} items identical, which bounds the drift the arms' block ordering
-exposes them to without removing it. Both winners had written training-item
-constants into their own bodies, and GEPA accepted its winner on three items.
+$\NUM{\effectSeenSkillopt}$ on trained scenarios, raw
+$p = \NUM{\pSeenSkillopt}$, which Holm takes to \NUM{\qSeenSkillopt}. On
+scenarios neither engine saw, GEPA's winner scores \NUM{\accUnseenGepa}
+against \NUM{\accUnseenOff} for an empty prompt. The placebo is not inert: it
+beats the skill we wrote on both item sets, and on the seen set it beats the
+empty prompt by more than any registered gain in the study. Both winners
+had written training-item constants
+into their own bodies, and GEPA accepted its winner on three items. An A/A
+control, the placebo arm scored a second time into its own checkpoint,
+returned \NUM{\aaPairs} of \NUM{\aaPairs} items identical.
 
-\textbf{The more useful result is that we can show the design could not have
-answered its own question.} Items are drawn from templates and the template is
-the independent unit, so the unseen set is three clusters, and three clusters
-admit no one-sided $p$ below \NUM{\floorUnseen}. All three unseen primaries were
-unfalsifiable before the first call. The pre-registration had computed a minimum
-detectable effect of \NUM{\mdeUnseen} assuming no clustering; at the design
-effect our own protocol specifies it is \NUM{\mdeClusteredUnseen}, and the
-smaller of the two clustered figures is still \NUM{\mdeRatio} times the largest
-gain the study went on to observe. Both
-numbers were computable from the registration alone. Neither was carried into
-the paper until this version, and we think that omission, not the null, is the
-transferable finding.
-
-A second measurement result concerns the instrument. Pooled accuracy hides
-which templates discriminate, and the metric this study reports, which counts an
-unreadable answer as wrong, does not even order them: one template answered
-perfectly whenever it was answered reports below one that is mostly guessing.
-Reporting discrimination directly leaves the headline standing and shows
-\NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates below
-$J = \NUM{\lowSignalThreshold}$ in every arm, two of them indistinguishably
-from zero, so a \NUM{\totalItems}-item run carries the signal of
-\NUM{\signalItems}. We argue both failure modes are generic to the
-two-option, template-built evaluations
-this literature is built on.
+\textbf{The power arithmetic decides half of that null before the data
+does.} Items are drawn from templates and the template is the independent
+unit, so the unseen set is three clusters, and a one-sided test over three
+clusters admits no $p$ below \NUM{\floorUnseen}: all three unseen primaries
+were unfalsifiable before the first call. The minimum detectable effect at
+the design effect our own protocol specifies is \NUM{\mdeClusteredUnseen} on
+that set, and the smaller of the two clustered figures is still
+\NUM{\mdeRatio} times the largest gain the study observed. Both numbers were
+computable from the registration alone. A companion decomposition of our own
+records shows \NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates
+below informedness $J = \NUM{\lowSignalThreshold}$ in every arm, so a
+\NUM{\totalItems}-item run carries the discriminative signal of
+\NUM{\signalItems}, and the reported metric does not even order the
+templates. Each check is a few lines of arithmetic over artifacts every
+study already has, and we argue all of them belong in any evaluation this
+literature runs.
 \end{abstract}
 
 \input{sections/introduction}
 \input{sections/related_work}
-\input{sections/method}
 \input{sections/corpus}
+\input{sections/method}
 \input{sections/results}
-\input{sections/signal}
-\input{sections/ceiling}
 \input{sections/discussion}
 \input{sections/limitations}
 
@@ -193,5 +200,6 @@ this literature is built on.
 \appendix
 \input{sections/appendix_harness}
 \input{sections/appendix_prompts}
+\input{sections/ceiling}
 
 \end{document}

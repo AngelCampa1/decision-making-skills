@@ -6,128 +6,112 @@
 % be dropped between that file and this section without a note saying why.
 
 \paragraph{One model, and a small one.} The target is \NUM{\studyModel}. The
-choice was made before the screen that justifies it, which we report as the
-ordering defect it is: every larger model we later measured solves the corpus
-with an empty prompt, and three we registered never returned inside the screen's
-budget (\Cref{sec:ceiling}). A 1.7B model fails in ways a frontier model
-does not, and the clearest signal in this run, generations that never conclude
-(\Cref{sec:parsefail}), is characteristic of small models. Our result
-does not travel upward without re-measurement, and Prompting
-Inversion~\citep{promptinginversion2025} gives a specific reason to expect it
-might invert.
+choice was made before the screen that justifies it, and the screen then
+showed there was nothing to choose: every larger model we measured solves the
+corpus with an empty prompt, and three reachable registered models never
+returned inside the screen's budget (\Cref{sec:noreplication}). A 1.7B model fails in ways a
+frontier model does not, and the clearest signal in this run, generations
+that never conclude (\Cref{sec:parsefail}), is characteristic of small
+models. Our result does not travel upward without re-measurement, and the
+Prompting Inversion result~\citep{promptinginversion2025} gives a
+prompting-level reason to expect it might invert: constraints that helped a
+mid-tier model became detrimental on a frontier one.
 
 \paragraph{One harness.} Everything ran through one scaffold. Harness variance
-exceeds model variance by roughly $7.8\times$~\citep{harnessdisclosure2026}, so
-this is a claim about a scaffold as much as about a model.
-\Cref{sec:appendix-harness} gives the full disclosure so the scaffold can be
-reproduced or blamed.
+exceeded model variance by roughly $7.8\times$ in the one factorial design
+that measured it~\citep{harnessdisclosure2026}, so this is a claim about a
+scaffold as much as about a model. \Cref{sec:appendix-harness} gives the full
+disclosure so the scaffold can be reproduced or blamed.
 
-\paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items, ten
-templates, and templates rather than items are the independent unit. The cluster
-design effect cuts the effective count roughly in half, and
-\Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on templates below
-$J = \NUM{\lowSignalThreshold}$ in every arm. Ten clusters is few, and every interval in
-\Cref{tab:signal} is as wide as that implies.
+\paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items,
+ten templates, and templates rather than items are the independent unit. The
+cluster design effect cuts the effective count roughly in half, and
+\Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on templates
+below $J = \NUM{\lowSignalThreshold}$ in every arm. Ten clusters is few, and
+every interval in \Cref{tab:signal} is as wide as that implies.
 
-An earlier draft of this paragraph said exact and resampling methods recover
-validity here. For the intervals they do. For the registered primary they do
-not: McNemar's exactness is conditional on independent discordant pairs, and
-clustering breaks the conditioning rather than widening it.
-\Cref{sec:clustered} therefore reports a template-level test throughout, and the
-floor it carries is the sharper statement — the unseen comparisons could not
-have rejected at any outcome.
+Exact and resampling methods recover the intervals here, and they do not
+recover the registered primary: McNemar's exactness is conditional on
+independent discordant pairs, and clustering breaks the conditioning rather
+than widening it. \Cref{sec:clustered} therefore reports a template-level
+test throughout, and the floor it carries is the sharper statement: the
+unseen comparisons could not have rejected at any outcome.
 
 \paragraph{The effect this design could see, and the effect it saw.} The
-pre-registration measured discordance at \NUM{\mdeDiscordance} on
-held-out items before the run and computed a minimum detectable effect from it:
-at $\alpha = \NUM{\mdeAlpha}$ and 80\% power, \NUM{\mdeUnseen} on the unseen set
-and \NUM{\mdeSeen} on the seen one. The largest gain anywhere in this study is
-\NUM{\effectSeenSkillopt}, and the largest movement in either direction is
-GEPA's \NUM{\effectUnseenGepa}, which is also below the detectable effect. \textbf{Nothing here was powered to detect what it
-found}, and no version of this paper should be read as evidence that the true
-effects are zero.
+pre-registration measured discordance at \NUM{\mdeDiscordance} on held-out
+items before the run and computed a minimum detectable effect from it: at
+$\alpha = \NUM{\mdeAlpha}$ and 80\% power, \NUM{\mdeUnseen} on the unseen set
+and \NUM{\mdeSeen} on the seen one. The largest gain anywhere in this study
+is \NUM{\effectSeenSkillopt}, and the largest movement in either direction is
+GEPA's \NUM{\effectUnseenGepa}, which is also below the detectable effect.
+\textbf{Nothing here was powered to detect what it found}, and no version of
+this paper should be read as evidence that the true effects are zero.
 
-That calculation assumed no clustering. At the design effect
-of \NUM{\protocolDesignEffect} our standing protocol specifies for a
-template-built corpus, the same arithmetic gives \NUM{\mdeClusteredUnseen} and
-\NUM{\mdeClusteredSeen}, the smaller of which is still \NUM{\mdeRatio} times
-the largest observed gain. The registration computed the optimistic version and the paper
-did not carry either until now.
+That calculation assumed no clustering. At the design effect of
+\NUM{\protocolDesignEffect} our standing protocol specifies for a
+template-built corpus, the same arithmetic gives \NUM{\mdeClusteredUnseen}
+and \NUM{\mdeClusteredSeen}, the smaller of which is still \NUM{\mdeRatio}
+times the largest observed gain. Both versions were computable from the
+registration alone, before the first call.
 
-\paragraph{Two engines, one configuration each, one search budget.} Each engine
-ran once, under a call guard, with an OpenAI-compatible reflection model. A
-different reflector, a larger budget, or a different stopping point could
-produce a different winner. SkillOpt scored nine candidates on the full
+\paragraph{Two engines, one configuration each, one search budget.} Each
+engine ran once, under a call guard, with an OpenAI-compatible reflection
+model. A different reflector, a larger budget, or a different stopping point
+could produce a different winner. SkillOpt scored nine candidates on the full
 validation pool and took the one that answered all 21. GEPA's search ran to
-completion and its own acceptance rule declared a winner scored on three items
-(\Cref{sec:whatengines}). An earlier draft of this paragraph said our code had
-picked GEPA's winner from its lineage after a budget stop. That is what happened
-in an earlier search whose winner we did not test, and it is not what the record
-for the tested run says. Neither is the engines' fault, and the second is
-arguably the point.
-
-\paragraph{The two item sets differ in more than exposure.} The placebo helps on
-the seen set and does nothing on the unseen set, and the placebo has no training
-history, so the split confounds ``held out'' with ``different scenarios''. We
-report the sets separately, never pool them, and do not read the difference
-between them as a generalisation gap.
-
-\paragraph{The decomposition is computed over parsed rows.} An arm that parses
-less is measured on the subset it managed to answer. \texttt{gepa} parses least
-at \NUM{\parseRateGepa}, and \Cref{sec:parsefail} shows that subset is not a
-random one, which moves its parsed accuracy on one template by
-\NUM{\gapParsedUnseenRelZeroZeroOneVendorOutageGepa} against the figure we
-report. Treating an unparsed row as a wrong answer would be a
-different estimator with a different bias, and we did not want to choose one
-after seeing the data.
+completion and its own acceptance rule declared a winner scored on three
+items (\Cref{sec:whatengines}). Neither is the engines' fault, and the
+second is arguably the point.
 
 \paragraph{Self-generated items, so we own their biases.} Generating our own
 items removes contamination and buys the ownership of every idiosyncrasy
 instead. The corpus is ten templates from one author in one sitting, so idiom
-and structure are correlated across it in ways that are hard to see from inside.
-No realism measurement exists: the human audit that was the target was retired,
-and the forced-choice comparison replacing it needs a human-written source we
-have not cleared. Nothing measures realism today.
+and structure are correlated across it in ways that are hard to see from
+inside. No realism measurement exists: the human audit that was the target
+was retired, and the forced-choice comparison replacing it needs a
+human-written source we have not cleared. Nothing measures realism today.
 
 \paragraph{The distractor audit is half done.} A distractor is admitted on
 structural invariance, which is checked. The semantic half, two independent
-auditors agreeing a distractor is genuinely irrelevant rather than plausibly
-foldable into the reasoning, has not run. A 2026 re-analysis of
-GSM-Symbolic~\citep{gsmsymbolic2024} reports that exact class produced most of
-the original effect: after a two-auditor filter kept 117 of 945 candidate
-distractors as genuinely irrelevant, the residual drop was indistinguishable
-from zero. That re-analysis is an unrefereed blog post and we have no bibliography
-entry for it, so we neither cite it as literature nor discount it: it is the
-gate our distractor premise most needs and least has, and it is the reason the
-premise is stated here as a premise.
+auditors agreeing a distractor is genuinely irrelevant, has not run. A 2026
+re-analysis of GSM-Symbolic~\citep{gsmsymbolic2024} reports that exact class
+produced most of the original effect: after a two-auditor filter kept only
+the genuinely irrelevant distractors, the residual drop was indistinguishable
+from zero. That re-analysis is an unrefereed blog post and we have no
+bibliography entry for it, so we neither cite it as literature nor discount
+it. It is the gate our distractor premise most needs and least has, and it
+is the reason the premise is stated here as a premise.
 
-\paragraph{No sampling-parameter control on two of three venues.} The evolution
-searches and the study ran at \texttt{temperature=0} where the backend exposes
-it. Temperature 0 is not deterministic on hosted inference in any case, which is
-why the A/A control is a measurement here and not an assumption.
+\paragraph{No sampling-parameter control on two of three venues.} The
+evolution searches and the study ran at \texttt{temperature=0} where the
+backend exposes it. Temperature 0 is not deterministic on hosted inference in
+any case, which is why the A/A control is a measurement here and not an
+assumption.
 
 \paragraph{The two evolved bodies are gone, and two searches are missing from
 our own call ledger.} Both searches wrote into a results directory our
 \texttt{.gitignore} excludes, so nothing they produced was ever committed and
-the directories no longer exist. The winners' content hashes and their outcomes
-are on the record, and the bodies behind those hashes are not: a content-hash
-search of the machine found neither. So the central artifacts of the two arms
-this paper is named after cannot be inspected by anyone, ourselves included, and how many
-calls the searches took is unrecoverable. Every other figure this paper draws from the study
-is countable from committed files, with the exceptions
-\texttt{main.tex} enumerates. \Cref{sec:appendix-prompts} says what a
-replicator can and cannot do with that.
+the directories no longer exist. The winners' content hashes and their
+outcomes are on the record, and the bodies behind those hashes are not: a
+content-hash search of the machine found neither. So the central artifacts of
+the two arms this paper is named after cannot be inspected by anyone,
+ourselves included, and how many calls the searches took is unrecoverable.
+Every other figure this paper draws from the study is countable from
+committed files, with the exceptions \texttt{main.tex} enumerates.
+\Cref{sec:appendix-prompts} says what a replicator can and cannot do with
+that.
 
-\paragraph{Arms ran in blocks rather than interleaved.} Every item of one arm,
-then every item of the next, which confounds an arm with whatever drifted
-between blocks. We intended item-major ordering and the study path does not do
-it. The A/A pass bounds the damage rather than removing it: it repeated the
-control arm \NUM{\aaSeparation} calls later and returned \NUM{\aaPairs} of
-\NUM{\aaPairs} identical, on a local server with no quota and no served-model
-churn. That is evidence the exposure did not bite here. It is not a defence of
-the design, and a hosted venue would not have offered it.
+\paragraph{Arms ran in blocks rather than interleaved.} Every item of one
+arm, then every item of the next, which confounds an arm with whatever
+drifted between blocks. We intended item-major ordering and the study path
+does not do it. The A/A pass bounds the damage without removing it: it
+repeated the control arm \NUM{\aaSeparation} calls later and returned
+\NUM{\aaPairs} of \NUM{\aaPairs} identical, on a local server with no quota
+and no served-model churn. That is evidence the exposure did not bite here.
+It is not a defence of the design, and a hosted venue would not have offered
+it.
 
-\paragraph{A verdict is not a usability judgement.} That neither engine beat a
-placebo here does not show the engines do not work. It shows that on this
-corpus, at this model size, what they hand back does not beat a document-shaped
-control. Those are different statements.
+\paragraph{A verdict is not a usability judgement.} That neither engine beat
+a placebo here does not show the engines do not work. It shows that on this
+corpus, at this model size, what they hand back does not beat a
+document-shaped control. Those are different statements.

@@ -4,143 +4,152 @@
 \subsection{What a ratchet without a control can and cannot tell you}
 
 Both engines improved a validation score and both accepted on it. Neither
-improvement survived a placebo. That gap has a mechanical explanation which does
-not require either engine to be badly built.
+improvement survived a placebo. That gap has a mechanical explanation which
+does not require either engine to be badly built.
 
-An accept-if-strictly-better rule performs one implicit test per proposal, keeps
-every winner, reports none of the tests, and has no way to ask whether a
-difference could have arisen by chance. The number scales with the proposal
-budget, and ours were small: nine candidates for SkillOpt and twelve for GEPA. SkillOpt accepted its winner on 21 of 21
-validation items against a seed's 18, with no interval on either. GEPA accepted
-its winner on three items and never scored it on the pool at all. A ratchet in
-that regime is a device for selecting noise, and it will select noise with
-perfect reliability given enough proposals.
+An accept-if-strictly-better rule performs one implicit test per proposal,
+keeps every winner, reports none of the tests, and has no way to ask whether a
+difference could have arisen by chance. In our runs SkillOpt accepted its
+winner on 21 of 21 validation items against a seed's 18, with no interval on
+either; GEPA accepted its winner on three items and never scored it on the
+pool at all (\Cref{sec:whatengines}). A ratchet in that regime is a device
+for selecting noise, and it will select noise reliably given enough
+proposals.
 
-The fix is cheap and neither engine has it: hold out items the ratchet cannot
-see, and require a candidate to beat the incumbent on those before accepting.
-Nothing about either architecture prevents it.
+Neither engine is blind to overfitting by design. SkillOpt gates every edit
+on a selection split disjoint from the rollouts the edit was generated from,
+and GEPA maintains a validation pool for candidate selection. What neither
+attaches is any notion of chance: each acceptance is a single
+unreplicated evaluation, the same selection items are reused adaptively for
+every decision in the run, and a strictly-better rule fires on a one-item
+difference as readily as on a twenty-item one. Repeated evaluation at the
+acceptance gate, or any test that asks how often a no-better candidate would
+pass it, would close the gap, and nothing about either architecture prevents
+that.
 
 \subsection{Memorisation is the reachable optimum, not a bug}
 
-Both winners wrote training-item constants into the skill body, and both landed
-on the same training template with different numbers. Neither engine was asked
-to. Both were asked to maximise a score on items they could see, and
-transcribing what they saw is the best available way to do that.
+Both winners wrote training-item constants into the skill body, and both
+landed on the same training template with different numbers
+(\Cref{sec:whatengines}). Neither engine was asked to. Both were asked to
+maximise a score on items they could see, and transcribing what they saw is
+the best available way to do that.
 
 This has a design consequence for anyone evaluating these engines. A holdout
-that varies only the random seed of a template will score a transcribed template
-\emph{rule} as generalisation, because the transcription still fits the template
-it came from. A transcribed \emph{constant} does not survive a seed change on
-this corpus, where every threshold is redrawn per item (\Cref{sec:corpus}), and
-that is the half a mid-run amendment closed. Our original plan was a seed-varying
-holdout and a probe caught it before the study rather than after. \textbf{Split
-by template, or the rule channel stays open.}
+that varies only the random seed of a template scores a transcribed template
+\emph{rule} as generalisation, because the transcription still fits the
+template it came from. A transcribed \emph{constant} does not survive a seed
+change on this corpus, where every threshold is redrawn per item
+(\Cref{sec:corpus}). \textbf{Split by template, or the rule channel stays
+open.}
 
-Whether the transcription paid is a question this design cannot answer, which
-is worth separating from the lesson. GEPA lifted constants from two training
-templates, \texttt{rel-007-capacity-scale} and
-\texttt{rel-008-contract-renew}; SkillOpt lifted from the second alone. Neither
-appears in the unseen set, so no unseen number can speak to what they cost.
+Whether the transcription paid is a question this design cannot answer.
+\Cref{sec:whatengines} gives the per-template accounting. In summary, the
+second largest contribution to the study's largest gain sits on the one
+template the winning engine memorised a threshold for, and a template with
+no lifted constant contributes more. A corpus with a fixed threshold would
+have rewarded the same behaviour outright. This one rewarded it on the
+template it could, and no design we ran can separate the two.
 
-Inside the seen set the two engines point opposite ways. GEPA reads
-\NUM{\accSeenRelZeroZeroEightContractRenewGepa} and
-\NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} on the templates its constants
-came from, against an empty prompt's
-\NUM{\accSeenRelZeroZeroEightContractRenewOff} and
-\NUM{\accSeenRelZeroZeroSevenCapacityScaleOff}, and its unseen deficit is on a
-template none of them touch. SkillOpt reads
-\NUM{\accSeenRelZeroZeroEightContractRenewSkillopt} on
-\texttt{rel-008-contract-renew}, and that single template carries
-\NUM{\netSeenRelZeroZeroEightContractRenewSkillopt} of the net items behind its
-headline \NUM{\effectSeenSkillopt} (\Cref{sec:whatengines}).
+\subsection{The placebo moved the model}
 
-So the second largest contribution to the largest gain in this study sits on the
-one template the winning engine memorised a threshold for. We are not entitled
-to call that the cause: it is one template, one engine, an unregistered
-comparison, and \texttt{rel-005-security-patch} carries
-\NUM{\netSeenRelZeroZeroFiveSecurityPatchSkillopt} with no constant lifted from
-it at all. What we are entitled to say is that a corpus with a fixed
-threshold would have rewarded the same behaviour outright, this one rewarded it
-on the template it could, and no design we ran can separate the two.
+The most actionable number in \Cref{tab:seen} is not either engine's. It is
+the placebo at \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} for an empty
+prompt. A document of the right length and shape, whose content carries no
+method, outperformed the skill we wrote, and on the unseen set it
+outperformed GEPA's winner too.
 
-\subsection{The placebo moved the model, which is the more useful finding}
+Read one way this undercuts the premise of writing skills at all, and we
+follow it: on this corpus and this model, a substantial part of
+what a skill does is occupy the system prompt with structured text. Read
+another way it is a warning about every published skill result that lacks
+this arm, which is nearly all of them. Either reading requires the arm.
 
-The most actionable number in \Cref{tab:seen} is not either engine's. It is the
-placebo at \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} for an empty prompt.
-A document of the right length and shape, whose content carries no method,
-outperformed the skill we wrote, and on the unseen set it outperformed GEPA's
-winner too.
+The largest thing this run moved points at the harness question rather than
+the content question. Nearly every unreadable answer from the seed skill and
+the placebo is a generation that ran to the output cap without concluding,
+and the placebo produces the most of any arm (\Cref{sec:parsefail}). On a
+single forced choice that is worth a few points and reads as noise. In an
+agent loop, a model that will not stop is a different kind of failure, and
+nothing here measures it. One winner suppresses the runaways and one does
+not, and the arm that provokes them hardest is a document with no content.
 
-Read one way this undercuts the premise of writing skills at all, and we follow
-that honestly: on this corpus and this model, a substantial part of what a skill
-does is occupy the system prompt with structured text. Read another way it is a
-warning about every published skill result that lacks this arm, which is nearly
-all of them. Either reading requires the arm.
+\subsection{Where this leaves the availability and optimisation results}
 
-\subsection{Where this leaves the SkillsBench and SkillOpt disagreement}
+Our result is closer to the near-zero prose effects of the controlled
+SkillsBench-subset study~\citep{skillsbench2026} than to SkillOpt's $+23.5$
+on GPT-5.5 in direct chat~\citep{skillopt2026}, and we report that with the
+scope it deserves. We tested one corpus, one target model at 1.7B parameters,
+and one task family with computable ground truth. SkillOpt reports
+comparable gains inside Codex and Claude Code, agent harnesses running
+multi-step work, which is a different regime in a way that could matter: an
+evolved skill that fixes a formatting pathology is
+worth little on a single forced choice and could be worth a great deal across
+a long trajectory. The runaway-generation result above is a concrete instance
+of the same boundary.
 
-Our result is closer to SkillsBench's null than to SkillOpt's $+23.5$ on GPT-5.5
-in direct chat~\citep{skillopt2026}, and we
-report that with the scope it deserves. We tested one corpus, one target model
-at 1.7B parameters, and one task family with computable ground truth. SkillOpt
-evaluates inside agent harnesses on multi-step work, which is a different regime
-in a way that could plausibly matter: an evolved skill that fixes a formatting
-pathology is worth little on a single forced choice and could be worth a great
-deal across a long trajectory.
+\subsection{Why no larger-model replication exists}
+\label{sec:noreplication}
 
-The largest thing this run moved points that way, though not where we first
-looked for it. Nearly every unreadable answer from the seed skill and the
-placebo is a generation that ran to the output cap without concluding, and the
-placebo produces the most of any arm (\Cref{sec:parsefail}). On a single forced
-choice that is worth a few points and reads as noise. In an agent loop a model
-that will not stop is a different kind of failure, and nothing here measures it.
-An earlier draft credited the winners with fixing this; one does and one does
-not, and the arm that provokes it hardest is a document with no content.
+The obvious next step is this study on a model large enough to carry a
+verdict, and the corpus cannot host it. Screened with an empty prompt on
+\NUM{\screenItems} items each, every hosted model in our committed screen
+answers this corpus at or near ceiling: \NUM{\screenAtCeiling} of
+\NUM{\screenModels} at \NUM{\screenBest} and the weakest at
+\NUM{\screenWorst}, against \NUM{\accUnseenOff} for the study's local target.
+At \NUM{\screenWorst} there is no headroom for any effect this design could
+detect.
+
+We then authored nine harder templates and none opened the headroom: on a 30B
+model six hit the ceiling the originals hit, two turned out to be one-sided
+in a way no arm could exploit, and the ninth had no room either. What the
+attempt produced is an admission rule for future corpora and three
+registered predictions falsified within a day of registration, which is the
+pre-registration machinery working at authoring speed.
+Appendix~\ref{sec:ceiling} reports the probes, their provenance, and the
+rule.
 
 \subsection{What a verdict is worth}
 
-The claim we are entitled to is that on \NUM{\studyModel}, on this corpus, under
-these controls, neither engine's output beat a document-shaped placebo, and one
-scored below an empty prompt. Harness variance exceeds model variance by roughly
-$7.8\times$~\citep{harnessdisclosure2026}, so transfer to another scaffold
-should not be assumed. That is the same warning that literature issues about everyone
-else's numbers, and we apply it to ours.
+The claim we are entitled to is that on \NUM{\studyModel}, on this corpus,
+under these controls, neither engine's output beat a document-shaped placebo,
+and one scored below an empty prompt. Harness variance exceeds model variance
+by roughly $7.8\times$ on one factorial design~\citep{harnessdisclosure2026},
+so transfer to another scaffold should not be assumed. That is the warning
+that literature issues about everyone else's numbers, and we apply it to
+ours.
 
-\subsection{Two lines of arithmetic that would have stopped this study}
+The two checks this study contributes to that literature need no data at
+all. Both are arithmetic over a registration, and either would have stopped
+this study. A null from an underpowered design is not evidence of absence. A
+null from a design with a $p$-floor above its own $\alpha$ is not evidence
+of anything, and three of our six registered comparisons were exactly that.
 
-We ran a pre-registered five-arm study with a placebo, a holdout minted after
-the winners were frozen, an A/A control, and a hash-locked registration verified
-by git ancestry. It still could not have answered its own question, and the two
-checks that would have shown that take a pocket calculator and a registration.
+\subsection{The checks, collected}
 
-The first is the $p$-floor. Fix the unit of analysis, count the clusters, and a
-one-sided exact test over $k$ of them cannot return a $p$ below $2^{-k}$. Our
-unseen set is \NUM{\templatesUnseen} templates, so the floor is
-\NUM{\floorUnseen}, and no outcome would have cleared the family's
-$\alpha = \NUM{\studyAlpha}$, let alone Holm's tightest step of
-\NUM{\mdeAlpha}.
-The second is the minimum detectable effect, which our registration did compute
-and then computed at a design effect of 1.0 for a corpus built from templates.
-At the \NUM{\protocolDesignEffect} our own protocol specifies, the detectable
-effect is \NUM{\mdeClusteredUnseen} against a largest observed gain of
-\NUM{\effectSeenSkillopt}.
+Every check this paper argues for runs on artifacts a study of this kind
+already has.
 
-Neither check needs data. Both need someone to name the unit of analysis before
-the run and then use the same unit afterwards, which is exactly what we failed
-to do: our method section matched on items, our limitations section said
-templates were the unit, and nothing reconciled them until the run was over.
-That is a cheap failure to inherit and a cheap one to avoid, and it is the piece
-of this paper we would most want a reader of the skill optimisation literature
-to take away. A null from an underpowered design is not evidence of absence. A
-null from a design with a $p$-floor above its own $\alpha$ is not evidence of
-anything.
+\begin{enumerate}
+  \item A placebo matched to the artifact under test, reported as the
+    control (\Cref{sec:method}).
+  \item An A/A repeat of one arm, scored into its own checkpoint
+    (\Cref{sec:results}).
+  \item The unit of analysis named at registration, and the $p$-floor
+    $2^{-k}$ computed from the cluster count before the run
+    (\Cref{sec:clustered}).
+  \item The minimum detectable effect computed at the design's own
+    clustering, read beside the effect the study later observes
+    (\Cref{sec:limitations}).
+  \item Discrimination reported beside accuracy, per template
+    (\Cref{sec:signal}).
+  \item The discordant split beside every paired $p$-value
+    (\Cref{sec:method}).
+\end{enumerate}
 
 \subsection{Negative results}
 
-The skill we wrote and ship lost to a placebo on both item sets. Three
-registered predictions about corpus construction were falsified inside a day
-(\Cref{sec:ceiling}). Three of our own ten templates measure nothing
-(\Cref{sec:signal}). One earlier run in this project is void, refused on parse
-rate before any prediction was scored. And the headline experiment could not be
-replicated at a tier that would carry a verdict, for a reason that is a property
-of our corpus, not of the engines.
+The skill we wrote and ship lost to a placebo on both item sets. Three of
+our ten templates measure nothing (\Cref{sec:signal}). And the headline
+experiment cannot be replicated at a tier that would carry a verdict, for a
+reason that is a property of our corpus, not of the engines.
