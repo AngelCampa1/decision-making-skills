@@ -13,7 +13,8 @@
 
 </div>
 
-**Audience:** anyone deciding whether this is worth their attention.
+A set of decision procedures an AI coding agent can load on demand, and the evaluation harness
+built to find out whether they actually work.
 
 Two things live here.
 
@@ -35,8 +36,8 @@ THEREFORE
 
 That is `ledger.md`, the one for when too much context arrived and you cannot
 see which fact decides it. The other five handle advice that is generically
-right and may be wrong for you, consequences you did not price, timing, several
-positions that are each defensible, and a missing fact that may or may not
+right and may be wrong for you; consequences you did not price; timing; several
+positions that are each defensible; and a missing fact that may or may not
 matter.
 
 **And `decision_evals`, the harness built to find out whether any of that
