@@ -45,6 +45,8 @@ from decision_evals.stats.cluster import (
     cluster_bootstrap_diff,
     cluster_sign_flip,
 )
+from decision_evals.stats.paired import mcnemar_exact
+from decision_evals.stats.power import minimum_detectable_effect
 from decision_evals.stats.signal import DegenerateSignalError, informedness, skew
 
 #: Where published runs of the five-arm study live.
@@ -317,6 +319,235 @@ def clustered_tests(
     return results
 
 
+#: Discordance the pre-registration measured before the run, on 84 held-out
+#: items at validation seed 1000. The MDE is a function of it, so it is the
+#: study's own input and not a value chosen here.
+REGISTERED_DISCORDANCE: Final = 0.250
+
+#: The design effect PROTOCOL.md assumes for a template-built corpus. The
+#: pre-registration computed its MDE at 1.0, which is the no-clustering case and
+#: not the one the protocol specifies; both are reported.
+PROTOCOL_DESIGN_EFFECT: Final = 2.0
+
+
+def power_macros(analysis: Mapping[str, Any], manifest: Mapping[str, Any]) -> dict[str, str]:
+    """The smallest effect this design could have seen, at each item count.
+
+    A null is only worth reading beside the effect the study was powered for.
+    This one registered an MDE before the first call and the paper did not carry
+    it, which leaves a reader unable to tell a small effect from no effect.
+
+    Reported at the pre-registration's own design effect of 1.0 and again at
+    PROTOCOL.md's 2.0, because the registration used the first where the
+    standing protocol specifies the second.
+    """
+    family = max(len(item_set["comparisons"]) for item_set in analysis["sets"])
+    alpha = float(manifest["request"]["alpha"]) / family
+    values: dict[str, str] = {
+        _macro_name("mde", "alpha"): _fixed(alpha, 4),
+        _macro_name("mde", "discordance"): _fixed(REGISTERED_DISCORDANCE, 3),
+        _macro_name("protocol", "designEffect"): f"{PROTOCOL_DESIGN_EFFECT:.1f}",
+    }
+    clustered: list[float] = []
+    for item_set in analysis["sets"]:
+        label = item_set["label"]
+        for name, effect in (("mde", 1.0), ("mdeClustered", PROTOCOL_DESIGN_EFFECT)):
+            try:
+                result = minimum_detectable_effect(
+                    int(item_set["n_items"]),
+                    REGISTERED_DISCORDANCE,
+                    alpha=alpha,
+                    design_effect=effect,
+                )
+            except ValueError:
+                # A set too small to detect any effect at this alpha has no MDE
+                # to report. Omitting the macro leaves any prose citing it as an
+                # undefined control sequence, which is the failure this module
+                # is built to produce rather than a wrong number.
+                continue
+            values[_macro_name(name, label)] = _fixed(result.effect, 4)
+            if effect != 1.0:
+                clustered.append(result.effect)
+
+    # How far the clustered bar sits above the biggest gain the study saw. The
+    # largest *gain* rather than the largest absolute movement, because the
+    # question a power calculation answers is whether an improvement of that
+    # size was detectable, and a decrement of the same size is a different
+    # claim. Both are in the tables; only this one is the bar's counterpart.
+    gains = [
+        comparison["accuracy"] - comparison["control_accuracy"]
+        for item_set in analysis["sets"]
+        for comparison in item_set["comparisons"]
+    ]
+    best = max(gains)
+    if best > 0 and clustered:
+        values[_macro_name("mde", "ratio")] = f"{min(clustered) / best:.1f}"
+    return values
+
+
+def per_template_macros(
+    readings: Sequence[Reading], manifest: Mapping[str, Any], baseline: str
+) -> dict[str, str]:
+    """Accuracy and parse rate per template, and each arm with one dropped.
+
+    An aggregate over three templates can be carried entirely by one of them,
+    which is what happened to this study's most quoted sentence. These are the
+    numbers that show it: per template, and per arm with each template removed
+    in turn.
+
+    ``\\accWithout<Set><Template><Arm>`` is an arm's accuracy over the set with
+    that template dropped. ``\\constantShare<Set><Template><Arm>`` is how often
+    the arm gave its most frequent answer, which reads 1.000 for a constant
+    responder.
+    """
+    sets = manifest.get("request", {}).get("sets") or []
+    by_arm: dict[str, list[Reading]] = defaultdict(list)
+    for reading in readings:
+        by_arm[reading.arm].append(reading)
+    values: dict[str, str] = {}
+    for item_set in sets:
+        label, seeds = item_set["label"], set(item_set["seeds"])
+        templates = sorted({r.template_id for r in readings if r.seed in seeds})
+        for arm, rows in by_arm.items():
+            scoped = [r for r in rows if r.seed in seeds]
+            for template in templates:
+                key = _template_key(template)
+                here = [r for r in scoped if r.template_id == template]
+                rest = [r for r in scoped if r.template_id != template]
+                values[_macro_name("acc", label, key, arm)] = _fixed(_accuracy(here), 4)
+                values[_macro_name("accWithout", label, key, arm)] = _fixed(_accuracy(rest), 4)
+                values[_macro_name("parseRate", label, key, arm)] = _fixed(_parse_rate(here), 3)
+                answers = [r.parsed for r in here if r.parsed is not None]
+                if answers:
+                    top = max(set(answers), key=answers.count)
+                    share = answers.count(top) / len(answers)
+                    values[_macro_name("constantShare", label, key, arm)] = _fixed(share, 3)
+                    values[_macro_name("parsedCount", label, key, arm)] = str(len(answers))
+                for answer, (failed, total) in key_selectivity(
+                    readings, seeds, template, arm
+                ).items():
+                    slug = _template_key(answer.replace("_", "-"))
+                    values[_macro_name("failOn", label, key, arm, slug)] = str(failed)
+                    values[_macro_name("countOn", label, key, arm, slug)] = str(total)
+        for template in templates:
+            key = _template_key(template)
+            values[_macro_name("gap", label, key, baseline)] = _signed(
+                _accuracy(
+                    [r for r in by_arm["gepa"] if r.seed in seeds and r.template_id == template]
+                )
+                - _accuracy(
+                    [r for r in by_arm[baseline] if r.seed in seeds and r.template_id == template]
+                ),
+                4,
+            )
+    return values
+
+
+def restricted_macros(
+    readings: Sequence[Reading], manifest: Mapping[str, Any], control: str
+) -> dict[str, str]:
+    """The registered comparisons re-run on items both arms could read.
+
+    Accuracy scores an unreadable answer wrong, so it sums decision quality and
+    format compliance, and the arms differ on the second by more than any effect
+    here. This holds format constant by keeping only the pairs where the arm and
+    the control both parsed.
+
+    It is not the corrected analysis and must not be reported as one: parse
+    failure is selective on the answer key (:func:`key_selectivity`), so the
+    restriction conditions on a post-treatment variable that correlates with the
+    outcome. Both readings are biased and this design cannot say which is nearer.
+    """
+    by_arm: dict[str, dict[tuple[int, str], Reading]] = defaultdict(dict)
+    for reading in readings:
+        by_arm[reading.arm][reading.item] = reading
+    values: dict[str, str] = {}
+    for item_set in manifest.get("request", {}).get("sets") or []:
+        label, seeds = item_set["label"], set(item_set["seeds"])
+        for arm in by_arm:
+            if arm == control:
+                continue
+            pairs = [
+                (by_arm[control][item], by_arm[arm][item])
+                for item in sorted(by_arm[control])
+                if item[0] in seeds
+                and item in by_arm[arm]
+                and by_arm[control][item].parsed is not None
+                and by_arm[arm][item].parsed is not None
+            ]
+            if not pairs:
+                continue
+            result = mcnemar_exact(
+                [_is_correct(c) for c, _ in pairs], [_is_correct(t) for _, t in pairs]
+            )
+            values[_macro_name("restricted", label, arm)] = _signed(result.proportion_difference, 4)
+            values[_macro_name("restrictedP", label, arm)] = _fixed(result.p_value, 4)
+            values[_macro_name("restrictedWins", label, arm)] = str(result.treatment_wins)
+            values[_macro_name("restrictedLosses", label, arm)] = str(result.control_wins)
+            values[_macro_name("restrictedPairs", label, arm)] = str(result.n_pairs)
+    return values
+
+
+def key_selectivity(
+    readings: Sequence[Reading], set_seeds: set[int], template_id: str, arm: str
+) -> dict[str, tuple[int, int]]:
+    """How an arm's parse failures split across the answers on one template.
+
+    Keyed by the expected answer, valued ``(failed, total)``. A failure rate
+    that differs sharply between the two answers is the finding: the arm is not
+    dropping items at random, it is dropping the ones whose correct answer it
+    will not give, and dropping those is not neutral to any comparison.
+
+    Reported per answer rather than as majority and minority, because these keys
+    are balanced by construction and ranking two equal counts would name the
+    halves by an accident of sort order.
+    """
+    rows = [
+        r for r in readings if r.arm == arm and r.seed in set_seeds and r.template_id == template_id
+    ]
+    return {
+        label: (
+            sum(r.expected == label and r.parsed is None for r in rows),
+            sum(r.expected == label for r in rows),
+        )
+        for label in sorted({r.expected for r in rows})
+    }
+
+
+def _template_key(template_id: str) -> str:
+    """A template id as a macro-name fragment: letters only, digits spelled out.
+
+    ``rel-001-vendor-outage`` becomes ``relZeroZeroOneVendorOutage``. LaTeX
+    control sequences take no digits or hyphens, and mangling silently would
+    collide ``rel-001`` with ``rel-010``.
+    """
+    digits = {
+        "0": "Zero",
+        "1": "One",
+        "2": "Two",
+        "3": "Three",
+        "4": "Four",
+        "5": "Five",
+        "6": "Six",
+        "7": "Seven",
+        "8": "Eight",
+        "9": "Nine",
+    }
+    head, *tail = template_id.split("-")
+    parts = [head] + [part[:1].upper() + part[1:] for part in tail]
+    return "".join("".join(digits.get(ch, ch) for ch in part) for part in parts)
+
+
+def _accuracy(readings: Sequence[Reading]) -> float:
+    """Share answered correctly, unparsed counted wrong, as the study scores it."""
+    return sum(_is_correct(r) for r in readings) / len(readings) if readings else 0.0
+
+
+def _parse_rate(readings: Sequence[Reading]) -> float:
+    """Share that produced a readable answer."""
+    return sum(r.parsed is not None for r in readings) / len(readings) if readings else 0.0
+
+
 def _is_correct(reading: Reading) -> int:
     """One when the arm answered this item correctly, zero otherwise.
 
@@ -533,7 +764,10 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     }
 
     sizes = body_tokens(readings, arms)
-    control = sizes[analysis["control"]]
+    # The ratio is against whichever arm the run registered as its control, so a
+    # run whose control is not among the arms gets sizes and no ratios rather
+    # than a ratio against something that was not the comparison.
+    control = sizes.get(str(analysis["control"]), 0)
     for arm, size in sizes.items():
         values[_macro_name("body", arm, "tokens")] = str(size)
         if size and control:
@@ -573,6 +807,10 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
         values[_macro_name("aa", "disagreements")] = str(aa["arm_only"] + aa["control_only"])
         values[_macro_name("aa", "p")] = _fixed(aa["p_value"], 4)
         values[_macro_name("aa", "accuracy")] = _fixed(aa["accuracy"], 4)
+        # Every call the run made. ``studyReadings`` counts the arms only,
+        # because ``load_readings`` drops the A/A pass, and quoting it as the
+        # run's size understates it by one arm.
+        values[_macro_name("study", "calls")] = str(len(readings) + int(aa["n_pairs"]))
 
     for arm, signal in signals.items():
         values[_macro_name("parseRate", arm)] = _fixed(signal.parse_rate, 3)
@@ -605,6 +843,9 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values[_macro_name("signal", "items")] = str(total_items - quiet_items)
     values[_macro_name("total", "items")] = str(total_items)
 
+    values.update(power_macros(analysis, manifest))
+    values.update(per_template_macros(readings, manifest, BASELINE_ARM))
+    values.update(restricted_macros(readings, manifest, analysis["control"]))
     values.update(placebo_macros(repo_root))
 
     return values

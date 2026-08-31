@@ -21,9 +21,13 @@ from decision_evals.figures import (
     SEED_SKILL,
     FigureError,
     Reading,
+    _template_key,
     arm_order,
+    body_tokens,
+    clustered_tests,
     collect,
     informedness_deltas,
+    key_selectivity,
     latest_run,
     load_readings,
     low_signal_templates,
@@ -49,6 +53,13 @@ ARMS = ("off", "on", "candidate")
 TEMPLATES = ("t-good", "t-quiet", "t-onesided")
 
 
+#: Prompt tokens each arm's document adds on top of the shared framing. The
+#: real records carry ``input_tokens`` and the delta against ``off`` is exactly
+#: constant per item, which is what ``body_tokens`` relies on and refuses
+#: without.
+BODY_TOKENS = {"off": 0, "on": 100, "candidate": 250}
+
+
 def _row(
     arm: str, template: str, index: int, expected: str, parsed: str | None
 ) -> dict[str, object]:
@@ -60,6 +71,9 @@ def _row(
         "expected": expected,
         "parsed": parsed,
         "parse_status": "parsed" if parsed is not None else "unparsed",
+        # The shared prefix varies by item, as it does in the real records; the
+        # arm's contribution is what is constant.
+        "input_tokens": 200 + index + BODY_TOKENS.get(arm, 0),
     }
 
 
@@ -134,7 +148,15 @@ def _write_run(root: Path, *, arms: tuple[str, ...] = ARMS, aa: bool = True) -> 
     (run_dir / "run.json").write_text(
         json.dumps(
             {
-                "request": {"target_model": "fixture/model"},
+                "request": {
+                    "target_model": "fixture/model",
+                    "alpha": 0.05,
+                    # One set over every fixture seed, so the clustered test and
+                    # the per-template macros have the shape they have on a real
+                    # run. Three templates, which is also the cluster count that
+                    # made the published unseen comparison undecidable.
+                    "sets": [{"label": "unseen", "seeds": [1000]}],
+                },
                 "arms": [{"label": arm} for arm in arms],
             }
         ),
@@ -195,8 +217,8 @@ class TestReadingRecords:
 
     def test_an_item_is_a_seed_and_an_id_together(self) -> None:
         """`item_id` does not encode the seed, so alone it collapses the seeds."""
-        first = Reading("off", "x#v0", "x", 1000, "a", "a")
-        second = Reading("off", "x#v0", "x", 1001, "a", "a")
+        first = Reading("off", "x#v0", "x", 1000, "a", "a", 200)
+        second = Reading("off", "x#v0", "x", 1001, "a", "a", 200)
         assert first.item != second.item
         assert first.item == (1000, "x#v0")
 
@@ -446,3 +468,72 @@ class TestPlaceboMatch:
         ):
             expected = len(delivered_body(REPO_ROOT / source).split())
             assert int(values[macro]) == expected, f"{macro} is not the delivered body"
+
+
+class TestBodyTokens:
+    """Document sizes, derived from the prompt lengths the records carry."""
+
+    def test_each_arm_is_its_delta_against_the_baseline(self, tmp_path: Path) -> None:
+        readings = load_readings(_write_run(tmp_path))
+        sizes = body_tokens(readings, ARMS)
+        assert sizes == {"off": 0, "on": 100, "candidate": 250}
+
+    def test_a_prefix_that_is_not_shared_is_refused(self, tmp_path: Path) -> None:
+        """A varying delta means the arms did not see the same framing.
+
+        Reporting a mean would turn that into a plausible number. The published
+        figures are exact because this refuses when they cannot be.
+        """
+        run_dir = _write_run(tmp_path)
+        path = run_dir / "records-on.jsonl"
+        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        rows[0]["input_tokens"] += 7
+        path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
+        with pytest.raises(FigureError, match="prompt prefix is not shared"):
+            body_tokens(load_readings(run_dir), ARMS)
+
+    def test_a_missing_baseline_is_refused(self, tmp_path: Path) -> None:
+        readings = load_readings(_write_run(tmp_path, arms=("on", "candidate")))
+        with pytest.raises(FigureError, match="no 'off' arm"):
+            body_tokens(readings, ("on", "candidate"))
+
+
+class TestClusteredTests:
+    """The registered comparisons re-run with the template as the unit."""
+
+    def test_it_reports_one_result_per_set_and_arm(self, tmp_path: Path) -> None:
+        run_dir = _write_run(tmp_path)
+        manifest = json.loads((run_dir / "run.json").read_text())
+        results = clustered_tests(load_readings(run_dir), manifest, "on")
+        assert set(results) == {("unseen", "off"), ("unseen", "candidate")}
+
+    def test_the_floor_comes_back_with_the_p(self, tmp_path: Path) -> None:
+        """Three templates cannot produce a p below 0.125, which is the finding."""
+        run_dir = _write_run(tmp_path)
+        manifest = json.loads((run_dir / "run.json").read_text())
+        results = clustered_tests(load_readings(run_dir), manifest, "on")
+        for result in results.values():
+            assert result.floor >= 2.0**-3
+
+    def test_a_manifest_with_no_sets_is_refused(self, tmp_path: Path) -> None:
+        run_dir = _write_run(tmp_path)
+        path = run_dir / "run.json"
+        manifest = json.loads(path.read_text())
+        del manifest["request"]["sets"]
+        with pytest.raises(FigureError, match="no item sets"):
+            clustered_tests(load_readings(run_dir), manifest, "on")
+
+
+class TestKeySelectivity:
+    """Whether an arm's unreadable answers land evenly across the key."""
+
+    def test_failures_are_reported_per_expected_answer(self, tmp_path: Path) -> None:
+        readings = load_readings(_write_run(tmp_path))
+        split = key_selectivity(readings, {1000}, "t-good", "off")
+        assert split["a"] == (1, 3)
+        assert split["b"] == (0, 2)
+
+    def test_a_template_key_survives_digits_and_hyphens(self) -> None:
+        """LaTeX takes no digits in a name, and mangling collides 001 with 010."""
+        assert _template_key("rel-001-vendor-outage") == "relZeroZeroOneVendorOutage"
+        assert _template_key("rel-010-loan-review") != _template_key("rel-001-loan-review")

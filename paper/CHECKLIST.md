@@ -92,11 +92,15 @@ Last worked through 2026-08-28, against the five-arm study at
       the effect, because the run's analysis did not compute one and
       `de figures` renders that file rather than reanalysing it. Closing this
       means re-running the analysis, not editing the paper
-- [ ] Underpowered comparisons reported as `UNTESTED` with their MDE, not as
-      nulls. `stats/power.py` computes an MDE and this study did not report
-      one. The nulls here are reported as failures to reject rather than as
-      nulls, which is the property the box is protecting, by prose rather than
-      by a number
+- [x] Underpowered comparisons reported as `UNTESTED` with their MDE, not as
+      nulls. This box read "`stats/power.py` computes an MDE and this study did
+      not report one" until 2026-08-31, and that was false about the
+      pre-registration: the MDE was computed before the first call, at 0.081
+      unseen and 0.075 seen, and recorded in the prediction entry. What was true
+      is that the paper never carried it. `limitations.tex` now reports both,
+      beside the largest effect observed, and beside the same figure recomputed
+      at the design effect `PROTOCOL.md` specifies. The nulls remain reported as
+      failures to reject rather than as nulls
 - [x] Statistical code covered at 100% line and branch, with property tests
       pinning McNemar against `scipy`. `stats/signal.py`, added 2026-08-28 for
       the decomposition, inherits that floor and meets it, as does

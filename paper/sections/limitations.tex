@@ -23,9 +23,32 @@ gives the full disclosure so the scaffold can be reproduced or blamed.
 templates, and templates rather than items are the independent unit. The cluster
 design effect cuts the effective count roughly in half, and
 \Cref{sec:signal} shows \NUM{\lowSignalItems} of those items carry no
-discriminative signal at all. Exact and resampling methods recover validity
-here; they do not recover power that was never purchased. Ten clusters is few,
-and every interval in \Cref{tab:signal} is as wide as that implies.
+discriminative signal at all. Ten clusters is few, and every interval in
+\Cref{tab:signal} is as wide as that implies.
+
+An earlier draft of this paragraph said exact and resampling methods recover
+validity here. For the intervals they do. For the registered primary they do
+not: McNemar's exactness is conditional on independent discordant pairs, and
+clustering breaks the conditioning rather than widening it.
+\Cref{sec:clustered} therefore reports a template-level test throughout, and the
+floor it carries is the sharper statement — the unseen comparisons could not
+have rejected at any outcome.
+
+\paragraph{The effect this design could see, and the effect it saw.} The
+pre-registration measured discordance at \NUM{\mdeDiscordance} on
+held-out items before the run and computed a minimum detectable effect from it:
+at $\alpha = \NUM{\mdeAlpha}$ and 80\% power, \NUM{\mdeUnseen} on the unseen set
+and \NUM{\mdeSeen} on the seen one. The largest effect anywhere in this study is
+\NUM{\effectSeenSkillopt}. \textbf{Nothing here was powered to detect what it
+found}, and no version of this paper should be read as evidence that the true
+effects are zero.
+
+That calculation assumed no clustering. At the design effect
+of \NUM{\protocolDesignEffect} our standing protocol specifies for a
+template-built corpus, the same arithmetic gives \NUM{\mdeClusteredUnseen} and
+\NUM{\mdeClusteredSeen}, which is roughly \NUM{\mdeRatio} times the largest
+observed effect. The registration computed the optimistic version and the paper
+did not carry either until now.
 
 \paragraph{Two engines, one configuration each, one search budget.} Each engine
 ran once, under a call guard, with an OpenAI-compatible reflection model. A

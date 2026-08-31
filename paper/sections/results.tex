@@ -64,11 +64,32 @@ and it is on the checklist as one.
 
 Three readings deserve to be stated rather than left in the table.
 
-\paragraph{GEPA's winner is worse than writing nothing.} It scores
-\NUM{\accUnseenGepa} on unseen scenarios against \NUM{\accUnseenOff} for an
-empty prompt and \NUM{\accUnseenPlacebo} for the placebo, losing
-\NUM{\lossesUnseenGepa} items to the placebo's \NUM{\winsUnseenGepa}. It is the
-only arm in the study below \texttt{off}. \Cref{sec:whatengines} says why.
+\paragraph{GEPA's winner is worse than writing nothing, on one template of
+three.} It scores \NUM{\accUnseenGepa} on unseen scenarios against
+\NUM{\accUnseenOff} for an empty prompt and \NUM{\accUnseenPlacebo} for the
+placebo, losing \NUM{\lossesUnseenGepa} items to the placebo's
+\NUM{\winsUnseenGepa}. It is the only arm in the study below \texttt{off}.
+
+That aggregate is one template. On \texttt{rel-001-vendor-outage} GEPA reads
+\NUM{\accUnseenRelZeroZeroOneVendorOutageGepa} against \texttt{off}'s
+\NUM{\accUnseenRelZeroZeroOneVendorOutageOff}, a gap of
+\NUM{\gapUnseenRelZeroZeroOneVendorOutageOff}. Drop that one template and GEPA
+becomes the \emph{best} unseen arm, at
+\NUM{\accWithoutUnseenRelZeroZeroOneVendorOutageGepa} against \texttt{off}'s
+\NUM{\accWithoutUnseenRelZeroZeroOneVendorOutageOff} and the placebo's
+\NUM{\accWithoutUnseenRelZeroZeroOneVendorOutagePlacebo}. With
+\NUM{\templatesUnseen} unseen templates a directional claim about the set is not
+available either way, which is what \Cref{sec:clustered} reports as a floor.
+
+The mechanism is visible in the same records. On \texttt{rel-001} GEPA gave one
+answer to a share \NUM{\constantShareUnseenRelZeroZeroOneVendorOutageGepa} of
+the \NUM{\parsedCountUnseenRelZeroZeroOneVendorOutageGepa} items it parsed at
+all, against a balanced key: sensitivity 1, specificity 0, and an informedness
+of exactly zero, which is one of two such cells in the study and is already
+printed in \Cref{tab:signal}. Its parse rate there is
+\NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
+\NUM{\parseRateUnseenRelZeroZeroOneVendorOutagePlacebo} for the placebo on the
+same items. \Cref{sec:whatengines} describes the body.
 
 \paragraph{The hand-written skill also fails to beat the placebo.} The
 \texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
@@ -80,6 +101,41 @@ set against \NUM{\accSeenOff} for an empty prompt, which is the largest movement
 in \Cref{tab:seen}. A structured document of the right length and shape, whose
 content carries no method, moved this model. Any evaluation without such an arm
 would have attributed that movement to whatever text it happened to be testing.
+
+\subsection{An off-key answer is scored as a wrong answer, and it is not random}
+\label{sec:parsefail}
+
+Every arm's unreadable answers are scored wrong. That is the study's convention
+and it is defensible, but it makes accuracy a sum of decision quality and format
+compliance, and the arms differ on the second by more than any effect here.
+
+Two failure modes exist and they are near-disjoint by arm. \texttt{off} and
+\texttt{gepa} fail almost entirely by naming an option not on the menu;
+\texttt{on}, \texttt{placebo} and \texttt{skillopt} fail almost entirely by
+producing no answer line at all. Any document in the system prompt, real or
+placebo, converts off-key answers into missing ones.
+
+\textbf{Parse failure is selective on the answer key.} The key on
+\texttt{rel-001-vendor-outage} is balanced,
+\NUM{\countOnUnseenRelZeroZeroOneVendorOutageGepaWait} items each way. GEPA
+fails to produce a readable answer on
+\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaWait} of the items whose correct
+answer is \texttt{wait} and on
+\NUM{\failOnUnseenRelZeroZeroOneVendorOutageGepaFileSlaClaim} of the items whose
+answer is \texttt{file\_sla\_claim}. When the right answer is to hold back, it
+neither holds back nor abstains: it answers off-key. The same shape appears for
+\texttt{off} on \texttt{rel-003-oncall-escalate}.
+
+That has a consequence for any repair. Restricting to items both arms parsed
+removes exactly the items an arm systematically fails, so it conditions on a
+post-treatment variable that correlates with the key. We report the restriction
+because it moves things — SkillOpt's unseen advantage over the placebo becomes
+\NUM{\restrictedUnseenSkillopt} on a
+\NUM{\restrictedWinsUnseenSkillopt}--\NUM{\restrictedLossesUnseenSkillopt} split,
+and GEPA's seen comparison goes from $p = \NUM{\pSeenGepa}$ to
+$\NUM{\restrictedPSeenGepa}$ — and we do not offer it as the corrected analysis.
+Both readings are biased, in opposite directions, and this design cannot say
+which is nearer.
 
 \subsection{The same comparisons at the template level}
 \label{sec:clustered}
