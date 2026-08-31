@@ -112,6 +112,25 @@ Last worked through 2026-08-28, against the five-arm study at
       `TestBenjaminiHochberg.test_rejections_agree_with_the_adjusted_values`)
 - [ ] Coverage simulation: 1,000 simulated clustered datasets with known Δ,
       empirical 95% CI coverage in [0.93, 0.97]
+- [x] **One unit of analysis, named before the run and used after it.** Added
+      2026-08-31 because this study did not have one. `method.tex` paired on
+      items and `limitations.tex` said templates were the independent unit, and
+      nothing reconciled the two until the run was over. Both units are now
+      reported side by side (`sec:clustered`), and the correction is stated in
+      the limitations rather than quietly applied
+- [x] **Attainable p-floor computed from the cluster count before the run.** A
+      one-sided exact test over k clusters cannot return a p below 2⁻ᵏ. Added
+      2026-08-31 after the arithmetic showed three of this study's six
+      registered primaries could not have rejected at any outcome: the unseen
+      set is three templates and floors at 0.1250. `de figures` generates
+      `\floorUnseen` and `\floorSeen` so no future run can omit them
+- [x] **The estimator answers the question the prose asks.** Added 2026-08-31.
+      Three independent agents recomputed every macro in this paper and all
+      three matched; none checked whether accuracy on a balanced key contains
+      the quantity the signal section claimed to extract from it. It does not:
+      accuracy is (J+1)/2 there and response bias contributes nothing. A number
+      can be correct and still answer nothing, and no gate in this repository
+      reads for that
 
 ## Data
 
