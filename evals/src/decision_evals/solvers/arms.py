@@ -16,7 +16,7 @@ as a model comparison, so the figure justifies holding the menu constant and
 nothing else; it is not compared against our own effects. The menu lives in
 :func:`render_item`, which is arm-independent, so it cannot vary by construction.
 
-**The placebo is matched on tokens and structure.** A skill that beats ``off``
+**The placebo is matched on word count and structure.** A skill that beats ``off``
 but not ``placebo`` is a length effect. :func:`check_placebo_match` refuses a
 placebo that is not the right size, because an unmatched placebo is worse than
 none: it looks like a control while silently failing to control for the thing it
@@ -63,7 +63,7 @@ ARM_PURPOSE: Final[dict[ArmName, str]] = {
     "off": "The skill is absent. What the model does unaided, on the same items.",
     "on": "The skill is present and is the only thing in the prompt.",
     "placebo": (
-        "A document matched to the skill on tokens and structure, so that a gain "
+        "A document matched to the skill on word count and structure, so that a gain "
         "over `off` can be told apart from a gain from any document that size."
     ),
     "cot": (

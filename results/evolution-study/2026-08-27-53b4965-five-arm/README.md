@@ -6,7 +6,7 @@ a label-set version: unseen `a9889750c762`, seen `bb95bfe63c1b`, both recorded
 in `run.json`.
 
 Prediction: [`notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md`](../../../notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md),
-first committed at `0b379af`, with an amendment appended mid-run after 143 of
+first committed at `e882eff`, with an amendment appended mid-run after 143 of
 4,368 calls and before any comparison was read.
 
 Write-up: [`notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md`](../../../notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md)
@@ -24,14 +24,14 @@ same study code, and the directory carries the second because that is the one a
 reader can check the prediction against. The prediction's first commit,
 `e882eff`, is an ancestor of `53b4965`.
 
-Five arms at a matched token budget, all through `solvers/arms.build_arm`, told
+Five arms at a matched word count, all through `solvers/arms.build_arm`, told
 apart by `candidate_sha`:
 
 | arm | body |
 | --- | --- |
 | `off` | none |
 | `on` | `skills/decision-making/SKILL.md` |
-| `placebo` | `skills/decision-making/placebo.md`, token- and structure-matched |
+| `placebo` | `skills/decision-making/placebo.md`, word-count- and structure-matched |
 | `gepa` | frozen winner of `results/evolution/2026-08-27-1b24c9d-gepa-seven-templates` |
 | `skillopt` | frozen winner of `results/evolution/2026-08-27-5267516-skillopt-seven-templates` |
 
@@ -80,13 +80,16 @@ at +0.041 on the seen set, raw p = 0.034, which Holm takes to 0.102.
 - **A/A.** The placebo was scored a second time over all 728 items into
   `records-aa.jsonl`, a separate checkpoint so resume could not skip the pass
   and report perfect agreement by construction. **728 of 728 items came back
-  identical**, both passes at 0.7308, p = 1.000. Every difference between arms
-  in the tables above is a difference the prompts caused.
+  identical**, both passes at 0.7308, p = 1.000. That bounds the venue drift
+  this design is exposed to; it does not license reading every difference in
+  the tables above as prompt-caused, because the pass repeats one arm and the
+  arms ran in blocks.
 - **Falsifier.** `off` returns 0.702 over the 728 items, so a non-zero score was
   reachable in every arm and the scorer reads the same object in each.
-- **Residency.** Pinned at 60 minutes and recorded per pass rather than
-  asserted, after a probe found two items answering deterministically to whether
-  the model had just been loaded.
+- **Residency.** Pinned at 60 minutes, sent on every request rather than
+  assumed, after a probe found two items answering deterministically to whether
+  the model had just been loaded. It is not written into `run.json`, so a
+  replicator reads it from the provider source.
 
 ## What this does not claim
 
@@ -94,12 +97,14 @@ at +0.041 on the seen set, raw p = 0.034, which Holm takes to 0.102.
 Nothing here moves `SCORECARD.md`. The result is scoped to one 1.7B model under
 these controls.
 
-That limit was measured rather than assumed: eight of the eleven reachable
-NVIDIA Build models registered in `arenas.py` solve the corpus with an empty
+That limit was measured rather than assumed: every one of the seven NVIDIA
+Build models in `nvbuild-ceiling-screen.json` solves the corpus with an empty
 prompt, the weakest at 0.933 against 0.702 for this study's target, so no
-screen-tier venue can host this study as the corpus currently stands. The three
-not measured are larger than models already answering at 1.000, which is an
-expectation rather than a reading.
+screen-tier venue can host this study as the corpus currently stands. An eighth model returned inside
+budget and is recorded in the notebook entry but not in the file; we report the
+file's count, because a record edited to match a write-up is not a record. The
+three registered models that never returned are larger than models already
+answering at 1.000, which is an expectation rather than a reading.
 [`notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md`](../../../notebook/2026-08-27-the-verdict-tier-is-reachable-and-the-corpus-is-not-hard-enough-for-it.md)
 
 The design also has a confound the write-up states in full: `placebo` helps on
@@ -122,3 +127,25 @@ belongs to is its `seed`, and `run.json` lists the seeds for each.
 
 Every number in the tables above recomputes from these files through
 `decision_evals.evolution.study.analyse`.
+
+## Corrections
+
+Appended 2026-08-31, during the pre-submission audit of `paper/`. The text above
+was corrected in place and each change is recorded here, because a provenance
+artifact that quietly disagrees with the records beside it is worse than one
+that says where it was wrong.
+
+- The prediction's first commit read `0b379af`, which is not a valid object.
+  It is `e882eff`, which this file already gave correctly sixteen lines later.
+- Three surfaces said the placebo is matched on **tokens**. Nothing in this
+  repository has ever counted tokens: `check_placebo_match` compares word counts
+  within 15%. `docs/PROTOCOL.md` carries the same correction.
+- The A/A paragraph said every difference between arms is a difference the
+  prompts caused. The A/A bounds the venue confound and does not remove it: the
+  pass repeats one arm, and the arms ran in blocks.
+- Residency was described as "recorded per pass". It is sent on every request
+  and is not in `run.json`. `docs/HARNESS_DISCLOSURE.md` carries the same
+  correction.
+- The screen was described as eight of eleven reachable models.
+  `nvbuild-ceiling-screen.json` holds seven rows; the eighth is in the notebook
+  entry and not in the committed file.

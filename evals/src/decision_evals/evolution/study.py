@@ -5,7 +5,7 @@ and the shape it takes comes from what the surveyed engines do not do. They
 report one number per candidate on the split they optimised against. Here the
 items come from seeds no search could reach, every arm answers the *same* items
 so the comparison is paired, and the arm that matters is not "no skill" but a
-document matched to the skill on tokens and structure. A gain over nothing is
+document matched to the skill on word count and structure. A gain over nothing is
 not evidence that a skill helped; it is evidence that a paragraph helped.
 
 Two item sets rather than one, and this is the part the 2026-08-27 searches

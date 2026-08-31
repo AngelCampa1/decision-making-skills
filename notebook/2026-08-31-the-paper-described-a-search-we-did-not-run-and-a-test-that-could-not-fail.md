@@ -427,3 +427,55 @@ worth stating plainly: this paper's numbers have been right the whole time, and
 its sentences about those numbers have been wrong 75 times. The defects live in
 prose written to fix earlier prose, in the surface nobody has opened yet, and in
 any sentence quantified over a set.
+
+## Cycle eight: the provenance artifact was the last never-audited surface
+
+Thirteen findings. The cycle opened two surfaces no previous one had: the
+published run's own `README.md`, which the paper points readers at as its
+provenance artifact, and the arm-purpose strings in `solvers/arms.py` that
+`de sync` renders into the site.
+
+**Four claims about our own provenance were false, and all four were universals
+over a set.** `main.tex` listed the corpus-ceiling probes among the classes of
+number that cannot be generated, and said "Both sections say so". The ceiling
+*screen* wrote `nvbuild-ceiling-screen.json`, which is committed, which
+`figures.py` reads, and which supplies six macros the section uses — and
+`ceiling.tex` says so in terms. `results.tex` said "Every figure here is read
+off the two search runs" in a subsection using thirteen generated macros.
+`ceiling.tex` said everything after the screen wrote no records, which is wrong
+for the admission-rule subsection: I recomputed all ten of its figures from
+`records-off.jsonl` and every one reproduces, `rel-009` at skew +0.0187 and
+J +0.0283 against the printed +0.019 and +0.028. And `appendix_prompts.tex`
+said a replicator can recompute "all three" hashes one sentence before saying
+"Both hashes above reproduce"; `off` is empty and its `candidate_sha` is null.
+
+**"Matched on tokens" survived on six surfaces after the correction landed.**
+`docs/PROTOCOL.md` has carried the dated correction since this morning —
+nothing here has ever counted tokens, `check_placebo_match` compares word counts
+within 15%. It reached three paper surfaces and none of: `arms.py` twice,
+`study.py`, `docs/METHODS.md` twice, the run README twice. One of those is
+`ARM_PURPOSE`, so `de sync` was publishing the false version to the site from a
+source the `generated regions` gate certifies as matching. The gate was right
+and the source was wrong, which is the failure mode a generated region has.
+
+**The run README carried a git SHA that does not exist.** `0b379af` is not a
+valid object; the prediction's first commit is `e882eff`, which the same file
+gives correctly sixteen lines down. The provenance gate reads the commit graph
+and not this prose, so nothing could see it. The README also asserted the exact
+causal claim the paper spends a paragraph refusing — "every difference between
+arms in the tables above is a difference the prompts caused" — and repeated
+the residency wording `HARNESS_DISCLOSURE.md` was corrected for three days ago,
+and counted eight screened models beside a committed file holding seven.
+
+Corrections to the README went in as edits plus a dated corrections block at the
+foot, rather than a silent rewrite: it is a dated record, and one that quietly
+stops disagreeing with itself has lost the thing that made it worth keeping.
+
+## Eight cycles
+
+88 defects, and the fourth independent re-derivation of the arithmetic again
+found nothing. Cycle eight also enumerated every remaining superlative in the
+paper and every one of them checked out, which is the first time that pattern
+has come back clean. The pattern that has not exhausted itself is the other one:
+there was still one more surface nobody had opened, and it was the artifact the
+paper cites as its evidence that the numbers are real.

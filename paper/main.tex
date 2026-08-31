@@ -93,11 +93,14 @@
 %      size). These are settings, not results. Two of them are in run.json and
 %      could be generated; they are typed because a setting a replicator needs
 %      to read in prose is not a figure that can go stale against the data.
-%   3. The corpus-ceiling probes of section \ref{sec:ceiling} and the two
-%      evolution searches read off in section \ref{sec:whatengines}. The probes
-%      ran through sub-agents and the searches wrote into a gitignored directory
-%      that no longer exists, so neither wrote records to generate from and the
-%      source for both is a dated notebook entry. Both sections say so.
+%   3. The sub-agent probes of section \ref{sec:ceiling} and the two evolution
+%      searches read off in section \ref{sec:whatengines}. The probes ran
+%      outside the checkpointed runner and the searches wrote into a gitignored
+%      directory that no longer exists, so neither wrote records to generate
+%      from and the source for both is a dated notebook entry. Both sections
+%      say so. The ceiling *screen* is not in this class: it wrote
+%      nvbuild-ceiling-screen.json, which is committed and which `de figures`
+%      reads, so those six figures are macros like any other.
 %      Section \ref{sec:whatengines} also names the numbers it withdrew when a
 %      2026-08-31 audit found they came from a search whose winners were never
 %      tested.
@@ -126,8 +129,8 @@ Two open-source engines, GEPA and Microsoft's SkillOpt, automatically rewrite
 the markdown ``skill'' files that agent tools load, and both accept an edit on a
 single uncontrolled score improvement. We evolved a decision-making skill with
 each engine on one corpus of computable-ground-truth decisions, against one
-target model, \NUM{\studyModel}, inside one harness. We then tested five arms
-against each other on a holdout minted after both winners were frozen: no skill, the hand-written seed skill, a
+target model, \NUM{\studyModel}, inside one harness. We then ran five arms over
+a holdout minted after both winners were frozen: no skill, the hand-written seed skill, a
 structure-matched placebo, and the two evolved winners. Comparisons are McNemar
 exact against the placebo with Holm correction across a pre-registered family of
 \NUM{\familySize}, on \NUM{\unseenItems} and \NUM{\seenItems} items analysed separately.

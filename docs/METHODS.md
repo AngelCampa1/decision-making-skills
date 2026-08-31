@@ -204,13 +204,13 @@ question and is not part of the comparison:
 | --- | --- |
 | `off` | The skill is absent. What the model does unaided, on the same items. |
 | `on` | The skill is present and is the only thing in the prompt. |
-| `placebo` | A document matched to the skill on tokens and structure, so that a gain over `off` can be told apart from a gain from any document that size. |
+| `placebo` | A document matched to the skill on word count and structure, so that a gain over `off` can be told apart from a gain from any document that size. |
 | `cot` | The plainest step-by-step instruction. The tripwire for whether the skill is an expensive way to say think. |
 | `in_situ` | The skill delivered the way an install delivers it, alongside whatever else is in the prompt. Ecological validity, not effect size. |
 | `candidate` | A machine-written body, delivered exactly as `on` delivers a human one. The arm an evolution engine's output is scored in, so that what changed between them is the author. |
 <!-- /de:generated -->
 
-A placebo is token- and structure-matched filler, and the match is enforced
+A placebo is word-count- and structure-matched filler, and the match is enforced
 rather than eyeballed: `check_placebo_match` refuses a placebo of the wrong size
 or shape, because an unmatched placebo is worse than none: it looks like a
 control while silently failing to control.
@@ -535,7 +535,7 @@ is short, and keeping that answer legible is the job.
 
 **Amended 2026-08-27. One run now measures the downstream question.** The
 five-arm evolution study ran the shipped skill as its `on` arm over 728 items
-against an empty prompt and a token- and structure-matched placebo, with an A/A
+against an empty prompt and a word-count- and structure-matched placebo, with an A/A
 control that came back identical on all 728. It scored below the placebo on both
 item sets, and neither difference is significant. It carries no verdict, because
 its target model is `qwen3:1.7b` and `arenas.py` gives a `dev` run none, so
