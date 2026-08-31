@@ -115,14 +115,15 @@ that pull in different directions.
 
 The first is aggregation. On a balanced key accuracy over the parsed rows is
 $(J+1)/2$, so a template at $J = 0$ reads exactly 0.5000 and is obvious the
-moment anyone looks at it per template. Almost nobody does. Pooled over ten
-templates the same corpus returns \NUM{\accSeenOff} for an empty prompt, which
-looks like a corpus that works.
+moment anyone looks at it per template. Almost nobody does. Pooled over the
+\NUM{\templatesSeen} seen templates, two of which sit at chance, the same corpus
+returns \NUM{\accSeenOff} for an empty prompt, which looks like a corpus that
+works.
 
 The second is that the metric this study reports is not the parsed one. Counting
 an unreadable answer as wrong breaks the identity, and it breaks the ordering
 with it. \texttt{rel-003-oncall-escalate} discriminates perfectly for
-\texttt{off}, $J = 1.000$ on the
+\texttt{off} in \Cref{tab:templates}, on the
 \NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items it answered, and
 reports \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}.
 \texttt{rel-006-refund-request} barely discriminates at all and reports
@@ -148,4 +149,6 @@ $[0.35, 0.75]$. That criterion admits a one-sided template, because
 one-sidedness lands squarely inside the band. It has been extended with two
 more: skew near zero, so the model is answering from the item, and informedness
 below one, so there is something left for an arm to gain. Both are computed from
-the calibration run the first criterion already requires.
+the calibration run the first criterion already requires. Neither closes the
+case, and \Cref{sec:ceiling} gives the template of ours that passes all three
+and still measures nothing.

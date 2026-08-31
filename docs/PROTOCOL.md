@@ -275,13 +275,26 @@ control arm only so they cannot bias the treatment-minus-control difference:
    something left for an arm to gain.
 
 **Criteria 4 and 5 are new in Version 2, and criterion 3 is why.** A model
-answering one option nine times in ten scores about 0.63 on a balanced
-two-option key, which lands inside [0.35, 0.75] and reads as difficulty.
-`hrd-002-shipping-escalation` did exactly that: 0.722 on a 30B, reached with
-sensitivity 1.000 against specificity between 0.167 and 0.250. Criterion 3
-cannot tell that apart from a template the model is genuinely finding hard, and
-an arm that merely nudged the model toward the other option would have gained
-about thirty points without deciding any better.
+answering one option nine times in ten scores about 0.63 on a two-option key
+whose base rate is near two thirds, which lands inside [0.35, 0.75] and reads as
+difficulty. `hrd-002-shipping-escalation` did exactly that: 0.722 on a 30B,
+reached with sensitivity 1.000 against specificity between 0.167 and 0.250.
+Criterion 3 cannot tell that apart from a template the model is genuinely
+finding hard.
+
+Corrected 2026-08-31. This paragraph said the key was balanced and that an arm
+nudging the model toward the other option would have gained about thirty points.
+On a balanced key accuracy is `(J+1)/2`, so a pure bias shift gains nothing at
+all and the 0.63 needs the unbalanced base rate now stated. The audit that found
+it is in
+[`../notebook/2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md`](../notebook/2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md).
+
+Neither criterion closes the case on its own. `rel-009-flight-rebook` passes all
+three on the control arm — accuracy 0.4911, skew +0.019, informedness +0.028 —
+and is one of the three templates the five-arm study found measures nothing. A
+coin has zero skew and zero informedness too. Criterion 5 bounds discrimination
+above and not below, and a lower bound is the obvious repair; nothing has been
+run against one, so it is not written here as a rule.
 
 Both are computed by `stats/signal.py` over the control arm's own records, so
 they cost no calls beyond the calibration run criterion 3 already needs. No gate

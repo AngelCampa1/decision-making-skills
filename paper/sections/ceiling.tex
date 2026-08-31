@@ -49,7 +49,9 @@ $(J + 1)/2$, which is exactly the two balanced measurements, 0.583 and 0.625.
 The third ran on a realised 18/17 split, where the identity gives 0.618 against
 the 0.629 observed. A nudge toward the other option would move both error rates
 and leave $J$ where it is, so it would gain nothing. An earlier draft said it
-would gain roughly thirty points, which is worth zero on a balanced key. The template is not hard and it is not biased in a way any arm could
+would gain roughly thirty points, which is worth zero on a balanced key.
+\texttt{docs/PROTOCOL.md} still carries that sentence and is corrected by this
+one. The template is not hard and it is not biased in a way any arm could
 exploit. It is barely discriminating, which is the reason to retire it.
 
 Two more templates were built to diagnose that one, and both diagnoses were
@@ -94,10 +96,21 @@ all computable from the control-arm records a calibration run already produces:
   \item informedness below one, so discrimination is left to gain.
 \end{itemize}
 
-\textbf{No template we have passes all three.} Seven published templates and six
-of the nine hard ones have signal and no room, on a large model. The one-sided
-ones have room and no signal. The three templates of \Cref{sec:signal} have
-neither on the small model.
+Seven published templates and six of the nine hard ones have signal and no
+room, on a large model. The one-sided ones have room and no signal.
+
+\textbf{And the three criteria do not close the case, which we found by turning
+them on our own corpus.} \texttt{rel-009-flight-rebook} passes all three on the
+control arm: reported accuracy \NUM{\accUnseenRelZeroZeroNineFlightRebookOff},
+inside the band and far below any ceiling; skew of $+0.019$, which is as near
+zero as anything we have measured; and informedness of $+0.028$, which is
+certainly below one. It is also one of the three templates \Cref{sec:signal}
+marks as measuring nothing. A coin has zero skew and zero informedness too. The
+third criterion bounds discrimination above and not below, and a lower bound is
+the obvious repair, but we have not run a corpus against one and will not
+present an untested rule as a result. What this section delivers is a criterion
+set that is necessary, demonstrably not sufficient, and better than the accuracy
+band it replaces.
 
 A fourth criterion is untested and we state it as a hypothesis rather than a
 rule: both options should be acts, so neither is the default a model reaches for

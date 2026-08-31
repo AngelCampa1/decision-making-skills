@@ -23,8 +23,8 @@ reproduced or blamed.
 \paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items, ten
 templates, and templates rather than items are the independent unit. The cluster
 design effect cuts the effective count roughly in half, and
-\Cref{sec:signal} shows \NUM{\lowSignalItems} of those items carry no
-discriminative signal at all. Ten clusters is few, and every interval in
+\Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on templates below
+$J = \NUM{\lowSignalThreshold}$ in every arm. Ten clusters is few, and every interval in
 \Cref{tab:signal} is as wide as that implies.
 
 An earlier draft of this paragraph said exact and resampling methods recover
@@ -48,8 +48,8 @@ effects are zero.
 That calculation assumed no clustering. At the design effect
 of \NUM{\protocolDesignEffect} our standing protocol specifies for a
 template-built corpus, the same arithmetic gives \NUM{\mdeClusteredUnseen} and
-\NUM{\mdeClusteredSeen}, which is roughly \NUM{\mdeRatio} times the largest
-observed effect. The registration computed the optimistic version and the paper
+\NUM{\mdeClusteredSeen}, the smaller of which is still \NUM{\mdeRatio} times
+the largest observed gain. The registration computed the optimistic version and the paper
 did not carry either until now.
 
 \paragraph{Two engines, one configuration each, one search budget.} Each engine

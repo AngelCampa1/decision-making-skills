@@ -91,10 +91,14 @@
 %      quote they came from.
 %   2. Configuration constants (context window, token cap, seed floor, model
 %      size). These are settings, not results.
-%   3. The corpus-ceiling probes of section \ref{sec:ceiling} and the flip-rate
-%      probe of section \ref{sec:results}. Those ran through sub-agents rather
-%      than the checkpointed runner, so they wrote no records to generate from,
-%      and their source is a dated notebook entry. That section says so.
+%   3. The corpus-ceiling probes of section \ref{sec:ceiling} and the two
+%      evolution searches read off in section \ref{sec:whatengines}. The probes
+%      ran through sub-agents and the searches wrote into a gitignored directory
+%      that no longer exists, so neither wrote records to generate from and the
+%      source for both is a dated notebook entry. Both sections say so.
+%      Section \ref{sec:whatengines} also names the numbers it withdrew when a
+%      2026-08-31 audit found they came from a search whose winners were never
+%      tested.
 \IfFileExists{generated/macros.tex}{\input{generated/macros}}{}
 \IfFileExists{generated/tables.tex}{\input{generated/tables}}{}
 
@@ -123,7 +127,7 @@ each engine, then tested five arms against each other on a holdout minted after
 both winners were frozen: no skill, the hand-written seed skill, a
 structure-matched placebo, and the two evolved winners. Comparisons are McNemar
 exact against the placebo with Holm correction across a pre-registered family of
-three, on \NUM{\unseenItems} and \NUM{\seenItems} items analysed separately.
+\NUM{\familySize}, on \NUM{\unseenItems} and \NUM{\seenItems} items analysed separately.
 
 \textbf{No arm rejects on either item set.} The best showing is SkillOpt at
 $\NUM{\effectSeenSkillopt}$ on trained scenarios, raw $p = \NUM{\pSeenSkillopt}$,

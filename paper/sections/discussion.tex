@@ -35,18 +35,30 @@ and a probe caught it before the study rather than after. \textbf{Split by
 template, or the evaluation rewards the failure it exists to detect.}
 
 Whether the transcription paid is a question this design cannot answer, which
-is worth separating from the lesson. Both engines lifted constants from
-\texttt{rel-007-capacity-scale} and \texttt{rel-008-contract-renew}, and both
-are training templates, so neither appears in the unseen set at all. On the two
-templates the constants concern, GEPA reads
+is worth separating from the lesson. GEPA lifted constants from two training
+templates, \texttt{rel-007-capacity-scale} and
+\texttt{rel-008-contract-renew}; SkillOpt lifted from the second alone. Neither
+appears in the unseen set, so no unseen number can speak to what they cost.
+
+Inside the seen set the two engines point opposite ways. GEPA reads
 \NUM{\accSeenRelZeroZeroEightContractRenewGepa} and
-\NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} against an empty prompt's
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleGepa} on the templates its constants
+came from, against an empty prompt's
 \NUM{\accSeenRelZeroZeroEightContractRenewOff} and
-\NUM{\accSeenRelZeroZeroSevenCapacityScaleOff}: at or above it, not below.
-GEPA's unseen deficit is on \texttt{rel-001-vendor-outage}, which none of the
-constants touch. So the memorisation neither visibly cost nor visibly bought
-accuracy here, and a corpus with a fixed threshold would have rewarded exactly
-the same behaviour while this one merely tolerated it.
+\NUM{\accSeenRelZeroZeroSevenCapacityScaleOff}, and its unseen deficit is on a
+template none of them touch. SkillOpt reads
+\NUM{\accSeenRelZeroZeroEightContractRenewSkillopt} on
+\texttt{rel-008-contract-renew}, and that single template carries 8 of the 16
+net items behind its headline \NUM{\effectSeenSkillopt}
+(\Cref{sec:whatengines}).
+
+So half the largest gain in this study sits on the one template the winning
+engine memorised a threshold for. We are not entitled to call that the cause: it
+is one template, one engine, an unregistered comparison, and
+\texttt{rel-005-security-patch} carries a larger net with no constant lifted
+from it at all. What we are entitled to say is that a corpus with a fixed
+threshold would have rewarded the same behaviour outright, this one rewarded it
+on the template it could, and no design we ran can separate the two.
 
 \subsection{The placebo moved the model, which is the more useful finding}
 
