@@ -124,3 +124,40 @@ The lesson for the register: three independent agents recomputed every macro in
 this paper and all three confirmed the arithmetic. None of them checked whether
 the estimator the arithmetic implements answers the question the prose says it
 answers. A number can be correctly computed and still be an answer to nothing.
+
+## Appended: the repair to the algebra needed a repair
+
+A second adversarial cycle read the fixes rather than the original, and its most
+useful finding was that the fix above inverted its own premise. Saying accuracy
+is `(J+1)/2` and then that a chance template is hard to spot cannot both be
+true: at `J = 0` accuracy reads exactly 0.5000, the floor of the scale and the
+most diagnostic number on it.
+
+Two things save the claim and both are in the records. Pooling, first: ten
+templates with three at chance still return 0.7168 for an empty prompt, and a
+corpus-level number does not say which three. And second, the metric this study
+publishes is not the parsed one. Scoring an unreadable answer as wrong breaks
+the identity and takes the ordering with it. `rel-003-oncall-escalate`
+discriminates perfectly for `off`, `J = 1.000` on the 58.9% of items it
+answered, and reports 0.5893. `rel-006-refund-request` barely discriminates and
+reports 0.6071. A template that is always right when it answers ranks below one
+that is mostly guessing.
+
+The other bad repair was the memorisation claim. `utilisation_floor` belongs to
+`rel-008-contract-renew`; `headroom_pct`, 2818 and 2032 belong to
+`rel-007-capacity-scale`. Both are training templates, so neither appears in the
+unseen set and no unseen number can speak to what the constants cost. On the two
+templates concerned GEPA reads 0.8750 and 1.0000 against an empty prompt's
+0.7679 and 1.0000. The sentence claiming memorisation cost GEPA accuracy was
+written to be self-critical and was not true.
+
+Six smaller ones went with them, including a p-floor whose stated reason was
+wrong: the observed sign vector does not have to maximise the statistic, it only
+has to be one of the `2^k` and therefore inside its own tail. For SkillOpt on the
+seen set it sums +16 against an attainable +34, and the test still returns
+18/64.
+
+The pattern worth carrying: each cycle's errors were in what the previous cycle
+had just written. Three cycles in, the defect rate in untouched prose is zero
+and the defect rate in freshly repaired prose has been the highest in the paper
+both times.
