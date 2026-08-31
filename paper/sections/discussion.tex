@@ -58,12 +58,14 @@ in a way that could plausibly matter: an evolved skill that fixes a formatting
 pathology is worth little on a single forced choice and could be worth a great
 deal across a long trajectory.
 
-The one gain we found that exceeded measurement error points that way. Half of
-the seed skill's failures were generations that ran to the token cap without
-concluding, and both winners took those to zero. That is a real effect, larger
-than the noise, and it is a formatting fix. On a single-answer benchmark it is
-worth a few points. In an agent loop it might be worth much more, and nothing
-here measures that.
+The largest thing this run moved points that way, though not where we first
+looked for it. Nearly every unreadable answer from the seed skill and the
+placebo is a generation that ran to the output cap without concluding, and the
+placebo produces the most of any arm (\Cref{sec:parsefail}). On a single forced
+choice that is worth a few points and reads as noise. In an agent loop a model
+that will not stop is a different kind of failure, and nothing here measures it.
+An earlier draft credited the winners with fixing this; one does and one does
+not, and the arm that provokes it hardest is a document with no content.
 
 \subsection{What a verdict is worth}
 

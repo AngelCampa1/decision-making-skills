@@ -115,6 +115,20 @@ Two failure modes exist and they are near-disjoint by arm. \texttt{off} and
 producing no answer line at all. Any document in the system prompt, real or
 placebo, converts off-key answers into missing ones.
 
+The missing ones have a mechanism, and it is not a property of the document's
+content. A generation that stops exactly at the \NUM{\outputCap}-token output
+cap did not choose to stop, and counting those per arm gives \NUM{\atCapOff} for
+an empty prompt, \NUM{\atCapOn} for the seed skill and \NUM{\atCapPlacebo} for
+the placebo, against \NUM{\unparsedOff}, \NUM{\unparsedOn} and
+\NUM{\unparsedPlacebo} unreadable answers in total. \textbf{The arm with the most
+runaway generations in this study is the one whose document says nothing.}
+Putting text in the system prompt makes a 1.7B model talk itself out of
+concluding, and how much text matters more than what it says. An earlier draft
+of this paper reported the opposite: that runaways were a seed skill pathology
+both evolved winners fixed. GEPA's winner does suppress them, to
+\NUM{\atCapGepa}, while carrying the most unreadable answers of any arm at
+\NUM{\unparsedGepa}; SkillOpt's does not, at \NUM{\atCapSkillopt}.
+
 \textbf{Parse failure is selective on the answer key.} The key on
 \texttt{rel-001-vendor-outage} is balanced,
 \NUM{\countOnUnseenRelZeroZeroOneVendorOutageGepaWait} items each way. GEPA
@@ -207,50 +221,52 @@ the scorer reads the same object in each.
 The scores above are the answer to the registered question. What the winners
 contain is a separate finding and does not depend on a score.
 
-\textbf{Both engines wrote the answer key into the skill body, by different
-routes and onto near-disjoint parts of the corpus.}
+\textbf{Both of the winners we tested had written training-item constants into
+the skill body, and both engines accepted them on evidence too thin to have
+noticed.}
 
-GEPA's winner stopped being a decision skill. It is titled \emph{Travel-Connection
-Decision Assistant Instruction Set} and opens by declaring itself a decision aid
-for airline connectivity questions. Its domain section is one training
-template and nothing else, down to naming that template's two option strings,
-and it closes with a worked example whose arithmetic is wrong. That single-template
-specialisation scored 20 of 21 across ten templates during the search, which the
-domain content cannot explain; the format sections earned it. On the unseen set
-it is the worst arm in the study.
+GEPA's winner carries a rules table asserting renewal at 61\% utilisation and
+capacity headroom at 37\%, and a worked example built on the numbers 2818 and
+2032. Every one of those is a value from a single training item. The catch is
+that \texttt{utilisation\_floor} is drawn fresh per item from the integer range
+60 to 95 and stated in each item's Background, so a body carrying 61\% asserts
+a threshold its own prompt contradicts on almost every item it meets. That arm
+scores \NUM{\accUnseenGepa} on the unseen set against \NUM{\accUnseenOff} for an
+empty prompt, and it is the only arm in the study below no document at all.
 
-SkillOpt's winner is the seed body with its structure intact, plus two appended
-sections. One is headed, in the engine's own words, \emph{Examples from the
-training data}, and lists five scenarios with their values and their verdicts. We
-checked every number in it against the 70 items the search was given, and all of
-them appear there. A second appended section names three more templates,
-bringing it to eight of ten.
+SkillOpt's winner carries 63\% for the same template with the arithmetic
+$213/300$ beside it. Two engines, one training pool, two different constants,
+one rule.
 
-Their union is the corpus. Neither engine was asked to memorise, neither
-mechanism is a bug in the engines as implemented, and both are what an
-accept-if-strictly-better ratchet with no held-out check will find.
+The generalisation is weaker than the pair suggests and worth stating at its
+real strength. Six frozen winners exist across this project's searches. Three
+carry constants lifted from single training items and three carry none, so this
+is a common outcome of an accept-if-strictly-better ratchet with no held-out
+check, not a certain one. Neither engine was asked to memorise and neither
+mechanism is a defect in the engines as implemented.
 
-\paragraph{One real gain, smaller than advertised.} The scorer distinguishes a
-wrong answer from an unreadable one, and that split survives where the totals do
-not. Half the seed skill's validation failures were generations that ran to the
-full token cap without ever emitting an answer line: a 1.7B model talking itself
-out of concluding. Both winners took those to zero. That is the one part of
-either engine's gain larger than the measurement error, and it is a formatting
-fix rather than a reasoning one.
+\paragraph{What each engine accepted its winner on.} SkillOpt scored all nine
+of its candidates on all 21 validation items: seed 18, winner 21. GEPA scored
+its generation-zero candidate on 21 items and every candidate after it on three.
+Its \texttt{winner.json} closes at score $1.000$ over $n = 3$, with
+\texttt{winner\_source = engine}: the search ran to completion, so GEPA's own
+acceptance rule chose, and it chose on three items answered correctly. GEPA's
+$1.000$ and its seed's $0.762$ are therefore not the same measurement and cannot
+be differenced. This is not a defect in our harness either. A
+\texttt{\_best\_validated} path exists and picks a body scored on the whole pool,
+and it is used only when a search is budget-stopped. An engine's acceptance rule
+is part of what the engine is, and this study tests what an engine hands you.
+What GEPA handed us is a document selected on three items that then lost to an
+empty prompt on \NUM{\unseenItems}.
 
-\paragraph{Why the search scores could not have settled anything.} Both runs
-contain repeats nobody planned, because resumption re-asked some candidates the
-same item. Each is a controlled replicate: same body, same item, same model,
-same run. \textbf{Of 49 repeated pairs, 7 disagreed}, a per-item flip rate of
-14.3\% with a Wilson 95\% interval of [7.1\%, 26.7\%]. That puts the standard
-deviation of a 21-item validation score at about 1.2 items. Both winners are
-three items above their seed. The gains each engine accepted on are inside the
-noise of the score it accepted them on, and neither engine measured that noise.
-
-Every figure in this subsection, and every figure above it that describes what
-the searches did, is read off the two search runs, whose directories were never
-committed and no longer exist (\Cref{sec:limitations}). They are typed from the
-dated notebook entries that recorded them rather than generated from records,
-and the reader should weigh them against the five-arm numbers accordingly. The
-tables above, and everything in \Cref{sec:signal}, come from committed records
-through \texttt{de figures}.
+\paragraph{Provenance, because this subsection is the weak one.} Every figure
+here is read off the two search runs, whose directories were gitignored and no
+longer exist (\Cref{sec:limitations}). They are typed from the dated notebook
+entries that recorded them, not generated from committed records, and a reader
+should weigh them accordingly. An earlier draft of this subsection described a
+different pair of winners: the ones from an earlier search over all ten
+templates, which the pre-registration had already ruled out as arms. Its
+travel-scenario specialisation, its ``20 of 21'', its ``eight of ten'' and its
+14.3\% validation flip rate all belong to that search and are withdrawn here.
+The tables above, and everything in \Cref{sec:signal}, come from committed
+records through \texttt{de figures} and were never affected.

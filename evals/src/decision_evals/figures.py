@@ -104,6 +104,7 @@ class Reading:
     expected: str
     parsed: str | None
     input_tokens: int
+    output_tokens: int
 
     @property
     def item(self) -> tuple[int, str]:
@@ -229,6 +230,7 @@ def load_readings(run_dir: Path) -> list[Reading]:
                     expected=row["expected"],
                     parsed=row["parsed"] if row["parse_status"] == "parsed" else None,
                     input_tokens=int(row["input_tokens"]),
+                    output_tokens=int(row["output_tokens"]),
                 )
             )
     if not readings:
@@ -512,6 +514,33 @@ def key_selectivity(
         )
         for label in sorted({r.expected for r in rows})
     }
+
+
+def at_cap_macros(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str, str]:
+    """Per arm, how many generations ran to the output cap without concluding.
+
+    The cap is read off the records as the largest ``output_tokens`` any arm
+    reached, because the run manifest does not carry it and a hard-coded 4096
+    would silently report zero the day the cap changes. A generation that stops
+    exactly at the ceiling did not choose to stop.
+
+    This exists because the paper twice claimed runaway generations were a seed
+    skill pathology that both evolved winners fixed. In this run the placebo
+    produces the most of them, so whatever is happening is a property of putting
+    a document in the prompt and not of what the document says.
+    """
+    if not readings:
+        raise FigureError("no readings to count generations over")
+    cap = max(r.output_tokens for r in readings)
+    values = {_macro_name("outputCap"): str(cap)}
+    for arm in arms:
+        rows = [r for r in readings if r.arm == arm]
+        if not rows:
+            continue
+        at_cap = sum(r.output_tokens >= cap for r in rows)
+        values[_macro_name("atCap", arm)] = str(at_cap)
+        values[_macro_name("unparsed", arm)] = str(sum(r.parsed is None for r in rows))
+    return values
 
 
 def _template_key(template_id: str) -> str:
@@ -843,6 +872,7 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values[_macro_name("signal", "items")] = str(total_items - quiet_items)
     values[_macro_name("total", "items")] = str(total_items)
 
+    values.update(at_cap_macros(readings, arms))
     values.update(power_macros(analysis, manifest))
     values.update(per_template_macros(readings, manifest, BASELINE_ARM))
     values.update(restricted_macros(readings, manifest, analysis["control"]))

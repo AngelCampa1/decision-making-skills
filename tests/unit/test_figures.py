@@ -23,6 +23,7 @@ from decision_evals.figures import (
     Reading,
     _template_key,
     arm_order,
+    at_cap_macros,
     body_tokens,
     clustered_tests,
     collect,
@@ -59,6 +60,9 @@ TEMPLATES = ("t-good", "t-quiet", "t-onesided")
 #: without.
 BODY_TOKENS = {"off": 0, "on": 100, "candidate": 250}
 
+#: The output ceiling the fixture's unanswered readings stop at.
+OUTPUT_CAP = 4096
+
 
 def _row(
     arm: str, template: str, index: int, expected: str, parsed: str | None
@@ -74,6 +78,9 @@ def _row(
         # The shared prefix varies by item, as it does in the real records; the
         # arm's contribution is what is constant.
         "input_tokens": 200 + index + BODY_TOKENS.get(arm, 0),
+        # Below the cap except for the one reading per arm that has no answer,
+        # which is how a runaway generation looks in the real records.
+        "output_tokens": OUTPUT_CAP if parsed is None else 100 + index,
     }
 
 
@@ -217,8 +224,8 @@ class TestReadingRecords:
 
     def test_an_item_is_a_seed_and_an_id_together(self) -> None:
         """`item_id` does not encode the seed, so alone it collapses the seeds."""
-        first = Reading("off", "x#v0", "x", 1000, "a", "a", 200)
-        second = Reading("off", "x#v0", "x", 1001, "a", "a", 200)
+        first = Reading("off", "x#v0", "x", 1000, "a", "a", 200, 100)
+        second = Reading("off", "x#v0", "x", 1001, "a", "a", 200, 100)
         assert first.item != second.item
         assert first.item == (1000, "x#v0")
 
@@ -537,3 +544,27 @@ class TestKeySelectivity:
         """LaTeX takes no digits in a name, and mangling collides 001 with 010."""
         assert _template_key("rel-001-vendor-outage") == "relZeroZeroOneVendorOutage"
         assert _template_key("rel-010-loan-review") != _template_key("rel-001-loan-review")
+
+
+class TestAtCap:
+    """Generations that stopped because they hit the ceiling, not because they finished."""
+
+    def test_the_cap_is_read_off_the_records(self, tmp_path: Path) -> None:
+        """Hard-coding 4096 would report zero silently the day the cap moves."""
+        values = at_cap_macros(load_readings(_write_run(tmp_path)), ARMS)
+        assert values["outputCap"] == str(OUTPUT_CAP)
+
+    def test_each_arm_carries_its_count_and_its_unparsed_total(self, tmp_path: Path) -> None:
+        values = at_cap_macros(load_readings(_write_run(tmp_path)), ARMS)
+        for arm in ARMS:
+            assert values[f"atCap{arm.capitalize()}"] == "1"
+            assert values[f"unparsed{arm.capitalize()}"] == "1"
+
+    def test_an_arm_with_no_readings_is_skipped_not_zeroed(self, tmp_path: Path) -> None:
+        """A zero for an arm that did not run reads as a measurement of it."""
+        values = at_cap_macros(load_readings(_write_run(tmp_path)), (*ARMS, "absent"))
+        assert "atCapAbsent" not in values
+
+    def test_no_readings_is_refused(self) -> None:
+        with pytest.raises(FigureError, match="no readings"):
+            at_cap_macros([], ARMS)

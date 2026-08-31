@@ -8,8 +8,8 @@
 \paragraph{One model, and a small one.} The target is \NUM{\studyModel}. The
 choice was forced: every larger model we could reach solves the corpus with an
 empty prompt (\Cref{sec:ceiling}). A 1.7B model fails in ways a frontier model
-does not, and one of the two effects we found larger than noise, runaway
-generations that never conclude, is characteristic of small models. Our result
+does not, and the clearest signal in this run, generations that never conclude
+(\Cref{sec:parsefail}), is characteristic of small models. Our result
 does not travel upward without re-measurement, and Prompting
 Inversion~\citep{promptinginversion2025} gives a specific reason to expect it
 might invert.
@@ -54,11 +54,14 @@ did not carry either until now.
 \paragraph{Two engines, one configuration each, one search budget.} Each engine
 ran once, under a call guard, with an OpenAI-compatible reflection model. A
 different reflector, a larger budget, or a different stopping point could
-produce a different winner. SkillOpt's search stopped itself after nine steps
-and its winner arrived at step one; GEPA's was stopped by the call guard before
-it declared one, so its winner was chosen by our code from its lineage rather
-than by the engine. Both facts are in the run records, and neither is the
-engines' fault.
+produce a different winner. SkillOpt scored nine candidates on the full
+validation pool and took the one that answered all 21. GEPA's search ran to
+completion and its own acceptance rule declared a winner scored on three items
+(\Cref{sec:whatengines}). An earlier draft of this paragraph said our code had
+picked GEPA's winner from its lineage after a budget stop. That is what happened
+in an earlier search whose winner we did not test, and it is not what the record
+for the tested run says. Neither is the engines' fault, and the second is
+arguably the point.
 
 \paragraph{The two item sets differ in more than exposure.} The placebo helps on
 the seen set and does nothing on the unseen set, and the placebo has no training
