@@ -43,10 +43,13 @@ absence is what makes most skill evaluations uninterpretable.
     against \NUM{\skillSections}. It is \emph{not} matched against the evolved
     winners, whose lengths the engines chose, and
     \Cref{sec:length-confound} gives the delivered sizes and what they cost.
-  \item \textbf{The option menu is held constant across arms.} Removing option
-    menus moved trajectory accuracy by 14 to 40 points in
-    AgentAtlas~\citep{agentatlas2026}, which is larger than any effect we
-    expected to measure.
+  \item \textbf{The option menu is held constant across arms.} Removing the
+    explicit label menu moved trajectory accuracy by 14 to 40 points in
+    AgentAtlas v1~\citep{agentatlas2026}. We cite v1 because v2 withdrew the
+    number and replaced it with ``mapped label agreement can change
+    substantially'', alongside a caution against reading its synthetic study as
+    a model comparison. So the figure justifies holding the menu constant and
+    nothing else; we do not compare it to our own effects.
 \end{enumerate}
 
 All five arms are built by one function, \texttt{solvers.arms.build\_arm}, and

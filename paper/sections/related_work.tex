@@ -62,13 +62,19 @@ the evolved winners, and \Cref{sec:length-confound} gives the sizes.
 
 \subsection{Harness variance, and what a verdict is worth}
 
-Harness variance exceeds model variance by roughly
-$7.8\times$~\citep{harnessbench2026}, with ranking reversals across harnesses on
-the same models. A result measured inside one scaffold is a claim about that
-scaffold as much as about the model, and almost nobody reports the scaffold in
-enough detail to check. We give the full ETCSOVG
-disclosure~\citep{harnessdisclosure2026} in \Cref{sec:appendix-harness}, and we
-do not assume our result transfers to a different agent harness.
+\citet{harnessdisclosure2026} run three frontier models across three harness
+configurations on a stratified subset of SWE-bench Verified and report an
+aggregate harness-to-model variance ratio of $7.8\times$, with the ranking of
+models reversing in six of nine comparisons. One $3\times3$ design on one task
+distribution: we read the direction as transferring and the ratio as not.
+\citet{harnessbench2026} reach the qualitative half of the same conclusion over
+5{,}194 trajectories on 106 sandboxed tasks, where completion, process quality
+and failure behaviour all vary substantially across model-harness pairings. A
+result measured inside one scaffold is a claim about that scaffold as much as
+about the model, and almost nobody reports the scaffold in enough detail to
+check. We give the full ETCSOVG disclosure~\citep{harnessdisclosure2026} in
+\Cref{sec:appendix-harness}, and we do not assume our result transfers to a
+different agent harness.
 
 Prompting Inversion~\citep{promptinginversion2025} sharpens this for our case
 specifically: scaffolding tuned against a weak model can become a handicap on a
