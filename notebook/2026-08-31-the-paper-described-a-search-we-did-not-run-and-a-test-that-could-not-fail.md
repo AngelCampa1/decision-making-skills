@@ -317,3 +317,56 @@ always one more of them than you think.
 
 And a superlative is a claim over a set. This paper contained five of them that
 nobody had checked against the set, and four were false.
+
+## Appended: cycle six, and the reasoning chain that was never recorded
+
+Sixteen. The worst is not a number, it is a claim about what this study
+published.
+
+**The records do not carry the reasoning chain, and the paper said three times
+that they do.** `RunRecord` has no field for it. The provider parses
+`reasoning`/`thinking` off the response and `runner.py` writes
+`response=result.text` only, so `grep -c reasoning records-*.jsonl` returns
+zero. The size of the gap is in the records themselves: for `on`, `placebo` and
+`skillopt` the median generation bills between 564 and 716 output tokens against
+a recorded response of roughly five tokens' worth of text. About 99% of what
+those three arms generated was paid for and is gone.
+
+The harness appendix said reasoning "is kept, not discarded". The prompts
+appendix said full transcripts are published. `CHECKLIST.md` ticked the box.
+That box is open now, all three passages say what the records hold, and the
+paper names `biderman2024lessons` as the standard it misses rather than the one
+it meets. No gate reads for this and none could: the claim is about a field's
+absence, and absence is what a renderer cannot notice.
+
+**Four more false claims.** `method.tex` said the `screen` arena may emit a
+verdict; `arenas.py` sets `emits_verdict=False`, and the scope claim this whole
+paper rests on depends on that being right. Two files said GEPA's winner is the
+only arm below an empty prompt; on the unseen set the skill we wrote is below it
+too, 0.6786 against 0.6845. `method.tex` said the item-level and template-level
+tests disagree in one direction with the clustered test more conservative; two
+of six go the other way, one by 0.35.
+
+**And the skew superlative was still there**, because I applied half of cycle
+five's fix: I removed the clause about the placebo arm and left the false
+superlative it was attached to. `rel-003` and `rel-007` both read exactly 0.000.
+
+**ETCSOVG is ours.** `refs.bib` has said so since 2026-08-13 — "the ETCSOVG
+expansion is ours, not the paper's" — and two sections plus
+`docs/RELATED_WORK.md` credited the checklist to the paper we cite for the
+requirement. The correction was in the repository the whole time, in the file
+whose job is to hold it.
+
+**Eight `CHECKLIST.md` boxes had never been audited and seven were wrong.** The
+build-environment box named a Windows machine's toolchain beside this machine's
+page count. The A/A repeated `placebo`, not the arm `PROTOCOL.md` calls the
+control. A test described as deliberately removed is present and is the
+replacement for the one that was. And the scope box claimed the abstract states
+the model, which it did not until this cycle added it.
+
+## Six cycles
+
+63 defects, still no arithmetic error. The distribution has not moved: every
+cycle's findings sit in prose the previous cycle wrote, plus one surface nobody
+had opened. Cycle six's contribution to the pattern is the sharpest yet — a fix
+applied to half its target, where the half left behind was the false part.
