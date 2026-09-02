@@ -26,8 +26,7 @@ with nothing for a procedure to fix
 committed screen file solved the reliability corpus with an empty prompt at
 0.933 to 1.000
 ([the run README](../results/evolution-study/2026-08-27-53b4965-five-arm/README.md)).
-Pre-registered predictions bet against the ceiling on four separate occasions
-and lost every time.
+Four registered predictions bet against the ceiling, and every one lost.
 
 Along the way the harness caught its own instrument, its own venue and its own
 gate being wrong, in that order. The first trigger corpus was
@@ -50,7 +49,7 @@ primaries could never have rejected. The bodies of both winners are lost.
 
 The one finding that repeats across every corpus version is small and about
 firing, which is upstream of helping: the opener sentence of the skill's
-description costs false positives in every run that removed it, and its recall
+description costs false positives in every run that varied it, and its recall
 contribution has never separated from zero in a paired test.
 
 What the harness now refuses, as a result of each of those, is the part of this
@@ -156,11 +155,13 @@ each the reason a refusal now exists.
 
 **A ruler scored 89%.** The first trigger corpus had positives at a median of
 18 words and negatives at 8. The rule "fire if the turn is 18 words or longer"
-scored 0.890 against 0.956 for the best model arm measured at the time, about
-six points of room. Re-scored on the version 2 key, where the best arms read
-0.9795 and 0.9863, every result on that corpus was competing for about
-<!-- de:fact headroom-points -->nine points<!-- /de:fact --> over a ruler
-([`STATUS.md`](STATUS.md), "a second reading of that through-line"). The
+scores 0.890 on the version 2 key, against 0.9795 and 0.9863 for the best arms
+measured on that key, so every result on that corpus was competing for about
+<!-- de:fact headroom-points -->nine points<!-- /de:fact --> over a ruler.
+The figure was first published as six points against 0.956, which set the
+version 2 ruler beside a version 1 arm that was not the best at either
+version; the correction is appended in
+[`STATUS.md`](STATUS.md), "a second reading of that through-line". The
 rebuilt corpus holds the best model-free shortcut, a stump over eight trivial
 features, at <!-- de:fact word-trick-ceiling -->0.7054<!-- /de:fact --> against
 a majority baseline of 0.6667.
@@ -217,8 +218,9 @@ an hour apart agree on 0 of 40, and the register in `runner.py` records the two
 cross-invocation serial pairs available at 0 of 40 and 7 of 40, so serial is
 not a way to make the backend reproducible either, and no two runs on it may be
 compared by text. On
-the parsed answer the arms sit at 0.850 and 0.825 against 0.875, which at
-n = 40 separates nothing. The refusal in
+the parsed answer, the quantity that reaches a published number, the two
+concurrent passes agree with serial on 0.850 and 0.825 of items against 0.875
+between two serial invocations, which at n = 40 separates nothing. The refusal in
 [`runner.py`](../evals/src/decision_evals/runner.py) is therefore a register of
 venue prefixes, `CONCURRENCY_UNSAFE`, and it shrinks by measurement.
 [`2026-08-19-concurrency-changes-every-answer-on-a-batching-server.md`](../notebook/2026-08-19-concurrency-changes-every-answer-on-a-batching-server.md);
@@ -234,9 +236,9 @@ and inside a search every validation pass is followed by a reflector call that
 takes longer than that, so a search sampled both states in an order nothing
 chose. `keep_alive: 60m` now goes out with each call
 ([`providers/openai_compatible.py`](../evals/src/decision_evals/providers/openai_compatible.py)),
-and the five-arm study's A/A pass returning 728 of 728 identical is the
-evidence that it closed the gap. The value is still not written into
-`run.json`; the run README says so.
+and the five-arm study's A/A pass, the check that entry planned for the pin,
+came back 728 of 728 identical on one arm run in a block. The value is still
+not written into `run.json`; the run README says so.
 [`2026-08-27-the-venue-is-deterministic-and-one-of-its-inputs-was-not-in-the-record.md`](../notebook/2026-08-27-the-venue-is-deterministic-and-one-of-its-inputs-was-not-in-the-record.md).
 
 ## 4. A coverage floor is not a wiring check
@@ -304,9 +306,9 @@ one-sided sign-flip test over three clusters cannot return a p below
 outcome. `cluster_sign_flip` in
 [`stats/cluster.py`](../evals/src/decision_evals/stats/cluster.py) now reports
 that floor as a property of the design. The pre-registered minimum detectable
-effect was 0.081 unseen and 0.075 seen at a design effect of 1.0; at the 2.0
-[`PROTOCOL.md`](PROTOCOL.md) specifies it is 0.1137 and 0.1053, about 2.6 times
-the largest gain observed.
+effect was 0.081 unseen and 0.075 seen at a design effect of 1.0; at the
+design effect of about 2.0 that [`PROTOCOL.md`](PROTOCOL.md) specifies it is
+0.1137 and 0.1053, about 2.6 times the largest gain observed.
 [`2026-08-27-prediction-the-five-arm-study-before-the-first-call.md`](../notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md);
 [`2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md`](../notebook/2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md).
 
@@ -328,16 +330,16 @@ content-hash search of 40,936 files on the machine found neither body. Their
 SHA-256 hashes are on every record of the arms they drove, so each arm is
 provably one fixed body that nobody can obtain
 ([`STATUS.md`](STATUS.md), appended 2026-08-28). A re-run with the winners'
-bodies committed and seven or more unseen templates was started on 2026-09-02.
-It has no entry in the record yet and no results, and nothing here predicts
-them.
+bodies committed and seven or more unseen templates is being prepared. Its
+prediction entry is not yet committed, no study call has been made, and
+nothing here predicts its result.
 
 ## 6. The opener sentence
 
 The one finding that recurs. The skill's description opens with a trigger
 sentence full of illustrative quotes, "help me think this through", "should I
 take it", and it is the part of the description that reads as the most
-important. In every run that removed it, the opener cost false positives and
+important. In every run that varied it, the opener cost false positives and
 its recall contribution never separated from zero.
 
 | run | key | what the opener did |
@@ -413,9 +415,11 @@ Each refusal below is the shape of an incident above, and
 Two things are reusable whatever becomes of the skill.
 
 The placebo arm. SkillOpt's winner took 21 of 21 validation items against the
-seed skill's 18, GEPA's engine accepted a winner on a score the lineage
-recorded over three items, and neither cleared a control matched on word count
-and structure on either item set at the registered bar. The placebo has no
+seed skill's 18; the first score the lineage recorded for GEPA's winner was
+over three items, GEPA's own return rule as cited evaluates on the validation
+pool, and the records that would say which score it accepted on are gone.
+Neither winner cleared a control matched on word count and structure on either
+item set at the registered bar. The placebo has no
 training history, so where it moved between the two item sets it showed that
 "held out" and "different scenarios" were confounded in the design, from inside
 the design. Run one.

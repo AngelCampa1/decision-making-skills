@@ -23,23 +23,24 @@ the record of what it found: its own decision corpus could not fail.
   authored here with an answer key was solved by the model without the skill,
   the scalar scenarios at Youden's J = 1.000 over 99 blind readings
   ([`docs/STATUS.md`](docs/STATUS.md)).
-- **The optimisers memorised, and one accepted on three items.** Two automated
+- **The optimisers memorised, and neither beat a placebo.** Two automated
   skill-evolution engines each produced a winner carrying constants lifted from
-  single training items, one engine accepted its winner on a score the lineage
-  recorded over three items, and neither beat a word-count-matched placebo over
+  single training items, the first score the lineage recorded for one winner
+  was over three items, and neither beat a word-count-matched placebo over
   728 items after Holm
   ([the run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md)).
 - **The harness caught <!-- de:fact broken-measurements -->eleven<!-- /de:fact -->
-  of its own measurements broken before they became results**, and each one
-  is now a refusal that runs on every commit
+  of its own measurements broken before they became results**, and the guard
+  each one forced is recorded beside it
   ([`docs/STATUS.md`](docs/STATUS.md)).
 
 [**The write-up**](docs/WHAT_WE_FOUND.md) ·
 [Architecture](docs/ARCHITECTURE.md) ·
 [v1.0.0 release](https://github.com/AngelCampa1/decision-making-skills/releases/tag/v1.0.0)
 
-Twenty runs are published under these rules, raw transcripts included, indexed
-in [`docs/RUN_INDEX.md`](docs/RUN_INDEX.md). No skill here carries a verdict.
+Twenty runs are published, raw transcripts included, indexed in
+[`docs/RUN_INDEX.md`](docs/RUN_INDEX.md); two predate the provenance rule and
+are baselined there. No skill here carries a verdict.
 The skills ship as experimental, the finding is the product, and
 [`SCORECARD.md`](SCORECARD.md) says what would change that.
 
@@ -52,7 +53,7 @@ happened here. The dated record behind each row is a section of
 | What broke | What now refuses it |
 | --- | --- |
 | One turn moved from the positives to the negatives and recall rose 3 to 5 points on four of the five arms on disk, with no call re-made ([record](docs/WHY_THESE_RULES.md#the-answer-key-move-that-earned-five-points)) | `label_versions_comparable` refuses a comparison across answer-key versions, and every record carries `set_version` |
-| A module with a 100% coverage floor was called by nothing, three times ([record](docs/WHY_THESE_RULES.md#why-a-coverage-floor-is-not-a-wiring-check)) | The `integrity wiring` step refuses a floored module no entry point can reach |
+| A module with a 100% coverage floor was called by nothing, twice, and a tested function nothing invoked made it three ([record](docs/WHY_THESE_RULES.md#why-a-coverage-floor-is-not-a-wiring-check)) | The `integrity wiring` step refuses a floored module no entry point can reach |
 | Answer key v5 was 78% adjudicated for a day and the gate stayed green ([record](docs/WHY_THESE_RULES.md#why-an-unadjudicated-answer-key-is-refused)) | The `label adjudication` step refuses a trigger set carrying an item with no three-judge blind record |
 | The README told readers to run two commands that did not exist and advertised a directory that did not either ([record](docs/WHY_THESE_RULES.md#why-documentation-is-gated-mechanically)) | The `documentation` step refuses a command, path or component a document names and the repository does not have |
 | `main`'s tip imported a module that was never committed, and every local gate passed because the file was on disk ([record](docs/WHY_THESE_RULES.md#why-the-gate-runs-in-ci-too)) | The same gate runs in CI on a clean checkout |
@@ -152,7 +153,7 @@ sentence that refuses to compare answer-key version 4 against version 6.
 
 ## The skill
 
-One skill, `decision-making`, eight markdown files and no runtime. Its router
+One skill, `decision-making`, nine markdown files and no runtime. Its router
 asks what is *hard* about the choice and reads one of six procedures:
 [`ledger.md`](skills/decision-making/ledger.md) when a pile of context arrived
 and it is unclear which fact decides it, [`fit.md`](skills/decision-making/fit.md)
