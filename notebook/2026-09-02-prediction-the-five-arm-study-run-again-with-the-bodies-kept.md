@@ -311,3 +311,13 @@ minibatch. This run keeps the lineage and the search log, so the score the
 engine returned its winner on and the denominator it was computed over can be
 read rather than inferred. It is recorded as a check, and the answer goes in
 the write-up whichever way it falls.
+
+---
+
+## Amendment, before the first call: the training seed
+
+The searches section above says 70 training items from seeds 0 and 1. That
+was the CLI's default seed list, not the registration. The pool is seed 0
+alone, 70 items, and the validation pool is seed 1000, 21 items, the same two
+numbers Phase 2 and the first run used. `--train-seeds 0 --limit 70
+--val-seeds 1000 --val-limit 21`, recorded in each search's `run.json`.
