@@ -560,7 +560,7 @@ being tracked.\
 [tool.decision-evals.reviewed]
 "AGENTS.md" = "d019bc1"
 "CONTRIBUTING.md" = "d019bc1"
-"README.md" = "1e67a7f"
+"README.md" = "1589826"
 "SCORECARD.md" = "1e67a7f"
 "docs/ACCUMULATION_VENUE.md" = "291548d"
 "docs/ARCHITECTURE.md" = "d019bc1"
@@ -581,6 +581,7 @@ being tracked.\
 "docs/STATUS.md" = "1e67a7f"
 "docs/TAILORING_CORPUS_SPEC.md" = "2ada1a3"
 "docs/VOICE.md" = "1e67a7f"
+"docs/WHAT_WE_FOUND.md" = "1589826"
 "docs/WHY_THESE_RULES.md" = "1e67a7f"
 "docs/programme/part-1-what-is-already-known.md" = "2ada1a3"
 "docs/programme/part-2-the-product.md" = "650dcbc"
