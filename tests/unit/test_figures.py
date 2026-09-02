@@ -844,3 +844,28 @@ class TestRescoring:
         # And the registered figures are untouched by the re-read.
         assert values["accUnseenGepa"] == "0.6280"
         assert values["rescoredAccUnseenGepa"] == "0.7440"
+
+
+def test_a_per_winner_placebo_is_its_own_arm_and_not_the_shared_one(tmp_path: Path) -> None:
+    """`records-placebo-gepa.jsonl` is read as the arm `placebo-gepa`. The
+    2026-09-02 design gives each winner a placebo of its own, and a reader that
+    matched on the prefix would fold it into the shared control."""
+    run_dir = _write_run(tmp_path, arms=("placebo", "placebo-gepa"))
+    readings = load_readings(run_dir)
+    assert {reading.arm for reading in readings} == {"placebo", "placebo-gepa"}
+    assert sum(1 for r in readings if r.arm == "placebo") == len(TEMPLATES) * 4 + 1
+
+
+def test_a_run_with_a_placebo_per_winner_is_refused_rather_than_mispaired(
+    tmp_path: Path,
+) -> None:
+    """Every figure pairs every arm against the one `control`. On a run whose
+    winner was registered against its own placebo, the rescored and clustered
+    macros would print the winner against the shared placebo under a heading
+    saying "registered", and `write_figures` picks the latest run by name."""
+    run_dir = _write_run(tmp_path)
+    analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
+    analysis["controls"] = {"candidate": "placebo-candidate"}
+    (run_dir / "analysis.json").write_text(json.dumps(analysis), encoding="utf-8")
+    with pytest.raises(FigureError, match="candidate vs placebo-candidate"):
+        read_study(run_dir)

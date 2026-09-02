@@ -25,18 +25,22 @@ from decision_evals.evolution.study import (
     ItemSet,
     PassAgreement,
     SetPasses,
+    SetResult,
     StudyError,
     StudyRequest,
     analyse,
     analyse_passes,
+    analyse_secondary,
     by_arm,
     compare,
+    family_of,
     freeze,
     load_pass,
     records_path,
     run_study,
 )
 from decision_evals.evolution.venues import MOCK_MODEL, mock_call, venue_for
+from decision_evals.figures import load_readings
 from decision_evals.runner import RunRecord, load_records
 
 GEPA_BODY = "# GEPA winner\n\nDo the thing well."
@@ -676,3 +680,344 @@ class TestResumingUnderAnotherDesign:
         with pytest.raises(StudyError):
             self._run(tmp_path, self._request(chunk=3))
         assert (result.paths.root / "run.json").read_bytes() == before
+
+
+# ---------------------------------------------------------------------------
+# The 2026-09-02 registration: a subset, an explicit holdout, a placebo per winner.
+# ---------------------------------------------------------------------------
+
+ON_BODY = "# Seed skill\n\nThink it through first."
+SHARED_PLACEBO = "# Placebo\n\nWords."
+#: Seven words, one heading, no fence: the shape of `GEPA_BODY`.
+GEPA_PLACEBO = "# Placebo gepa\n\nSay the thing again."
+#: Seven words, one heading, no fence: the shape of `SKILLOPT_BODY`.
+SKILLOPT_PLACEBO = "# Placebo skillopt\n\nSay it differently now."
+#: Four words against seven: outside the 15% the matcher allows.
+SHORT_PLACEBO = "# Placebo gepa\n\nWords."
+
+MATCHED_ARMS = (
+    Arm(label="off", kind="off"),
+    Arm(label="on", kind="on", body=ON_BODY),
+    Arm(label="placebo", kind="placebo", body=SHARED_PLACEBO, source="placebo.md"),
+    Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="placebo-gepa"),
+    Arm(label="skillopt", kind="candidate", body=SKILLOPT_BODY, control="placebo-skillopt"),
+    Arm(label="placebo-gepa", kind="placebo", body=GEPA_PLACEBO, source="gepa-placebo.md"),
+    Arm(
+        label="placebo-skillopt",
+        kind="placebo",
+        body=SKILLOPT_PLACEBO,
+        source="skillopt-placebo.md",
+    ),
+)
+
+ONE_SET = (ItemSet(label="unseen", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)),)
+
+
+def _records_for(arms: tuple[Arm, ...], correct: dict[str, bool]) -> list[RunRecord]:
+    """Four questions per arm, each arm right or wrong on all of them."""
+    return [
+        _record(arm=arm.kind, item_id=f"i{k}", correct=correct[arm.label], candidate_sha=arm.sha)
+        for arm in arms
+        for k in range(4)
+    ]
+
+
+class TestTheRequestRecordsTheSubsetAndTheHoldout:
+    def test_the_defaults_are_the_whole_corpus_and_a_ranked_holdout(self) -> None:
+        request = StudyRequest(target_model=MOCK_MODEL, sets=ONE_SET)
+        assert (request.only_templates, request.holdout_ids) == ((), ())
+
+    def test_a_set_drawing_outside_the_subset_is_refused(self) -> None:
+        """The subset the manifest records must be the subset the items come from."""
+        with pytest.raises(StudyError, match="rel-001-vendor-outage"):
+            StudyRequest(
+                target_model=MOCK_MODEL,
+                sets=ONE_SET,
+                only_templates=("rel-002-deploy-window",),
+            )
+
+    def test_an_explicit_holdout_outside_the_subset_is_refused(self) -> None:
+        with pytest.raises(StudyError, match="rel-009-flight-rebook"):
+            StudyRequest(
+                target_model=MOCK_MODEL,
+                sets=ONE_SET,
+                only_templates=("rel-001-vendor-outage",),
+                holdout_ids=("rel-009-flight-rebook",),
+            )
+
+    def _run(self, tmp_path: Path, **overrides: object):
+        fields: dict[str, object] = {
+            "target_model": MOCK_MODEL,
+            "sets": ONE_SET,
+            "templates_root": TEMPLATES,
+            "run_aa": False,
+        }
+        fields.update(overrides)
+        return run_study(
+            StudyRequest(**fields),  # type: ignore[arg-type]
+            ARMS[:2],
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_an_explicit_holdout_reaches_the_manifest_and_names_its_source(
+        self, tmp_path: Path
+    ) -> None:
+        result = self._run(
+            tmp_path,
+            only_templates=("rel-001-vendor-outage", "rel-002-deploy-window"),
+            holdout_ids=("rel-001-vendor-outage",),
+        )
+        manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["request"]["only_templates"] == [
+            "rel-001-vendor-outage",
+            "rel-002-deploy-window",
+        ]
+        assert manifest["request"]["holdout_ids"] == ["rel-001-vendor-outage"]
+        assert manifest["holdout_source"] == "explicit"
+
+    def test_a_ranked_holdout_says_so_and_a_study_with_one_placebo_maps_nothing(
+        self, tmp_path: Path
+    ) -> None:
+        result = self._run(tmp_path)
+        manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["holdout_source"] == "passphrase"
+        assert manifest["winner_placebos"] == {}
+        assert [arm["control"] for arm in manifest["arms"]] == [None, None]
+
+
+class TestResumingUnderAnotherSubsetHoldoutOrPlacebo:
+    """The fields the 2026-09-02 registration adds are compared on resume like
+    every other request field, and the placebo mapping beside them."""
+
+    def _request(self, **overrides: object) -> StudyRequest:
+        fields: dict[str, object] = {
+            "target_model": MOCK_MODEL,
+            "sets": ONE_SET,
+            "templates_root": TEMPLATES,
+            "run_aa": False,
+        }
+        fields.update(overrides)
+        return StudyRequest(**fields)  # type: ignore[arg-type]
+
+    def _run(self, tmp_path: Path, request: StudyRequest, arms: tuple[Arm, ...] = ARMS[:2]):
+        return run_study(
+            request,
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_a_changed_subset_is_refused(self, tmp_path: Path) -> None:
+        self._run(tmp_path, self._request())
+        with pytest.raises(StudyError, match="different only_templates"):
+            self._run(tmp_path, self._request(only_templates=("rel-001-vendor-outage",)))
+
+    def test_a_changed_explicit_holdout_is_refused(self, tmp_path: Path) -> None:
+        self._run(tmp_path, self._request(holdout_ids=("rel-001-vendor-outage",)))
+        with pytest.raises(StudyError, match="different holdout_ids"):
+            self._run(tmp_path, self._request())
+
+    def test_a_moved_winner_placebo_is_refused(self, tmp_path: Path) -> None:
+        """Same arms, same bodies, another file behind one placebo. The arms
+        agree, and the mapping is what catches it."""
+        gepa = Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="placebo-gepa")
+        first = Arm(label="placebo-gepa", kind="placebo", body=GEPA_PLACEBO, source="a.md")
+        moved = Arm(label="placebo-gepa", kind="placebo", body=GEPA_PLACEBO, source="b.md")
+        self._run(tmp_path, self._request(), arms=(*ARMS[:2], gepa, first))
+        with pytest.raises(StudyError, match="different winner_placebos"):
+            self._run(tmp_path, self._request(), arms=(*ARMS[:2], gepa, moved))
+
+
+class TestAPlaceboPerWinner:
+    def test_an_arm_cannot_be_its_own_control(self) -> None:
+        with pytest.raises(StudyError, match="its own control"):
+            Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="gepa")
+
+    def test_naming_the_shared_control_is_the_default_said_out_loud(self) -> None:
+        """One spelling, so it neither enters the placebo mapping nor sends the
+        shared placebo through the match check against a winner."""
+        arm = Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="placebo")
+        assert (arm.control, arm.versus) == ("", "placebo")
+        assert Arm(label="placebo", kind="placebo", body="x", control="placebo").control == ""
+        assert study._assert_matched((*ARMS[:2], arm)) == {}
+
+    def test_the_family_is_on_and_each_winner_against_its_own_placebo(self) -> None:
+        """Three comparisons, as registered: the family does not grow when a
+        placebo is added per winner, because a control is not a hypothesis."""
+        assert [(arm.label, arm.versus) for arm in family_of(MATCHED_ARMS)] == [
+            ("on", "placebo"),
+            ("gepa", "placebo-gepa"),
+            ("skillopt", "placebo-skillopt"),
+        ]
+
+    def test_with_one_placebo_the_family_is_what_it_was(self) -> None:
+        assert [arm.label for arm in family_of(ARMS)] == ["gepa", "skillopt"]
+
+    def _correct(self) -> dict[str, bool]:
+        return {
+            "off": False,
+            "on": True,
+            "placebo": True,
+            "gepa": True,
+            "skillopt": False,
+            "placebo-gepa": False,
+            "placebo-skillopt": True,
+        }
+
+    def test_each_winner_is_compared_against_its_own_placebo(self) -> None:
+        records = _records_for(MATCHED_ARMS, self._correct())
+        (outcome,) = analyse(records, MATCHED_ARMS, ONE_SET)
+        assert {c.arm: c.control_accuracy for c in outcome.comparisons} == {
+            "on": 1.0,
+            "gepa": 0.0,
+            "skillopt": 1.0,
+        }
+        assert [c.arm for c in outcome.comparisons] == ["on", "gepa", "skillopt"]
+
+    def test_the_secondary_block_reads_each_pair_against_the_shared_placebo(self) -> None:
+        records = _records_for(MATCHED_ARMS, self._correct())
+        (outcome,) = analyse_secondary(records, MATCHED_ARMS, ONE_SET)
+        assert [c.arm for c in outcome.comparisons] == [
+            "gepa",
+            "placebo-gepa",
+            "skillopt",
+            "placebo-skillopt",
+        ]
+        assert all(c.control_accuracy == 1.0 for c in outcome.comparisons)
+        assert all(c.adjusted == c.p_value and not c.rejected for c in outcome.comparisons)
+
+    def test_no_secondary_block_without_a_placebo_per_winner(self) -> None:
+        records = _records_for(ARMS, dict.fromkeys(("off", "placebo", "gepa", "skillopt"), True))
+        assert analyse_secondary(records, ARMS, ONE_SET) == ()
+
+    def test_no_secondary_block_without_the_shared_placebo(self) -> None:
+        arms = (MATCHED_ARMS[3], MATCHED_ARMS[5])
+        records = _records_for(arms, {"gepa": True, "placebo-gepa": False})
+        assert analyse_secondary(records, arms, ONE_SET) == ()
+
+
+class TestThePlaceboMatchIsCheckedBeforeAnyCall:
+    def _run(self, tmp_path: Path, arms: tuple[Arm, ...]):
+        request = StudyRequest(
+            target_model=MOCK_MODEL, sets=ONE_SET, templates_root=TEMPLATES, run_aa=False
+        )
+        return run_study(
+            request,
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_a_mismatch_is_refused_by_its_numbers_and_nothing_is_written(
+        self, tmp_path: Path
+    ) -> None:
+        gepa = Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="placebo-gepa")
+        short = Arm(label="placebo-gepa", kind="placebo", body=SHORT_PLACEBO)
+        with pytest.raises(StudyError, match="'placebo-gepa' does not match 'gepa'") as caught:
+            self._run(tmp_path, (*ARMS[:2], gepa, short))
+        assert "4 words against 7" in str(caught.value)
+        assert not (tmp_path / "results").exists()
+
+    def test_a_control_that_is_not_an_arm_is_refused(self) -> None:
+        gepa = Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="placebo-gepa")
+        with pytest.raises(StudyError, match="not a declared arm"):
+            study._assert_matched((*ARMS[:2], gepa))
+
+    def test_a_control_that_is_not_a_placebo_is_refused(self) -> None:
+        gepa = Arm(label="gepa", kind="candidate", body=GEPA_BODY, control="off")
+        with pytest.raises(StudyError, match="of kind 'off'"):
+            study._assert_matched((*ARMS[:2], gepa))
+
+    def test_a_placebo_per_winner_needs_the_shared_placebo_beside_it(self) -> None:
+        with pytest.raises(StudyError, match="shared 'placebo'"):
+            study._assert_matched((MATCHED_ARMS[3], MATCHED_ARMS[5]))
+
+    def test_the_mapping_carries_the_placebo_its_path_its_hash_and_the_match(self) -> None:
+        pairings = study._assert_matched(MATCHED_ARMS)
+        assert set(pairings) == {"gepa", "skillopt"}
+        gepa = pairings["gepa"]
+        assert (gepa["placebo"], gepa["path"], gepa["sha"]) == (
+            "placebo-gepa",
+            "gepa-placebo.md",
+            MATCHED_ARMS[5].sha,
+        )
+        match = gepa["match"]
+        assert isinstance(match, dict)
+        assert (match["skill_words"], match["placebo_words"]) == (7, 7)
+
+    def test_a_matched_study_runs_each_placebo_into_its_own_file(self, tmp_path: Path) -> None:
+        arms = (MATCHED_ARMS[0], MATCHED_ARMS[2], MATCHED_ARMS[3], MATCHED_ARMS[5])
+        result = self._run(tmp_path, arms)
+        names = sorted(path.name for path in result.paths.root.glob("records-*.jsonl"))
+        assert names == [
+            "records-gepa.jsonl",
+            "records-off.jsonl",
+            "records-placebo-gepa.jsonl",
+            "records-placebo.jsonl",
+        ]
+        assert {reading.arm for reading in load_readings(result.paths.root)} == {
+            "off",
+            "placebo",
+            "gepa",
+            "placebo-gepa",
+        }
+        assert result.controls == {"gepa": "placebo-gepa"}
+        assert [c.arm for c in result.sets[0].comparisons] == ["gepa"]
+        assert [c.arm for c in result.secondary[0].comparisons] == ["gepa", "placebo-gepa"]
+        manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["winner_placebos"]["gepa"]["placebo"] == "placebo-gepa"
+        assert {arm["label"]: arm["control"] for arm in manifest["arms"]} == {
+            "off": None,
+            "placebo": None,
+            "gepa": "placebo-gepa",
+            "placebo-gepa": None,
+        }
+
+        freeze(
+            result.paths,
+            result.sets,
+            result.aa,
+            result.passes,
+            result.secondary,
+            result.controls,
+        )
+        analysis = json.loads((result.paths.root / "analysis.json").read_text(encoding="utf-8"))
+        assert analysis["control"] == "placebo"
+        assert analysis["controls"] == {"gepa": "placebo-gepa"}
+        assert analysis["secondary"]["control"] == "placebo"
+        assert analysis["secondary"]["corrected"] is False
+        assert [c["arm"] for c in analysis["secondary"]["sets"][0]["comparisons"]] == [
+            "gepa",
+            "placebo-gepa",
+        ]
+
+
+class TestFreezeUnderTheSharedPlaceboDesign:
+    def test_a_study_with_one_placebo_writes_byte_for_byte_what_it_did(
+        self, tmp_path: Path
+    ) -> None:
+        """The published 2026-08-27 run reads `analysis.json` through the keys
+        it had; a study that adds none of the new options writes none of the
+        new keys."""
+        sets = (SetResult(label="u", n_items=1, accuracy={"off": 0.0}),)
+        before = paths_for(tmp_path / "before", "run")
+        after = paths_for(tmp_path / "after", "run")
+        for paths in (before, after):
+            paths.root.mkdir(parents=True)
+        freeze(before, sets, None)
+        freeze(after, sets, None, (), (), {})
+        assert (before.root / "analysis.json").read_bytes() == (
+            after.root / "analysis.json"
+        ).read_bytes()
+        assert list(json.loads((after.root / "analysis.json").read_text())) == [
+            "control",
+            "sets",
+            "aa",
+        ]

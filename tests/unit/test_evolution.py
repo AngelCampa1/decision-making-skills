@@ -54,6 +54,7 @@ from decision_evals.evolution.holdout import (
     _derive,
     assert_evolvable,
     census,
+    explicit_split,
     holdout_seeds,
     mint,
     pool_of,
@@ -2238,3 +2239,140 @@ def test_a_pooled_corpus_reaches_the_driver_and_the_manifest(
     )
     assert manifest["request"]["templates_root"] == roots
     assert any(name.startswith("hrd-") for name in manifest["templates"])
+
+
+# ---------------------------------------------------------------------------
+# The 2026-09-02 registration: an explicit holdout, and a corpus cut down
+# ---------------------------------------------------------------------------
+
+#: Absolute, because `evolve` takes a relative root from `repo_root`, which
+#: these tests point at a temporary directory.
+PUBLISHED_ROOT = str(REPO_ROOT / "datasets" / "templates")
+
+
+def test_an_explicit_holdout_partitions_the_corpus_as_written() -> None:
+    """The registration writes the ids down; the study takes them as they are."""
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    split = explicit_split(ids, passphrase="p", holdout_ids=("rel-008", "rel-003"))
+    assert split.holdout == ("rel-003", "rel-008")
+    assert set(split.train) | set(split.holdout) == set(ids)
+    assert not set(split.train) & set(split.holdout)
+    assert split.passphrase == "p", "the seeds are still minted from it"
+
+
+def test_an_explicit_holdout_can_keep_a_pair_together() -> None:
+    """The reason the option exists: the digest ranking cannot promise that a
+    near-duplicate pair lands on one side."""
+    ids = [f"hrd-{n:03d}" for n in range(1, 10)]
+    pair = ("hrd-003", "hrd-008")
+    assert set(pair) <= set(explicit_split(ids, passphrase="p", holdout_ids=pair).holdout)
+
+
+def test_an_explicit_holdout_naming_an_unknown_template_is_refused_by_name() -> None:
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    with pytest.raises(ValueError, match="rel-999"):
+        explicit_split(ids, passphrase="p", holdout_ids=("rel-001", "rel-999"))
+
+
+def test_an_explicit_holdout_of_nothing_is_refused() -> None:
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    with pytest.raises(ValueError, match="holds out nothing"):
+        explicit_split(ids, passphrase="p", holdout_ids=())
+
+
+def test_an_explicit_holdout_of_everything_is_refused() -> None:
+    ids = [f"rel-{n:03d}" for n in range(1, 11)]
+    with pytest.raises(ValueError, match="leaves the seen set empty"):
+        explicit_split(ids, passphrase="p", holdout_ids=ids)
+
+
+def test_a_cut_down_corpus_reaches_the_driver_and_the_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A search over fourteen of nineteen that recorded the root alone would
+    read as a search over nineteen."""
+    seen: dict[str, object] = {}
+
+    def capture(request: EvolveRequest, **kwargs: object) -> str:
+        seen["train"] = kwargs["train"]
+        seen["validation"] = kwargs["validation"]
+        raise KeyboardInterrupt
+
+    monkeypatch.setitem(DRIVERS, "gepa", capture)
+    only = ("rel-001-vendor-outage", "rel-002-deploy-window")
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        only_templates=only,
+        templates_root=PUBLISHED_ROOT,
+    )
+    with pytest.raises(KeyboardInterrupt):
+        evolve(request, repo_root=tmp_path, git_sha="abc1234")
+    for key in ("train", "validation"):
+        rows = seen[key]
+        assert isinstance(rows, list)
+        assert {item.template_id for item in rows} == set(only)
+    manifest = json.loads(
+        next((tmp_path / "results" / "evolution").glob("*/run.json")).read_text(encoding="utf-8")
+    )
+    assert tuple(manifest["request"]["only_templates"]) == only
+    assert manifest["templates"] == sorted(only)
+
+
+def test_training_templates_pick_from_within_the_cut_down_corpus(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: dict[str, object] = {}
+
+    def capture(request: EvolveRequest, **kwargs: object) -> str:
+        seen["train"] = kwargs["train"]
+        raise KeyboardInterrupt
+
+    monkeypatch.setitem(DRIVERS, "gepa", capture)
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        only_templates=("rel-001-vendor-outage", "rel-002-deploy-window"),
+        train_templates=("rel-002-deploy-window",),
+        templates_root=PUBLISHED_ROOT,
+    )
+    with pytest.raises(KeyboardInterrupt):
+        evolve(request, repo_root=tmp_path, git_sha="abc1234")
+    rows = seen["train"]
+    assert isinstance(rows, list)
+    assert {item.template_id for item in rows} == {"rel-002-deploy-window"}
+
+
+def test_an_unknown_template_in_the_cut_down_corpus_is_refused_before_the_driver(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setitem(DRIVERS, "gepa", lambda request, **kwargs: pytest.fail("the driver ran"))
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        only_templates=("rel-999-absent",),
+        templates_root=PUBLISHED_ROOT,
+    )
+    with pytest.raises(EvolveError, match="rel-999-absent"):
+        evolve(request, repo_root=tmp_path, git_sha="abc1234")
+    assert not (tmp_path / "results").exists()
+
+
+def test_a_training_template_the_cut_down_corpus_leaves_out_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A search may see less than the corpus, never more."""
+    monkeypatch.setitem(DRIVERS, "gepa", lambda request, **kwargs: pytest.fail("the driver ran"))
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        only_templates=("rel-001-vendor-outage",),
+        train_templates=("rel-002-deploy-window",),
+        templates_root=PUBLISHED_ROOT,
+    )
+    with pytest.raises(EvolveError, match="rel-002-deploy-window"):
+        evolve(request, repo_root=tmp_path, git_sha="abc1234")

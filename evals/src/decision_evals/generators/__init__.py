@@ -19,6 +19,7 @@ from decision_evals.generators.loader import (
     load_all,
     load_template,
     parse_roots,
+    restrict,
 )
 from decision_evals.generators.safe_eval import (
     ExpressionError,
@@ -49,6 +50,7 @@ __all__ = [
     "load_template",
     "parse_roots",
     "referenced_names",
+    "restrict",
     "strata_combinations",
     "validate",
 ]

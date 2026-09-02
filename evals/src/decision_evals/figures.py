@@ -966,13 +966,30 @@ def low_signal_templates(signals: Mapping[str, ArmSignal]) -> list[str]:
 
 
 def read_study(run_dir: Path) -> Study:
-    """Read one published run and compute the decomposition over it, once."""
+    """Read one published run and compute the decomposition over it, once.
+
+    Raises:
+        FigureError: The run tested a winner against a placebo of its own.
+            Every figure here pairs every arm against the one ``control`` in
+            ``analysis.json``, so on such a run the rescored, clustered and
+            per-template macros would print a winner against the shared placebo
+            under a heading that says "registered". Refusing is the honest
+            reading until the figures learn the ``controls`` mapping.
+    """
     manifest = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+    analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
+    if analysis.get("controls"):
+        pairs = ", ".join(f"{arm} vs {control}" for arm, control in analysis["controls"].items())
+        raise FigureError(
+            f"{run_dir.name} registered {pairs}, and these figures pair every arm against "
+            f"{analysis.get('control')!r}. Teach them the `controls` mapping in "
+            "analysis.json before publishing from this run."
+        )
     readings = load_readings(run_dir)
     signals = signal_by_arm(readings, arm_order(manifest))
     return Study(
         run=run_dir.name,
-        analysis=json.loads((run_dir / "analysis.json").read_text(encoding="utf-8")),
+        analysis=analysis,
         manifest=manifest,
         readings=readings,
         signals=signals,

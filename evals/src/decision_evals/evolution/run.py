@@ -48,7 +48,13 @@ from decision_evals.evolution.venues import (
     mock_call,
     venue_for,
 )
-from decision_evals.generators import generate, load_all, parse_roots
+from decision_evals.generators import (
+    TemplateLoadError,
+    generate,
+    load_all,
+    parse_roots,
+    restrict,
+)
 from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn, RunRecord, load_records
 from decision_evals.solvers.arms import render_item
@@ -116,6 +122,13 @@ class EvolveRequest:
     #: :func:`~decision_evals.evolution.holdout.template_split` derives the set
     #: from a passphrase rather than leaving it to taste.
     train_templates: tuple[str, ...] = ()
+    #: The corpus the search may load at all, before ``train_templates`` says
+    #: which of it the search may see. Empty means everything under
+    #: ``templates_root``. A named subset leaves out the scenarios a screen
+    #: found at chance for the target, and it is a request field so the
+    #: manifest says which: a run over fourteen of nineteen that recorded the
+    #: root alone would read as a run over nineteen.
+    only_templates: tuple[str, ...] = ()
     #: The context window the target runs with. Zero leaves it to the server,
     #: which is what every run before 2026-08-27 did and what made those runs
     #: hard to read: Ollama defaults to 4,096, and fourteen of sixteen
@@ -361,6 +374,33 @@ def items_for(
     return items
 
 
+def _visible(request: EvolveRequest, roots: Sequence[Path]) -> set[str] | None:
+    """Which template ids the search may draw, or ``None`` for all of them.
+
+    ``only_templates`` restricts the corpus and ``train_templates`` restricts
+    the search within it, so a training id outside the corpus is a
+    contradiction rather than a narrower request.
+
+    Raises:
+        EvolveError: An id under ``only_templates`` that no template answers
+            to, or a training id the restricted corpus does not hold.
+    """
+    trained = set(request.train_templates) or None
+    if not request.only_templates:
+        return trained
+    try:
+        allowed = {t.template_id for t in restrict(load_all(roots), request.only_templates)}
+    except TemplateLoadError as exc:
+        raise EvolveError(str(exc)) from exc
+    outside = sorted((trained or set()) - allowed)
+    if outside:
+        raise EvolveError(
+            f"train_templates names {', '.join(outside)}, which only_templates leaves out. "
+            "A search may see less than the corpus, never more."
+        )
+    return trained or allowed
+
+
 def _rotated(by_template: Sequence[Sequence[Item]]) -> list[Item]:
     """Every item once, ordered so any prefix spans templates and strata.
 
@@ -443,8 +483,8 @@ def evolve(
         repo_root, run_name(engine=request.engine, git_sha=git_sha, on=on, slug=request.slug)
     )
 
-    templates = set(request.train_templates) or None
     roots = parse_roots(request.templates_root, base=repo_root)
+    templates = _visible(request, roots)
     train = items_for(request.train_seeds, limit=request.limit, templates=templates, root=roots)
     validation = items_for(
         request.val_seeds,

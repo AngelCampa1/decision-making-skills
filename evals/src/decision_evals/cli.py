@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Annotated, Final
 
@@ -47,13 +47,21 @@ from decision_evals.drift import (
     worklist,
 )
 from decision_evals.drift import census as drift_census
-from decision_evals.evolution.holdout import mint, template_split
+from decision_evals.evolution.holdout import explicit_split, mint, template_split
 from decision_evals.evolution.run import DEFAULT_TEMPLATES_ROOT, EvolveRequest, seed_body
 from decision_evals.evolution.run import evolve as run_evolution
-from decision_evals.evolution.study import Arm, ItemSet, StudyRequest, freeze, run_study
+from decision_evals.evolution.study import (
+    CONTROL,
+    Arm,
+    ItemSet,
+    StudyError,
+    StudyRequest,
+    freeze,
+    run_study,
+)
 from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm, venue_for
 from decision_evals.figures import write_figures
-from decision_evals.generators import generate, load_all, parse_roots
+from decision_evals.generators import generate, load_all, parse_roots, restrict
 from decision_evals.prereg import (
     PreregistrationError,
     RepoState,
@@ -125,6 +133,15 @@ HOLDOUT_DIR: Final = "datasets/holdout"
 #: that may never be committed. ``datasets/holdout/README.md`` says so too, and
 #: three statements of one fact is two too many, so this is the one to change.
 HOLDOUT_GLOB: Final = "*.jsonl"
+
+#: How many templates `de study` holds out when neither `--holdout-templates`
+#: nor `--holdout-ids` says otherwise. The 2026-08-27 run's number.
+DEFAULT_HOLDOUT: Final = 3
+
+#: The two authored bodies every study runs, relative to the repository, so the
+#: manifest can say where they came from beside the winners' paths.
+SEED_SKILL_PATH: Final = "skills/decision-making/SKILL.md"
+PLACEBO_PATH: Final = "skills/decision-making/placebo.md"
 
 #: The line a confirmation run's README carries, naming the pre-registration it
 #: ran under. Nothing else in a run directory separates a confirm-arena run from
@@ -1364,6 +1381,15 @@ def evolve(
             "`datasets/templates,datasets/templates-hard`."
         ),
     ] = DEFAULT_TEMPLATES_ROOT,
+    only_templates: Annotated[
+        str,
+        typer.Option(
+            help="Comma-separated template ids the corpus is cut down to before anything "
+            "else reads it. Empty means every template under --templates-root. An id "
+            "no template answers to is refused by name. `--train-templates` then "
+            "picks from within this subset."
+        ),
+    ] = "",
 ) -> None:
     """Evolve a skill against the corpus, and write the search down.
 
@@ -1399,8 +1425,9 @@ def evolve(
         num_epochs=num_epochs,
         max_tokens=max_tokens,
         num_ctx=num_ctx,
-        train_templates=tuple(name.strip() for name in train_templates.split(",") if name.strip()),
+        train_templates=_ids(train_templates),
         templates_root=templates_root,
+        only_templates=_id_set(only_templates),
     )
     result = run_evolution(
         request,
@@ -1425,6 +1452,21 @@ def evolve(
             fg=typer.colors.YELLOW,
         )
         typer.echo(f"         {result.stop_reason}")
+
+
+def _ids(text: str) -> tuple[str, ...]:
+    """Parse a comma-separated id list, blanks dropped, order kept."""
+    return tuple(name.strip() for name in text.split(",") if name.strip())
+
+
+def _id_set(text: str) -> tuple[str, ...]:
+    """Parse a comma-separated id list as a set: sorted, once each.
+
+    A subset and a holdout are sets, and the manifest records them as written,
+    so ``a,b`` and ``b,a`` have to record the same or a resume under the other
+    spelling is refused as a different design.
+    """
+    return tuple(sorted(set(_ids(text))))
 
 
 def _seeds(text: str) -> tuple[int, ...]:
@@ -1464,12 +1506,46 @@ def study(
             "is what the report calls it."
         ),
     ] = None,
+    winner_placebo: Annotated[
+        list[str] | None,
+        typer.Option(
+            help="A placebo matched to one evolved arm, as `label=path/to/body.md`, where "
+            "the label is one given to --winner. Repeatable. It runs as `placebo-<label>` "
+            "and that winner's registered comparison is against it rather than the "
+            "shared placebo; the file must match the winner on words, headings and "
+            "fences, and a mismatch is refused before any call."
+        ),
+    ] = None,
     passphrase: Annotated[
         str, typer.Option(help="Derives both the template split and the holdout seeds.")
     ] = "",
     holdout_templates: Annotated[
-        int, typer.Option(help="How many scenarios are kept back from the searches.")
-    ] = 3,
+        int | None,
+        typer.Option(
+            help="How many scenarios are kept back from the searches, ranked from the "
+            "passphrase. Defaults to 3. Not with --holdout-ids."
+        ),
+    ] = None,
+    holdout_ids: Annotated[
+        str,
+        typer.Option(
+            help="Comma-separated template ids to hold out, written down rather than "
+            "ranked. For a split the ranking cannot promise, such as a near-duplicate "
+            "pair kept on one side. Every id must be in the corpus, at least one "
+            "template must stay on each side, and the manifest records the holdout "
+            "as explicit. Not with --holdout-templates."
+        ),
+    ] = "",
+    only_templates: Annotated[
+        str,
+        typer.Option(
+            help="Comma-separated template ids the study draws from. Empty means every "
+            "template under --templates-root. A template a screen found at chance for "
+            "the target leaves both sets this way, and an id no template answers to is "
+            "refused by name. The seeds are still minted over the whole corpus, so "
+            "they do not move with the subset."
+        ),
+    ] = "",
     unseen_seeds: Annotated[
         int, typer.Option(help="Holdout seeds drawn for the held-out scenarios.")
     ] = 4,
@@ -1507,39 +1583,79 @@ def study(
     The split and the seeds are both derived from ``--passphrase`` rather than
     chosen, so the test set is reproducible from one string and cannot be
     re-drawn until it is convenient. The template split is drawn over every
-    template under ``--templates-root``, so pooling a second corpus changes
-    which scenarios are held out.
+    template under ``--templates-root``, or over ``--only-templates`` when
+    given, so pooling a second corpus or leaving a template out changes which
+    scenarios are held out. ``--holdout-ids`` takes a split that was derived
+    elsewhere and written down; the manifest says which kind it was.
     """
     if not passphrase:
         raise typer.BadParameter("a study needs a passphrase; the split derives from it")
+    held = _id_set(holdout_ids)
+    if held and holdout_templates is not None:
+        raise typer.BadParameter(
+            "--holdout-ids and --holdout-templates each name the split; pass one of them"
+        )
     head = _git_output(["rev-parse", "HEAD"])
     if head is None:
         typer.secho("not a git repository, so no commit can be recorded", fg=typer.colors.RED)
         raise typer.Exit(1)
     roots = parse_roots(templates_root, base=REPO_ROOT)
-    split = template_split(
-        (template.template_id for template in load_all(roots)),
-        passphrase=passphrase,
-        holdout=holdout_templates,
-    )
+    only = _id_set(only_templates)
+    try:
+        loaded = load_all(roots)
+        ids = [template.template_id for template in restrict(loaded, only)]
+        left_out = sorted(set(held) & {t.template_id for t in loaded} - set(ids))
+        if left_out:
+            raise typer.BadParameter(
+                f"--holdout-ids names {', '.join(left_out)}, which --only-templates leaves "
+                "out. A template is held out or left out, not both."
+            )
+        split = (
+            explicit_split(ids, passphrase=passphrase, holdout_ids=held)
+            if held
+            else template_split(
+                ids,
+                passphrase=passphrase,
+                holdout=DEFAULT_HOLDOUT if holdout_templates is None else holdout_templates,
+            )
+        )
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    # Minted over everything under the roots, not the subset: the seeds a
+    # passphrase yields are then a function of the corpus alone, and leaving a
+    # template out cannot move them.
     seeds = mint(passphrase, unseen_seeds + seen_seeds, lambda seed: _generates(seed, roots))
     unseen = tuple(seeds.seeds[:unseen_seeds])
     seen = tuple(seeds.seeds[unseen_seeds:])
 
     arms = [
         Arm(label="off", kind="off"),
-        Arm(label="on", kind="on", body=seed_body(REPO_ROOT)),
+        Arm(label="on", kind="on", body=seed_body(REPO_ROOT), source=SEED_SKILL_PATH),
         Arm(
             label="placebo",
             kind="placebo",
-            body=_body(REPO_ROOT / "skills/decision-making/placebo.md"),
+            body=_body(REPO_ROOT / PLACEBO_PATH),
+            source=PLACEBO_PATH,
         ),
     ]
     for pair in winner or []:
         label, _, path = pair.partition("=")
         if not path:
             raise typer.BadParameter(f"--winner takes `label=path`, got {pair!r}")
-        arms.append(Arm(label=label, kind="candidate", body=_body(Path(path))))
+        arms.append(Arm(label=label, kind="candidate", body=_body(Path(path)), source=path))
+    for pair in winner_placebo or []:
+        label, _, path = pair.partition("=")
+        if not path:
+            raise typer.BadParameter(f"--winner-placebo takes `label=path`, got {pair!r}")
+        index = next((i for i, arm in enumerate(arms) if arm.label == label), None)
+        if index is None or arms[index].kind != "candidate":
+            raise typer.BadParameter(
+                f"--winner-placebo {label!r} names no --winner. Winners: "
+                f"{', '.join(arm.label for arm in arms if arm.kind == 'candidate') or 'none'}."
+            )
+        matched = f"placebo-{label}"
+        arms[index] = replace(arms[index], control=matched)
+        arms.append(Arm(label=matched, kind="placebo", body=_body(Path(path)), source=path))
 
     request = StudyRequest(
         target_model=target,
@@ -1556,22 +1672,40 @@ def study(
         passes=passes,
         chunk=chunk,
         templates_root=templates_root,
+        only_templates=only,
+        holdout_ids=held,
     )
-    typer.echo(f"held out {', '.join(split.holdout)}")
+    source = "explicit" if held else "passphrase"
+    typer.echo(f"held out {', '.join(split.holdout)} ({source})")
+    if only:
+        typer.echo(f"corpus   {len(ids)} of {len(loaded)} template(s)")
     typer.echo(f"seeds    unseen {list(unseen)}  seen {list(seen)}")
     typer.echo(f"arms     {', '.join(arm.label for arm in arms)}")
 
-    result = run_study(request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head)
-    freeze(result.paths, result.sets, result.aa, result.passes)
+    try:
+        result = run_study(
+            request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head
+        )
+    except StudyError as exc:
+        typer.secho(str(exc), fg=typer.colors.RED)
+        raise typer.Exit(2) from exc
+    freeze(result.paths, result.sets, result.aa, result.passes, result.secondary, result.controls)
     for outcome in result.sets:
         typer.echo(f"\n{outcome.label}: {outcome.n_items} item(s)")
         for label, value in outcome.accuracy.items():
             typer.echo(f"   {label:12s} {value:.3f}")
         for comparison in outcome.comparisons:
-            verdict = "beats placebo" if comparison.rejected else "does not beat placebo"
+            against = result.controls.get(comparison.arm, CONTROL)
+            verdict = f"beats {against}" if comparison.rejected else f"does not beat {against}"
             typer.echo(
                 f"   {comparison.arm:12s} {comparison.effect:+.3f} "
                 f"p={comparison.p_value:.4f} Holm={comparison.adjusted:.4f}  {verdict}"
+            )
+    for outcome in result.secondary:
+        typer.echo(f"\n{outcome.label}: secondary, against the shared placebo, uncorrected")
+        for comparison in outcome.comparisons:
+            typer.echo(
+                f"   {comparison.arm:12s} {comparison.effect:+.3f} p={comparison.p_value:.4f}"
             )
     for repeat in result.passes:
         typer.echo(f"\n{repeat.label}: passes")

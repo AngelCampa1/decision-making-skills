@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from pathlib import Path
 
 import yaml
@@ -109,3 +109,29 @@ def load_all(root: Path | Sequence[Path] | None = None) -> list[Template]:
             seen[template.template_id] = directory
         templates.extend(loaded)
     return sorted(templates, key=lambda template: template.template_id)
+
+
+def restrict(templates: Sequence[Template], ids: Collection[str]) -> list[Template]:
+    """The templates ``ids`` names, in the order they were loaded.
+
+    An empty ``ids`` is the whole corpus, which is what every run before
+    2026-09-02 drew. A named subset is how a study leaves out the scenarios a
+    screen found at chance for its target: an item no arm can answer is a pair
+    that never discords, and it dilutes the denominator without moving the test.
+
+    Raises:
+        TemplateLoadError: An id no loaded template answers to. Dropping it
+            would run a study over one scenario fewer than the registration
+            names, under a manifest recording the registration's list.
+    """
+    if not ids:
+        return list(templates)
+    known = {template.template_id for template in templates}
+    unknown = sorted(set(ids) - known)
+    if unknown:
+        raise TemplateLoadError(
+            f"no template answers to {', '.join(unknown)}. The corpus holds "
+            f"{', '.join(sorted(known))}."
+        )
+    wanted = set(ids)
+    return [template for template in templates if template.template_id in wanted]

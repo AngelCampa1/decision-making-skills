@@ -15,6 +15,7 @@ from decision_evals.generators.loader import (
     load_all,
     load_template,
     parse_roots,
+    restrict,
 )
 
 Build = Callable[..., dict[str, Any]]
@@ -24,6 +25,22 @@ def _write(directory: Path, name: str, payload: object) -> Path:
     path = directory / f"{name}.yaml"
     path.write_text(yaml.safe_dump(payload), encoding="utf-8")
     return path
+
+
+def test_restrict_names_a_subset_and_keeps_load_order() -> None:
+    kept = restrict(load_all(), ("rel-003-oncall-escalate", "rel-001-vendor-outage"))
+    assert [t.template_id for t in kept] == ["rel-001-vendor-outage", "rel-003-oncall-escalate"]
+
+
+def test_restrict_to_nothing_is_the_whole_corpus() -> None:
+    corpus = load_all()
+    assert [t.template_id for t in restrict(corpus, ())] == [t.template_id for t in corpus]
+
+
+def test_restrict_refuses_an_unknown_id_by_name() -> None:
+    """Dropping it would run over one scenario fewer than the manifest says."""
+    with pytest.raises(TemplateLoadError, match="rel-999-absent"):
+        restrict(load_all(), ("rel-001-vendor-outage", "rel-999-absent"))
 
 
 def test_a_valid_template_round_trips(tmp_path: Path, template_dict: Build) -> None:

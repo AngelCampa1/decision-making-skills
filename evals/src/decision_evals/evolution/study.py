@@ -53,7 +53,7 @@ from decision_evals.generators import parse_roots
 from decision_evals.generators.audit import corpus_fingerprint
 from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn, RunRecord, load_records, run_arm
-from decision_evals.solvers.arms import ArmName, ArmPrompt, build_arm
+from decision_evals.solvers.arms import ArmName, ArmPrompt, build_arm, check_placebo_match
 from decision_evals.stats.multiplicity import holm
 from decision_evals.stats.paired import mcnemar_exact
 
@@ -107,13 +107,26 @@ class Arm:
     figures read the arm back off that name. So it is one token, and it is
     never ``aa``.
 
+    ``control`` names the arm this one is tested against in the registered
+    family; blank means the shared :data:`CONTROL`. The 2026-08-27 run tested
+    every arm against one placebo matched to the seed skill, and that placebo
+    was 2.59 times shorter than one winner, so the registered design gives each
+    evolved winner a placebo matched to it. An arm named as another's control
+    is a control and leaves the family.
+
     Raises:
-        StudyError: A label that cannot name a file, or one the A/A already uses.
+        StudyError: A label that cannot name a file, one the A/A already uses,
+            or a control that names the arm itself.
     """
 
     label: str
     kind: ArmName
     body: str = ""
+    control: str = ""
+    #: Where the body was read from, as the caller wrote it. The body's hash is
+    #: the arm's identity; this is provenance, written to the manifest, and for
+    #: a per-winner placebo compared on resume beside the hash.
+    source: str = ""
 
     def __post_init__(self) -> None:
         if not _LABEL.match(self.label) or self.label == "aa":
@@ -121,11 +134,22 @@ class Arm:
                 f"arm label {self.label!r} cannot name a checkpoint. A label is one token of "
                 "letters, digits, `_`, `.` or `-`, and `aa` is the A/A pass."
             )
+        if self.control == CONTROL:
+            # Naming the shared control is the default said out loud, and one
+            # spelling keeps it out of the placebo mapping and the match check.
+            object.__setattr__(self, "control", "")
+        if self.control == self.label:
+            raise StudyError(f"arm {self.label!r} cannot be its own control")
 
     @property
     def sha(self) -> str | None:
         """The body's hash, which is what separates two candidate arms."""
         return body_sha(self.body) if self.body else None
+
+    @property
+    def versus(self) -> str:
+        """The label this arm's registered comparison is against."""
+        return self.control or CONTROL
 
 
 @dataclass(frozen=True, slots=True)
@@ -167,6 +191,16 @@ class StudyRequest:
     #: :func:`~decision_evals.generators.parse_roots` reads, relative to the
     #: repository root and recorded as written.
     templates_root: str = DEFAULT_TEMPLATES_ROOT
+    #: The subset of the corpus the study draws from, or empty for all of it.
+    #: A screen found five of nineteen templates at chance for the 2026-09-02
+    #: target, and an item no arm can answer is a pair that never discords.
+    #: They leave both sets, and the manifest says which.
+    only_templates: tuple[str, ...] = ()
+    #: The held-out templates, when they were written down rather than ranked
+    #: from the passphrase. Empty means the split came from the passphrase.
+    #: Recorded so a resumed study cannot swap one holdout for another under
+    #: the same passphrase.
+    holdout_ids: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.sets:
@@ -182,6 +216,17 @@ class StudyRequest:
                     "seeds. A study scored on anything a search could reach is reporting "
                     "training accuracy, which is the practice this whole design exists "
                     "to test."
+                )
+        if self.only_templates:
+            allowed = set(self.only_templates)
+            named = {t for item_set in self.sets for t in item_set.templates}
+            named.update(self.holdout_ids)
+            beyond = sorted(named - allowed)
+            if beyond:
+                raise StudyError(
+                    f"{', '.join(beyond)} is named by a set or the holdout but not by "
+                    "only_templates. The subset the manifest records must be the subset "
+                    "the items come from."
                 )
         if self.passes < 1:
             raise StudyError(f"a study runs at least one pass, got {self.passes}")
@@ -266,6 +311,12 @@ class StudyResult:
     lineage: list[object] = field(default_factory=list)
     #: Empty for a one-pass study.
     passes: tuple[SetPasses, ...] = ()
+    #: Outside the family and uncorrected. Empty unless an arm has a control
+    #: of its own; see :func:`analyse_secondary`.
+    secondary: tuple[SetResult, ...] = ()
+    #: Family arm to the control it was tested against, for the arms whose
+    #: control is not the shared one. Empty for a study with one placebo.
+    controls: dict[str, str] = field(default_factory=dict)
 
 
 def records_path(root: Path, label: str, pass_index: int = 1) -> Path:
@@ -415,8 +466,10 @@ def analyse(
     for item_set in sets:
         mine = _in_set(records, item_set)
         outcomes = by_arm(mine, arms)
-        family = [arm.label for arm in arms if arm.label not in (control, "off")]
-        raw = [compare(item_set.label, name, outcomes, control=control) for name in family]
+        raw = [
+            compare(item_set.label, arm.label, outcomes, control=arm.control or control)
+            for arm in family_of(arms, control=control)
+        ]
         adjusted = holm([c.p_value for c in raw], alpha=alpha) if raw else None
         comparisons = tuple(
             Comparison(**{**asdict(c), "adjusted": a, "rejected": r})
@@ -426,6 +479,65 @@ def analyse(
                 adjusted.rejected if adjusted else (),
                 strict=True,
             )
+        )
+        out.append(
+            SetResult(
+                label=item_set.label,
+                n_items=len({_key(record) for record in mine}),
+                accuracy=_accuracy(outcomes),
+                comparisons=comparisons,
+            )
+        )
+    return tuple(out)
+
+
+def family_of(arms: Sequence[Arm], *, control: str = CONTROL) -> list[Arm]:
+    """The arms whose comparison is registered: not ``off``, and not a control.
+
+    An arm named as another arm's control is a control, whatever its kind, and
+    a control is not a hypothesis. With one placebo the family is every other
+    arm but ``off``, which is what the 2026-08-27 run corrected over. With a
+    placebo per winner the family is the same size: ``on`` against the shared
+    placebo, and each winner against its own.
+    """
+    named = {arm.control for arm in arms if arm.control}
+    return [arm for arm in arms if arm.label not in (control, "off") and arm.label not in named]
+
+
+def analyse_secondary(
+    records: Sequence[RunRecord],
+    arms: Sequence[Arm],
+    sets: Sequence[ItemSet],
+    *,
+    control: str = CONTROL,
+) -> tuple[SetResult, ...]:
+    """The comparisons a per-winner placebo makes readable, outside the family.
+
+    For every arm with a control of its own: that arm against the shared
+    placebo, and its control against the shared placebo. The first is what the
+    2026-08-27 run reported and lets the two designs be read side by side; the
+    second says whether the matched placebo is itself a better document than
+    the shared one, which is the reading the whole redesign rests on.
+
+    Uncorrected, and ``rejected`` is never set. These are descriptions of the
+    design, not hypotheses about a skill, and a correction spent on them would
+    come out of the family's power. Empty when no arm has its own control, or
+    when no shared control was declared: there is then nothing to describe.
+    """
+    pairs: list[str] = []
+    for arm in arms:
+        if arm.control:
+            pairs.extend((arm.label, arm.control))
+    labels = {arm.label for arm in arms}
+    if not pairs or control not in labels:
+        return ()
+    out: list[SetResult] = []
+    for item_set in sets:
+        mine = _in_set(records, item_set)
+        outcomes = by_arm(mine, arms)
+        comparisons = tuple(
+            Comparison(**{**asdict(c), "adjusted": c.p_value})
+            for c in (compare(item_set.label, name, outcomes, control=control) for name in pairs)
         )
         out.append(
             SetResult(
@@ -509,7 +621,8 @@ def run_study(
     ``records-<label>.jsonl`` and resumes from it.
 
     Raises:
-        StudyError: The venue cannot hold the output cap it was given.
+        StudyError: The venue cannot hold the output cap it was given, or a
+            per-winner placebo does not match its winner.
     """
     if request.max_tokens:
         try:
@@ -518,14 +631,24 @@ def run_study(
             raise StudyError(str(exc)) from exc
 
     _assert_distinct(arms)
+    pairings = _assert_matched(arms)
     paths = paths_for(
         repo_root, run_name(engine="study", git_sha=git_sha, on=on, slug=request.slug)
     )
     paths.root.mkdir(parents=True, exist_ok=True)
+    # A control is recorded for the arms that are tested, and null for the
+    # arms that are tested against: the manifest says what the analysis does.
+    family = {arm.label for arm in family_of(arms)}
     declared: list[dict[str, object]] = [
-        {"label": arm.label, "kind": arm.kind, "candidate_sha": arm.sha} for arm in arms
+        {
+            "label": arm.label,
+            "kind": arm.kind,
+            "candidate_sha": arm.sha,
+            "control": arm.versus if arm.label in family else None,
+        }
+        for arm in arms
     ]
-    _assert_resumable(paths, request, declared)
+    _assert_resumable(paths, request, declared, pairings)
     roots = parse_roots(request.templates_root, base=repo_root)
     items = {item_set.label: item_set.items(root=roots) for item_set in request.sets}
     write_manifest(
@@ -537,7 +660,9 @@ def run_study(
             "chunk": request.chunk,
             "passes": request.passes,
             "templates_roots": [_relative(root, repo_root) for root in roots],
+            "holdout_source": "explicit" if request.holdout_ids else "passphrase",
             "arms": declared,
+            "winner_placebos": pairings,
             "sets": {
                 label: {
                     "items": len(rows),
@@ -605,7 +730,69 @@ def run_study(
         stop_reason=stop_reason,
         records=len(records) + sum(len(rows) for rows in later),
         passes=analyse_passes([records, *later], arms, request.sets) if later else (),
+        secondary=analyse_secondary(records, arms, request.sets),
+        controls={arm.label: arm.control for arm in family_of(arms) if arm.control},
     )
+
+
+def _assert_matched(arms: Sequence[Arm]) -> dict[str, dict[str, object]]:
+    """Check every per-winner placebo against its winner before a call is made.
+
+    The single placebo of the 2026-08-27 run was matched to the seed skill and
+    ran as the control for two winners it was not matched to, one of them 2.59
+    times its length. So a control an arm names for itself has to pass
+    :func:`~decision_evals.solvers.arms.check_placebo_match` against that arm's
+    body, on words, headings and fences, and the numbers go in the manifest.
+
+    Returns the mapping ``run.json`` records under ``winner_placebos``: the
+    winner's label to its placebo's label, source, hash and match.
+
+    Raises:
+        StudyError: A control that is not a declared arm, a control that is not
+            a placebo, a mismatch, or a per-winner placebo in a study with no
+            shared one. The A/A and the secondary comparisons read the shared
+            placebo, and a study without it could not say what its matched
+            placebo was matched against.
+    """
+    by_label = {arm.label: arm for arm in arms}
+    pairings: dict[str, dict[str, object]] = {}
+    for arm in arms:
+        if not arm.control:
+            continue
+        placebo = by_label.get(arm.control)
+        if placebo is None:
+            raise StudyError(
+                f"arm {arm.label!r} is tested against {arm.control!r}, which is not a "
+                f"declared arm. Declared: {', '.join(by_label)}."
+            )
+        if placebo.kind != "placebo":
+            raise StudyError(
+                f"arm {arm.label!r} is tested against {arm.control!r}, which is of kind "
+                f"{placebo.kind!r}. A control of the family is a placebo."
+            )
+        match = check_placebo_match(arm.body, placebo.body)
+        if not match.ok:
+            raise StudyError(
+                f"placebo {placebo.label!r} does not match {arm.label!r}: "
+                f"{match.placebo_words} words against {match.skill_words} "
+                f"(ratio {match.word_ratio:.2f}, tolerance {match.tolerance:.0%}), "
+                f"{match.placebo_sections} heading(s) against {match.skill_sections}, "
+                f"{match.placebo_templates} fenced block(s) against {match.skill_templates}. "
+                "A control that is not matched measures the document's shape, not "
+                "its content."
+            )
+        pairings[arm.label] = {
+            "placebo": placebo.label,
+            "path": placebo.source,
+            "sha": placebo.sha,
+            "match": asdict(match),
+        }
+    if pairings and CONTROL not in by_label:
+        raise StudyError(
+            f"a per-winner placebo needs the shared {CONTROL!r} arm beside it. The A/A "
+            "and the secondary comparisons read it."
+        )
+    return pairings
 
 
 def _assert_distinct(arms: Sequence[Arm]) -> None:
@@ -642,7 +829,10 @@ def _assert_distinct(arms: Sequence[Arm]) -> None:
 
 
 def _assert_resumable(
-    paths: RunPaths, request: StudyRequest, arms: Sequence[dict[str, object]]
+    paths: RunPaths,
+    request: StudyRequest,
+    arms: Sequence[dict[str, object]],
+    pairings: dict[str, dict[str, object]] | None = None,
 ) -> None:
     """Refuse to resume a study under a different design.
 
@@ -651,7 +841,9 @@ def _assert_resumable(
     with two passes of eight-item chunks and resumed with one pass of sixteen
     would leave ``pass-2/`` on disk under a manifest that says it never ran,
     and the same records under a manifest naming another corpus, other arms or
-    other sets. Only :data:`RESUMABLE_CAPS` may change.
+    other sets. Only :data:`RESUMABLE_CAPS` may change. Every request field is
+    compared, so a field added to the request is compared on the day it is
+    added; the arms and the per-winner placebo mapping are compared beside it.
 
     Raises:
         StudyError: A manifest is on disk and disagrees on anything but a cap.
@@ -667,6 +859,8 @@ def _assert_resumable(
     ]
     if before.get("arms") != _plain(list(arms)):
         differing.append("arms")
+    if before.get("winner_placebos") != _plain(pairings or {}):
+        differing.append("winner_placebos")
     if differing:
         raise StudyError(
             f"{paths.manifest} describes a study with different {', '.join(differing)}. A "
@@ -762,11 +956,16 @@ def freeze(
     sets: Sequence[SetResult],
     aa: Comparison | None = None,
     passes: Sequence[SetPasses] | None = None,
+    secondary: Sequence[SetResult] | None = None,
+    controls: dict[str, str] | None = None,
 ) -> None:
     """Write the study's numbers where a README can read them without rerunning it.
 
-    ``passes`` is written only when a study ran more than one, so a one-pass
-    study's ``analysis.json`` has the keys it always had.
+    ``passes`` is written only when a study ran more than one, and ``controls``
+    and ``secondary`` only when an arm had a placebo of its own, so a study
+    under the 2026-08-27 design writes the keys it always wrote and the
+    published run still reads. ``control`` stays the shared placebo; where a
+    family comparison was against another arm, ``controls`` says which.
     """
     payload: dict[str, object] = {
         "control": CONTROL,
@@ -775,6 +974,14 @@ def freeze(
     }
     if passes:
         payload["passes"] = [asdict(result) for result in passes]
+    if controls:
+        payload["controls"] = dict(controls)
+    if secondary:
+        payload["secondary"] = {
+            "control": CONTROL,
+            "corrected": False,
+            "sets": [asdict(result) for result in secondary],
+        }
     paths.root.joinpath("analysis.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, default=str) + "\n",
         encoding="utf-8",
@@ -797,8 +1004,10 @@ __all__ = [
     "StudyResult",
     "analyse",
     "analyse_passes",
+    "analyse_secondary",
     "by_arm",
     "compare",
+    "family_of",
     "freeze",
     "load_pass",
     "records_path",

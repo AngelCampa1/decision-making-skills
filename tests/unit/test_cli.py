@@ -1136,31 +1136,38 @@ class TestTheArmBodyReader:
         assert caught.value.exit_code == 2
 
 
+def _capture_study(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
+    """Stand in for `run_study` and `freeze`, and keep what the command handed them."""
+    seen: dict[str, object] = {}
+    monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+    def fake_run_study(request: object, arms: object, **kwargs: object) -> object:
+        seen["request"] = request
+        seen["arms"] = arms
+        return SimpleNamespace(
+            paths=SimpleNamespace(root=cli.REPO_ROOT / "results" / "evolution" / "x"),
+            sets=(),
+            aa=None,
+            passes=(),
+            secondary=(),
+            controls={},
+        )
+
+    def fake_freeze(*args: object) -> None:
+        seen["freeze"] = args
+
+    monkeypatch.setattr(cli, "run_study", fake_run_study)
+    monkeypatch.setattr(cli, "freeze", fake_freeze)
+    return seen
+
+
 class TestTheStudyOptionsReachTheRequest:
     """The 2026-09-02 options. Each is threaded through to the request the
     manifest records, and a flag that parsed and went nowhere would leave a
     run.json describing a study that did not happen."""
 
     def _capture(self, monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
-        seen: dict[str, object] = {}
-        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
-
-        def fake_run_study(request: object, arms: object, **kwargs: object) -> object:
-            seen["request"] = request
-            seen["arms"] = arms
-            return SimpleNamespace(
-                paths=SimpleNamespace(root=cli.REPO_ROOT / "results" / "evolution" / "x"),
-                sets=(),
-                aa=None,
-                passes=(),
-            )
-
-        def fake_freeze(*args: object) -> None:
-            seen["freeze"] = args
-
-        monkeypatch.setattr(cli, "run_study", fake_run_study)
-        monkeypatch.setattr(cli, "freeze", fake_freeze)
-        return seen
+        return _capture_study(monkeypatch)
 
     def test_passes_chunk_and_the_corpus_are_recorded(
         self, monkeypatch: pytest.MonkeyPatch
@@ -1192,7 +1199,7 @@ class TestTheStudyOptionsReachTheRequest:
         assert request.templates_root == "datasets/templates,datasets/templates-hard"  # type: ignore[attr-defined]
         named = {t for s in request.sets for t in s.templates}  # type: ignore[attr-defined]
         assert len(named) == 19, "the split is drawn over both corpora"
-        assert len(seen["freeze"]) == 4  # type: ignore[arg-type]
+        assert len(seen["freeze"]) == 6  # type: ignore[arg-type]
 
     def test_the_defaults_are_one_pass_of_eight_over_the_published_corpus(
         self, monkeypatch: pytest.MonkeyPatch
@@ -1280,3 +1287,219 @@ class TestTheEvolveOptionsReachTheRequest:
         monkeypatch.setattr(cli, "run_evolution", fake_evolve)
         runner.invoke(app, ["evolve", "--target", "mockllm/deterministic"])
         assert seen["request"].templates_root == "datasets/templates"  # type: ignore[attr-defined]
+
+
+#: The shape `check_placebo_match` reads: seven words, one heading, no fence.
+WINNER_BODY = "# GEPA winner\n\nDo the thing well."
+MATCHED_PLACEBO = "# Placebo gepa\n\nSay the thing again."
+SHORT_PLACEBO = "# Placebo gepa\n\nWords."
+
+
+def _study(*extra: str) -> object:
+    """Invoke `de study` on the mock venue with one seed a side, plus `extra`."""
+    return runner.invoke(
+        app,
+        [
+            "study",
+            "--target",
+            "mockllm/deterministic",
+            "--passphrase",
+            "x",
+            "--unseen-seeds",
+            "1",
+            "--seen-seeds",
+            "1",
+            *extra,
+        ],
+    )
+
+
+class TestTheRegistrationOptionsReachTheRequest:
+    """`--only-templates`, `--holdout-ids` and `--winner-placebo`: the three
+    things the 2026-09-02 registration needs that the command could not say."""
+
+    def test_a_subset_is_recorded_and_bounds_both_sets(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        only = ("rel-001-vendor-outage", "rel-002-deploy-window", "rel-003-oncall-escalate")
+        result = _study("--only-templates", ",".join(only), "--holdout-templates", "1")
+        assert result.exit_code == 0, result.output  # type: ignore[attr-defined]
+        request = seen["request"]
+        assert request.only_templates == only  # type: ignore[attr-defined]
+        named = {t for s in request.sets for t in s.templates}  # type: ignore[attr-defined]
+        assert named == set(only)
+        assert "corpus   3 of 10 template(s)" in result.output  # type: ignore[attr-defined]
+
+    def test_an_unknown_template_in_the_subset_is_refused_by_name(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        result = _study("--only-templates", "rel-001-vendor-outage,rel-999-absent")
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "rel-999-absent" in result.output  # type: ignore[attr-defined]
+        assert "request" not in seen
+
+    def test_an_explicit_holdout_is_the_unseen_set(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = _capture_study(monkeypatch)
+        held = ("rel-002-deploy-window", "rel-005-security-patch")
+        result = _study("--holdout-ids", ",".join(held))
+        assert result.exit_code == 0, result.output  # type: ignore[attr-defined]
+        request = seen["request"]
+        sets = {s.label: s.templates for s in request.sets}  # type: ignore[attr-defined]
+        assert sets["unseen"] == held
+        assert len(sets["seen"]) == 8
+        assert not set(sets["seen"]) & set(held)
+        assert request.holdout_ids == held  # type: ignore[attr-defined]
+        assert "(explicit)" in result.output  # type: ignore[attr-defined]
+
+    def test_a_ranked_holdout_says_so(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = _capture_study(monkeypatch)
+        result = _study()
+        assert result.exit_code == 0, result.output  # type: ignore[attr-defined]
+        assert seen["request"].holdout_ids == ()  # type: ignore[attr-defined]
+        assert "(passphrase)" in result.output  # type: ignore[attr-defined]
+
+    def test_an_explicit_holdout_and_a_count_are_refused_together(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        result = _study("--holdout-ids", "rel-001-vendor-outage", "--holdout-templates", "1")
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "pass one of them" in result.output  # type: ignore[attr-defined]
+        assert "request" not in seen
+
+    def test_an_explicit_holdout_naming_an_unknown_template_is_refused(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        result = _study("--holdout-ids", "rel-999-absent")
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "rel-999-absent" in result.output  # type: ignore[attr-defined]
+        assert "request" not in seen
+
+    def test_a_holdout_the_subset_leaves_out_is_refused_as_such(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Not "no template answers to": the template exists, and the two
+        options disagree about it."""
+        seen = _capture_study(monkeypatch)
+        result = _study(
+            "--only-templates",
+            "rel-001-vendor-outage,rel-002-deploy-window",
+            "--holdout-ids",
+            "rel-003-oncall-escalate",
+        )
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "not both." in result.output  # type: ignore[attr-defined]
+        assert "request" not in seen
+
+    def test_ids_are_recorded_as_a_set(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """`b,a` and `a,b` are one holdout; a resume under the other spelling
+        would otherwise be refused as another design."""
+        seen = _capture_study(monkeypatch)
+        result = _study(
+            "--holdout-ids",
+            "rel-002-deploy-window,rel-001-vendor-outage,rel-002-deploy-window",
+            "--only-templates",
+            "rel-003-oncall-escalate,rel-001-vendor-outage,rel-002-deploy-window",
+        )
+        assert result.exit_code == 0, result.output  # type: ignore[attr-defined]
+        request = seen["request"]
+        assert request.holdout_ids == (  # type: ignore[attr-defined]
+            "rel-001-vendor-outage",
+            "rel-002-deploy-window",
+        )
+        assert request.only_templates == (  # type: ignore[attr-defined]
+            "rel-001-vendor-outage",
+            "rel-002-deploy-window",
+            "rel-003-oncall-escalate",
+        )
+
+    def test_a_winner_placebo_runs_as_its_own_arm_and_rewires_the_winner(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        winner = tmp_path / "winner.md"
+        winner.write_text(WINNER_BODY, encoding="utf-8")
+        placebo = tmp_path / "gepa-placebo.md"
+        placebo.write_text(MATCHED_PLACEBO, encoding="utf-8")
+        result = _study("--winner", f"gepa={winner}", "--winner-placebo", f"gepa={placebo}")
+        assert result.exit_code == 0, result.output  # type: ignore[attr-defined]
+        arms = {arm.label: arm for arm in seen["arms"]}  # type: ignore[attr-defined]
+        assert list(arms) == ["off", "on", "placebo", "gepa", "placebo-gepa"]
+        assert arms["gepa"].control == "placebo-gepa"
+        assert (arms["placebo-gepa"].kind, arms["placebo-gepa"].source) == (
+            "placebo",
+            str(placebo),
+        )
+        assert arms["placebo-gepa"].body == MATCHED_PLACEBO
+
+    def test_a_winner_placebo_for_no_winner_is_refused(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+        placebo = tmp_path / "gepa-placebo.md"
+        placebo.write_text(MATCHED_PLACEBO, encoding="utf-8")
+        result = _study("--winner-placebo", f"gepa={placebo}")
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "names no --winner" in result.output  # type: ignore[attr-defined]
+        assert "request" not in seen
+
+    def test_a_winner_placebo_without_a_path_is_refused(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _capture_study(monkeypatch)
+        result = _study("--winner-placebo", "gepa")
+        assert result.exit_code != 0  # type: ignore[attr-defined]
+        assert "label=path" in result.output  # type: ignore[attr-defined]
+
+    def test_a_mismatched_winner_placebo_is_refused_before_any_call(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Through the real `run_study`: the check runs before the run directory
+        exists, so the refusal leaves nothing behind."""
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+        winner = tmp_path / "winner.md"
+        winner.write_text(WINNER_BODY, encoding="utf-8")
+        placebo = tmp_path / "gepa-placebo.md"
+        placebo.write_text(SHORT_PLACEBO, encoding="utf-8")
+        result = _study("--winner", f"gepa={winner}", "--winner-placebo", f"gepa={placebo}")
+        assert result.exit_code == 2, result.output  # type: ignore[attr-defined]
+        assert "'placebo-gepa' does not match 'gepa'" in result.output  # type: ignore[attr-defined]
+        assert "4 words against 7" in result.output  # type: ignore[attr-defined]
+
+
+class TestTheEvolveSubsetReachesTheRequest:
+    def _capture(self, monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
+        seen: dict[str, object] = {}
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+        def fake_evolve(request: object, **kwargs: object) -> object:
+            seen["request"] = request
+            raise cli.typer.Exit(0)
+
+        monkeypatch.setattr(cli, "run_evolution", fake_evolve)
+        return seen
+
+    def test_only_templates_is_recorded(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = self._capture(monkeypatch)
+        runner.invoke(
+            app,
+            [
+                "evolve",
+                "--target",
+                "mockllm/deterministic",
+                "--only-templates",
+                "rel-001-vendor-outage, rel-002-deploy-window",
+            ],
+        )
+        assert seen["request"].only_templates == (  # type: ignore[attr-defined]
+            "rel-001-vendor-outage",
+            "rel-002-deploy-window",
+        )
+
+    def test_the_default_is_the_whole_corpus(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = self._capture(monkeypatch)
+        runner.invoke(app, ["evolve", "--target", "mockllm/deterministic"])
+        assert seen["request"].only_templates == ()  # type: ignore[attr-defined]

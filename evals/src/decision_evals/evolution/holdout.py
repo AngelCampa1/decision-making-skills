@@ -214,6 +214,51 @@ def template_split(template_ids: Iterable[str], *, passphrase: str, holdout: int
     )
 
 
+def explicit_split(
+    template_ids: Iterable[str], *, passphrase: str, holdout_ids: Iterable[str]
+) -> Split:
+    """A split whose holdout was written down rather than ranked.
+
+    :func:`template_split` ranks by digest and promises nothing about which ids
+    land together. The 2026-09-02 registration needs one thing the ranking
+    cannot give: a near-duplicate pair (``hrd-003-deposit-notice`` and
+    ``hrd-008-deposit-notice-costed``) on the same side, because a rule learned
+    on one is a rule remembered on the other. So the registration derives the
+    list from the passphrase under the pair rule, writes the ids down, and the
+    study takes the ids. The passphrase still travels with the split, because
+    the seeds are still minted from it.
+
+    Raises:
+        ValueError: An id no template answers to, a holdout of nothing, or a
+            holdout of everything. Each is named rather than trimmed: a split
+            that dropped an unknown id would hold out one scenario fewer than
+            the registration says it does.
+    """
+    ids = sorted(set(template_ids))
+    held = tuple(sorted(set(holdout_ids)))
+    unknown = sorted(set(held) - set(ids))
+    if unknown:
+        raise ValueError(
+            f"no template answers to {', '.join(unknown)}, so it cannot be held out. "
+            f"The corpus holds {', '.join(ids)}."
+        )
+    if not held:
+        raise ValueError(
+            "an explicit holdout names at least one template; a split that holds out "
+            "nothing reports transfer it never tested."
+        )
+    if len(held) == len(ids):
+        raise ValueError(
+            f"holding out all {len(ids)} template(s) leaves the seen set empty, and a "
+            "study with no seen scenarios cannot measure memorisation."
+        )
+    return Split(
+        train=tuple(name for name in ids if name not in set(held)),
+        holdout=held,
+        passphrase=passphrase,
+    )
+
+
 def census(seeds: Sequence[int]) -> dict[str, int]:
     """How many seeds fall in each pool, for a run's own record.
 
