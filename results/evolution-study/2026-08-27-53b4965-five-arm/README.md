@@ -6,8 +6,9 @@ a label-set version: unseen `a9889750c762`, seen `bb95bfe63c1b`, both recorded
 in `run.json`.
 
 Prediction: [`notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md`](../../../notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md),
-first committed at `e882eff`, with an amendment appended mid-run after 143 of
-4,368 calls and before any comparison was read.
+first committed at `e882eff`, with an amendment whose text says it was appended
+after 143 of 4,368 calls and before any comparison was read, and whose commit
+`03f4df8` postdates the run commit by seven hours.
 
 Write-up: [`notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md`](../../../notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md)
 
@@ -161,3 +162,30 @@ Appended 2026-08-31, second pass.
 - The screen paragraph said no screen-tier venue can host this study. The screen
   covered NVIDIA Build only; `claude_code` and `antigravity` are registered at
   that tier and were never screened. Scoped.
+
+Appended 2026-09-01, during the assessment that preceded the release.
+
+- The prediction line said the amendment was "appended mid-run". Its commit,
+  `03f4df8`, was made at 22:29 on 2026-08-27, seven hours after the run commit
+  `53b4965` at 15:03, and in the same commit as the results write-up. The
+  entry's own text is the only evidence for its timing, and the line now says
+  so.
+- **The scorer refused 87 correct-looking answers as options not on the menu,
+  and 84 of them were the key's option followed by the model's thinking-mode
+  switch, `ANSWER: monitor /think`.** Every figure in this file and in
+  `analysis.json` is as scored at the time and stays so. `de figures` now
+  emits the same records re-read with the token stripped (`\rescored...` and
+  `\controlToken...` macros) beside the registered ones. The re-read moves two
+  arms: `off` gains 29 items and `gepa` 54. Under it `gepa` reads 0.7440 on
+  the unseen set against `off` at 0.7024, and 0.8112 against `placebo` at
+  0.7679 on the seen set, raw p = 0.0166, Holm q = 0.0497, template-level
+  p = 0.0469 uncorrected; `placebo` against `off` on the seen set falls from
+  44/24 (p = 0.010) to 21/24. The registered primary is unchanged and the
+  paper reports both. `scorers/answer.py` strips the token from 2026-09-01.
+- `winner.json`'s "score 1.000 over n = 3" for GEPA is the first score the
+  lineage recorded for that candidate (`evolution/adapter.py`,
+  `_record_candidate`), which for GEPA is a reflection-minibatch score. The
+  engine's own return rule evaluates on the validation pool. The search
+  records that would say what the engine actually scored the winner on are in
+  the directory `.gitignore` excluded. The write-up's "accepted on three
+  items" is therefore a statement about our logging until shown otherwise.

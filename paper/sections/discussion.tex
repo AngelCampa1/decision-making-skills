@@ -11,10 +11,10 @@ An accept-if-strictly-better rule performs one implicit test per proposal,
 keeps every winner, reports none of the tests, and has no way to ask whether a
 difference could have arisen by chance. In our runs SkillOpt accepted its
 winner on 21 of 21 validation items against a seed's 18, with no interval on
-either; GEPA accepted its winner on three items and never scored it on the
-pool at all (\Cref{sec:whatengines}). A ratchet in that regime is a device
-for selecting noise, and it will select noise reliably given enough
-proposals.
+either, and GEPA's acceptance is a three-item score in our lineage that its
+own return rule says should have been more (\Cref{sec:whatengines}). A
+ratchet in that regime is a device for selecting noise, and it will select
+noise reliably given enough proposals.
 
 Neither engine is blind to overfitting by design. SkillOpt gates every edit
 on a selection split disjoint from the rollouts the edit was generated from,
@@ -51,19 +51,23 @@ no lifted constant contributes more. A corpus with a fixed threshold would
 have rewarded the same behaviour outright. This one rewarded it on the
 template it could, and no design we ran can separate the two.
 
-\subsection{The placebo moved the model}
+\subsection{The placebo and the skill we wrote}
 
-The most actionable number in \Cref{tab:seen} is not either engine's. It is
-the placebo at \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} for an empty
-prompt. A document of the right length and shape, whose content carries no
-method, outperformed the skill we wrote, and on the unseen set it
-outperformed GEPA's winner too.
+A first draft of this paper titled this subsection ``the placebo moved the
+model'', on the seen-set gap between the placebo and an empty prompt. That
+gap was one template's refused answers and it closes under the re-read
+(\Cref{sec:parsefail}). What stands is the comparison against the skill we
+wrote: the placebo, a document of the same length and shape whose content
+carries no method, scores above it on both item sets, and neither difference
+is significant.
 
-Read one way this undercuts the premise of writing skills at all, and we
-follow it: on this corpus and this model, a substantial part of
-what a skill does is occupy the system prompt with structured text. Read
-another way it is a warning about every published skill result that lacks
-this arm, which is nearly all of them. Either reading requires the arm.
+Read one way that is a warning about the skill: on this corpus and this
+model, nothing in its content did better than structured text of the same
+size. Read another way it is a warning about every published skill result
+that lacks this arm, which is nearly all of them, because without it a gain
+from content and a gain from any structured text are one number. Either
+reading requires the arm, and the first draft is the case for reading the
+arm's own figures carefully.
 
 The largest thing this run moved points at the harness question rather than
 the content question. Nearly every unreadable answer from the seed skill and
@@ -112,8 +116,9 @@ rule.
 \subsection{What a verdict is worth}
 
 The claim we are entitled to is that on \NUM{\studyModel}, on this corpus,
-under these controls, neither engine's output beat a document-shaped placebo,
-and one scored below an empty prompt. Harness variance exceeds model variance
+under these controls, neither engine's output beat a document-shaped placebo
+as registered, and the one that scored below an empty prompt did so on our
+scorer's reading of a control token. Harness variance exceeds model variance
 by roughly $7.8\times$ on one factorial design~\citep{harnessdisclosure2026},
 so transfer to another scaffold should not be assumed. That is the warning
 that literature issues about everyone else's numbers, and we apply it to
@@ -145,11 +150,16 @@ already has.
     (\Cref{sec:signal}).
   \item The discordant split beside every paired $p$-value
     (\Cref{sec:method}).
+  \item Every refused answer read once by a person, before a pattern in
+    where the refusals fall is reported as a finding (\Cref{sec:parsefail}).
 \end{enumerate}
 
 \subsection{Negative results}
 
 The skill we wrote and ship lost to a placebo on both item sets. Three of
-our ten templates measure nothing (\Cref{sec:signal}). And the headline
-experiment cannot be replicated at a tier that would carry a verdict, for a
-reason that is a property of our corpus, not of the engines.
+our ten templates measure nothing (\Cref{sec:signal}). Two of the six
+registered predictions missed (\Cref{sec:predictions}). The two non-null
+readings a first draft of this paper carried were our scorer's
+(\Cref{sec:parsefail}). And the headline experiment cannot be replicated at
+a tier that would carry a verdict, for a reason that is a property of our
+corpus, not of the engines.

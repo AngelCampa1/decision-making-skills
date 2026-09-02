@@ -39,6 +39,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Final
 
+from decision_evals.scorers.answer import (
+    last_answer_line,
+    normalise_answer,
+    strip_control_token,
+)
 from decision_evals.skills import delivered_body
 from decision_evals.solvers.arms import check_placebo_match
 from decision_evals.stats.cluster import (
@@ -46,6 +51,7 @@ from decision_evals.stats.cluster import (
     cluster_bootstrap_diff,
     cluster_sign_flip,
 )
+from decision_evals.stats.multiplicity import holm
 from decision_evals.stats.paired import mcnemar_exact
 from decision_evals.stats.power import minimum_detectable_effect
 from decision_evals.stats.signal import DegenerateSignalError, informedness, skew
@@ -110,6 +116,12 @@ class Reading:
     parsed: str | None
     input_tokens: int
     output_tokens: int
+    #: What the scorer would have read with a trailing control token stripped
+    #: (:func:`decision_evals.scorers.answer.strip_control_token`). Equal to
+    #: ``parsed`` when the answer parsed; the text in front of the token when
+    #: the answer was refused for carrying one; ``None`` otherwise. Feeds
+    #: :func:`rescored_macros` and nothing registered.
+    rescored: str | None = None
 
     @property
     def item(self) -> tuple[int, str]:
@@ -226,6 +238,7 @@ def load_readings(run_dir: Path) -> list[Reading]:
             if not line.strip():
                 continue
             row = json.loads(line)
+            parsed = row["parsed"] if row["parse_status"] == "parsed" else None
             readings.append(
                 Reading(
                     arm=arm,
@@ -233,14 +246,30 @@ def load_readings(run_dir: Path) -> list[Reading]:
                     template_id=row["template_id"],
                     seed=int(row["seed"]),
                     expected=row["expected"],
-                    parsed=row["parsed"] if row["parse_status"] == "parsed" else None,
+                    parsed=parsed,
                     input_tokens=int(row["input_tokens"]),
                     output_tokens=int(row["output_tokens"]),
+                    rescored=_rescore(parsed, row.get("response", "")),
                 )
             )
     if not readings:
         raise FigureError(f"no arm records under {run_dir}")
     return readings
+
+
+def _rescore(parsed: str | None, response: str) -> str | None:
+    """The answer with a trailing control token stripped, or what the scorer read.
+
+    Only an answer the scorer refused is re-read, and only when the refusal was a
+    control token on the answer line. Everything else keeps the verdict on file.
+    """
+    if parsed is not None:
+        return parsed
+    line = last_answer_line(response)
+    if line is None:
+        return None
+    text, carried = strip_control_token(line)
+    return text if carried else None
 
 
 def body_tokens(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str, int]:
@@ -523,6 +552,137 @@ def restricted_macros(
             values[_macro_name("restrictedWins", label, arm)] = str(result.treatment_wins)
             values[_macro_name("restrictedLosses", label, arm)] = str(result.control_wins)
             values[_macro_name("restrictedPairs", label, arm)] = str(result.n_pairs)
+    return values
+
+
+def _is_correct_rescored(reading: Reading) -> int:
+    """One when the re-read answer names the key, zero otherwise."""
+    return int(
+        reading.rescored is not None
+        and normalise_answer(reading.rescored) == normalise_answer(reading.expected)
+    )
+
+
+def rescored_macros(
+    readings: Sequence[Reading], manifest: Mapping[str, Any], analysis: Mapping[str, Any]
+) -> dict[str, str]:
+    """The study re-read with a trailing control token stripped, beside the record.
+
+    Qwen3 treats ``/think`` as a thinking-mode switch and, in this study, echoed
+    it onto the answer line: ``ANSWER: monitor /think``. The scorer read that as
+    an option not on the menu and scored it wrong. It happened 87 times in 3,640
+    calls, the key agreed with the word in front of the token on 84 of them, and
+    it landed unevenly: 56 on GEPA's winner, 29 on the empty prompt, one each on
+    two other arms. In the study's own vocabulary that is a ``verifier_defect``
+    (:mod:`decision_evals.scorers.answer`), and because it is uneven it moves
+    comparisons rather than every arm together.
+
+    The registered figures stay as registered. This family reports what the same
+    records read with the token stripped: accuracy per arm, the registered
+    comparisons with Holm over the same family, the template-level test, and the
+    control against the baseline, a comparison the registration left outside the
+    family and the first draft of the paper read as a finding. It is named
+    ``rescored`` and not ``corrected`` for the reason :func:`restricted_macros`
+    gives: a re-read chosen after the data are in cannot be the headline.
+
+    ``\\controlToken<Arm>`` counts the arm's refused answers that carried the
+    token, ``\\controlTokenCorrect<Arm>`` how many of those named the key, and
+    ``\\controlTokenOn<Set><Template><Arm>`` where they landed.
+    ``\\controlOverBaseline<Set>`` and ``\\controlOverBaselineNet<Set><Template>``
+    give the control against the baseline as registered, so the paper can show
+    which template carried it; ``\\rescored...`` prefixes each with the re-read.
+    """
+    control = str(analysis["control"])
+    alpha = float(manifest.get("request", {}).get("alpha", 0.05))
+    by_arm: dict[str, dict[tuple[int, str], Reading]] = defaultdict(dict)
+    for reading in readings:
+        by_arm[reading.arm][reading.item] = reading
+    values: dict[str, str] = {}
+
+    carried_total = named_total = 0
+    for arm, rows in by_arm.items():
+        carried = [r for r in rows.values() if r.parsed is None and r.rescored is not None]
+        named = sum(_is_correct_rescored(r) for r in carried)
+        carried_total += len(carried)
+        named_total += named
+        values[_macro_name("controlToken", arm)] = str(len(carried))
+        values[_macro_name("controlTokenCorrect", arm)] = str(named)
+    values[_macro_name("controlToken", "total")] = str(carried_total)
+    values[_macro_name("controlTokenCorrect", "total")] = str(named_total)
+
+    seeds_of = {s["label"]: set(s["seeds"]) for s in manifest.get("request", {}).get("sets") or []}
+    for item_set in analysis["sets"]:
+        label = item_set["label"]
+        seeds = seeds_of.get(label, set())
+        items = sorted(item for item in by_arm[control] if item[0] in seeds)
+        if not items:
+            continue
+        templates = sorted({by_arm[control][item].template_id for item in items})
+
+        for arm, rows in by_arm.items():
+            scoped = [rows[item] for item in items if item in rows]
+            if not scoped:
+                continue
+            accuracy = sum(_is_correct_rescored(r) for r in scoped) / len(scoped)
+            values[_macro_name("rescoredAcc", label, arm)] = _fixed(accuracy, 4)
+            for template in templates:
+                here = [r for r in scoped if r.template_id == template]
+                values[_macro_name("controlTokenOn", label, _template_key(template), arm)] = str(
+                    sum(1 for r in here if r.parsed is None and r.rescored is not None)
+                )
+
+        family = [c["arm"] for c in item_set["comparisons"] if c["arm"] in by_arm]
+        raw: list[float] = []
+        for arm in family:
+            pairs = [(by_arm[control][item], by_arm[arm][item]) for item in items]
+            result = mcnemar_exact(
+                [_is_correct_rescored(c) for c, _ in pairs],
+                [_is_correct_rescored(t) for _, t in pairs],
+            )
+            raw.append(result.p_value)
+            values[_macro_name("rescoredEffect", label, arm)] = _signed(
+                result.proportion_difference, 4
+            )
+            values[_macro_name("rescoredWins", label, arm)] = str(result.treatment_wins)
+            values[_macro_name("rescoredLosses", label, arm)] = str(result.control_wins)
+            values[_macro_name("rescoredP", label, arm)] = _fixed(result.p_value, 4)
+            flip = cluster_sign_flip(
+                [_is_correct_rescored(t) - _is_correct_rescored(c) for c, t in pairs],
+                [c.template_id for c, _ in pairs],
+                alternative="greater",
+            )
+            values[_macro_name("rescoredClustered", label, arm)] = _fixed(flip.p_value, 4)
+            values[_macro_name("rescoredClusters", label, arm)] = str(flip.n_clusters)
+        if raw:
+            for arm, adjusted in zip(family, holm(raw, alpha=alpha).adjusted, strict=True):
+                values[_macro_name("rescoredQ", label, arm)] = _fixed(adjusted, 4)
+
+        # The control against the baseline, which the registration left outside
+        # the family. Reported as registered and re-read, per template, because
+        # the first draft of the paper read the registered version as a finding
+        # and it was one template's refused answers.
+        if BASELINE_ARM in by_arm:
+            pairs = [(by_arm[BASELINE_ARM][item], by_arm[control][item]) for item in items]
+            for prefix, score in (
+                ("controlOverBaseline", _is_correct),
+                ("rescoredControlOverBaseline", _is_correct_rescored),
+            ):
+                result = mcnemar_exact([score(b) for b, _ in pairs], [score(c) for _, c in pairs])
+                values[_macro_name(prefix, "wins", label)] = str(result.treatment_wins)
+                values[_macro_name(prefix, "losses", label)] = str(result.control_wins)
+                values[_macro_name(prefix, "p", label)] = _fixed(result.p_value, 4)
+                flip = cluster_sign_flip(
+                    [score(c) - score(b) for b, c in pairs],
+                    [b.template_id for b, _ in pairs],
+                    alternative="greater",
+                )
+                values[_macro_name(prefix, "clustered", label)] = _fixed(flip.p_value, 4)
+                values[_macro_name(prefix, "clusters", label)] = str(flip.n_clusters)
+                for template in templates:
+                    net = sum(score(c) - score(b) for b, c in pairs if b.template_id == template)
+                    values[_macro_name(prefix, "net", label, _template_key(template))] = _signed(
+                        net, 0
+                    )
     return values
 
 
@@ -986,6 +1146,7 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values.update(power_macros(analysis, manifest))
     values.update(per_template_macros(readings, manifest, BASELINE_ARM, analysis["control"]))
     values.update(restricted_macros(readings, manifest, analysis["control"]))
+    values.update(rescored_macros(readings, manifest, analysis))
     values.update(placebo_macros(repo_root))
 
     return values

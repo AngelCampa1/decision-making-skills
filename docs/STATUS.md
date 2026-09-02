@@ -1174,3 +1174,41 @@ bounds the venue drift this design is exposed to and does not remove it. The
 paper refuses the strong reading in three places and `README.md` and the run's
 own `README.md` have been corrected to match. This entry is appended rather than
 edited into the sentence above, which is the rule for this file.
+
+## Correction, 2026-09-01: two of the study's readings were the scorer's
+
+Appended, not rewritten. The sentences above that say GEPA's winner scored
+**0.628 on unseen scenarios against 0.685 for no skill at all, the only arm in
+the study worse than an empty prompt** are as scored and stay as written. What
+they measured is now known.
+
+**The scorer refused 87 answers that carried the model's thinking-mode
+switch.** `ollama/qwen3:1.7b` wrote `ANSWER: monitor /think` and the scorer,
+matching the text after `ANSWER:` against the option list, refused each as an
+option not on the menu. Eighty-four of the 87 named the key. Fifty-six fell on
+GEPA's winner, 41 of them on `rel-001-vendor-outage`; 29 on the empty prompt,
+23 of them on `rel-003-oncall-escalate`; one each on `on` and `skillopt`; none
+on `placebo`. That is the `verifier_defect` class of
+[`docs/FAILURE_TAXONOMY.md`](FAILURE_TAXONOMY.md), found on 2026-09-01 by
+printing the answer line of every refused row, which the study's write-up and
+fourteen review passes over the paper had not done.
+
+**What it moves.** Re-read with the token stripped, from the same records and
+with nothing re-scored on disk: GEPA's winner reads 0.7440 on the unseen set
+against 0.7024 for the empty prompt, and 0.8112 on the seen set against the
+placebo's 0.7679, raw p = 0.0166, Holm q = 0.0497 at the registered item unit,
+template-level p = 0.0469 uncorrected. The placebo over the empty prompt on the
+seen set, which the paper's first draft carried as its one positive finding at
+44/24, p = 0.010, was 23 of those refusals on one template and reads 21/24
+re-read. The registered null stands; the two non-null readings did not survive.
+
+**What changed in the tree.** `scorers/answer.py` strips the token from
+2026-09-01, with the reasoning in a comment above the pattern; the scorer is
+not a governed path, so the register carries no entry. `de figures` emits the re-read as
+`\rescored...` and `\controlToken...` macros beside the registered ones, and
+the paper reports both and promotes neither. Two smaller corrections landed in
+the same pass: the "mid-run" amendment to the study's prediction is
+commit-dated seven hours after the run, and "GEPA accepted its winner on three
+items" is the first score our lineage recorded for that candidate, which
+GEPA's own return rule says is not the acceptance score. The entry is
+[`notebook/2026-09-01-the-scorer-refused-a-control-token-and-the-paper-read-the-refusals-as-findings.md`](../notebook/2026-09-01-the-scorer-refused-a-control-token-and-the-paper-read-the-refusals-as-findings.md).

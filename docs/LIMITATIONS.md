@@ -132,6 +132,17 @@ widest interval in that table partly for this reason. Ten templates is few
 clusters, so the intervals are wide. And a template whose key holds one answer
 class has no informedness at all, which is a refusal rather than a zero.
 
+The scorer counts an unreadable answer as wrong, and on the five-arm study 87
+of the 3,640 answers were the model's thinking-mode switch written after a
+readable option, `ANSWER: monitor /think`. Eighty-four named the key. The
+refusals fell on two arms and two templates, so they moved comparisons and not
+the arms together, and two readings the paper's first draft carried as
+findings were made of them. The scorer strips the token from 2026-09-01. The
+registered figures are as scored and the re-read is reported beside them; with
+one pass per arm, nothing here can say which is nearer the truth, and the rule
+that a zero is classified before it is believed was applied to the first
+control run and not to this one until the assessment of 2026-09-01.
+
 ## The datasets
 
 Trigger corpus versions 1 through 3 are

@@ -38,6 +38,7 @@ from decision_evals.figures import (
     render_macros,
     render_signal_plot,
     render_tables,
+    rescored_macros,
     restricted_macros,
     screen_macros,
     signal_by_arm,
@@ -69,7 +70,12 @@ OUTPUT_CAP = 4096
 
 
 def _row(
-    arm: str, template: str, index: int, expected: str, parsed: str | None
+    arm: str,
+    template: str,
+    index: int,
+    expected: str,
+    parsed: str | None,
+    response: str | None = None,
 ) -> dict[str, object]:
     return {
         "arm": arm,
@@ -79,6 +85,8 @@ def _row(
         "expected": expected,
         "parsed": parsed,
         "parse_status": "parsed" if parsed is not None else "unparsed",
+        # The real records carry the answer text. Only the rescoring reads it.
+        "response": response if response is not None else (f"ANSWER: {parsed}" if parsed else ""),
         # The shared prefix varies by item, as it does in the real records; the
         # arm's contribution is what is constant.
         "input_tokens": 200 + index + BODY_TOKENS.get(arm, 0),
@@ -114,7 +122,11 @@ def _write_run(root: Path, *, arms: tuple[str, ...] = ARMS, aa: bool = True) -> 
             for index in range(4)
         ]
         # One unanswered reading per arm, so the parse rate is not trivially 1.
-        rows.append(_row(arm, "t-good", 9, "a", None))
+        # The candidate's is the shape the 2026-08-27 records carry 87 times: the
+        # right option with a control token after it, which the scorer refused.
+        rows.append(
+            _row(arm, "t-good", 9, "a", None, "ANSWER: a /think" if arm == "candidate" else None)
+        )
         text = "\n".join(json.dumps(row) for row in rows)
         # A trailing blank line, which the real checkpoints also carry.
         (run_dir / f"records-{arm}.jsonl").write_text(text + "\n\n", encoding="utf-8")
@@ -728,3 +740,107 @@ class TestRefusalsOnMalformedRuns:
         values = restricted_macros(load_readings(run_dir), manifest, "on")
         assert "restrictedUnseenCandidate" not in values
         assert "restrictedUnseenOff" in values
+
+
+class TestRescoring:
+    """The control-token re-read, reported beside the record and never in its place."""
+
+    def test_only_a_refused_answer_carrying_the_token_is_re_read(self, tmp_path: Path) -> None:
+        readings = load_readings(_write_run(tmp_path))
+        by_arm = {(r.arm, r.item_id): r for r in readings}
+        assert by_arm[("candidate", "t-good#v9")].parsed is None
+        assert by_arm[("candidate", "t-good#v9")].rescored == "a"
+        # The same unanswered item on another arm has no answer line at all.
+        assert by_arm[("on", "t-good#v9")].rescored is None
+        # A parsed answer re-reads as itself.
+        assert by_arm[("on", "t-good#v0")].rescored == "a"
+
+    def test_the_token_is_counted_where_it_landed(self, tmp_path: Path) -> None:
+        study = read_study(_write_run(tmp_path))
+        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        assert values["controlTokenCandidate"] == "1"
+        assert values["controlTokenCorrectCandidate"] == "1"
+        assert values["controlTokenOn"] == "0"
+        assert values["controlTokenOnUnseenTGoodCandidate"] == "1"
+        assert values["controlTokenOnUnseenTQuietCandidate"] == "0"
+
+    def test_the_re_read_moves_only_the_arm_that_carried_it(self, tmp_path: Path) -> None:
+        study = read_study(_write_run(tmp_path))
+        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        assert values["rescoredAccUnseenOn"] == "0.6923"
+        assert values["rescoredAccUnseenCandidate"] == "0.7692"
+        assert values["rescoredWinsUnseenCandidate"] == "1"
+        assert values["rescoredLossesUnseenCandidate"] == "0"
+        assert values["rescoredPUnseenCandidate"] == "0.5000"
+        assert values["rescoredQUnseenCandidate"] == "0.5000"
+        assert values["rescoredClusteredUnseenCandidate"] == "0.5000"
+        assert values["rescoredClustersUnseenCandidate"] == "1"
+
+    def test_the_control_against_the_baseline_is_reported_both_ways(self, tmp_path: Path) -> None:
+        study = read_study(_write_run(tmp_path))
+        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        # `on` is the fixture's control and `off` its baseline; they answer alike.
+        assert values["controlOverBaselineWinsUnseen"] == "0"
+        assert values["controlOverBaselineLossesUnseen"] == "0"
+        assert values["controlOverBaselinePUnseen"] == "1.0000"
+        assert values["controlOverBaselineClustersUnseen"] == "0"
+        assert values["controlOverBaselineNetUnseenTGood"] == "+0"
+        assert values["rescoredControlOverBaselineWinsUnseen"] == "0"
+
+    def test_a_set_the_manifest_does_not_seed_defines_nothing(self, tmp_path: Path) -> None:
+        study = read_study(_write_run(tmp_path))
+        analysis = {"control": "on", "sets": [{"label": "ghost", "comparisons": []}]}
+        assert rescored_macros(study.readings, study.manifest, analysis) == {
+            "controlTokenOff": "0",
+            "controlTokenCorrectOff": "0",
+            "controlTokenOn": "0",
+            "controlTokenCorrectOn": "0",
+            "controlTokenCandidate": "1",
+            "controlTokenCorrectCandidate": "1",
+            "controlTokenTotal": "1",
+            "controlTokenCorrectTotal": "1",
+        }
+
+    def test_an_empty_family_and_no_baseline_still_report_accuracy(self) -> None:
+        readings = [
+            Reading("on", "x#v0", "x", 1000, "a", "a", 200, 100, "a"),
+            Reading("on", "x#v1", "x", 1000, "b", "a", 200, 100, "a"),
+            Reading("candidate", "x#v0", "x", 1000, "a", None, 200, 100, "a"),
+            Reading("candidate", "x#v1", "x", 1000, "b", None, 200, 100, None),
+            # An arm with no reading in the set is skipped, not scored zero.
+            Reading("ghost", "y#v0", "y", 2000, "a", "a", 200, 100, "a"),
+        ]
+        manifest = {"request": {"sets": [{"label": "unseen", "seeds": [1000]}]}}
+        analysis = {"control": "on", "sets": [{"label": "unseen", "comparisons": []}]}
+        values = rescored_macros(readings, manifest, analysis)
+        assert values["rescoredAccUnseenOn"] == "0.5000"
+        assert values["rescoredAccUnseenCandidate"] == "0.5000"
+        assert "rescoredAccUnseenGhost" not in values
+        assert not any(name.startswith("rescoredQ") for name in values)
+        assert not any(name.startswith("controlOverBaseline") for name in values)
+
+    def test_the_published_record_carries_the_defect_the_paper_reports(self) -> None:
+        values = collect(
+            read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED), REPO_ROOT
+        )
+        # 87 refused answers carried the token; 84 named the key.
+        carried = sum(
+            int(values[f"controlToken{arm}"])
+            for arm in ("Off", "On", "Placebo", "Gepa", "Skillopt")
+        )
+        named = sum(
+            int(values[f"controlTokenCorrect{arm}"])
+            for arm in ("Off", "On", "Placebo", "Gepa", "Skillopt")
+        )
+        assert (carried, named) == (87, 84)
+        assert (values["controlTokenTotal"], values["controlTokenCorrectTotal"]) == ("87", "84")
+        assert values["controlTokenGepa"] == "56"
+        assert values["controlTokenOff"] == "29"
+        # The registered placebo-over-off reading on the seen set is one template.
+        assert values["controlOverBaselineNetSeenRelZeroZeroThreeOncallEscalate"] == "+23"
+        assert values["controlTokenOnSeenRelZeroZeroThreeOncallEscalateOff"] == "23"
+        assert values["controlOverBaselinePSeen"] == "0.0103"
+        assert values["rescoredControlOverBaselinePSeen"] == "0.7243"
+        # And the registered figures are untouched by the re-read.
+        assert values["accUnseenGepa"] == "0.6280"
+        assert values["rescoredAccUnseenGepa"] == "0.7440"

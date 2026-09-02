@@ -104,8 +104,11 @@
 %      exists, so neither wrote records to generate from and the source for
 %      both is a dated notebook entry. Both places say so; the search figures
 %      are echoed in the abstract, introduction and discussion, and the
-%      mid-run amendment's call count (143) in the method section is typed
-%      from the same notebook record. The ceiling
+%      amendment's call count (143) in the method section is typed from the
+%      same notebook record, beside the commit identifiers that date it and
+%      the run. The six registered predictions are scored in the results
+%      from the same entry, with every figure that has a macro given as one.
+%      The ceiling
 %      *screen* is not in this class: it wrote nvbuild-ceiling-screen.json,
 %      which is committed and which `de figures` reads, so those six figures
 %      are macros like any other.
@@ -158,17 +161,24 @@ McNemar exact against the placebo with Holm correction across a family of
 \NUM{\familySize} per item set, on \NUM{\unseenItems} unseen and
 \NUM{\seenItems} seen items analysed separately.
 
-\textbf{No arm rejects on either item set.} The best showing is SkillOpt at
-$\NUM{\effectSeenSkillopt}$ on trained scenarios, raw
-$p = \NUM{\pSeenSkillopt}$, which Holm takes to \NUM{\qSeenSkillopt}. On
-scenarios neither engine saw, GEPA's winner scores \NUM{\accUnseenGepa}
-against \NUM{\accUnseenOff} for an empty prompt. The placebo is not inert: it
-beats the skill we wrote on both item sets, and on the seen set it beats the
-empty prompt by more than any registered gain in the study. Both winners
-had written training-item constants
-into their own bodies, and GEPA accepted its winner on three items. An A/A
+\textbf{No arm rejects on either item set as registered.} The best showing
+is SkillOpt at $\NUM{\effectSeenSkillopt}$ on trained scenarios, raw
+$p = \NUM{\pSeenSkillopt}$, which Holm takes to \NUM{\qSeenSkillopt}. Both
+winners had written training-item constants into their own bodies. An A/A
 control, the placebo arm scored a second time into its own checkpoint,
-returned \NUM{\aaPairs} of \NUM{\aaPairs} items identical.
+returned \NUM{\aaPairs} of \NUM{\aaPairs} items identical. The same records
+carry a defect in our scorer, found after a first draft of this paper had read
+it as a result: the target model echoed its thinking-mode switch after
+\NUM{\controlTokenTotal} answers, \texttt{ANSWER: monitor /think}, the scorer
+refused each as an option not on the menu, and \NUM{\controlTokenCorrectTotal}
+of them named the key. The refusals fell \NUM{\controlTokenGepa} times on
+GEPA's winner and \NUM{\controlTokenOff} on the empty prompt, so they moved
+comparisons and not arms. Read with the token stripped, GEPA's winner rises
+from \NUM{\accUnseenGepa} to \NUM{\rescoredAccUnseenGepa} on scenarios
+neither engine saw, and on trained scenarios its comparison against the
+placebo reads Holm $q = \NUM{\rescoredQSeenGepa}$ at the registered item unit
+and $p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected at the template unit.
+We report that re-read beside the registered figures and promote neither.
 
 \textbf{The power arithmetic decides half of that null before the data
 does.} Items are drawn from templates and the template is the independent

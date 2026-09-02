@@ -43,15 +43,32 @@ the run's provenance gate refuses a result whose prediction cannot be shown
 by ancestry to predate it.
 
 \paragraph{What we found.}
-No arm rejects, on either item set, after correction. The best showing is
-SkillOpt's winner at $\NUM{\effectSeenSkillopt}$ on the scenarios it trained
-against, which does not survive multiplicity. On scenarios neither engine
-saw, GEPA's winner falls furthest below an empty prompt, and the skill we
-wrote falls below the placebo too. Both winners had written training-item
-constants into their own bodies, each asserting a different threshold for
-the same rule on a variable the corpus redraws for every item. GEPA accepted
-its winner on three items, by its own acceptance rule, and never scored it
-on its validation pool.
+No arm rejects, on either item set, after correction, as registered. The best
+showing is SkillOpt's winner at $\NUM{\effectSeenSkillopt}$ on the scenarios
+it trained against, which does not survive multiplicity. The skill we wrote
+falls below the placebo on both sets. Both winners had written training-item
+constants into their own bodies, each asserting a different threshold for the
+same rule on a variable the corpus redraws for every item. Our lineage holds
+GEPA's winner with a score over three items; GEPA's own return rule evaluates
+on the validation pool, and the search records that would say which happened
+are gone (\Cref{sec:whatengines}).
+
+The registered figures also carry a defect in our scorer, found after a first
+draft of this paper had read it as a result. The target model echoes its
+thinking-mode switch onto the answer line, \texttt{ANSWER: monitor /think}.
+The scorer refused \NUM{\controlTokenTotal} such answers as options not on
+the menu, and \NUM{\controlTokenCorrectTotal} of them named the key. The
+refusals landed on two arms, \NUM{\controlTokenGepa} on GEPA's winner and
+\NUM{\controlTokenOff} on the empty prompt, and on two templates. Every
+sentence that draft built on where the unreadable answers fell was a sentence
+about that token: a placebo that beat an empty prompt on the seen set, a GEPA
+winner that fell below an empty prompt on the unseen set, and a parse failure
+selective on the answer key. \Cref{sec:parsefail} reports the same records
+with the token stripped, beside the registered figures. Under that re-read
+GEPA's winner is the arm nearest to clearing the placebo, at Holm
+$q = \NUM{\rescoredQSeenGepa}$ on the seen set at the registered item unit
+and $p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected at the template unit,
+and the unseen set stays under its floor.
 
 A null is only worth reading if the study could have returned something
 else, so we checked, and half of it could not have. Our items come from
@@ -86,9 +103,9 @@ below $J = \NUM{\lowSignalThreshold}$ in every arm, so a
 \begin{enumerate}
   \item \textbf{The first placebo-controlled evaluation of automated skill
     optimisation we are aware of}, with an A/A determinism control reported
-    beside it. The placebo is not inert: it beats the skill we wrote on both
-    item sets, and on the seen set it beats the empty prompt by more than
-    any registered gain in the study (\Cref{sec:results}).
+    beside it, and a defect in our own scorer reported beside the figures it
+    moved rather than corrected in place (\Cref{sec:results}). The placebo
+    beats the skill we wrote on both item sets.
   \item \textbf{The arithmetic showing our own registered design was
     undecidable, computable from the registration alone.} A one-sided test over
     \NUM{\templatesUnseen} template clusters has a $p$-floor of
@@ -102,13 +119,12 @@ below $J = \NUM{\lowSignalThreshold}$ in every arm, so a
     to our own published records, showing that three templates measure
     nothing in any arm and that the published metric does not order the
     others by what they measure (\Cref{sec:signal}).
-  \item \textbf{Both winners memorised, and both were accepted on evidence
-    too thin to notice.} Two engines, one training pool, two different
+  \item \textbf{Both winners memorised, and both were accepted on a single
+    unreplicated comparison.} Two engines, one training pool, two different
     constants written into the skill body for the same redrawn-per-item
-    rule; one winner accepted on a score over three items
-    (\Cref{sec:whatengines}). A pre-study probe anticipated exactly this
-    channel, and the holdout was rebuilt to catch it before either engine
-    ran (\Cref{sec:corpus}).
+    rule (\Cref{sec:whatengines}). A pre-study probe anticipated exactly
+    this channel, and the holdout was rebuilt to catch it before either
+    engine ran (\Cref{sec:corpus}).
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}

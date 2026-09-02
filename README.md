@@ -260,18 +260,25 @@ hash. `de confirm` reaches the module from the console script, so
 `[tool.decision-evals.unwired]` is now empty. What has never run is the
 `confirm` arena itself, which still refuses for want of a holdout.
 
-**Landed 2026-08-27: neither skill-evolution engine beat a placebo.** Two
-automated prompt optimizers, GEPA and SkillOpt, each evolved a skill on a
-matched budget. Both winners had written the answer key into their own bodies:
-one transcribed a training template's rule, the other appended worked examples
-whose numbers trace back to the training pool. Tested against a placebo on a
-holdout minted after both were frozen, no arm rejects on either item set after
-Holm. GEPA's winner scores 0.628 on unseen scenarios against 0.685 for **no
-skill at all**. On that set the skill we wrote is below an empty prompt too, at
-0.679. The A/A
-control returned 728 of 728 items identical, which bounds the venue drift the
-design is exposed to without removing it: the pass repeats one arm, and the arms
-ran in blocks.
+**Landed 2026-08-27, re-read 2026-09-01: neither skill-evolution engine beat
+a placebo as registered, and the scorer had refused 87 answers that carried a
+control token.** Two automated prompt optimizers, GEPA and SkillOpt, each
+evolved a skill on a matched budget. Both winners had written the answer key
+into their own bodies: one transcribed a training template's rule, the other
+appended worked examples whose numbers trace back to the training pool. Tested
+against a placebo on a holdout minted after both were frozen, no arm rejects
+on either item set after Holm. The same records hold a defect in our scorer:
+the 1.7B target echoed its thinking-mode switch after 87 answers, `ANSWER:
+monitor /think`, each was scored wrong as an option not on the menu, and 84 of
+them named the key. Fifty-six fell on GEPA's winner and 29 on the empty
+prompt, so the two readings the first write-up carried as findings, GEPA's
+winner below an empty prompt and the placebo above one, were the scorer's.
+Re-read with the token stripped, GEPA's winner is the arm nearest to clearing
+the placebo, at Holm q = 0.0497 on the trained scenarios at the item unit and
+p = 0.0469 uncorrected at the template unit. The paper reports both readings
+and promotes neither. The A/A control returned 728 of 728 items identical,
+which bounds the venue drift the design is exposed to without removing it:
+the pass repeats one arm, and the arms ran in blocks.
 [The run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md).
 
 Two findings from the same line of work cut into the instrument rather than the

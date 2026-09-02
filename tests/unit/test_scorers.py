@@ -21,8 +21,10 @@ from decision_evals.generators.generate import Item, generate
 from decision_evals.generators.schema import Template
 from decision_evals.scorers.answer import (
     ParseStatus,
+    last_answer_line,
     parse_answer,
     score_item,
+    strip_control_token,
     summarise,
 )
 
@@ -187,3 +189,34 @@ def test_an_empty_run_has_defined_rates() -> None:
     summary = summarise([])
     assert summary.accuracy == 0.0
     assert summary.parse_failure_rate == 0.0
+
+
+class TestControlToken:
+    """Qwen3 echoes its thinking-mode switch onto the answer line.
+
+    On the 2026-08-27 five-arm study the scorer refused ``ANSWER: monitor /think``
+    87 times as an option not on the menu, and the key agreed with ``monitor`` on
+    84 of them. The token is not an option, so it is stripped like punctuation.
+    """
+
+    @pytest.mark.parametrize("token", ["/think", "/no_think", " /THINK", "  /no_think  "])
+    def test_a_trailing_control_token_is_stripped(self, token: str) -> None:
+        parsed = parse_answer(f"ANSWER: monitor{token}", ["escalate", "monitor"])
+        assert parsed.status == "parsed"
+        assert parsed.value == "monitor"
+
+    def test_the_raw_text_keeps_the_token_it_was_read_from(self) -> None:
+        parsed = parse_answer("ANSWER: monitor /think", ["escalate", "monitor"])
+        assert parsed.raw == "monitor /think"
+
+    def test_a_token_inside_the_answer_is_not_a_trailing_token(self) -> None:
+        parsed = parse_answer("ANSWER: /think monitor", ["escalate", "monitor"])
+        assert parsed.status == "unlisted_option"
+
+    def test_an_answer_with_no_token_is_returned_unchanged(self) -> None:
+        assert strip_control_token("monitor") == ("monitor", False)
+        assert strip_control_token("monitor /think") == ("monitor", True)
+
+    def test_the_last_answer_line_is_the_one_read(self) -> None:
+        assert last_answer_line("ANSWER: a\nmore\nANSWER: b /think") == "b /think"
+        assert last_answer_line("no answer here") is None

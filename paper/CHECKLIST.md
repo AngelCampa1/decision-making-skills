@@ -34,6 +34,15 @@ Last worked through 2026-09-01, against the five-arm study at
       Source: [`../docs/LIMITATIONS.md`](../docs/LIMITATIONS.md)
 - [x] Limitations were written *before* results existed, so they cannot be
       tuned to flatter them
+- [x] **Every refused answer was read before a pattern in the refusals was
+      reported.** Added 2026-09-01, because until then it had not been: 87
+      answers carried the target model's thinking-mode switch after the
+      option, the scorer refused each, 84 named the key, and the abstract's
+      one non-null sentence and the results' "parse failure is selective on
+      the answer key" paragraph were both made of them. The registered figures
+      stand as scored; `de figures` emits the re-read beside them
+      (`\rescored...`, `\controlToken...`) and `sec:parsefail` reports both
+      and promotes neither
 
 ## Experimental design
 
@@ -240,9 +249,11 @@ Last worked through 2026-09-01, against the five-arm study at
       the latency distribution that would is not a result this paper reports
 - [x] Negative results reported at the same prominence as positive ones. The
       discussion closes on them: our own skill lost to the placebo on both
-      sets, three registered predictions were falsified, three of ten templates
-      measure nothing, and the headline could not be replicated at a tier that
-      carries a verdict
+      sets, two of the six registered predictions missed and are scored in
+      the text (`sec:predictions`, added 2026-09-01; until then the scoring
+      lived only in the notebook), three of ten templates measure nothing,
+      the two non-null readings of the first draft were the scorer's, and the
+      headline could not be replicated at a tier that carries a verdict
 - [x] Figures generated from `results/` by `make paper`, never transcribed.
       `de figures` writes every macro and every table. Three classes of number
       are typed and each is identified in the prose: figures from cited work,

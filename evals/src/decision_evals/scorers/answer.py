@@ -65,6 +65,36 @@ _ANSWER_LINE: Final = re.compile(
 
 _DECORATION: Final = re.compile(r"^[\s*_`\"'\[]+|[\s*_`\"'\].,;:!]+$")
 
+#: A chat-template control token echoed onto the answer line. Qwen3 reads
+#: ``/think`` and ``/no_think`` as a thinking-mode switch, and on the five-arm
+#: study of 2026-08-27 it wrote the switch back after its answer 87 times in
+#: 3,640 calls: ``ANSWER: monitor /think``. The scorer read that as an option
+#: not on the menu and scored it wrong, and the key agreed with the word in
+#: front of the token on 84 of the 87. The token is not an option and not a
+#: decision, so it is stripped the way a trailing full stop is. This does not
+#: rescore a committed record: a record's ``correct`` is what the scorer read
+#: at the time, and ``figures.rescored_macros`` reports the difference beside
+#: the registered figures rather than in their place.
+_CONTROL_TOKEN: Final = re.compile(r"\s*/(?:no_)?think\s*$", re.IGNORECASE)
+
+
+def last_answer_line(response: str) -> str | None:
+    """The text after ``ANSWER:`` on the last answer line, or ``None`` without one."""
+    matches = _ANSWER_LINE.findall(response)
+    return matches[-1].strip() if matches else None
+
+
+def strip_control_token(raw: str) -> tuple[str, bool]:
+    """The answer text without a trailing control token, and whether one was there."""
+    stripped = _CONTROL_TOKEN.sub("", raw)
+    return stripped, stripped != raw
+
+
+def normalise_answer(text: str) -> str:
+    """Fold the differences that are presentation rather than content."""
+    stripped = _DECORATION.sub("", text)
+    return re.sub(r"[\s_\-]+", " ", stripped).strip().casefold()
+
 
 @dataclass(frozen=True)
 class ParsedAnswer:
@@ -96,12 +126,6 @@ class Score:
         return not self.parsed.ok
 
 
-def _normalise(text: str) -> str:
-    """Fold the differences that are presentation rather than content."""
-    stripped = _DECORATION.sub("", text)
-    return re.sub(r"[\s_\-]+", " ", stripped).strip().casefold()
-
-
 def parse_answer(response: str, options: Sequence[str]) -> ParsedAnswer:
     """Extract the chosen option from a response.
 
@@ -109,13 +133,13 @@ def parse_answer(response: str, options: Sequence[str]) -> ParsedAnswer:
     further reasoning, and the last statement is the one they are standing
     behind.
     """
-    matches = _ANSWER_LINE.findall(response)
-    if not matches:
+    raw = last_answer_line(response)
+    if raw is None:
         return ParsedAnswer(status="no_answer_line", value=None, raw=None)
 
-    raw = matches[-1].strip()
-    target = _normalise(raw)
-    hits = [option for option in options if _normalise(option) == target]
+    text, _ = strip_control_token(raw)
+    target = normalise_answer(text)
+    hits = [option for option in options if normalise_answer(option) == target]
 
     if len(hits) == 1:
         return ParsedAnswer(status="parsed", value=hits[0], raw=raw)
