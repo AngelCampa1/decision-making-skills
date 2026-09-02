@@ -35,7 +35,7 @@ import re
 import string
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final
 
@@ -168,6 +168,47 @@ class Delta:
 
 
 @dataclass(frozen=True, slots=True)
+class Controls:
+    """Which arm each comparison was made against.
+
+    A study with one placebo tests every arm against it, and ``per_arm`` is
+    empty. A study that gave a winner a placebo matched to that winner records
+    the pairing in ``analysis.json`` under ``controls``, and the winner's
+    registered comparison is against that placebo and not the shared one.
+    Reading the shared control for such an arm reports a number the study did
+    not register, which is why every comparison below asks this rather than
+    naming an arm.
+
+    Attributes:
+        shared: The control named once at the top of ``analysis.json``. Arms
+            with no entry of their own are tested against it, which is the whole
+            of the 2026-08-27 design.
+        per_arm: Arm label to the control it was tested against, for the arms
+            whose control is not the shared one.
+    """
+
+    shared: str
+    per_arm: Mapping[str, str] = field(default_factory=dict)
+
+    def of(self, arm: str) -> str:
+        """The arm this one was compared against."""
+        return self.per_arm.get(arm, self.shared)
+
+    def parts(self, arm: str) -> tuple[str, ...]:
+        """Macro-name parts naming the control, and nothing for the shared one.
+
+        A comparison against the shared placebo keeps the name it has always
+        had, so a run with no mapping writes the file it wrote before. A
+        comparison against a placebo of the arm's own gets the control's name
+        in the macro, because on such a run the same arm is also read against
+        the shared placebo in the secondary block and two readings of one arm
+        under one name is the mistake this suffix exists to make impossible.
+        """
+        own = self.per_arm.get(arm)
+        return () if own is None else ("vs", _arm_key(own))
+
+
+@dataclass(frozen=True, slots=True)
 class Study:
     """One published run, read once.
 
@@ -184,6 +225,7 @@ class Study:
         readings: Every arm's records, the A/A pass excluded.
         signals: Per-arm discrimination and bias.
         deltas: Each arm's informedness against ``off``, with its interval.
+        controls: What each arm's registered comparison was against.
     """
 
     run: str
@@ -192,6 +234,7 @@ class Study:
     readings: Sequence[Reading]
     signals: Mapping[str, ArmSignal]
     deltas: Sequence[Delta]
+    controls: Controls
 
 
 @dataclass(frozen=True, slots=True)
@@ -312,7 +355,7 @@ def body_tokens(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str, i
 
 
 def clustered_tests(
-    readings: Sequence[Reading], manifest: Mapping[str, Any], control: str
+    readings: Sequence[Reading], manifest: Mapping[str, Any], controls: Controls
 ) -> dict[tuple[str, str], SignFlipResult]:
     """The registered comparisons re-run with the template as the unit.
 
@@ -321,12 +364,13 @@ def clustered_tests(
     that test is answering at a unit the design does not have. This sums to one
     net difference per template and exchanges those signs instead.
 
-    Keyed by ``(set label, arm)``, control arm excluded because it is the thing
-    every arm is differenced against.
+    Keyed by ``(set label, arm)``. An arm is differenced against whatever
+    ``controls`` says it was tested against, and an arm that is its own control
+    is left out because there is nothing to difference it against.
 
     Raises:
         FigureError: The manifest declares no item sets, or an arm is missing an
-            item another arm has.
+            item its control has.
     """
     sets = manifest.get("request", {}).get("sets")
     if not sets:
@@ -337,10 +381,14 @@ def clustered_tests(
     results: dict[tuple[str, str], SignFlipResult] = {}
     for item_set in sets:
         seeds = set(item_set["seeds"])
-        items = sorted(item for item in by_arm[control] if item[0] in seeds)
-        for arm in by_arm:
+        # Over a snapshot: reading an arm's control below can mint an empty
+        # entry, and a dictionary that grows while it is being walked raises
+        # somewhere unrelated to the arm that caused it.
+        for arm in list(by_arm):
+            control = controls.of(arm)
             if arm == control:
                 continue
+            items = sorted(item for item in by_arm[control] if item[0] in seeds)
             missing = [item for item in items if item not in by_arm[arm]]
             if missing:
                 raise FigureError(f"{arm!r} is missing {len(missing)} item(s) {control!r} has")
@@ -424,7 +472,7 @@ def power_macros(analysis: Mapping[str, Any], manifest: Mapping[str, Any]) -> di
 
 
 def per_template_macros(
-    readings: Sequence[Reading], manifest: Mapping[str, Any], baseline: str, control: str
+    readings: Sequence[Reading], manifest: Mapping[str, Any], baseline: str, controls: Controls
 ) -> dict[str, str]:
     """Accuracy and parse rate per template, and each arm with one dropped.
 
@@ -436,7 +484,9 @@ def per_template_macros(
     ``\\accWithout<Set><Template><Arm>`` is an arm's accuracy over the set with
     that template dropped. ``\\constantShare<Set><Template><Arm>`` is how often
     the arm gave its most frequent answer, which reads 1.000 for a constant
-    responder.
+    responder. ``\\net<Set><Template><Arm>`` is items won minus items lost
+    against the arm's own control, and carries ``Vs<Control>`` when that is not
+    the shared one.
     """
     sets = manifest.get("request", {}).get("sets") or []
     by_arm: dict[str, list[Reading]] = defaultdict(list)
@@ -448,13 +498,14 @@ def per_template_macros(
         templates = sorted({r.template_id for r in readings if r.seed in seeds})
         for arm, rows in by_arm.items():
             scoped = [r for r in rows if r.seed in seeds]
+            name = _arm_key(arm)
             for template in templates:
                 key = _template_key(template)
                 here = [r for r in scoped if r.template_id == template]
                 rest = [r for r in scoped if r.template_id != template]
-                values[_macro_name("acc", label, key, arm)] = _fixed(_accuracy(here), 4)
-                values[_macro_name("accWithout", label, key, arm)] = _fixed(_accuracy(rest), 4)
-                values[_macro_name("parseRate", label, key, arm)] = _fixed(_parse_rate(here), 3)
+                values[_macro_name("acc", label, key, name)] = _fixed(_accuracy(here), 4)
+                values[_macro_name("accWithout", label, key, name)] = _fixed(_accuracy(rest), 4)
+                values[_macro_name("parseRate", label, key, name)] = _fixed(_parse_rate(here), 3)
                 # Accuracy over the parsed subset, and its distance from the
                 # reported figure. On a balanced key the two coincide unless the
                 # unreadable answers land unevenly across it, so this difference
@@ -462,22 +513,22 @@ def per_template_macros(
                 read = [r for r in here if r.parsed is not None]
                 if read:
                     parsed_acc = _accuracy(read)
-                    values[_macro_name("accParsed", label, key, arm)] = _fixed(parsed_acc, 4)
-                    values[_macro_name("gapParsed", label, key, arm)] = _signed(
+                    values[_macro_name("accParsed", label, key, name)] = _fixed(parsed_acc, 4)
+                    values[_macro_name("gapParsed", label, key, name)] = _signed(
                         parsed_acc - _accuracy(here), 4
                     )
                 answers = [r.parsed for r in here if r.parsed is not None]
                 if answers:
                     top = max(set(answers), key=answers.count)
                     share = answers.count(top) / len(answers)
-                    values[_macro_name("constantShare", label, key, arm)] = _fixed(share, 3)
-                    values[_macro_name("parsedCount", label, key, arm)] = str(len(answers))
+                    values[_macro_name("constantShare", label, key, name)] = _fixed(share, 3)
+                    values[_macro_name("parsedCount", label, key, name)] = str(len(answers))
                 for answer, (failed, total) in key_selectivity(
                     readings, seeds, template, arm
                 ).items():
                     slug = _template_key(answer.replace("_", "-"))
-                    values[_macro_name("failOn", label, key, arm, slug)] = str(failed)
-                    values[_macro_name("countOn", label, key, arm, slug)] = str(total)
+                    values[_macro_name("failOn", label, key, name, slug)] = str(failed)
+                    values[_macro_name("countOn", label, key, name, slug)] = str(total)
         for template in templates:
             key = _template_key(template)
             # Net items against the *control*, which is what every reported
@@ -485,6 +536,7 @@ def per_template_macros(
             # over templates and not a partition of them, so this is what shows
             # which template carried one and which pulled the other way.
             for arm in by_arm:
+                control = controls.of(arm)
                 if arm == control:
                     continue
                 here = [r for r in by_arm[arm] if r.seed in seeds]
@@ -495,7 +547,9 @@ def per_template_macros(
                     for r in here
                     if r.item in paired and r.template_id == template
                 )
-                values[_macro_name("net", label, key, arm)] = _signed(net, 0)
+                values[_macro_name("net", label, key, _arm_key(arm), *controls.parts(arm))] = (
+                    _signed(net, 0)
+                )
             # Named for its numerator, not its trailing token. The sibling
             # family above puts the arm last, so a shared `gap` prefix with the
             # *baseline* last read as the same shape meaning the opposite
@@ -504,21 +558,22 @@ def per_template_macros(
             gepa = [r for r in by_arm["gepa"] if r.seed in seeds and r.template_id == template]
             floor = [r for r in by_arm[baseline] if r.seed in seeds and r.template_id == template]
             if gepa and floor:
-                values[_macro_name("gepaLess", label, key, baseline)] = _signed(
+                values[_macro_name("gepaLess", label, key, _arm_key(baseline))] = _signed(
                     _accuracy(gepa) - _accuracy(floor), 4
                 )
     return values
 
 
 def restricted_macros(
-    readings: Sequence[Reading], manifest: Mapping[str, Any], control: str
+    readings: Sequence[Reading], manifest: Mapping[str, Any], controls: Controls
 ) -> dict[str, str]:
     """The registered comparisons re-run on items both arms could read.
 
     Accuracy scores an unreadable answer wrong, so it sums decision quality and
     format compliance, and the arms differ on the second by more than any effect
     here. This holds format constant by keeping only the pairs where the arm and
-    the control both parsed.
+    its own control both parsed, so a winner with a placebo of its own is
+    restricted to the items that winner and that placebo could both read.
 
     It is not the corrected analysis and must not be reported as one: parse
     failure is selective on the answer key (:func:`key_selectivity`), so the
@@ -531,7 +586,8 @@ def restricted_macros(
     values: dict[str, str] = {}
     for item_set in manifest.get("request", {}).get("sets") or []:
         label, seeds = item_set["label"], set(item_set["seeds"])
-        for arm in by_arm:
+        for arm in list(by_arm):
+            control = controls.of(arm)
             if arm == control:
                 continue
             pairs = [
@@ -547,11 +603,12 @@ def restricted_macros(
             result = mcnemar_exact(
                 [_is_correct(c) for c, _ in pairs], [_is_correct(t) for _, t in pairs]
             )
-            values[_macro_name("restricted", label, arm)] = _signed(result.proportion_difference, 4)
-            values[_macro_name("restrictedP", label, arm)] = _fixed(result.p_value, 4)
-            values[_macro_name("restrictedWins", label, arm)] = str(result.treatment_wins)
-            values[_macro_name("restrictedLosses", label, arm)] = str(result.control_wins)
-            values[_macro_name("restrictedPairs", label, arm)] = str(result.n_pairs)
+            named = (label, _arm_key(arm), *controls.parts(arm))
+            values[_macro_name("restricted", *named)] = _signed(result.proportion_difference, 4)
+            values[_macro_name("restrictedP", *named)] = _fixed(result.p_value, 4)
+            values[_macro_name("restrictedWins", *named)] = str(result.treatment_wins)
+            values[_macro_name("restrictedLosses", *named)] = str(result.control_wins)
+            values[_macro_name("restrictedPairs", *named)] = str(result.n_pairs)
     return values
 
 
@@ -564,7 +621,10 @@ def _is_correct_rescored(reading: Reading) -> int:
 
 
 def rescored_macros(
-    readings: Sequence[Reading], manifest: Mapping[str, Any], analysis: Mapping[str, Any]
+    readings: Sequence[Reading],
+    manifest: Mapping[str, Any],
+    analysis: Mapping[str, Any],
+    controls: Controls,
 ) -> dict[str, str]:
     """The study re-read with a trailing control token stripped, beside the record.
 
@@ -589,10 +649,12 @@ def rescored_macros(
     token, ``\\controlTokenCorrect<Arm>`` how many of those named the key, and
     ``\\controlTokenOn<Set><Template><Arm>`` where they landed.
     ``\\controlOverBaseline<Set>`` and ``\\controlOverBaselineNet<Set><Template>``
-    give the control against the baseline as registered, so the paper can show
-    which template carried it; ``\\rescored...`` prefixes each with the re-read.
+    give the shared control against the baseline as registered, so the paper can
+    show which template carried it; ``\\rescored...`` prefixes each with the
+    re-read. Every comparison is against the arm's own control, and carries
+    ``Vs<Control>`` where that is not the shared one.
     """
-    control = str(analysis["control"])
+    control = controls.shared
     alpha = float(manifest.get("request", {}).get("alpha", 0.05))
     by_arm: dict[str, dict[tuple[int, str], Reading]] = defaultdict(dict)
     for reading in readings:
@@ -605,8 +667,8 @@ def rescored_macros(
         named = sum(_is_correct_rescored(r) for r in carried)
         carried_total += len(carried)
         named_total += named
-        values[_macro_name("controlToken", arm)] = str(len(carried))
-        values[_macro_name("controlTokenCorrect", arm)] = str(named)
+        values[_macro_name("controlToken", _arm_key(arm))] = str(len(carried))
+        values[_macro_name("controlTokenCorrect", _arm_key(arm))] = str(named)
     values[_macro_name("controlToken", "total")] = str(carried_total)
     values[_macro_name("controlTokenCorrect", "total")] = str(named_total)
 
@@ -624,38 +686,40 @@ def rescored_macros(
             if not scoped:
                 continue
             accuracy = sum(_is_correct_rescored(r) for r in scoped) / len(scoped)
-            values[_macro_name("rescoredAcc", label, arm)] = _fixed(accuracy, 4)
+            values[_macro_name("rescoredAcc", label, _arm_key(arm))] = _fixed(accuracy, 4)
             for template in templates:
                 here = [r for r in scoped if r.template_id == template]
-                values[_macro_name("controlTokenOn", label, _template_key(template), arm)] = str(
-                    sum(1 for r in here if r.parsed is None and r.rescored is not None)
-                )
+                values[
+                    _macro_name("controlTokenOn", label, _template_key(template), _arm_key(arm))
+                ] = str(sum(1 for r in here if r.parsed is None and r.rescored is not None))
 
         family = [c["arm"] for c in item_set["comparisons"] if c["arm"] in by_arm]
         raw: list[float] = []
         for arm in family:
-            pairs = [(by_arm[control][item], by_arm[arm][item]) for item in items]
+            against = by_arm[controls.of(arm)]
+            pairs = [(against[item], by_arm[arm][item]) for item in items]
             result = mcnemar_exact(
                 [_is_correct_rescored(c) for c, _ in pairs],
                 [_is_correct_rescored(t) for _, t in pairs],
             )
             raw.append(result.p_value)
-            values[_macro_name("rescoredEffect", label, arm)] = _signed(
-                result.proportion_difference, 4
-            )
-            values[_macro_name("rescoredWins", label, arm)] = str(result.treatment_wins)
-            values[_macro_name("rescoredLosses", label, arm)] = str(result.control_wins)
-            values[_macro_name("rescoredP", label, arm)] = _fixed(result.p_value, 4)
+            keyed = (label, _arm_key(arm), *controls.parts(arm))
+            values[_macro_name("rescoredEffect", *keyed)] = _signed(result.proportion_difference, 4)
+            values[_macro_name("rescoredWins", *keyed)] = str(result.treatment_wins)
+            values[_macro_name("rescoredLosses", *keyed)] = str(result.control_wins)
+            values[_macro_name("rescoredP", *keyed)] = _fixed(result.p_value, 4)
             flip = cluster_sign_flip(
                 [_is_correct_rescored(t) - _is_correct_rescored(c) for c, t in pairs],
                 [c.template_id for c, _ in pairs],
                 alternative="greater",
             )
-            values[_macro_name("rescoredClustered", label, arm)] = _fixed(flip.p_value, 4)
-            values[_macro_name("rescoredClusters", label, arm)] = str(flip.n_clusters)
+            values[_macro_name("rescoredClustered", *keyed)] = _fixed(flip.p_value, 4)
+            values[_macro_name("rescoredClusters", *keyed)] = str(flip.n_clusters)
         if raw:
             for arm, adjusted in zip(family, holm(raw, alpha=alpha).adjusted, strict=True):
-                values[_macro_name("rescoredQ", label, arm)] = _fixed(adjusted, 4)
+                values[_macro_name("rescoredQ", label, _arm_key(arm), *controls.parts(arm))] = (
+                    _fixed(adjusted, 4)
+                )
 
         # The control against the baseline, which the registration left outside
         # the family. Reported as registered and re-read, per template, because
@@ -683,6 +747,52 @@ def rescored_macros(
                     values[_macro_name(prefix, "net", label, _template_key(template))] = _signed(
                         net, 0
                     )
+    return values
+
+
+def secondary_macros(analysis: Mapping[str, Any]) -> dict[str, str]:
+    """The readings the study registered as secondary, named so they read as it.
+
+    A study with a placebo per winner also records the shared placebo against
+    the empty prompt, each winner against the shared placebo, and each matched
+    placebo against the shared one. None of them is in the corrected family, and
+    the last is the reading the per-winner design rests on: whether a placebo
+    matched to a long winner is itself a better document than the short one.
+
+    Every name carries both arms, because the same arm appears here against a
+    different control than the one its registered comparison used, and a name
+    that dropped the control would put two readings of one arm under one macro.
+    ``\\secondaryCorrection`` is the block's own word for what was spent on it,
+    read off the record rather than asserted here, so prose citing it cannot
+    call an uncorrected reading corrected.
+
+    Empty when the run registered no secondary block, which is every run under
+    the 2026-08-27 design.
+    """
+    block = analysis.get("secondary")
+    if not block:
+        return {}
+    values = {
+        _macro_name("secondary", "correction"): (
+            "corrected" if block["corrected"] else "uncorrected"
+        )
+    }
+    for item_set in block["sets"]:
+        label = item_set["label"]
+        for comparison in item_set["comparisons"]:
+            named = (
+                label,
+                _arm_key(comparison["arm"]),
+                "vs",
+                _arm_key(comparison["control"]),
+            )
+            effect = comparison["accuracy"] - comparison["control_accuracy"]
+            values[_macro_name("secondaryAcc", *named)] = _fixed(comparison["accuracy"], 4)
+            values[_macro_name("secondaryEffect", *named)] = _signed(effect, 4)
+            values[_macro_name("secondaryWins", *named)] = str(comparison["arm_only"])
+            values[_macro_name("secondaryLosses", *named)] = str(comparison["control_only"])
+            values[_macro_name("secondaryP", *named)] = _fixed(comparison["p_value"], 4)
+            values[_macro_name("secondaryPairs", *named)] = str(comparison["n_pairs"])
     return values
 
 
@@ -735,8 +845,8 @@ def at_cap_macros(readings: Sequence[Reading], arms: Sequence[str]) -> dict[str,
         if not rows:
             continue
         at_cap = sum(r.output_tokens >= cap for r in rows)
-        values[_macro_name("atCap", arm)] = str(at_cap)
-        values[_macro_name("unparsed", arm)] = str(sum(r.parsed is None for r in rows))
+        values[_macro_name("atCap", _arm_key(arm))] = str(at_cap)
+        values[_macro_name("unparsed", _arm_key(arm))] = str(sum(r.parsed is None for r in rows))
     return values
 
 
@@ -828,6 +938,22 @@ def _template_key(template_id: str) -> str:
     head, *tail = template_id.split("-")
     parts = [head] + [part[:1].upper() + part[1:] for part in tail]
     return "".join("".join(digits.get(ch, ch) for ch in part) for part in parts)
+
+
+def _arm_key(arm: str) -> str:
+    """An arm label as a macro-name fragment: its words joined, digits untouched.
+
+    ``placebo-gepa`` becomes ``placeboGepa``. Every arm of the 2026-08-27 study
+    is one lowercase word and comes back unchanged, but ``_macro_name`` drops a
+    hyphen rather than reading it, which would leave a per-winner placebo as
+    ``placebogepa`` next to the ``PlaceboGepa`` this writes elsewhere.
+
+    Not :func:`_template_key`, which also spells digits out. A template id is
+    minted with digits in it; an arm label is typed by hand, and one carrying a
+    digit has always been refused rather than quietly renamed.
+    """
+    head, *tail = re.split(r"[-_]", arm)
+    return head + "".join(part[:1].upper() + part[1:] for part in tail)
 
 
 def _accuracy(readings: Sequence[Reading]) -> float:
@@ -968,22 +1094,26 @@ def low_signal_templates(signals: Mapping[str, ArmSignal]) -> list[str]:
 def read_study(run_dir: Path) -> Study:
     """Read one published run and compute the decomposition over it, once.
 
+    ``analysis.json`` names one ``control`` at the top and, on a run that gave a
+    winner a placebo matched to it, a ``controls`` mapping of the arms whose
+    control is not that one. Both are carried into :class:`Controls`, so a run
+    with no mapping is the case where every arm resolves to the shared control,
+    which is what this module did before the mapping existed.
+
     Raises:
-        FigureError: The run tested a winner against a placebo of its own.
-            Every figure here pairs every arm against the one ``control`` in
-            ``analysis.json``, so on such a run the rescored, clustered and
-            per-template macros would print a winner against the shared placebo
-            under a heading that says "registered". Refusing is the honest
-            reading until the figures learn the ``controls`` mapping.
+        FigureError: ``controls`` names an arm the manifest does not declare, so
+            no records file answers what the comparison was against.
     """
     manifest = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
     analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
-    if analysis.get("controls"):
-        pairs = ", ".join(f"{arm} vs {control}" for arm, control in analysis["controls"].items())
+    controls = Controls(str(analysis["control"]), dict(analysis.get("controls") or {}))
+    declared = set(arm_order(manifest))
+    unknown = sorted((set(controls.per_arm) | set(controls.per_arm.values())) - declared)
+    if unknown:
         raise FigureError(
-            f"{run_dir.name} registered {pairs}, and these figures pair every arm against "
-            f"{analysis.get('control')!r}. Teach them the `controls` mapping in "
-            "analysis.json before publishing from this run."
+            f"{run_dir.name} pairs {', '.join(unknown)} in its `controls` mapping, and the "
+            f"manifest declares {', '.join(sorted(declared))}. A comparison against an arm "
+            "that did not run is not a comparison."
         )
     readings = load_readings(run_dir)
     signals = signal_by_arm(readings, arm_order(manifest))
@@ -994,6 +1124,7 @@ def read_study(run_dir: Path) -> Study:
         readings=readings,
         signals=signals,
         deltas=informedness_deltas(signals),
+        controls=controls,
     )
 
 
@@ -1061,49 +1192,62 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     """
     analysis, manifest = study.analysis, study.manifest
     readings, signals = study.readings, study.signals
+    controls = study.controls
     arms = arm_order(manifest)
 
     values: dict[str, str] = {
         _macro_name("study", "run"): study.run,
         _macro_name("study", "model"): manifest["request"]["target_model"],
-        _macro_name("study", "control"): analysis["control"],
+        _macro_name("study", "control"): controls.shared,
         _macro_name("study", "arms"): str(len(manifest["arms"])),
         _macro_name("study", "readings"): str(len(readings)),
         _macro_name("study", "templates"): str(len({reading.template_id for reading in readings})),
     }
+    # What each arm's registered comparison was against, for the arms that were
+    # not tested against the shared control. Empty on a one-placebo run, so the
+    # paper can name the control it means rather than assume there is one.
+    for arm, against in sorted(controls.per_arm.items()):
+        values[_macro_name("controlOf", _arm_key(arm))] = against
 
     sizes = body_tokens(readings, arms)
-    # The ratio is against whichever arm the run registered as its control, so a
-    # run whose control is not among the arms gets sizes and no ratios rather
-    # than a ratio against something that was not the comparison.
-    control = sizes.get(str(analysis["control"]), 0)
+    # The ratio is against whichever arm the run registered as that arm's
+    # control, so a run whose control is not among the arms gets sizes and no
+    # ratios rather than a ratio against something that was not the comparison.
+    # A per-winner placebo is matched to its winner's length, which is the
+    # reading this ratio exists to carry: the shared placebo was 2.59 times
+    # shorter than one of the winners it stood in for.
     for arm, size in sizes.items():
-        values[_macro_name("body", arm, "tokens")] = str(size)
-        if size and control:
-            values[_macro_name("body", arm, "ratio")] = f"{size / control:.2f}"
+        values[_macro_name("body", _arm_key(arm), "tokens")] = str(size)
+        control_size = sizes.get(controls.of(arm), 0)
+        if size and control_size:
+            values[_macro_name("body", _arm_key(arm), "ratio", *controls.parts(arm))] = (
+                f"{size / control_size:.2f}"
+            )
 
     for item_set in analysis["sets"]:
         label = item_set["label"]
         values[_macro_name(label, "items")] = str(item_set["n_items"])
         for arm, accuracy in item_set["accuracy"].items():
-            values[_macro_name("acc", label, arm)] = _fixed(accuracy, 4)
+            values[_macro_name("acc", label, _arm_key(arm))] = _fixed(accuracy, 4)
         for comparison in item_set["comparisons"]:
             arm = comparison["arm"]
             effect = comparison["accuracy"] - comparison["control_accuracy"]
-            values[_macro_name("effect", label, arm)] = _signed(effect, 4)
-            values[_macro_name("wins", label, arm)] = str(comparison["arm_only"])
-            values[_macro_name("losses", label, arm)] = str(comparison["control_only"])
-            values[_macro_name("p", label, arm)] = _fixed(comparison["p_value"], 4)
-            values[_macro_name("q", label, arm)] = _fixed(comparison["adjusted"], 4)
+            named = (label, _arm_key(arm), *controls.parts(arm))
+            values[_macro_name("effect", *named)] = _signed(effect, 4)
+            values[_macro_name("wins", *named)] = str(comparison["arm_only"])
+            values[_macro_name("losses", *named)] = str(comparison["control_only"])
+            values[_macro_name("p", *named)] = _fixed(comparison["p_value"], 4)
+            values[_macro_name("q", *named)] = _fixed(comparison["adjusted"], 4)
 
-    for (label, arm), flip in clustered_tests(readings, manifest, analysis["control"]).items():
-        values[_macro_name("clustered", label, arm)] = _fixed(flip.p_value, 4)
-        values[_macro_name("clusters", label, arm)] = str(flip.n_clusters)
+    for (label, arm), flip in clustered_tests(readings, manifest, controls).items():
+        named = (label, _arm_key(arm), *controls.parts(arm))
+        values[_macro_name("clustered", *named)] = _fixed(flip.p_value, 4)
+        values[_macro_name("clusters", *named)] = str(flip.n_clusters)
         # The realised floor, which is above the design floor whenever a
         # template nets zero and drops out of the test. That is the number a
         # comparison was actually up against, and it is not knowable until the
         # data are in, unlike the design floor beside it.
-        values[_macro_name("clusteredFloor", label, arm)] = _fixed(flip.floor, 4)
+        values[_macro_name("clusteredFloor", *named)] = _fixed(flip.floor, 4)
 
     # The design floor is a property of how many templates the set has, not of
     # how many of them happened to move. A tied template can only raise the
@@ -1127,14 +1271,15 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
         values[_macro_name("study", "calls")] = str(len(readings) + int(aa["n_pairs"]))
 
     for arm, signal in signals.items():
-        values[_macro_name("parseRate", arm)] = _fixed(signal.parse_rate, 3)
-        values[_macro_name("meanJ", arm)] = _fixed(signal.mean_informedness, 3)
-        values[_macro_name("meanSkew", arm)] = _fixed(signal.mean_skew, 3)
+        values[_macro_name("parseRate", _arm_key(arm))] = _fixed(signal.parse_rate, 3)
+        values[_macro_name("meanJ", _arm_key(arm))] = _fixed(signal.mean_informedness, 3)
+        values[_macro_name("meanSkew", _arm_key(arm))] = _fixed(signal.mean_skew, 3)
 
     for delta in study.deltas:
-        values[_macro_name("deltaJ", delta.arm)] = _signed(delta.estimate, 3)
-        values[_macro_name("deltaJ", delta.arm, "low")] = _signed(delta.ci_low, 3)
-        values[_macro_name("deltaJ", delta.arm, "high")] = _signed(delta.ci_high, 3)
+        name = _arm_key(delta.arm)
+        values[_macro_name("deltaJ", name)] = _signed(delta.estimate, 3)
+        values[_macro_name("deltaJ", name, "low")] = _signed(delta.ci_low, 3)
+        values[_macro_name("deltaJ", name, "high")] = _signed(delta.ci_high, 3)
 
     quiet = low_signal_templates(signals)
     # Counted over one arm, because every arm saw the same items and summing
@@ -1148,7 +1293,7 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
         # passes of the control arm are separated by every arm that follows it.
         # The paper reports that distance because it is what the A/A actually
         # measured: a block design's exposure to drift, over that many calls.
-        after = arms[arms.index(analysis["control"]) + 1 :]
+        after = arms[arms.index(controls.shared) + 1 :]
         values[_macro_name("aa", "separation")] = str(len(after) * total_items)
 
     values[_macro_name("lowSignal", "threshold")] = _fixed(LOW_SIGNAL_J, 1)
@@ -1161,9 +1306,10 @@ def collect(study: Study, repo_root: Path) -> dict[str, str]:
     values.update(screen_macros(repo_root / STUDY_ROOT / study.run))
     values.update(template_range_macros(repo_root))
     values.update(power_macros(analysis, manifest))
-    values.update(per_template_macros(readings, manifest, BASELINE_ARM, analysis["control"]))
-    values.update(restricted_macros(readings, manifest, analysis["control"]))
-    values.update(rescored_macros(readings, manifest, analysis))
+    values.update(per_template_macros(readings, manifest, BASELINE_ARM, controls))
+    values.update(restricted_macros(readings, manifest, controls))
+    values.update(rescored_macros(readings, manifest, analysis, controls))
+    values.update(secondary_macros(analysis))
     values.update(placebo_macros(repo_root))
 
     return values
@@ -1180,33 +1326,86 @@ def render_macros(values: Mapping[str, str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _accuracy_table(analysis: Mapping[str, Any]) -> list[str]:
-    """One booktabs table per item set, arms ordered by accuracy."""
+def _accuracy_table(analysis: Mapping[str, Any], controls: Controls) -> list[str]:
+    """One booktabs table per item set, arms ordered by accuracy.
+
+    A run with a placebo per winner gains a column naming what each arm was
+    tested against, because on such a run the reader cannot recover it from the
+    caption: two arms in the same table were corrected together and measured
+    against different documents.
+    """
     lines: list[str] = []
+    per_arm = bool(controls.per_arm)
     for item_set in analysis["sets"]:
         label = item_set["label"]
         comparisons = {c["arm"]: c for c in item_set["comparisons"]}
         order = sorted(item_set["accuracy"], key=lambda a: -item_set["accuracy"][a])
         lines += [
             f"\\newcommand{{\\{_macro_name(label, 'table')}}}{{%",
-            "\\begin{tabular}{lrrrrr}",
+            "\\begin{tabular}{" + ("ll" if per_arm else "l") + "rrrrr}",
             "\\toprule",
-            "arm & accuracy & effect & wins/losses & $p$ & Holm $q$ \\\\",
+            ("arm & against" if per_arm else "arm")
+            + " & accuracy & effect & wins/losses & $p$ & Holm $q$ \\\\",
             "\\midrule",
         ]
         for arm in order:
-            accuracy = f"\\{_macro_name('acc', label, arm)}"
+            named = (label, _arm_key(arm), *controls.parts(arm))
+            cells = [f"\\texttt{{{arm}}}"]
+            if per_arm:
+                cells.append(f"\\texttt{{{controls.of(arm)}}}" if arm in comparisons else "---")
+            cells.append(f"\\{_macro_name('acc', label, _arm_key(arm))}")
             if arm in comparisons:
-                lines.append(
-                    f"\\texttt{{{arm}}} & {accuracy} & \\{_macro_name('effect', label, arm)} & "
-                    f"\\{_macro_name('wins', label, arm)} / "
-                    f"\\{_macro_name('losses', label, arm)} & "
-                    f"\\{_macro_name('p', label, arm)} & "
-                    f"\\{_macro_name('q', label, arm)} \\\\"
-                )
+                cells += [
+                    f"\\{_macro_name('effect', *named)}",
+                    f"\\{_macro_name('wins', *named)} / \\{_macro_name('losses', *named)}",
+                    f"\\{_macro_name('p', *named)}",
+                    f"\\{_macro_name('q', *named)}",
+                ]
             else:
-                lines.append(f"\\texttt{{{arm}}} & {accuracy} & --- & --- & --- & --- \\\\")
+                cells += ["---", "---", "---", "---"]
+            lines.append(" & ".join(cells) + " \\\\")
         lines += ["\\bottomrule", "\\end{tabular}}", ""]
+    return lines
+
+
+def _secondary_table(analysis: Mapping[str, Any]) -> list[str]:
+    """The secondary readings, in their own table, saying what they are.
+
+    Separate from the accuracy tables rather than a section of one. These
+    comparisons were not corrected and were not registered as hypotheses, and a
+    row of them under the same rule as the family is how an uncorrected reading
+    gets quoted as a result. Nothing at all when the run registered no secondary
+    block.
+    """
+    block = analysis.get("secondary")
+    if not block:
+        return []
+    lines = [
+        f"\\newcommand{{\\{_macro_name('secondary', 'table')}}}{{%",
+        "\\begin{tabular}{llrrrr}",
+        "\\toprule",
+        "set & arm & against & effect & wins/losses & $p$ \\\\",
+        "\\midrule",
+    ]
+    for item_set in block["sets"]:
+        label = item_set["label"]
+        for comparison in item_set["comparisons"]:
+            arm, against = comparison["arm"], comparison["control"]
+            named = (label, _arm_key(arm), "vs", _arm_key(against))
+            lines.append(
+                f"\\texttt{{{label}}} & \\texttt{{{arm}}} & \\texttt{{{against}}} & "
+                f"\\{_macro_name('secondaryEffect', *named)} & "
+                f"\\{_macro_name('secondaryWins', *named)} / "
+                f"\\{_macro_name('secondaryLosses', *named)} & "
+                f"\\{_macro_name('secondaryP', *named)} \\\\"
+            )
+    lines += [
+        "\\bottomrule",
+        "\\multicolumn{6}{l}{\\footnotesize Outside the registered family and "
+        "\\secondaryCorrection.} \\\\",
+        "\\end{tabular}}",
+        "",
+    ]
     return lines
 
 
@@ -1221,15 +1420,17 @@ def _signal_table(signals: Mapping[str, ArmSignal], deltas: Sequence[Delta]) -> 
         "\\midrule",
     ]
     for arm in signals:
+        name = _arm_key(arm)
         cells = [
             f"\\texttt{{{arm}}}",
-            f"\\{_macro_name('parseRate', arm)}",
-            f"\\{_macro_name('meanJ', arm)}",
+            f"\\{_macro_name('parseRate', name)}",
+            f"\\{_macro_name('meanJ', name)}",
         ]
         if arm in by_arm:
             cells += [
-                f"\\{_macro_name('deltaJ', arm)}",
-                f"[\\{_macro_name('deltaJ', arm, 'low')}, \\{_macro_name('deltaJ', arm, 'high')}]",
+                f"\\{_macro_name('deltaJ', name)}",
+                f"[\\{_macro_name('deltaJ', name, 'low')}, "
+                f"\\{_macro_name('deltaJ', name, 'high')}]",
             ]
         else:
             cells += ["---", "---"]
@@ -1270,7 +1471,8 @@ def _template_table(signals: Mapping[str, ArmSignal]) -> list[str]:
 def render_tables(study: Study) -> str:
     """Every table, as a macro apiece so the sections place them."""
     lines = ["% Generated by `de figures`. Do not edit.", ""]
-    lines += _accuracy_table(study.analysis)
+    lines += _accuracy_table(study.analysis, study.controls)
+    lines += _secondary_table(study.analysis)
     lines += _signal_table(study.signals, study.deltas)
     lines += _template_table(study.signals)
     return "\n".join(lines) + "\n"

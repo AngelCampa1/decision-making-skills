@@ -10,7 +10,9 @@ prevent.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -19,8 +21,10 @@ from decision_evals.figures import (
     LOW_SIGNAL_J,
     PLACEBO_SKILL,
     SEED_SKILL,
+    Controls,
     FigureError,
     Reading,
+    _arm_key,
     _template_key,
     arm_order,
     at_cap_macros,
@@ -41,6 +45,7 @@ from decision_evals.figures import (
     rescored_macros,
     restricted_macros,
     screen_macros,
+    secondary_macros,
     signal_by_arm,
     template_range_macros,
     write_figures,
@@ -63,7 +68,20 @@ TEMPLATES = ("t-good", "t-quiet", "t-onesided")
 #: real records carry ``input_tokens`` and the delta against ``off`` is exactly
 #: constant per item, which is what ``body_tokens`` relies on and refuses
 #: without.
-BODY_TOKENS = {"off": 0, "on": 100, "candidate": 250}
+BODY_TOKENS = {
+    "off": 0,
+    "on": 100,
+    "candidate": 250,
+    # The two-placebo fixture. Each matched placebo is within a few tokens of
+    # the winner it stands in for, and the shared placebo is within a few of the
+    # seed skill, which is the length mismatch the per-winner design exists to
+    # remove.
+    "placebo": 110,
+    "gepa": 300,
+    "placebo-gepa": 305,
+    "skillopt": 180,
+    "placebo-skillopt": 175,
+}
 
 #: The output ceiling the fixture's unanswered readings stop at.
 OUTPUT_CAP = 4096
@@ -420,6 +438,7 @@ class TestRendering:
                 readings=study.readings,
                 signals=crippled,
                 deltas=study.deltas,
+                controls=study.controls,
             )
         )
         assert "\\texttt{t-quiet}" in tables
@@ -531,14 +550,14 @@ class TestClusteredTests:
     def test_it_reports_one_result_per_set_and_arm(self, tmp_path: Path) -> None:
         run_dir = _write_run(tmp_path)
         manifest = json.loads((run_dir / "run.json").read_text())
-        results = clustered_tests(load_readings(run_dir), manifest, "on")
+        results = clustered_tests(load_readings(run_dir), manifest, Controls("on"))
         assert set(results) == {("unseen", "off"), ("unseen", "candidate")}
 
     def test_the_floor_comes_back_with_the_p(self, tmp_path: Path) -> None:
         """Three templates cannot produce a p below 0.125, which is the finding."""
         run_dir = _write_run(tmp_path)
         manifest = json.loads((run_dir / "run.json").read_text())
-        results = clustered_tests(load_readings(run_dir), manifest, "on")
+        results = clustered_tests(load_readings(run_dir), manifest, Controls("on"))
         for result in results.values():
             assert result.floor >= 2.0**-3
 
@@ -548,7 +567,7 @@ class TestClusteredTests:
         manifest = json.loads(path.read_text())
         del manifest["request"]["sets"]
         with pytest.raises(FigureError, match="no item sets"):
-            clustered_tests(load_readings(run_dir), manifest, "on")
+            clustered_tests(load_readings(run_dir), manifest, Controls("on"))
 
 
 class TestKeySelectivity:
@@ -710,7 +729,7 @@ class TestRefusalsOnMalformedRuns:
             run_dir, "candidate", lambda row: None if row["item_id"].endswith("#v0") else row
         )
         with pytest.raises(FigureError, match="missing"):
-            clustered_tests(load_readings(run_dir), manifest, "on")
+            clustered_tests(load_readings(run_dir), manifest, Controls("on"))
 
     def test_a_template_an_arm_never_answered_gets_no_parsed_macros(self, tmp_path: Path) -> None:
         """Zero would be a measurement of an accuracy nothing was measured on."""
@@ -725,7 +744,7 @@ class TestRefusalsOnMalformedRuns:
             ),
         )
         manifest = json.loads((run_dir / "run.json").read_text())
-        values = per_template_macros(load_readings(run_dir), manifest, "off", "on")
+        values = per_template_macros(load_readings(run_dir), manifest, "off", Controls("on"))
         assert "parseRateUnseenTQuietCandidate" in values
         assert "accParsedUnseenTQuietCandidate" not in values
         assert "constantShareUnseenTQuietCandidate" not in values
@@ -737,7 +756,7 @@ class TestRefusalsOnMalformedRuns:
             run_dir, "candidate", lambda row: {**row, "parsed": None, "parse_status": "unparsed"}
         )
         manifest = json.loads((run_dir / "run.json").read_text())
-        values = restricted_macros(load_readings(run_dir), manifest, "on")
+        values = restricted_macros(load_readings(run_dir), manifest, Controls("on"))
         assert "restrictedUnseenCandidate" not in values
         assert "restrictedUnseenOff" in values
 
@@ -757,7 +776,7 @@ class TestRescoring:
 
     def test_the_token_is_counted_where_it_landed(self, tmp_path: Path) -> None:
         study = read_study(_write_run(tmp_path))
-        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        values = rescored_macros(study.readings, study.manifest, study.analysis, study.controls)
         assert values["controlTokenCandidate"] == "1"
         assert values["controlTokenCorrectCandidate"] == "1"
         assert values["controlTokenOn"] == "0"
@@ -766,7 +785,7 @@ class TestRescoring:
 
     def test_the_re_read_moves_only_the_arm_that_carried_it(self, tmp_path: Path) -> None:
         study = read_study(_write_run(tmp_path))
-        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        values = rescored_macros(study.readings, study.manifest, study.analysis, study.controls)
         assert values["rescoredAccUnseenOn"] == "0.6923"
         assert values["rescoredAccUnseenCandidate"] == "0.7692"
         assert values["rescoredWinsUnseenCandidate"] == "1"
@@ -778,7 +797,7 @@ class TestRescoring:
 
     def test_the_control_against_the_baseline_is_reported_both_ways(self, tmp_path: Path) -> None:
         study = read_study(_write_run(tmp_path))
-        values = rescored_macros(study.readings, study.manifest, study.analysis)
+        values = rescored_macros(study.readings, study.manifest, study.analysis, study.controls)
         # `on` is the fixture's control and `off` its baseline; they answer alike.
         assert values["controlOverBaselineWinsUnseen"] == "0"
         assert values["controlOverBaselineLossesUnseen"] == "0"
@@ -790,7 +809,7 @@ class TestRescoring:
     def test_a_set_the_manifest_does_not_seed_defines_nothing(self, tmp_path: Path) -> None:
         study = read_study(_write_run(tmp_path))
         analysis = {"control": "on", "sets": [{"label": "ghost", "comparisons": []}]}
-        assert rescored_macros(study.readings, study.manifest, analysis) == {
+        assert rescored_macros(study.readings, study.manifest, analysis, Controls("on")) == {
             "controlTokenOff": "0",
             "controlTokenCorrectOff": "0",
             "controlTokenOn": "0",
@@ -812,7 +831,7 @@ class TestRescoring:
         ]
         manifest = {"request": {"sets": [{"label": "unseen", "seeds": [1000]}]}}
         analysis = {"control": "on", "sets": [{"label": "unseen", "comparisons": []}]}
-        values = rescored_macros(readings, manifest, analysis)
+        values = rescored_macros(readings, manifest, analysis, Controls("on"))
         assert values["rescoredAccUnseenOn"] == "0.5000"
         assert values["rescoredAccUnseenCandidate"] == "0.5000"
         assert "rescoredAccUnseenGhost" not in values
@@ -856,16 +875,363 @@ def test_a_per_winner_placebo_is_its_own_arm_and_not_the_shared_one(tmp_path: Pa
     assert sum(1 for r in readings if r.arm == "placebo") == len(TEMPLATES) * 4 + 1
 
 
-def test_a_run_with_a_placebo_per_winner_is_refused_rather_than_mispaired(
-    tmp_path: Path,
-) -> None:
-    """Every figure pairs every arm against the one `control`. On a run whose
-    winner was registered against its own placebo, the rescored and clustered
-    macros would print the winner against the shared placebo under a heading
-    saying "registered", and `write_figures` picks the latest run by name."""
-    run_dir = _write_run(tmp_path)
-    analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
-    analysis["controls"] = {"candidate": "placebo-candidate"}
+#: The two-placebo study's arms, in the order a study would register them: the
+#: floor, the seed skill, the shared placebo, a placebo matched to each winner,
+#: then the winners.
+PAIRED_ARMS = (
+    "off",
+    "on",
+    "placebo",
+    "placebo-gepa",
+    "placebo-skillopt",
+    "gepa",
+    "skillopt",
+)
+
+#: Which placebo each winner was registered against. `on` is absent, so it falls
+#: back to the shared placebo, which is what every arm did before this design.
+PAIRED_CONTROLS = {"gepa": "placebo-gepa", "skillopt": "placebo-skillopt"}
+
+#: Each arm's answers on `t-good`, whose key is a, a, b, b. This is the only
+#: template the arms differ on, so a comparison read against the wrong control
+#: comes back with a different number rather than the right one by luck. Against
+#: its own placebo `gepa` wins one item and loses none; against the shared
+#: placebo it wins none. `skillopt` nets zero against its own and minus one
+#: against the shared.
+PAIRED_ANSWERS = {
+    "off": ["a", "a", "b", "b"],
+    "on": ["a", "a", "b", "b"],
+    "placebo": ["a", "a", "b", "b"],
+    "placebo-gepa": ["a", "b", "b", "b"],
+    "placebo-skillopt": ["a", "a", "a", "b"],
+    "gepa": ["a", "a", "b", "b"],
+    "skillopt": ["b", "a", "b", "b"],
+}
+
+
+def _paired_comparison(arm: str, control: str, wins: int, losses: int) -> dict[str, object]:
+    """One row of a study's analysis, with the accuracies it implies over 13 items."""
+    return {
+        "item_set": "unseen",
+        "arm": arm,
+        "control": control,
+        "n_pairs": 13,
+        "accuracy": (9 + wins - losses) / 13,
+        "control_accuracy": 9 / 13,
+        "arm_only": wins,
+        "control_only": losses,
+        "p_value": 0.5,
+        "adjusted": 1.0,
+        "rejected": False,
+    }
+
+
+def _write_paired_run(root: Path) -> Path:
+    """A study that gave each winner a placebo matched to it.
+
+    The shape `de study --winner-placebo` writes: a `controls` mapping, a
+    `secondary` block, and a records file per matched placebo. Two winners, so a
+    figure that paired one of them correctly by accident still fails the other.
+    """
+    run_dir = root / "results" / "evolution-study" / "2026-02-02-abcdef0-paired"
+    run_dir.mkdir(parents=True)
+
+    keys = {
+        "t-good": ["a", "a", "b", "b"],
+        "t-quiet": ["a", "a", "b", "b"],
+        "t-onesided": ["a", "a", "a", "a"],
+    }
+    elsewhere = {"t-quiet": ["a", "a", "a", "a"], "t-onesided": ["a", "b", "a", "a"]}
+    for arm in PAIRED_ARMS:
+        answers = {"t-good": PAIRED_ANSWERS[arm], **elsewhere}
+        rows = [
+            _row(arm, template, index, keys[template][index], answers[template][index])
+            for template in TEMPLATES
+            for index in range(4)
+        ]
+        rows.append(_row(arm, "t-good", 9, "a", None))
+        (run_dir / f"records-{arm}.jsonl").write_text(
+            "\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8"
+        )
+
+    accuracy = dict.fromkeys(PAIRED_ARMS, 9 / 13)
+    analysis = {
+        "control": "placebo",
+        "controls": dict(PAIRED_CONTROLS),
+        "sets": [
+            {
+                "label": "unseen",
+                "n_items": 13,
+                "accuracy": accuracy,
+                "comparisons": [
+                    _paired_comparison("on", "placebo", 0, 0),
+                    _paired_comparison("gepa", "placebo-gepa", 1, 0),
+                    _paired_comparison("skillopt", "placebo-skillopt", 1, 1),
+                ],
+            }
+        ],
+        "secondary": {
+            "corrected": False,
+            "sets": [
+                {
+                    "label": "unseen",
+                    "n_items": 13,
+                    "accuracy": accuracy,
+                    "comparisons": [
+                        _paired_comparison("placebo", "off", 0, 0),
+                        _paired_comparison("gepa", "placebo", 0, 0),
+                        _paired_comparison("placebo-gepa", "placebo", 0, 1),
+                        _paired_comparison("skillopt", "placebo", 0, 1),
+                        _paired_comparison("placebo-skillopt", "placebo", 0, 1),
+                    ],
+                }
+            ],
+        },
+    }
     (run_dir / "analysis.json").write_text(json.dumps(analysis), encoding="utf-8")
-    with pytest.raises(FigureError, match="candidate vs placebo-candidate"):
-        read_study(run_dir)
+    (run_dir / "run.json").write_text(
+        json.dumps(
+            {
+                "request": {
+                    "target_model": "fixture/model",
+                    "alpha": 0.05,
+                    "sets": [{"label": "unseen", "seeds": [1000]}],
+                },
+                "arms": [
+                    {"label": arm, "control": PAIRED_CONTROLS.get(arm)} for arm in PAIRED_ARMS
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return run_dir
+
+
+class TestAPlaceboPerWinner:
+    """Each winner read against its own placebo, everywhere, or not at all.
+
+    The failure this guards is quiet: a figure that pairs `gepa` against the
+    shared placebo prints a plausible number under a heading that says
+    "registered", and nothing in the LaTeX build can tell the difference.
+    """
+
+    def test_the_mapping_is_read_and_falls_back_to_the_shared_control(self, tmp_path: Path) -> None:
+        study = read_study(_write_paired_run(tmp_path))
+        assert study.controls.shared == "placebo"
+        assert study.controls.of("gepa") == "placebo-gepa"
+        assert study.controls.of("skillopt") == "placebo-skillopt"
+        # An arm with no entry is where it always was.
+        assert study.controls.of("on") == "placebo"
+        assert study.controls.of("placebo-gepa") == "placebo"
+
+    def test_an_arm_label_becomes_one_camel_cased_word(self) -> None:
+        """`placebo-gepa` and `placebogepa` must not reach the same macro name.
+        A digit still refuses, because an arm label is typed by hand."""
+        assert _arm_key("gepa") == "gepa"
+        assert _arm_key("placebo-gepa") == "placeboGepa"
+        assert _arm_key("placebo_skillopt") == "placeboSkillopt"
+
+    def test_a_control_the_manifest_never_declared_is_refused(self, tmp_path: Path) -> None:
+        """A mapping naming an arm that did not run would pair a winner against
+        nothing, and `by_arm` hands back an empty control rather than saying so."""
+        run_dir = _write_paired_run(tmp_path)
+        analysis = json.loads((run_dir / "analysis.json").read_text(encoding="utf-8"))
+        analysis["controls"]["gepa"] = "placebo-ghost"
+        (run_dir / "analysis.json").write_text(json.dumps(analysis), encoding="utf-8")
+        with pytest.raises(FigureError, match="placebo-ghost"):
+            read_study(run_dir)
+
+    def test_the_net_per_template_is_against_the_arms_own_placebo(self, tmp_path: Path) -> None:
+        """+1 against its own placebo and 0 against the shared one, so a
+        mispairing reads as a different number and not as a missing macro."""
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        assert values["netUnseenTGoodGepaVsPlaceboGepa"] == "+1"
+        assert values["netUnseenTGoodSkilloptVsPlaceboSkillopt"] == "+0"
+        # The shared-placebo names are not written for an arm that has its own.
+        assert "netUnseenTGoodGepa" not in values
+        assert "netUnseenTGoodSkillopt" not in values
+        # An arm with no placebo of its own keeps the name it always had.
+        assert values["netUnseenTGoodOn"] == "+0"
+        assert values["netUnseenTGoodPlaceboGepa"] == "-1"
+
+    def test_the_registered_family_carries_the_control_in_its_name(self, tmp_path: Path) -> None:
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        for prefix in ("effect", "wins", "losses", "p", "q", "clustered", "clusters"):
+            assert f"{prefix}UnseenGepaVsPlaceboGepa" in values
+            assert f"{prefix}UnseenSkilloptVsPlaceboSkillopt" in values
+            assert f"{prefix}UnseenGepa" not in values
+            assert f"{prefix}UnseenOn" in values
+        assert values["winsUnseenGepaVsPlaceboGepa"] == "1"
+        assert values["lossesUnseenSkilloptVsPlaceboSkillopt"] == "1"
+
+    def test_the_restricted_and_rescored_reads_pair_the_same_way(self, tmp_path: Path) -> None:
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        assert values["restrictedWinsUnseenGepaVsPlaceboGepa"] == "1"
+        assert values["restrictedLossesUnseenGepaVsPlaceboGepa"] == "0"
+        assert values["restrictedWinsUnseenSkilloptVsPlaceboSkillopt"] == "1"
+        assert values["restrictedLossesUnseenSkilloptVsPlaceboSkillopt"] == "1"
+        assert values["rescoredWinsUnseenGepaVsPlaceboGepa"] == "1"
+        assert values["rescoredLossesUnseenGepaVsPlaceboGepa"] == "0"
+        # A matched placebo is still read against the shared one, under the
+        # plain name, because it is not an arm with a control of its own.
+        assert values["restrictedLossesUnseenPlaceboGepa"] == "1"
+
+    def test_the_body_ratio_is_against_the_document_the_arm_was_tested_against(
+        self, tmp_path: Path
+    ) -> None:
+        """The reading the redesign exists to fix. Against the shared placebo
+        `gepa` reads 2.73, which is a statement about length and not about what
+        the document says."""
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        assert values["bodyGepaRatioVsPlaceboGepa"] == "0.98"
+        assert values["bodySkilloptRatioVsPlaceboSkillopt"] == "1.03"
+        assert values["bodyOnRatio"] == "0.91"
+        assert values["controlOfGepa"] == "placebo-gepa"
+        assert values["controlOfSkillopt"] == "placebo-skillopt"
+        assert "controlOfOn" not in values
+
+    def test_the_secondary_block_is_rendered_and_says_it_is_uncorrected(
+        self, tmp_path: Path
+    ) -> None:
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        assert values["secondaryCorrection"] == "uncorrected"
+        # The reading the design rests on: the matched placebo against the
+        # shared one, named for both arms because the same arm appears here
+        # against a different control than the family used.
+        assert values["secondaryEffectUnseenPlaceboGepaVsPlacebo"] == "-0.0769"
+        assert values["secondaryLossesUnseenPlaceboGepaVsPlacebo"] == "1"
+        assert values["secondaryPUnseenPlaceboVsOff"] == "0.5000"
+        assert values["secondaryPairsUnseenGepaVsPlacebo"] == "13"
+        # And it does not overwrite the registered reading of the same arm.
+        assert values["effectUnseenGepaVsPlaceboGepa"] == "+0.0769"
+
+    def test_a_corrected_block_is_reported_as_corrected(self) -> None:
+        """The word comes off the record. A block someone corrected and left
+        under this key must not print as uncorrected because the renderer
+        assumed it."""
+        analysis = {
+            "secondary": {
+                "corrected": True,
+                "sets": [{"label": "unseen", "comparisons": []}],
+            }
+        }
+        assert secondary_macros(analysis)["secondaryCorrection"] == "corrected"
+
+    def test_a_run_with_no_secondary_block_defines_none_of_it(self, tmp_path: Path) -> None:
+        values = collect(read_study(_write_run(tmp_path)), tmp_path)
+        assert not any(name.startswith("secondary") for name in values)
+
+    def test_the_tables_name_what_each_arm_was_tested_against(self, tmp_path: Path) -> None:
+        study = read_study(_write_paired_run(tmp_path))
+        tables = render_tables(study)
+        assert "arm & against & accuracy" in tables
+        assert "\\texttt{gepa} & \\texttt{placebo-gepa} &" in tables
+        assert "\\texttt{on} & \\texttt{placebo} &" in tables
+        # An arm with no comparison of its own gets a dash, not a control it
+        # was never tested against.
+        assert "\\texttt{placebo} & --- &" in tables
+        assert "\\secondaryTable" in tables
+        assert "Outside the registered family and \\secondaryCorrection." in tables
+
+    def test_a_one_placebo_run_still_gets_the_table_it_always_had(self, tmp_path: Path) -> None:
+        tables = render_tables(read_study(_write_run(tmp_path)))
+        assert "\\begin{tabular}{lrrrrr}" in tables
+        assert "arm & accuracy & effect" in tables
+        assert "against" not in tables
+        assert "secondaryTable" not in tables
+
+    def test_every_arm_keeps_its_own_signal_row(self, tmp_path: Path) -> None:
+        """Seven arms and seven rows. A reader that folded the matched placebos
+        into the shared one would report a placebo that is a blend of three."""
+        values = collect(read_study(_write_paired_run(tmp_path)), tmp_path)
+        for arm in ("Off", "On", "Placebo", "PlaceboGepa", "PlaceboSkillopt", "Gepa", "Skillopt"):
+            assert f"meanJ{arm}" in values
+            assert f"accUnseen{arm}" in values
+
+    def test_the_whole_build_runs_on_a_two_placebo_run(self, tmp_path: Path) -> None:
+        """`de figures` and `make paper` go through here, so a reader that learnt
+        the mapping is worth nothing while the writer still refuses."""
+        _write_paired_run(tmp_path)
+        result = write_figures(tmp_path, tmp_path / "paper")
+        assert result.run == "2026-02-02-abcdef0-paired"
+        assert result.macros > 0
+        assert {path.name for path in result.paths} == {
+            "macros.tex",
+            "tables.tex",
+            "accuracy.tex",
+            "signal.tex",
+        }
+
+
+#: Control sequences the tables use that no generated macro defines. Every other
+#: `\name` in `tables.tex` has to be a macro `collect` wrote, which is what
+#: catches a table citing a comparison under a name the macro file spells
+#: differently.
+LATEX_CONTROL_SEQUENCES = frozenset(
+    {
+        "Delta",
+        "begin",
+        "bottomrule",
+        "dagger",
+        "end",
+        "footnotesize",
+        "midrule",
+        "multicolumn",
+        "newcommand",
+        "tabular",
+        "texttt",
+        "toprule",
+    }
+)
+
+
+def _undefined_in(tables: str, values: dict[str, str]) -> list[str]:
+    """Macros the tables cite that the macro file does not define."""
+    defined = set(re.findall(r"\\newcommand\{\\([A-Za-z]+)\}", tables))
+    used = set(re.findall(r"\\([A-Za-z]+)", tables))
+    return sorted(used - defined - LATEX_CONTROL_SEQUENCES - set(values))
+
+
+def test_the_tables_cite_no_macro_the_macro_file_leaves_undefined(tmp_path: Path) -> None:
+    """An undefined control sequence fails the LaTeX build somewhere unrelated to
+    the number that moved, which is how a renamed macro gets diagnosed as a TeX
+    problem. Checked on both designs, because the renaming is what differs."""
+    for run in (_write_run(tmp_path / "one"), _write_paired_run(tmp_path / "two")):
+        study = read_study(run)
+        assert _undefined_in(render_tables(study), collect(study, tmp_path)) == []
+
+
+def test_the_published_run_generates_the_bytes_it_generated_before() -> None:
+    """The 2026-08-27 run carries no `controls` key, so teaching these figures
+    the mapping may not move a digit of it. Pinned against `origin/main` at
+    ee34170: generated there, compared file by file, and these are the digests of
+    that output.
+
+    A change that moves one is not necessarily wrong and is never accidental. The
+    run's numbers are what `paper/` prints, so the diff belongs in review.
+    """
+    study = read_study(REPO_ROOT / "results" / "evolution-study" / PUBLISHED)
+    values = collect(study, REPO_ROOT)
+    artefacts = {
+        "macros.tex": (
+            render_macros(values),
+            "24e3c86ce7c06ce35cc159bfd6f8fa1fe95f0feeb61eea3e2885e995ce089f6a",
+        ),
+        "tables.tex": (
+            render_tables(study),
+            "6edc7ea393c58e4f079b3d34d7bb1c50bdb895bdb29ac1cd58cca908abd8ff8d",
+        ),
+        "accuracy.tex": (
+            render_accuracy_plot(study),
+            "0d63fe1f088cd98c2b133b9bb27bb7cba1055f675798111fca7d5c418200c84a",
+        ),
+        "signal.tex": (
+            render_signal_plot(study),
+            "7108a65c79f608307e8cfcd2d8d52a8ba849631c459427c3226bd7d2b78332e8",
+        ),
+    }
+    for name, (text, digest) in artefacts.items():
+        assert hashlib.sha256(text.encode("utf-8")).hexdigest() == digest, name
+    assert study.controls.per_arm == {}
+    assert not any("Vs" in name for name in values)
+    assert _undefined_in(render_tables(study), values) == []
