@@ -144,6 +144,10 @@ packages = ["evals/src/decision_evals"]
 line-length = 100
 target-version = "py313"
 src = ["evals/src", "tests"]
+# Third-party research skills installed by `npx skills add` for Claude Code
+# and Codex. They bundle their own Python CLIs, written to nobody's lint
+# rules but their authors', and the gate does not own them.
+extend-exclude = [".agents/skills", ".claude/skills"]
 
 [tool.ruff.lint]
 select = [

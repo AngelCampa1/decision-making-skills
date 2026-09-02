@@ -102,5 +102,8 @@ results/triggers/
 
 # Agent-local scratch: session config and throwaway worktrees. Untracked and
 # unignored, it put a scratch worktree's Python under `ruff check .` and broke
-# the gate for every session at once.
-.claude/
+# the gate for every session at once. `.claude/skills/` is the exception: the
+# third-party research skills installed there for Claude Code are tracked, and
+# `[tool.ruff]` excludes them so their bundled Python stays out of the gate.
+.claude/*
+!.claude/skills/

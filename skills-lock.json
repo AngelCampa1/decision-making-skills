@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "skills": {
+    "academic-paper-review": {
+      "source": "bytedance/deer-flow",
+      "sourceType": "github",
+      "skillPath": "skills/public/academic-paper-review/SKILL.md",
+      "computedHash": "ea1355279516468115f4e54c48bcfc20fd12ef6a67b48898f701ac8da5470fa4"
+    },
+    "citation-management": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/citation-management/SKILL.md",
+      "computedHash": "0e0a6b5b3f6861be50750a7dae49beff9d2ee6a82d996f77d26d7e45cadddded"
+    },
+    "experimental-design": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/experimental-design/SKILL.md",
+      "computedHash": "543629a926a68e82ef3876a2bde31f7b2a8d2808a0ef3c4179cfb2feae6c93bd"
+    },
+    "hypothesis-generation": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/hypothesis-generation/SKILL.md",
+      "computedHash": "96f315a3de9973ac3acf0d03c368e77b623167443ab2f96ed08f550bfbe7ea85"
+    },
+    "paper-lookup": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/paper-lookup/SKILL.md",
+      "computedHash": "8f577d2c3ec8bf892f525d69aea4c8e0c8143d8b0d9d27ce0bc4e5b2f4520bae"
+    },
+    "peer-review": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/peer-review/SKILL.md",
+      "computedHash": "0022e9a5ace76f9a46f6ba719a843f3b4f588b75a2d694b280a89b49ad657fb9"
+    },
+    "read-arxiv-paper": {
+      "source": "karpathy/nanochat",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/read-arxiv-paper/SKILL.md",
+      "computedHash": "fbfe8363abc18db544f627d00a69078f2371f2c272c480c2e83d065fc6588b02"
+    },
+    "scientific-critical-thinking": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-critical-thinking/SKILL.md",
+      "computedHash": "683ea661ed28e7d646cab5e4588dbcef457b280fcf0eba433ad97f9ba994c614"
+    },
+    "scientific-writing": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-writing/SKILL.md",
+      "computedHash": "603eb066998c5de1b6de3d49992da51802da801eafd2fa84b4db7fada674a86c"
+    },
+    "statistical-analysis": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/statistical-analysis/SKILL.md",
+      "computedHash": "f70a318e994adb30f800a84e99ac87917562e4111b43a046506b434063c841e2"
+    },
+    "statistical-power": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/statistical-power/SKILL.md",
+      "computedHash": "5e886e639526c0bc8487775e3a28dc56b0f119b17738ed1073d08945ab181cd2"
+    },
+    "systematic-literature-review": {
+      "source": "bytedance/deer-flow",
+      "sourceType": "github",
+      "skillPath": "skills/public/systematic-literature-review/SKILL.md",
+      "computedHash": "a4f42cb232c1b25a971c35c09933a1f26ef5c432439c0c7ca59137d0275cc4c1"
+    },
+    "venue-templates": {
+      "source": "k-dense-ai/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/venue-templates/SKILL.md",
+      "computedHash": "cd3318a26de87210f3b7cdab4948e7a4259ad0cf11f135aae4cc79178aebe95d"
+    }
+  }
+}
