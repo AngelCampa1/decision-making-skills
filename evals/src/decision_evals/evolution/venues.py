@@ -57,6 +57,22 @@ class VenueError(RuntimeError):
     """A venue was named that cannot be reached, or cannot be reached honestly."""
 
 
+class SearchStopped(BaseException):
+    """The reflector's breaker tripped, and the search ends here.
+
+    Derived from :class:`BaseException` on purpose. GEPA 0.1.4 wraps every
+    reflector call in ``except Exception``, appends ``None`` and proposes
+    again (``proposer/reflective_mutation/reflective_mutation.py``, lines
+    214 to 225), so an ordinary error from a reflector that cannot be reached
+    is swallowed once per proposal: each later proposal makes one HTTP call,
+    is refused at once, and the search spends its whole call budget scoring
+    parent minibatches that lead nowhere. An exception the engine cannot
+    catch unwinds to :func:`decision_evals.evolution.run.evolve`, which
+    freezes the lineage and the winner and records why, the same path the
+    wall-clock deadline lands in.
+    """
+
+
 @dataclass(frozen=True, slots=True)
 class Venue:
     """One endpoint, one model, and what is true about paying for it."""
@@ -185,26 +201,78 @@ def isolation_receipt(venue: Venue, *, timeout: float = 30.0) -> str:
 PROMPT_ALLOWANCE: Final = 2_048
 
 
-def context_window(venue: Venue, *, timeout: float = 30.0) -> int | None:
+#: The reflector's schedule. The runner's default waits about 30 s at most
+#: over five attempts, which suits a local server and is shorter than the
+#: window a hosted free tier closes for: NVIDIA Build refuses for about a
+#: minute. Ten attempts under a 120 s ceiling wait out a minute-plus window.
+REFLECTOR_BACKOFF: Final = Backoff(attempts=10, max_delay=120.0)
+
+
+def _stderr(message: str) -> None:
+    """Where a retry is reported when the caller names nowhere else.
+
+    The search log GEPA writes belongs to the engine, and the reflector is built
+    before the engine is, so the console is the surface both jobs share.
+    """
+    print(message, file=sys.stderr, flush=True)
+
+
+def _retry_reporter(
+    job: str, backpressure: Backpressure, log: Callable[[str], None]
+) -> Callable[[int, RateLimitedError], None]:
+    """The ``on_retry`` hook: one line per refusal, written before the wait."""
+
+    def report(attempt: int, exc: RateLimitedError) -> None:
+        asked = f"server asked for {exc.retry_after:g}s" if exc.retry_after else "backing off"
+        log(
+            f"{job} rate-limited on attempt {attempt + 1} of "
+            f"{backpressure.policy.attempts}, {asked} before the next: {exc}"
+        )
+
+    return report
+
+
+def context_window(
+    venue: Venue,
+    *,
+    timeout: float = 30.0,
+    backoff: Backoff | None = None,
+    log: Callable[[str], None] = _stderr,
+) -> int | None:
     """The context window the target is *loaded* with, or ``None`` if unknowable.
 
     ``None`` is a real answer and appears in two cases: a hosted endpoint that
     exposes no residency surface, and a local model nobody has loaded yet. The
     caller warms the model and asks again rather than treating either as
     permission to proceed.
+
+    A rate limit or a busy 503 on the probe is waited out on the runner's
+    schedule, the same one a scored call gets. This is the first request a
+    study makes, and a study that dies here on a transient refusal before its
+    first call is the failure the retry exists to remove.
     """
     if not venue.receipts:
         return None
     bare = venue.model[len(venue.label) + 1 :]
-    window = loaded(endpoint=venue.endpoint, timeout=timeout).get(bare)
+    backpressure = Backpressure(backoff)
+    report = _retry_reporter(f"residency probe {venue.model}", backpressure, log)
+
+    def probe() -> int | None:
+        return loaded(endpoint=venue.endpoint, timeout=timeout).get(bare)
+
+    window = call_with_backoff(probe, backpressure=backpressure, on_retry=report)
     if window is not None:
         return window
     # Nobody has loaded it, which is the state every first run of the day is
     # in. A guard that only ever fires on a warm server is a guard that misses
     # the run it was written for, so make the server resident and ask again.
     # The load generates nothing and is not a model call.
-    warm(venue.model, endpoint=venue.endpoint)
-    return loaded(endpoint=venue.endpoint, timeout=timeout).get(bare)
+    call_with_backoff(
+        lambda: warm(venue.model, endpoint=venue.endpoint),
+        backpressure=backpressure,
+        on_retry=report,
+    )
+    return call_with_backoff(probe, backpressure=backpressure, on_retry=report)
 
 
 def assert_cap_fits(window: int | None, max_tokens: int) -> None:
@@ -319,15 +387,6 @@ def _options_in(prompt: str) -> list[str]:
     return [line[2:].strip() for line in menu.splitlines() if line.startswith("- ")]
 
 
-def _stderr(message: str) -> None:
-    """Where a retry is reported when the caller names nowhere else.
-
-    The search log GEPA writes belongs to the engine, and the reflector is built
-    before the engine is, so the console is the surface both jobs share.
-    """
-    print(message, file=sys.stderr, flush=True)
-
-
 def reflection_lm(
     model: str,
     *,
@@ -347,45 +406,46 @@ def reflection_lm(
     ``reflection_lm`` expects. The reasoning field is dropped: a reflector that
     thinks out loud is fine and the engine has no use for the transcript.
 
-    A rate limit waits here, on the schedule :func:`~decision_evals.runner.run_arm`
-    uses for a scored call, and every wait is written to ``log``. The hosted
-    free tier that reflects for a local target answers 429 when its window
-    closes, and on 2026-08-27 that refusal reached the engine as a plain error.
-    GEPA catches everything and sleeps, the deadline in
-    :mod:`decision_evals.evolution.run` is what finally stopped it, and the
-    hours between were spent on a call that would have cleared in seconds. One
-    :class:`~decision_evals.runner.Backpressure` serves the whole search, so the
-    breaker counts consecutive refusals across proposals and a window that has
-    closed stops the search instead of being waited on again.
+    A rate limit waits here, on :data:`REFLECTOR_BACKOFF`, and every wait is
+    written to ``log``. The hosted free tier that reflects for a local target
+    answers 429 when its window closes, and on 2026-08-27 that refusal reached
+    the engine as a plain error. GEPA catches everything and sleeps, the
+    deadline in :mod:`decision_evals.evolution.run` is what finally stopped it,
+    and the hours between were spent on a call that would have cleared in
+    seconds. One :class:`~decision_evals.runner.Backpressure` serves the whole
+    search, so the breaker counts consecutive refusals across proposals, and
+    when it trips the search ends through :class:`SearchStopped`, which the
+    engine's per-proposal ``except Exception`` cannot swallow.
 
     Args:
-        backoff: The schedule. ``None`` is the runner's default, the same five
-            attempts and sixty-second ceiling a scored call gets.
+        backoff: The schedule. ``None`` is :data:`REFLECTOR_BACKOFF`, ten
+            attempts under a 120 s ceiling, sized for a hosted window that
+            closes for about a minute.
         log: Where each retry is reported. Standard error unless the caller
             has a better place.
+
+    Raises:
+        SearchStopped: From the returned callable, when the breaker trips.
     """
     venue = venue_for(model)
-    backpressure = Backpressure(backoff)
-
-    def report(attempt: int, exc: RateLimitedError) -> None:
-        asked = f"server asked for {exc.retry_after:g}s" if exc.retry_after else "backing off"
-        log(
-            f"reflector {venue.model} rate-limited on attempt {attempt + 1} of "
-            f"{backpressure.policy.attempts}, {asked} before the next: {exc}"
-        )
+    backpressure = Backpressure(backoff or REFLECTOR_BACKOFF)
+    report = _retry_reporter(f"reflector {venue.model}", backpressure, log)
 
     def reflect(prompt: str) -> str:
-        result = call_with_backoff(
-            lambda: openai_run(
-                prompt,
-                system_prompt="",
-                model=venue.model,
-                endpoint=venue.endpoint,
-                temperature=temperature,
-            ),
-            backpressure=backpressure,
-            on_retry=report,
-        )
+        try:
+            result = call_with_backoff(
+                lambda: openai_run(
+                    prompt,
+                    system_prompt="",
+                    model=venue.model,
+                    endpoint=venue.endpoint,
+                    temperature=temperature,
+                ),
+                backpressure=backpressure,
+                on_retry=report,
+            )
+        except RunError as exc:
+            raise SearchStopped(f"the reflector {venue.model} stopped the search: {exc}") from exc
         return result.text
 
     return reflect

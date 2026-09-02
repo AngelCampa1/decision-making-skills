@@ -40,6 +40,7 @@ from decision_evals.evolution.skillopt_env import build_env, train_config
 from decision_evals.evolution.solo import Solo
 from decision_evals.evolution.venues import (
     MOCK_MODEL,
+    SearchStopped,
     Venue,
     assert_cap_fits,
     call_fn,
@@ -502,6 +503,14 @@ def evolve(
         # exception propagated out of `de evolve`, and fourteen candidates and
         # 287 scored records stayed on disk with nothing pointing at them.
         # The cap still stops the run -- it is not raised, retried or widened.
+        stop_reason = str(exc)
+    except SearchStopped as exc:
+        # The reflector's breaker. It arrives as a `BaseException` because the
+        # engine swallows every `Exception` a reflector raises and proposes
+        # again, and a search whose reflector cannot be reached would otherwise
+        # spend its call budget on proposals that cannot be written. Same stop
+        # the deadline lands in: the lineage is on disk and a winner is chosen
+        # from what was scored.
         stop_reason = str(exc)
     except KeyboardInterrupt:
         # The deadline, or a person. Only the first is a result: a run somebody

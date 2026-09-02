@@ -796,7 +796,11 @@ def call_with_backoff[C](
     Args:
         attempt_call: The call, closed over its arguments. Made at least once.
         backpressure: The shared pause. Required: an optional one defaults to
-            no retrying, which is the behaviour this exists to replace.
+            no retrying, which is the behaviour this exists to replace. Under
+            :data:`DEFAULT_BACKOFF` the waits sum to about 30 s at most over
+            five attempts, which suits a local server and is shorter than the
+            minute a hosted free tier closes for, so the reflector carries a
+            longer schedule of its own.
         on_retry: Told about each refusal before the wait it causes, with the
             zero-based attempt and the error. The reflector logs from here.
 

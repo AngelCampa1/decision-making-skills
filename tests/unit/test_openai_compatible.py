@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import io
 import json
+import os
+import time
 import urllib.error
 from datetime import UTC, datetime, timedelta
 from email.utils import format_datetime
@@ -413,6 +415,27 @@ def test_a_retry_after_as_an_http_date_is_read_as_seconds_from_now(
     assert 60.0 < caught.value.retry_after <= 90.0
 
 
+def test_a_retry_after_date_in_the_unknown_zone_is_read_as_utc() -> None:
+    """RFC 5322 `-0000` parses to a naive datetime, and a naive `timestamp()`
+    reads local time. Probed on a UTC-6 machine on 2026-09-02: a date 60 s
+    ahead came back as 21,659 s. The clock is pinned to UTC-6 here so the
+    defect reproduces on a UTC machine too."""
+    when = (datetime.now(UTC) + timedelta(seconds=60)).strftime("%a, %d %b %Y %H:%M:%S -0000")
+    previous = os.environ.get("TZ")
+    os.environ["TZ"] = "Etc/GMT+6"
+    time.tzset()
+    try:
+        seconds = _retry_after({"Retry-After": when})
+    finally:
+        if previous is None:
+            os.environ.pop("TZ")
+        else:
+            os.environ["TZ"] = previous
+        time.tzset()
+    assert seconds is not None
+    assert 30.0 < seconds <= 60.0
+
+
 def test_a_retry_after_date_already_past_asks_for_nothing() -> None:
     when = format_datetime(datetime.now(UTC) - timedelta(seconds=90), usegmt=True)
     assert _retry_after({"Retry-After": when}) is None
@@ -453,8 +476,11 @@ def test_a_503_that_says_nothing_about_waiting_stays_an_ordinary_error(
     assert not isinstance(caught.value, RateLimitedError)
 
 
-def test_a_rate_limit_on_the_residency_listing_waits_too(monkeypatch: pytest.MonkeyPatch) -> None:
-    """`_get` shares the translation, so `/api/ps` cannot disagree with a completion."""
+def test_a_rate_limit_on_the_residency_listing_is_mapped_for_the_caller(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """`_get` shares the translation, so `/api/ps` cannot disagree with a
+    completion about the type. Waiting on it is `venues.context_window`'s job."""
     _fake_urlopen(monkeypatch, _http_error(429, "slow down"))
     with pytest.raises(RateLimitedError):
         loaded(endpoint=ollama(), timeout=1.0)

@@ -106,6 +106,8 @@ from decision_evals.evolution.venues import (
     MOCK_MARKER,
     MOCK_MODEL,
     PROMPT_ALLOWANCE,
+    REFLECTOR_BACKOFF,
+    SearchStopped,
     VenueError,
     assert_cap_fits,
     call_fn,
@@ -580,7 +582,128 @@ def test_the_reflector_reports_retries_to_stderr_by_default(
 ) -> None:
     _reflector_answering(monkeypatch, [RateLimitedError("429", retry_after=0.0)])
     reflection_lm("ollama/qwen3:4b")("p")
-    assert "rate-limited on attempt 1 of 5" in capsys.readouterr().err
+    assert "rate-limited on attempt 1 of 10" in capsys.readouterr().err
+
+
+def test_the_reflector_schedule_outlasts_a_hosted_window() -> None:
+    """Five full-jitter attempts under the runner's default sum to about 30 s
+    at most, and NVIDIA Build's free tier closes for about a minute. The
+    reflector's own schedule is pinned here so a default change is a
+    deliberate one."""
+    assert REFLECTOR_BACKOFF.attempts == 10
+    assert REFLECTOR_BACKOFF.max_delay == 120.0
+    assert REFLECTOR_BACKOFF.base_delay == 2.0
+
+
+def test_a_closed_window_stops_the_search_through_what_the_engine_cannot_swallow(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """GEPA 0.1.4 wraps each reflector call in `except Exception` and proposes
+    again, so a breaker that raised an ordinary error would be swallowed once
+    per proposal while the search spent its budget on parents. The fake engine
+    here swallows exactly what GEPA swallows."""
+    seen = _reflector_answering(monkeypatch, [RateLimitedError("429")] * 10)
+    reflect = reflection_lm(
+        "ollama/qwen3:4b",
+        backoff=Backoff(attempts=3, base_delay=0.0, max_delay=0.0, breaker_trips=2),
+        log=lambda _: None,
+    )
+    proposals: list[str | None] = []
+
+    def engine() -> None:
+        for _ in range(20):
+            try:
+                proposals.append(reflect("p"))
+            except Exception:
+                proposals.append(None)
+
+    with pytest.raises(SearchStopped, match="stopped the search"):
+        engine()
+    # Proposal one: three refusals, two breaker trips, the last refusal
+    # swallowed. Proposal two: the third consecutive trip crosses the breaker.
+    assert proposals == [None]
+    assert len(seen) == 4
+
+
+def test_a_stopped_search_is_frozen_with_the_reason(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`evolve` catches the breaker beside the deadline: the lineage holds,
+    a winner is chosen from what was scored, and `winner.json` says why."""
+
+    def breaker_tripped(
+        request: object, *, adapter: DecisionAdapter, validation: list[Item], **_: object
+    ) -> str:
+        del request
+        for body in ("A skill.", "Another skill."):
+            adapter.score(body, list(validation))
+        raise SearchStopped("the reflector nvbuild/x stopped the search: 12 consecutive refusals")
+
+    monkeypatch.setitem(DRIVERS, "gepa", breaker_tripped)
+    result = evolve(
+        EvolveRequest(
+            engine="gepa",
+            target_model=MOCK_MODEL,
+            train_seeds=(0,),
+            val_seeds=(1000,),
+            limit=2,
+            val_limit=2,
+        ),
+        repo_root=tmp_path,
+        git_sha="abc1234",
+    )
+    assert "stopped the search" in result.stop_reason
+    recorded = json.loads((result.paths.root / "winner.json").read_text(encoding="utf-8"))
+    assert recorded["stop_reason"] == result.stop_reason
+    assert recorded["winner_source"] != "engine"
+    assert (result.paths.root / "winner.md").read_text(encoding="utf-8") == result.winner.body
+
+
+def test_a_rate_limited_residency_probe_is_waited_out(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The first request a study makes. A transient refusal here killed the
+    study before its first call, which is the failure the retry removes."""
+    answers: list[object] = [RateLimitedError("429", retry_after=0.0), {"qwen3:4b": 8192}]
+
+    def fake_loaded(**_: object) -> dict[str, int]:
+        answer = answers.pop(0)
+        if isinstance(answer, RateLimitedError):
+            raise answer
+        return answer  # type: ignore[return-value]
+
+    monkeypatch.setattr("decision_evals.evolution.venues.loaded", fake_loaded)
+    lines: list[str] = []
+    window = context_window(
+        venue_for("ollama/qwen3:4b"),
+        backoff=Backoff(base_delay=0.0, max_delay=0.0),
+        log=lines.append,
+    )
+    assert window == 8192
+    assert lines == [
+        "residency probe ollama/qwen3:4b rate-limited on attempt 1 of 5, backing off "
+        "before the next: 429"
+    ]
+
+
+def test_a_server_still_loading_at_the_warm_is_waited_out(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`llama.cpp` answers 503 while the weights load, and the load is exactly
+    when that happens."""
+    listings: list[dict[str, int]] = [{}, {"qwen3:4b": 4096}]
+    warms: list[str] = []
+
+    def fake_warm(model: str, **_: object) -> None:
+        warms.append(model)
+        if len(warms) == 1:
+            raise RateLimitedError("503 Loading model", retry_after=0.0)
+
+    monkeypatch.setattr("decision_evals.evolution.venues.loaded", lambda **_: listings.pop(0))
+    monkeypatch.setattr("decision_evals.evolution.venues.warm", fake_warm)
+    window = context_window(
+        venue_for("ollama/qwen3:4b"),
+        backoff=Backoff(base_delay=0.0, max_delay=0.0),
+        log=lambda _: None,
+    )
+    assert window == 4096
+    assert warms == ["ollama/qwen3:4b", "ollama/qwen3:4b"]
 
 
 # -- the adapter ------------------------------------------------------------

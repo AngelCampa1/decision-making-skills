@@ -59,6 +59,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from datetime import UTC
 from email.utils import parsedate_to_datetime
 from typing import Any, Final
 
@@ -232,6 +233,12 @@ def _retry_after(headers: Any) -> float | None:
         when = parsedate_to_datetime(text)
     except (TypeError, ValueError):
         return None
+    if when.tzinfo is None:
+        # RFC 5322's `-0000` zone means UTC with the sender's local zone
+        # unknown, and `parsedate_to_datetime` hands it back naive. A naive
+        # `timestamp()` reads local time. Measured on a UTC-6 machine on
+        # 2026-09-02: a date 60 s ahead came back as 21,659 s.
+        when = when.replace(tzinfo=UTC)
     seconds = when.timestamp() - time.time()
     return seconds if seconds > 0 else None
 
@@ -302,8 +309,10 @@ def _get(url: str, *, api_key: str | None, timeout: float) -> Any:
 
     A sibling of :func:`_post` with its own body. The two share
     :func:`_translate` and nothing else: a GET carries no body, so the
-    prompt-too-long branch there never fires on one, and a rate limit on the
-    residency listing waits exactly as one on a completion does.
+    prompt-too-long branch there never fires on one. A rate limit on the
+    residency listing is mapped to the same type a completion gets, and the
+    caller decides what to do with it. Nothing here waits;
+    :func:`decision_evals.evolution.venues.context_window` does.
     """
     headers = {}
     if api_key is not None:
