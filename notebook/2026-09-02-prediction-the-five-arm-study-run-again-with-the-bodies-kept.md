@@ -365,3 +365,39 @@ members of the family, and they are uncorrected.
 
 The matched placebos carry no format instruction and no worked example, which
 is what makes the comparison able to show this.
+
+---
+
+## Amendment, after 71 calls: the wall-clock estimate was wrong by three times
+
+The call-count section above projects 30 to 40 hours from the screen's 7.5 to
+9.9 seconds per call. The first 71 calls of the study measure 26.6 seconds per
+call, which puts the run at about 109 hours. The design does not change. The
+wall-clock cap is raised from 172,800 seconds to 604,800 and the run resumes
+into its own checkpoint; `RESUMABLE_CAPS` permits raising a cap and nothing
+else, so the resume refuses any other difference.
+
+Where the time goes is worth recording, because the screen could not have
+predicted it. The screen ran one arm with no document and averaged 702 output
+tokens. Per arm here, over the first eight to sixteen items:
+
+| arm | mean seconds | mean input tokens | mean output tokens |
+| --- | --- | --- | --- |
+| `skillopt` | 11.9 | 2,648 | 694 |
+| `placebo-gepa` | 17.9 | 962 | 1,042 |
+| `gepa` | 18.5 | 1,154 | 1,120 |
+| `off` | 24.6 | 204 | 1,693 |
+| `placebo-skillopt` | 26.6 | 2,308 | 1,480 |
+| `placebo` | 34.2 | 858 | 2,037 |
+| `on` | 41.6 | 983 | 2,464 |
+
+Duration tracks output tokens rather than input tokens: the longest prompt is
+the fastest arm and the empty prompt is slower than three documented ones.
+Both evolved winners cut the model's reasoning roughly in half against the
+seed skill, and both matched placebos sit between. That is a reading about
+verbosity and not about accuracy, it is measured on 71 calls of a 14,700-call
+run, and it is recorded here only because the estimate it corrects was
+registered.
+
+The registered call count, split, arms, seeds, family, bar and every
+prediction are unchanged.
