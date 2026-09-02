@@ -8,8 +8,10 @@ silently skips corrupts the result rather than merely wasting time.
 
 from __future__ import annotations
 
+import io
 import json
 import threading
+import urllib.error
 from collections.abc import Callable
 from concurrent.futures import ALL_COMPLETED
 from concurrent.futures import wait as futures_wait
@@ -33,7 +35,9 @@ from decision_evals.providers.openai_compatible import Endpoint
 from decision_evals.runner import (
     CONCURRENCY_UNSAFE,
     Backoff,
+    Backpressure,
     RunError,
+    call_with_backoff,
     completed_keys,
     iter_items,
     load_records,
@@ -1133,3 +1137,87 @@ def test_time_spent_waiting_out_a_rate_limit_is_charged_to_the_clock(
             ledger=BudgetLedger(limit_usd=1.0, limit_seconds=0.04),
             backoff=Backoff(base_delay=0.0, max_delay=0.0, breaker_trips=99),
         )
+
+
+def test_the_public_schedule_reports_each_refusal_before_it_waits() -> None:
+    """`on_retry` is how the reflector logs. It fires before the pause, so a
+    log read during a wait says what the run is waiting on."""
+    events: list[str] = []
+    calls = 0
+
+    def attempt() -> str:
+        nonlocal calls
+        calls += 1
+        if calls < 3:
+            raise RateLimitedError("429", retry_after=0.0)
+        return "ok"
+
+    def sleep(delay: float) -> None:
+        events.append(f"slept {delay:g}")
+
+    backpressure = Backpressure(Backoff(base_delay=0.0, max_delay=0.0), sleep=sleep)
+    result = call_with_backoff(
+        attempt,
+        backpressure=backpressure,
+        on_retry=lambda attempt, exc: events.append(f"retry {attempt} {exc}"),
+    )
+    assert result == "ok"
+    assert events == ["retry 0 429", "slept 0", "retry 1 429", "slept 0"]
+
+
+class _Response:
+    def __init__(self, body: bytes) -> None:
+        self._body = body
+
+    def read(self) -> bytes:
+        return self._body
+
+    def __enter__(self) -> _Response:
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        return None
+
+
+def test_a_429_from_an_openai_compatible_server_is_waited_out_rather_than_scored(
+    items: list[Item], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The whole path, from the HTTP status to the record.
+
+    Until 2026-09-02 the provider mapped a 429 to a plain `CliError`, `_run_one`
+    caught it, and the item was scored as an infrastructure zero with nothing
+    retried. The fake here answers 429 once and then a completion, and the
+    record that comes out is an ordinary one.
+    """
+    codes = iter([429])
+    seen: list[Any] = []
+
+    def fake_urlopen(request: Any, timeout: float = 0.0) -> Any:
+        seen.append(request)
+        if next(codes, 200) == 429:
+            raise urllib.error.HTTPError(
+                request.full_url, 429, "err", {"Retry-After": "0"}, io.BytesIO(b"slow down")
+            )
+        prompt = json.loads(request.data)["messages"][1]["content"]
+        first_option = prompt.split("Options:\n")[1].splitlines()[0].removeprefix("- ")
+        completion = {
+            "model": "qwen3:4b",
+            "choices": [{"message": {"role": "assistant", "content": f"ANSWER: {first_option}"}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 3},
+        }
+        return _Response(json.dumps(completion).encode())
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    records = run_arm(
+        items[:1],
+        ARM,
+        model="ollama/qwen3:4b",
+        checkpoint=tmp_path / "run.jsonl",
+        call=local_call("ollama/qwen3:4b"),
+        ledger=BudgetLedger(limit_usd=10.0),
+        backoff=Backoff(base_delay=0.0, max_delay=0.0),
+    )
+    assert len(seen) == 2
+    assert len(records) == 1
+    assert records[0].zero_cause is None
+    assert records[0].model == "ollama/qwen3:4b"

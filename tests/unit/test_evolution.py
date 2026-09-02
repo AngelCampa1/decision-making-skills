@@ -114,10 +114,12 @@ from decision_evals.evolution.venues import (
     key_is_present,
     mock_call,
     mock_reflector,
+    reflection_lm,
     venue_for,
 )
 from decision_evals.generators.generate import Item
-from decision_evals.runner import load_records
+from decision_evals.providers.claude_code import CliResult, RateLimitedError
+from decision_evals.runner import Backoff, load_records
 from decision_evals.solvers.arms import render_item
 
 #: The engines are the *subject* of this study, so they live in the `evolve`
@@ -499,6 +501,86 @@ def test_the_reflector_repeats_the_last_rung_once_the_ladder_runs_out() -> None:
 
 def test_the_reflector_survives_a_prompt_with_no_fenced_block() -> None:
     assert MOCK_LADDER[0] in mock_reflector()("no fences here")
+
+
+def _reflector_answering(
+    monkeypatch: pytest.MonkeyPatch, refusals: list[RateLimitedError]
+) -> list[dict[str, object]]:
+    """A fake `openai_run` that refuses once per entry in ``refusals``, then answers.
+
+    Returns the keyword arguments of every call, so the test can see the
+    temperature and the empty system prompt reach the server unchanged.
+    """
+    seen: list[dict[str, object]] = []
+
+    def fake_run(prompt: str, **kwargs: object) -> CliResult:
+        seen.append(kwargs)
+        if refusals:
+            raise refusals.pop(0)
+        return CliResult(
+            text=f"rewrite of {prompt}",
+            model="ollama/qwen3:4b",
+            cost_usd=0.0,
+            input_tokens=1,
+            output_tokens=1,
+            duration_ms=0,
+            session_id="",
+        )
+
+    monkeypatch.setattr("decision_evals.evolution.venues.openai_run", fake_run)
+    return seen
+
+
+def test_a_rate_limited_reflector_waits_and_retries_rather_than_raising(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The 2026-08-27 hang. The reflector answered 429, the refusal reached the
+    engine, and GEPA sat in its own catch-all sleep for hours. Now the refusal
+    is waited out on the runner's schedule and the engine sees the answer."""
+    seen = _reflector_answering(monkeypatch, [RateLimitedError("429 slow down")])
+    lines: list[str] = []
+    reflect = reflection_lm(
+        "ollama/qwen3:4b", backoff=Backoff(base_delay=0.0, max_delay=0.0), log=lines.append
+    )
+    assert reflect("the prompt") == "rewrite of the prompt"
+    assert len(seen) == 2
+    assert all(call["temperature"] == 1.0 and call["system_prompt"] == "" for call in seen)
+    assert lines == [
+        "reflector ollama/qwen3:4b rate-limited on attempt 1 of 5, backing off before "
+        "the next: 429 slow down"
+    ]
+
+
+def test_the_reflector_log_says_what_the_server_asked_for(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _reflector_answering(monkeypatch, [RateLimitedError("429", retry_after=0.01)])
+    lines: list[str] = []
+    reflection_lm("ollama/qwen3:4b", log=lines.append)("p")
+    assert "server asked for 0.01s" in lines[0]
+
+
+def test_a_reflector_wall_that_does_not_move_still_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Past the attempts the refusal propagates, carrying the server's message,
+    and the engine's deadline is what bounds the search from there."""
+    _reflector_answering(monkeypatch, [RateLimitedError("429"), RateLimitedError("429 again")])
+    lines: list[str] = []
+    reflect = reflection_lm(
+        "ollama/qwen3:4b",
+        backoff=Backoff(attempts=2, base_delay=0.0, max_delay=0.0),
+        log=lines.append,
+    )
+    with pytest.raises(RateLimitedError, match="again"):
+        reflect("p")
+    assert len(lines) == 1
+
+
+def test_the_reflector_reports_retries_to_stderr_by_default(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _reflector_answering(monkeypatch, [RateLimitedError("429", retry_after=0.0)])
+    reflection_lm("ollama/qwen3:4b")("p")
+    assert "rate-limited on attempt 1 of 5" in capsys.readouterr().err
 
 
 # -- the adapter ------------------------------------------------------------

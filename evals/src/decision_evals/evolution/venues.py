@@ -27,11 +27,12 @@ from __future__ import annotations
 
 import hashlib
 import os
+import sys
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Final
 
-from decision_evals.providers.claude_code import CliResult, IsolationError
+from decision_evals.providers.claude_code import CliResult, IsolationError, RateLimitedError
 from decision_evals.providers.openai_compatible import (
     Endpoint,
     assert_isolated,
@@ -42,7 +43,14 @@ from decision_evals.providers.openai_compatible import (
     warm,
 )
 from decision_evals.providers.openai_compatible import run as openai_run
-from decision_evals.runner import CallFn, RunError, local_call
+from decision_evals.runner import (
+    Backoff,
+    Backpressure,
+    CallFn,
+    RunError,
+    call_with_backoff,
+    local_call,
+)
 
 
 class VenueError(RuntimeError):
@@ -311,7 +319,22 @@ def _options_in(prompt: str) -> list[str]:
     return [line[2:].strip() for line in menu.splitlines() if line.startswith("- ")]
 
 
-def reflection_lm(model: str, *, temperature: float = 1.0) -> Callable[[str], str]:
+def _stderr(message: str) -> None:
+    """Where a retry is reported when the caller names nowhere else.
+
+    The search log GEPA writes belongs to the engine, and the reflector is built
+    before the engine is, so the console is the surface both jobs share.
+    """
+    print(message, file=sys.stderr, flush=True)
+
+
+def reflection_lm(
+    model: str,
+    *,
+    temperature: float = 1.0,
+    backoff: Backoff | None = None,
+    log: Callable[[str], None] = _stderr,
+) -> Callable[[str], str]:
     """A prompt-in, text-out callable for an engine's proposal step.
 
     This is the one place in the package where temperature is not zero. Every
@@ -323,16 +346,45 @@ def reflection_lm(model: str, *, temperature: float = 1.0) -> Callable[[str], st
     Returns the reply text and nothing else, which is the shape GEPA's
     ``reflection_lm`` expects. The reasoning field is dropped: a reflector that
     thinks out loud is fine and the engine has no use for the transcript.
+
+    A rate limit waits here, on the schedule :func:`~decision_evals.runner.run_arm`
+    uses for a scored call, and every wait is written to ``log``. The hosted
+    free tier that reflects for a local target answers 429 when its window
+    closes, and on 2026-08-27 that refusal reached the engine as a plain error.
+    GEPA catches everything and sleeps, the deadline in
+    :mod:`decision_evals.evolution.run` is what finally stopped it, and the
+    hours between were spent on a call that would have cleared in seconds. One
+    :class:`~decision_evals.runner.Backpressure` serves the whole search, so the
+    breaker counts consecutive refusals across proposals and a window that has
+    closed stops the search instead of being waited on again.
+
+    Args:
+        backoff: The schedule. ``None`` is the runner's default, the same five
+            attempts and sixty-second ceiling a scored call gets.
+        log: Where each retry is reported. Standard error unless the caller
+            has a better place.
     """
     venue = venue_for(model)
+    backpressure = Backpressure(backoff)
+
+    def report(attempt: int, exc: RateLimitedError) -> None:
+        asked = f"server asked for {exc.retry_after:g}s" if exc.retry_after else "backing off"
+        log(
+            f"reflector {venue.model} rate-limited on attempt {attempt + 1} of "
+            f"{backpressure.policy.attempts}, {asked} before the next: {exc}"
+        )
 
     def reflect(prompt: str) -> str:
-        result = openai_run(
-            prompt,
-            system_prompt="",
-            model=venue.model,
-            endpoint=venue.endpoint,
-            temperature=temperature,
+        result = call_with_backoff(
+            lambda: openai_run(
+                prompt,
+                system_prompt="",
+                model=venue.model,
+                endpoint=venue.endpoint,
+                temperature=temperature,
+            ),
+            backpressure=backpressure,
+            on_retry=report,
         )
         return result.text
 

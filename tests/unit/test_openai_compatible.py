@@ -16,6 +16,8 @@ from __future__ import annotations
 import io
 import json
 import urllib.error
+from datetime import UTC, datetime, timedelta
+from email.utils import format_datetime
 from typing import Any
 
 import pytest
@@ -25,6 +27,7 @@ from decision_evals.providers.claude_code import (
     CliError,
     IsolationError,
     PromptTooLongError,
+    RateLimitedError,
 )
 from decision_evals.providers.openai_compatible import (
     Endpoint,
@@ -32,6 +35,7 @@ from decision_evals.providers.openai_compatible import (
     _get,
     _number,
     _post,
+    _retry_after,
     assert_isolated,
     build_native_payload,
     build_payload,
@@ -89,9 +93,11 @@ def _fake_urlopen(monkeypatch: pytest.MonkeyPatch, outcome: Any) -> list[Any]:
     return seen
 
 
-def _http_error(code: int, body: str) -> urllib.error.HTTPError:
+def _http_error(
+    code: int, body: str, headers: dict[str, str] | None = None
+) -> urllib.error.HTTPError:
     return urllib.error.HTTPError(
-        "http://x/v1/chat/completions", code, "err", {}, io.BytesIO(body.encode())
+        "http://x/v1/chat/completions", code, "err", headers or {}, io.BytesIO(body.encode())
     )
 
 
@@ -368,6 +374,90 @@ def test_any_other_http_error_is_a_cli_error(monkeypatch: pytest.MonkeyPatch) ->
     _fake_urlopen(monkeypatch, _http_error(500, "boom"))
     with pytest.raises(CliError, match="returned 500"):
         _post("http://x", {}, api_key=None, timeout=1.0)
+
+
+# --------------------------------------------------------------------------- #
+# Come back later
+# --------------------------------------------------------------------------- #
+
+
+@pytest.mark.parametrize("code", [429, 529])
+def test_a_rate_limit_is_the_error_the_runner_waits_on(
+    monkeypatch: pytest.MonkeyPatch, code: int
+) -> None:
+    """The 2026-08-27 defect. NVIDIA Build answered the reflector with 429, this
+    module said `CliError`, and nothing in the package retries one of those.
+    `RateLimitedError` is what `Backpressure` trips on."""
+    _fake_urlopen(monkeypatch, _http_error(code, "slow down"))
+    with pytest.raises(RateLimitedError, match="retry later") as caught:
+        _post("http://x", {}, api_key=None, timeout=1.0)
+    assert caught.value.retry_after is None
+
+
+def test_a_retry_after_in_seconds_is_read(monkeypatch: pytest.MonkeyPatch) -> None:
+    _fake_urlopen(monkeypatch, _http_error(429, "slow down", {"Retry-After": "7"}))
+    with pytest.raises(RateLimitedError) as caught:
+        _post("http://x", {}, api_key=None, timeout=1.0)
+    assert caught.value.retry_after == 7.0
+
+
+def test_a_retry_after_as_an_http_date_is_read_as_seconds_from_now(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """RFC 9110 allows the date form, and a hosted tier may use it."""
+    when = format_datetime(datetime.now(UTC) + timedelta(seconds=90), usegmt=True)
+    _fake_urlopen(monkeypatch, _http_error(429, "slow down", {"Retry-After": when}))
+    with pytest.raises(RateLimitedError) as caught:
+        _post("http://x", {}, api_key=None, timeout=1.0)
+    assert caught.value.retry_after is not None
+    assert 60.0 < caught.value.retry_after <= 90.0
+
+
+def test_a_retry_after_date_already_past_asks_for_nothing() -> None:
+    when = format_datetime(datetime.now(UTC) - timedelta(seconds=90), usegmt=True)
+    assert _retry_after({"Retry-After": when}) is None
+
+
+@pytest.mark.parametrize("value", ["0", "soon", "", "   ", 5, None])
+def test_a_retry_after_that_is_not_a_positive_wait_is_absent(value: Any) -> None:
+    """Read off the header: a number invented here would be indistinguishable
+    from one the server sent."""
+    assert _retry_after({"Retry-After": value}) is None
+
+
+def test_no_headers_at_all_is_no_request_to_wait() -> None:
+    assert _retry_after(None) is None
+
+
+@pytest.mark.parametrize(
+    "body",
+    ["Loading model", '{"error": {"message": "The server is overloaded, try again"}}'],
+)
+def test_a_503_that_says_the_server_is_busy_waits(
+    monkeypatch: pytest.MonkeyPatch, body: str
+) -> None:
+    """`llama.cpp` answers 503 while the weights load. Waiting clears it."""
+    _fake_urlopen(monkeypatch, _http_error(503, body))
+    with pytest.raises(RateLimitedError):
+        _post("http://x", {}, api_key=None, timeout=1.0)
+
+
+def test_a_503_that_says_nothing_about_waiting_stays_an_ordinary_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Unavailable says nothing about whether waiting helps, so a bare 503 is
+    scored as the failure it is."""
+    _fake_urlopen(monkeypatch, _http_error(503, "upstream gone"))
+    with pytest.raises(CliError) as caught:
+        _post("http://x", {}, api_key=None, timeout=1.0)
+    assert not isinstance(caught.value, RateLimitedError)
+
+
+def test_a_rate_limit_on_the_residency_listing_waits_too(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`_get` shares the translation, so `/api/ps` cannot disagree with a completion."""
+    _fake_urlopen(monkeypatch, _http_error(429, "slow down"))
+    with pytest.raises(RateLimitedError):
+        loaded(endpoint=ollama(), timeout=1.0)
 
 
 def test_an_unreachable_server_says_how_to_start_one(

@@ -762,12 +762,43 @@ def _call_with_backoff[C](
     prompt: str,
     backpressure: Backpressure,
 ) -> C:
-    """Issue the call, waiting out rate limits until the attempts run out.
+    """Issue one arm's call, waiting out rate limits until the attempts run out.
 
     Generic in what the call returns, so a backend handing back an isolation
     receipt alongside its result uses this schedule rather than a second copy
     of it. The arm supplies the system prompt and the in-situ flag and nothing
-    else, which is why one function serves both.
+    else, which is why one function serves both. The schedule itself is
+    :func:`call_with_backoff`, which takes no arm and serves the reflector too.
+    """
+    return call_with_backoff(
+        lambda: call(prompt, arm.system_prompt, arm.append),
+        backpressure=backpressure,
+    )
+
+
+def call_with_backoff[C](
+    attempt_call: Callable[[], C],
+    *,
+    backpressure: Backpressure,
+    on_retry: Callable[[int, RateLimitedError], None] | None = None,
+) -> C:
+    """Issue a call, waiting out rate limits until the attempts run out.
+
+    The one retry schedule in the package. :func:`run_arm` reaches it through
+    :func:`_call_with_backoff` for every scored call, and
+    :func:`decision_evals.evolution.venues.reflection_lm` reaches it directly
+    for the reflector, so a 429 waits the same way whichever job the call is
+    doing. It became public on 2026-09-02 because the reflector had no path to
+    it: NVIDIA Build rate-limited the GEPA reflector on 2026-08-27, the
+    refusal reached the engine as a plain error, and the search waited in the
+    engine's own catch-all for hours.
+
+    Args:
+        attempt_call: The call, closed over its arguments. Made at least once.
+        backpressure: The shared pause. Required: an optional one defaults to
+            no retrying, which is the behaviour this exists to replace.
+        on_retry: Told about each refusal before the wait it causes, with the
+            zero-based attempt and the error. The reflector logs from here.
 
     The final attempt is made outside the loop so its refusal propagates
     untouched: a call that never got through is recorded as the infrastructure
@@ -778,15 +809,17 @@ def _call_with_backoff[C](
     for attempt in range(backpressure.policy.attempts - 1):
         backpressure.wait()
         try:
-            result = call(prompt, arm.system_prompt, arm.append)
+            result = attempt_call()
         except RateLimitedError as exc:
+            if on_retry is not None:
+                on_retry(attempt, exc)
             backpressure.trip(attempt, exc.retry_after)
             continue
         backpressure.succeeded()
         return result
 
     backpressure.wait()
-    result = call(prompt, arm.system_prompt, arm.append)
+    result = attempt_call()
     backpressure.succeeded()
     return result
 

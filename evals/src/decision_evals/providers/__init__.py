@@ -23,6 +23,7 @@ from decision_evals.providers.claude_code import (
     CliResult,
     IsolationError,
     PromptTooLongError,
+    RateLimitedError,
     build_command,
     parse_result,
 )
@@ -43,6 +44,7 @@ __all__ = [
     "IsolationError",
     "ModelCard",
     "PromptTooLongError",
+    "RateLimitedError",
     "assert_isolated",
     "build_command",
     "ollama",

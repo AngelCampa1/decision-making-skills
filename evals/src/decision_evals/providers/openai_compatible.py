@@ -59,6 +59,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 from typing import Any, Final
 
 from decision_evals.providers.claude_code import (
@@ -67,6 +68,7 @@ from decision_evals.providers.claude_code import (
     CliResult,
     IsolationError,
     PromptTooLongError,
+    RateLimitedError,
 )
 
 #: Ollama's OpenAI-compatible endpoint. Loopback rather than ``localhost`` so
@@ -91,6 +93,27 @@ _TOO_LONG_MARKERS: Final[tuple[str, ...]] = (
     "exceeds the context window",
     "maximum context length",
     "context length exceeded",
+)
+
+#: HTTP statuses that ask the caller to come back later. The same pair the
+#: CLI provider reads out of ``api_error_status``: 429 is a
+#: rate limit and 529 is a server declaring itself overloaded. Both clear with
+#: nothing changing on this side, which is what makes them a reason to wait.
+#:
+#: Observed. On 2026-08-27 NVIDIA Build answered the GEPA reflector with 429
+#: and this module mapped it to a plain :class:`CliError`, which nothing
+#: retries. The search sat in the engine's own catch-all sleep for hours.
+_RATE_LIMIT_STATUSES: Final[frozenset[int]] = frozenset({429, 529})
+
+#: A 503 is "unavailable" and says nothing about whether waiting helps, so it
+#: counts as a rate limit only when the body says the server is busy.
+#: ``llama.cpp``'s server answers ``503 Loading model`` while the
+#: weights load, and "overloaded" is the word a saturated server uses. Matched
+#: case-insensitively. A 503 carrying neither stays a :class:`CliError`.
+_BUSY_STATUS: Final = 503
+_BUSY_MARKERS: Final[tuple[str, ...]] = (
+    "loading model",
+    "overloaded",
 )
 
 
@@ -189,6 +212,54 @@ class ModelCard:
         return not self.system.strip()
 
 
+def _retry_after(headers: Any) -> float | None:
+    """Seconds the server asked for in ``Retry-After``, or ``None`` when it said nothing.
+
+    Read off the header, for the reason the CLI provider gives: a number
+    invented here is indistinguishable from one the server sent, and the
+    runner's own backoff is the honest fallback. RFC 9110 allows two forms, a
+    count of seconds and an HTTP-date, and both are read. Anything else, and a
+    date already in the past, is treated as no request.
+    """
+    value = headers.get("Retry-After") if headers is not None else None
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip()
+    if text.isdigit():
+        seconds = float(text)
+        return seconds if seconds > 0 else None
+    try:
+        when = parsedate_to_datetime(text)
+    except (TypeError, ValueError):
+        return None
+    seconds = when.timestamp() - time.time()
+    return seconds if seconds > 0 else None
+
+
+def _translate(url: str, exc: urllib.error.HTTPError) -> CliError:
+    """The exception an HTTP error status stands for.
+
+    Shared by :func:`_post` and :func:`_get` so the two cannot disagree about
+    what a status means. The order matters: a credential refusal aborts the
+    run, a rate limit waits, a prompt that overflows the window is a defect in
+    the item, and everything else is one infrastructure failure.
+    """
+    detail = exc.read().decode("utf-8", errors="replace")[:400]
+    lowered = detail.lower()
+    if exc.code in _AUTH_STATUSES:
+        return AuthenticationError(f"{url} refused the credential ({exc.code}): {detail}")
+    busy = exc.code == _BUSY_STATUS and any(marker in lowered for marker in _BUSY_MARKERS)
+    if exc.code in _RATE_LIMIT_STATUSES or busy:
+        return RateLimitedError(
+            f"{url} asked for a retry later ({exc.code}): {detail}",
+            retry_after=_retry_after(exc.headers),
+        )
+    for marker in _TOO_LONG_MARKERS:
+        if marker in lowered:
+            return PromptTooLongError(detail)
+    return CliError(f"{url} returned {exc.code}: {detail}")
+
+
 def _post(url: str, payload: dict[str, Any], *, api_key: str | None, timeout: float) -> Any:
     """POST JSON and return the decoded response.
 
@@ -197,6 +268,7 @@ def _post(url: str, payload: dict[str, Any], *, api_key: str | None, timeout: fl
 
     Raises:
         AuthenticationError: The server refused the credential.
+        RateLimitedError: The server asked for the call to come back later.
         PromptTooLongError: The prompt exceeded the context window.
         CliError: Any other transport or protocol failure.
     """
@@ -210,16 +282,7 @@ def _post(url: str, payload: dict[str, Any], *, api_key: str | None, timeout: fl
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:400]
-        if exc.code in _AUTH_STATUSES:
-            raise AuthenticationError(
-                f"{url} refused the credential ({exc.code}): {detail}"
-            ) from exc
-        lowered = detail.lower()
-        for marker in _TOO_LONG_MARKERS:
-            if marker in lowered:
-                raise PromptTooLongError(detail) from exc
-        raise CliError(f"{url} returned {exc.code}: {detail}") from exc
+        raise _translate(url, exc) from exc
     except urllib.error.URLError as exc:
         # The overwhelmingly common case is that nobody started the server, and
         # a bare "connection refused" three frames down does not say so.
@@ -237,9 +300,10 @@ def _post(url: str, payload: dict[str, Any], *, api_key: str | None, timeout: fl
 def _get(url: str, *, api_key: str | None, timeout: float) -> Any:
     """GET JSON and return the decoded response.
 
-    A sibling of :func:`_post` rather than a parameter on it. The two share an
-    error vocabulary and nothing else: a GET carries no body, and the
-    prompt-too-long mapping that :func:`_post` needs cannot arise on one.
+    A sibling of :func:`_post` with its own body. The two share
+    :func:`_translate` and nothing else: a GET carries no body, so the
+    prompt-too-long branch there never fires on one, and a rate limit on the
+    residency listing waits exactly as one on a completion does.
     """
     headers = {}
     if api_key is not None:
@@ -249,12 +313,7 @@ def _get(url: str, *, api_key: str | None, timeout: float) -> Any:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8", errors="replace")
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")[:400]
-        if exc.code in _AUTH_STATUSES:
-            raise AuthenticationError(
-                f"{url} refused the credential ({exc.code}): {detail}"
-            ) from exc
-        raise CliError(f"{url} returned {exc.code}: {detail}") from exc
+        raise _translate(url, exc) from exc
     except urllib.error.URLError as exc:
         raise CliError(
             f"could not reach {url}: {exc.reason}. Is the server running? "
