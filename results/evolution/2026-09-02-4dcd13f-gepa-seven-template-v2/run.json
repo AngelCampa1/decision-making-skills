@@ -1,0 +1,77 @@
+{
+  "request": {
+    "engine": "gepa",
+    "target_model": "ollama/qwen3:1.7b",
+    "reflector_model": "nvbuild/openai/gpt-oss-20b",
+    "train_seeds": [
+      0
+    ],
+    "val_seeds": [
+      1000
+    ],
+    "max_calls": 300,
+    "max_seconds": 14400.0,
+    "generation_calls": 400,
+    "child_calls": 200,
+    "limit": 70,
+    "val_limit": 21,
+    "slug": "seven-template-v2",
+    "batch_size": 8,
+    "sel_env_num": 20,
+    "num_epochs": 1,
+    "train_templates": [
+      "hrd-001-warranty-claim",
+      "hrd-002-shipping-escalation",
+      "hrd-006-appeal-window",
+      "rel-003-oncall-escalate",
+      "rel-006-refund-request",
+      "rel-007-capacity-scale",
+      "rel-010-loan-review"
+    ],
+    "num_ctx": 16384,
+    "max_tokens": 4096,
+    "templates_root": "datasets/templates,datasets/templates-hard"
+  },
+  "git_sha": "4dcd13f5df62f8d71d0d8f43a27bbe76fb4f6dd6",
+  "pools": {
+    "train": [
+      0,
+      1000
+    ],
+    "validation": [
+      1000,
+      1500
+    ],
+    "holdout": [
+      10000,
+      11000
+    ]
+  },
+  "templates": [
+    "hrd-001-warranty-claim",
+    "hrd-002-shipping-escalation",
+    "hrd-006-appeal-window",
+    "rel-003-oncall-escalate",
+    "rel-006-refund-request",
+    "rel-007-capacity-scale",
+    "rel-010-loan-review"
+  ],
+  "train": {
+    "items": 70,
+    "seeds": {
+      "train": 70,
+      "validation": 0,
+      "holdout": 0,
+      "unassigned": 0
+    }
+  },
+  "validation": {
+    "items": 21,
+    "seeds": {
+      "train": 0,
+      "validation": 21,
+      "holdout": 0,
+      "unassigned": 0
+    }
+  }
+}
