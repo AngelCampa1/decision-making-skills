@@ -52,9 +52,10 @@ Last worked through 2026-09-01, against the five-arm study at
       the method. v2 added the corpus-admission criteria that this study's own
       failure produced, after the fact
 - [x] Hypotheses pre-registered before the run, in a dated `notebook/` entry
-      committed before the first call. One amendment was appended mid-run,
-      after 143 of 4,368 calls and before any comparison was read, and it is in
-      the entry rather than in a commit message
+      committed before the first call. Two amendments were appended to the
+      entry: one before the first call, and one whose text says mid-run, after
+      143 of 4,368 calls, and whose commit is seven hours after the run's.
+      Both are in the entry rather than in a commit message
 - [x] Pre-registration commits are ancestors of the result commits, verifiably.
       Not asserted: `de check`'s `provenance` step refuses a published run
       whose prediction entry's first commit is not a git ancestor of the run's

@@ -273,10 +273,10 @@ monitor /think`, each was scored wrong as an option not on the menu, and 84 of
 them named the key. Fifty-six fell on GEPA's winner and 29 on the empty
 prompt, so the two readings the first write-up carried as findings, GEPA's
 winner below an empty prompt and the placebo above one, were the scorer's.
-Re-read with the token stripped, GEPA's winner is the arm nearest to clearing
-the placebo, at Holm q = 0.0497 on the trained scenarios at the item unit and
-p = 0.0469 uncorrected at the template unit. The paper reports both readings
-and promotes neither. The A/A control returned 728 of 728 items identical,
+Re-read with the token stripped, GEPA's winner clears the placebo on the
+trained scenarios at the registered item unit, Holm q = 0.0497, and does not
+at the template unit, p = 0.0469 uncorrected against Holm's 0.0167. The paper
+reports both readings and promotes neither. The A/A control returned 728 of 728 items identical,
 which bounds the venue drift the design is exposed to without removing it:
 the pass repeats one arm, and the arms ran in blocks.
 [The run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md).

@@ -175,8 +175,8 @@ Appended 2026-09-01, during the assessment that preceded the release.
   switch, `ANSWER: monitor /think`.** Every figure in this file and in
   `analysis.json` is as scored at the time and stays so. `de figures` now
   emits the same records re-read with the token stripped (`\rescored...` and
-  `\controlToken...` macros) beside the registered ones. The re-read moves two
-  arms: `off` gains 29 items and `gepa` 54. Under it `gepa` reads 0.7440 on
+  `\controlToken...` macros) beside the registered ones. The re-read moves three
+  arms: `off` gains 29 items, `gepa` 54 and `on` 1. Under it `gepa` reads 0.7440 on
   the unseen set against `off` at 0.7024, and 0.8112 against `placebo` at
   0.7679 on the seen set, raw p = 0.0166, Holm q = 0.0497, template-level
   p = 0.0469 uncorrected; `placebo` against `off` on the seen set falls from

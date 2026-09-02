@@ -58,17 +58,18 @@ draft of this paper had read it as a result. The target model echoes its
 thinking-mode switch onto the answer line, \texttt{ANSWER: monitor /think}.
 The scorer refused \NUM{\controlTokenTotal} such answers as options not on
 the menu, and \NUM{\controlTokenCorrectTotal} of them named the key. The
-refusals landed on two arms, \NUM{\controlTokenGepa} on GEPA's winner and
-\NUM{\controlTokenOff} on the empty prompt, and on two templates. Every
+refusals landed almost entirely on two arms, \NUM{\controlTokenGepa} on
+GEPA's winner and \NUM{\controlTokenOff} on the empty prompt, and on two
+templates. Every
 sentence that draft built on where the unreadable answers fell was a sentence
 about that token: a placebo that beat an empty prompt on the seen set, a GEPA
 winner that fell below an empty prompt on the unseen set, and a parse failure
 selective on the answer key. \Cref{sec:parsefail} reports the same records
 with the token stripped, beside the registered figures. Under that re-read
-GEPA's winner is the arm nearest to clearing the placebo, at Holm
-$q = \NUM{\rescoredQSeenGepa}$ on the seen set at the registered item unit
-and $p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected at the template unit,
-and the unseen set stays under its floor.
+GEPA's winner clears the placebo on the seen set at the registered item unit,
+Holm $q = \NUM{\rescoredQSeenGepa}$, and does not at the template unit,
+$p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected; the unseen set remains
+undecidable at its floor. We promote neither reading.
 
 A null is only worth reading if the study could have returned something
 else, so we checked, and half of it could not have. Our items come from

@@ -53,7 +53,8 @@ Re-read with the token stripped, from the same records:
 | seen | `gepa` | 0.7730 | 0.8112 | 37/20, p = 0.0166, Holm q = 0.0497, clustered 0.0469 |
 
 `placebo` over `off` on the seen set goes from 44/24, p = 0.010, to 21/24.
-`on`, `placebo` and `skillopt` do not move. The three low-signal templates are
+`on` moves by one item, 0.7398 to 0.7423 on the seen set; `placebo` and
+`skillopt` do not move. The three low-signal templates are
 the same three. So: the two non-null readings the paper carried, the placebo
 above an empty prompt and GEPA's winner below one, were both the scorer. And
 the arm the registered figures placed last on the unseen set is, under the
@@ -88,8 +89,8 @@ earlier version did.
 score it received, and GEPA scores a new candidate first on a three-item
 reflection minibatch. `winner.json` falls back to that lineage score when the
 engine chose. GEPA's documented return rule evaluates on the validation pool.
-The records that would settle it are in the gitignored directory. The paper
-now says this.
+The records that would settle it were in the gitignored directory, which no
+longer exists. The paper now says this.
 
 **The "mid-run amendment" is commit-dated after the run.** Prediction
 committed 14:20 (`e882eff`), run at 15:03 (`53b4965`), amendment at 22:29
@@ -105,7 +106,7 @@ both.
 `docs/FAILURE_TAXONOMY.md` records that fifteen of fifteen zeros on the first
 control run were item defects, and `AUTONOMOUS_WORK_ORDER.md` rule 3 says a
 failure is adjudicated blind before it is believed. The five-arm study reported
-87 zeros as the model's and built three paragraphs and an abstract sentence on
+87 zeros as the model's and built four paragraphs and an abstract sentence on
 where they fell, and fourteen truth cycles read those paragraphs without once
 opening a refused response. The check that found it was a script over the
 records that printed the answer line of every `unlisted_option` row, which

@@ -135,8 +135,8 @@ class has no informedness at all, which is a refusal rather than a zero.
 The scorer counts an unreadable answer as wrong, and on the five-arm study 87
 of the 3,640 answers were the model's thinking-mode switch written after a
 readable option, `ANSWER: monitor /think`. Eighty-four named the key. The
-refusals fell on two arms and two templates, so they moved comparisons and not
-the arms together, and two readings the paper's first draft carried as
+refusals fell almost entirely on two arms, and on two templates, so they moved
+comparisons and not the arms together, and two readings the paper's first draft carried as
 findings were made of them. The scorer strips the token from 2026-09-01. The
 registered figures are as scored and the re-read is reported beside them; with
 one pass per arm, nothing here can say which is nearer the truth, and the rule

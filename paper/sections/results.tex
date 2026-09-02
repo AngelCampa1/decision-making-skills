@@ -64,8 +64,8 @@ carry only what the run computed. The intervals this paper adds are in
 \Cref{tab:signal}, computed fresh over templates on the discrimination
 measure, which is where the width of ten clusters is visible.
 
-\paragraph{GEPA's winner is worse than writing nothing, on one template of
-three.} It scores \NUM{\accUnseenGepa} on unseen scenarios against
+\paragraph{GEPA's winner is worse than writing nothing as registered, on one
+template of three.} It scores \NUM{\accUnseenGepa} on unseen scenarios against
 \NUM{\accUnseenOff} for an empty prompt and \NUM{\accUnseenPlacebo} for the
 placebo, losing \NUM{\lossesUnseenGepa} items to the placebo's
 \NUM{\winsUnseenGepa}. It is the arm furthest below \texttt{off} on that set;
@@ -83,15 +83,22 @@ GEPA becomes the \emph{best} unseen arm, at
 not available either way, which is what \Cref{sec:clustered} reports as a
 floor.
 
-The mechanism is visible in the same records. On \texttt{rel-001} GEPA gave one
-answer to a share \NUM{\constantShareUnseenRelZeroZeroOneVendorOutageGepa} of
-the \NUM{\parsedCountUnseenRelZeroZeroOneVendorOutageGepa} items it parsed at
-all, against a balanced key: sensitivity 1, specificity 0, and an informedness
-(Youden's $J$, defined in \Cref{sec:signal}) of exactly zero, the only such
-cell in the study, printed in \Cref{tab:templates}. Its parse rate on that
-template is \NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
-\NUM{\parseRateUnseenRelZeroZeroOneVendorOutagePlacebo} for the placebo on the
-same items. \Cref{sec:whatengines} describes the body.
+The records show what the template measured. On \texttt{rel-001} GEPA gave
+one answer to a share \NUM{\constantShareUnseenRelZeroZeroOneVendorOutageGepa}
+of the \NUM{\parsedCountUnseenRelZeroZeroOneVendorOutageGepa} items the
+scorer read, against a balanced key: sensitivity 1, specificity 0, and an
+informedness (Youden's $J$, defined in \Cref{sec:signal}) of exactly zero,
+the only such cell in the study, printed in \Cref{tab:templates}. Its parse
+rate on that template is
+\NUM{\parseRateUnseenRelZeroZeroOneVendorOutageGepa} against
+\NUM{\parseRateUnseenRelZeroZeroOneVendorOutagePlacebo} for the placebo on
+the same items, and the answers the scorer did not read are the finding:
+\NUM{\controlTokenOnUnseenRelZeroZeroOneVendorOutageGepa} of them were the
+other option followed by a control token the scorer refused
+(\Cref{sec:parsefail}). Read with the token stripped, this cell is not the
+only zero in the study; it is not a zero at all. The paragraph above is the
+registered reading, and the first draft of this paper offered it as a
+mechanism. \Cref{sec:whatengines} describes the body.
 
 \paragraph{The hand-written skill also fails to beat the placebo.} The
 \texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
@@ -188,8 +195,8 @@ list, refused each as an option not on the menu.
 \NUM{\controlTokenCorrectTotal} of the \NUM{\controlTokenTotal} name the key
 once the token is removed. In the harness's own vocabulary that is a verifier
 defect: the decision was made, and read wrongly. We found it on 2026-09-01,
-after a first draft of this paper had built three paragraphs on where those
-answers fell. The scorer now strips the token. Every registered figure in
+after a first draft of this paper had built its two non-null readings, and
+the paragraphs behind them, on where those answers fell. The scorer now strips the token. Every registered figure in
 this paper is from the records as they were scored, and this subsection
 reports the same records re-read.
 
@@ -213,46 +220,49 @@ were measuring.
 \paragraph{The study re-read.}
 
 \begin{center}
-\begin{tabular}{llrrrrr}
+\begin{tabular}{llrrrrrr}
 \toprule
-set & arm & registered & re-read & $p$ & Holm $q$ & clustered $p$ \\
+set & arm & registered & re-read & wins/losses & $p$ & Holm $q$ & clustered $p$ \\
 \midrule
-unseen & \texttt{off} & \NUM{\accUnseenOff} & \NUM{\rescoredAccUnseenOff} & & & \\
-unseen & \texttt{placebo} & \NUM{\accUnseenPlacebo} & \NUM{\rescoredAccUnseenPlacebo} & & & \\
-unseen & \texttt{on} & \NUM{\accUnseenOn} & \NUM{\rescoredAccUnseenOn} & \NUM{\rescoredPUnseenOn} & \NUM{\rescoredQUnseenOn} & \NUM{\rescoredClusteredUnseenOn} \\
-unseen & \texttt{gepa} & \NUM{\accUnseenGepa} & \NUM{\rescoredAccUnseenGepa} & \NUM{\rescoredPUnseenGepa} & \NUM{\rescoredQUnseenGepa} & \NUM{\rescoredClusteredUnseenGepa} \\
-unseen & \texttt{skillopt} & \NUM{\accUnseenSkillopt} & \NUM{\rescoredAccUnseenSkillopt} & \NUM{\rescoredPUnseenSkillopt} & \NUM{\rescoredQUnseenSkillopt} & \NUM{\rescoredClusteredUnseenSkillopt} \\
+unseen & \texttt{off} & \NUM{\accUnseenOff} & \NUM{\rescoredAccUnseenOff} & & & & \\
+unseen & \texttt{placebo} & \NUM{\accUnseenPlacebo} & \NUM{\rescoredAccUnseenPlacebo} & & & & \\
+unseen & \texttt{on} & \NUM{\accUnseenOn} & \NUM{\rescoredAccUnseenOn} & \NUM{\rescoredWinsUnseenOn}/\NUM{\rescoredLossesUnseenOn} & \NUM{\rescoredPUnseenOn} & \NUM{\rescoredQUnseenOn} & \NUM{\rescoredClusteredUnseenOn} \\
+unseen & \texttt{gepa} & \NUM{\accUnseenGepa} & \NUM{\rescoredAccUnseenGepa} & \NUM{\rescoredWinsUnseenGepa}/\NUM{\rescoredLossesUnseenGepa} & \NUM{\rescoredPUnseenGepa} & \NUM{\rescoredQUnseenGepa} & \NUM{\rescoredClusteredUnseenGepa} \\
+unseen & \texttt{skillopt} & \NUM{\accUnseenSkillopt} & \NUM{\rescoredAccUnseenSkillopt} & \NUM{\rescoredWinsUnseenSkillopt}/\NUM{\rescoredLossesUnseenSkillopt} & \NUM{\rescoredPUnseenSkillopt} & \NUM{\rescoredQUnseenSkillopt} & \NUM{\rescoredClusteredUnseenSkillopt} \\
 \midrule
-seen & \texttt{off} & \NUM{\accSeenOff} & \NUM{\rescoredAccSeenOff} & & & \\
-seen & \texttt{placebo} & \NUM{\accSeenPlacebo} & \NUM{\rescoredAccSeenPlacebo} & & & \\
-seen & \texttt{on} & \NUM{\accSeenOn} & \NUM{\rescoredAccSeenOn} & \NUM{\rescoredPSeenOn} & \NUM{\rescoredQSeenOn} & \NUM{\rescoredClusteredSeenOn} \\
-seen & \texttt{gepa} & \NUM{\accSeenGepa} & \NUM{\rescoredAccSeenGepa} & \NUM{\rescoredPSeenGepa} & \NUM{\rescoredQSeenGepa} & \NUM{\rescoredClusteredSeenGepa} \\
-seen & \texttt{skillopt} & \NUM{\accSeenSkillopt} & \NUM{\rescoredAccSeenSkillopt} & \NUM{\rescoredPSeenSkillopt} & \NUM{\rescoredQSeenSkillopt} & \NUM{\rescoredClusteredSeenSkillopt} \\
+seen & \texttt{off} & \NUM{\accSeenOff} & \NUM{\rescoredAccSeenOff} & & & & \\
+seen & \texttt{placebo} & \NUM{\accSeenPlacebo} & \NUM{\rescoredAccSeenPlacebo} & & & & \\
+seen & \texttt{on} & \NUM{\accSeenOn} & \NUM{\rescoredAccSeenOn} & \NUM{\rescoredWinsSeenOn}/\NUM{\rescoredLossesSeenOn} & \NUM{\rescoredPSeenOn} & \NUM{\rescoredQSeenOn} & \NUM{\rescoredClusteredSeenOn} \\
+seen & \texttt{gepa} & \NUM{\accSeenGepa} & \NUM{\rescoredAccSeenGepa} & \NUM{\rescoredWinsSeenGepa}/\NUM{\rescoredLossesSeenGepa} & \NUM{\rescoredPSeenGepa} & \NUM{\rescoredQSeenGepa} & \NUM{\rescoredClusteredSeenGepa} \\
+seen & \texttt{skillopt} & \NUM{\accSeenSkillopt} & \NUM{\rescoredAccSeenSkillopt} & \NUM{\rescoredWinsSeenSkillopt}/\NUM{\rescoredLossesSeenSkillopt} & \NUM{\rescoredPSeenSkillopt} & \NUM{\rescoredQSeenSkillopt} & \NUM{\rescoredClusteredSeenSkillopt} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-Accuracy as scored and with the token stripped; $p$, Holm $q$ over the
-registered family of three, and the template-level $p$ are all on the re-read
-and all against \texttt{placebo}. The unseen set stays under its floor
-(\Cref{sec:clustered}). On the seen set GEPA's winner reads
+Accuracy as scored and with the token stripped; the discordant split, $p$,
+Holm $q$ over the registered family of three, and the template-level $p$ are
+all on the re-read
+and all against \texttt{placebo}. The unseen set remains undecidable at its
+floor (\Cref{sec:clustered}). On the seen set GEPA's winner reads
 \NUM{\rescoredWinsSeenGepa} wins to \NUM{\rescoredLossesSeenGepa},
 $p = \NUM{\rescoredPSeenGepa}$ and Holm $q = \NUM{\rescoredQSeenGepa}$ at
-the registered item unit, and $p = \NUM{\rescoredClusteredSeenGepa}$ over
-\NUM{\rescoredClustersSeenGepa} clusters at the template unit, which Holm's
-tightest step of \NUM{\mdeAlpha} does not admit. SkillOpt's winner does not
-move: \NUM{\controlTokenSkillopt} of its answers carried the token, and that
-one did not name the key. The empty prompt rises to
-\NUM{\rescoredAccUnseenOff} unseen and \NUM{\rescoredAccSeenOff} seen, above
-the seed skill on both sets and above the placebo on the seen set.
+the registered item unit, which is below the registered
+$\alpha = \NUM{\studyAlpha}$: at the unit the registration named, the
+re-read rejects. At the template unit it reads
+$p = \NUM{\rescoredClusteredSeenGepa}$ over \NUM{\rescoredClustersSeenGepa}
+clusters, which Holm's tightest step of \NUM{\mdeAlpha} does not admit.
+SkillOpt's winner does not move: \NUM{\controlTokenSkillopt} of its answers
+carried the token, and that one did not name the key. The empty prompt rises
+to \NUM{\rescoredAccUnseenOff} unseen and \NUM{\rescoredAccSeenOff} seen,
+above the seed skill and the placebo on both sets.
 
 We do not promote the re-read. It is a scoring rule chosen after the data, on
 the arm it helps most, and a paper that swaps its primary for the reading that
 flatters one arm has done what the registration exists to prevent. The claim
 is narrower. The registered null stands; the two non-null readings the first
 draft carried were the scorer's; and the arm the registered figures placed
-below an empty prompt is, on the re-read, the arm nearest to clearing the
-placebo.
+below an empty prompt is, on the re-read, the one arm that clears the placebo
+at the registered unit, and does not at the unit the design has.
 
 \paragraph{The answers that never came.} The other failure is a response with
 no answer line at all, and it has a mechanism that is not the document's
