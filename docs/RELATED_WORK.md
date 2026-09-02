@@ -2,7 +2,7 @@
 
 **Audience:** the evaluating reader.
 
-The evidence base this project is built on, current as of August 2026. Organised
+The evidence base this project is built on, current as of September 2026. Organised
 by what each finding *does* for the design rather than by topic, because several
 of these changed decisions rather than merely informing them.
 
@@ -341,7 +341,9 @@ say so. An earlier version of this entry gave "+23.5pp" as an average across
 benchmarks with no harness named.
 *Caveats we take seriously:* no confidence intervals, no significance tests, and
 no correction for the many implicit comparisons its accept-if-strictly-better
-ratchet performs; benchmark selection restricted to tasks with crisp automatic
+ratchet performs (the absence was confirmed by a term search over the full text
+on 2026-08-31, recorded in `paper/refs.bib`; until then it rested on the
+abstract); benchmark selection restricted to tasks with crisp automatic
 scoring, and not flagged as a limitation; a target-matched optimiser recovers
 only 56-74% of the gain, which implies an unacknowledged distillation component.
 *Amended 2026-08-28.* That last figure is not in the abstract and nobody here
@@ -353,11 +355,16 @@ this project's stated contributions.*
 
 **"On the Impact of AGENTS.md Files on the Efficiency of AI Coding Agents"**,
 arXiv:2601.20404. 124 PRs across 10 repos. The abstract's figures are
-medians: −28.64% runtime, −16.58% output tokens. (The −20.27% and −20.08%
-*means* this entry used to lead with are not in the abstract and have not been
-checked against the body; nor has the claim below. Verified first-hand
-2026-08-12 as far as the abstract goes.) The benefit is said to concentrate in
-a small number of very expensive runs rather than spreading uniformly.
+medians: −28.64% runtime, −16.58% output tokens. The −20.27% and −20.08%
+*means* this entry used to lead with are not in the abstract; a full-text read
+on 2026-08-31 found them in the results section, as mean runtime 162.94s to
+129.91s and mean output tokens 5,744.81 to 4,591.46, so they are the paper's
+and the medians stay the headline because the abstract carries them. The same
+read found that the two conditions are the repository with its `AGENTS.md` and
+the same snapshot with the file removed, with no matched-length or contentless
+control, and that output quality is out of scope. The claim below is still
+unverified. The benefit is said to concentrate in a small number of very
+expensive runs rather than spreading uniformly.
 *Effect on design:* we report p90/p99 alongside means.
 
 **"Authoring Agent Skills: A Software-Engineering Approach"**, arXiv:2607.25032.
@@ -387,9 +394,13 @@ improvements". Its support is a control-theoretic formalisation, a survey of
 published benchmarks and deployments, and a controlled variance decomposition in
 which harness-induced variance "can substantially exceed" model-induced
 variance, "including cases of model ranking reversal". It argues for harness
-disclosure; the seven-heading ETCSOVG scheme we disclose under is ours and not
-the paper's, corrected 2026-08-31. *This is the premise of the whole project: the scaffold is
-the dominant variable, and it is the one nobody reports.*
+disclosure, and its Appendix A (Table 3) mandates the seven disclosure layers we
+report under: execution, tool, context, scheduling, observability, verification
+and governance. Only the ETCSOVG acronym is ours. An earlier version of this
+sentence called the whole scheme ours, and a full-text read on 2026-08-31,
+recorded in `paper/refs.bib`, corrected it. *This is the premise of the whole
+project: the scaffold is the dominant variable, and it is the one nobody
+reports.*
 
 The variance decomposition is the authors' own experiment, and its numbers are
 in the body rather than the abstract (§4.2 and Table 2, verified first-hand
@@ -539,6 +550,54 @@ current answer for cheap→expensive transfer.
 widely by task in compound systems.
 **GEPA** (ICLR 2026 oral, DSPy's dominant optimiser): reflective, trace-based
 optimisation that beats GRPO by up to 20% with up to 35× fewer rollouts.
+
+### What a placebo should be expected to do
+
+Three earlier results say what a document-shaped control does before any skill
+result is read against it. Each was read in full on 2026-09-02, and
+`paper/refs.bib` records the sentence and section behind every claim here.
+
+**Webson and Pavlick, "Do Prompt-Based Models Really Understand the Meaning of
+their Prompts?"**, arXiv:2109.01247, NAACL 2022. Over 30 hand-written NLI
+templates, models from 235M to 175B parameters learn as fast with irrelevant or
+misleading templates as with instructive ones in the few-shot setting, and a
+null template with no added text does far worse than an irrelevant one. Part of
+what the irrelevant templates carry is punctuation: without their question and
+quotation marks they lose much of the effect. The zero-shot result is mixed,
+since the most heavily instruction-tuned model, T0++, does distinguish the
+categories while still scoring high on pathological prompts.
+
+**Min, Lyu, Holtzman, Artetxe, Lewis, Hajishirzi, Zettlemoyer, "Rethinking the
+Role of Demonstrations"**, arXiv:2202.12837, EMNLP 2022. Replacing the gold
+labels in in-context demonstrations with random ones costs 0-5% absolute across
+12 models; what the demonstrations supply is the label space, the input
+distribution and the format, and removing the format is close to or worse than
+no demonstrations. The word to narrow is "content": the correctness of the
+pairing carries little, and the label space and input distribution are content
+that the paper prices at several points each. The bridge to instructions is the
+paper's hypothesis and Webson and Pavlick's experiment.
+
+**Ma, Wang, Zhou, Li, Du, Gui, Zhang, Huang, "Are Large Language Models Good
+Prompt Optimizers?"**, arXiv:2402.02101, 2024. With GPT-4 as the optimiser and
+GPT-3.5-Turbo and Llama-2-70B-chat as targets, reflection-based optimisers
+produce the same feedback whether the errors they reflect on are real or
+fabricated by flipping predictions, more than half of each step's feedback
+repeats what was already raised, and a directionless resampler matches them. The
+paper locates the loss in the refinement step and the target model's instruction
+following, and does not say where a gain comes from; it is cited for the
+insensitivity of reflection to the errors, and for nothing about the source of
+a gain.
+
+*Effect on design:* these three are the prior the placebo arm is read against.
+A block of structured text with no method in it is expected to move a model,
+and to move it by an amount that tracks its shape, so a skill that beats an
+empty prompt has shown nothing until it also beats the placebo. That is why the
+paper reports the placebo as a first-class arm on every item set, why the
+placebo is matched on word count and structural shape and shipped beside the
+skill, and why the third paper bounds the claim about the evolved winners: a
+reflective optimiser's feedback can be independent of the errors it was shown,
+so a winner's described contents are a hypothesis about where its gain came
+from and never evidence of it.
 
 ---
 

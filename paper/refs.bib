@@ -1752,3 +1752,177 @@
              description arms of one skill at one model tier are not that,
              which is the gap the notebook entry citing it has to carry.},
 }
+
+% ---------------------------------------------------------------------------
+% Placebo prior art, 2026-09-02. Three results that say what a document-shaped
+% control should be expected to do before any skill result is read against it.
+% Each was fetched from arXiv (abstract page, API metadata and the PDF) and
+% read in full on 2026-09-02; `quote` is the abstract's sentence and
+% `quote_body` the body's, with the sections named in `verification`. Where a
+% paper supports a narrower claim than the one it will be cited for, the
+% verification field says which half stands.
+% ---------------------------------------------------------------------------
+
+@inproceedings{webson2022understand,
+  author = {Webson, Albert and Pavlick, Ellie},
+  title  = {Do Prompt-Based Models Really Understand the Meaning of their
+            Prompts?},
+  booktitle = {Proceedings of NAACL-HLT},
+  year   = {2022},
+  note   = {arXiv:2109.01247},
+  quote  = {We find that models learn just as fast with many prompts that are
+            intentionally irrelevant or even pathologically misleading as they
+            do with instructively "good" prompts.},
+  quote_body = {We find that models trained with irrelevant templates learn
+            just as fast as those trained with instructive templates, with no
+            practical difference at any number of shots (Figure 2). This is
+            true for all models and all datasets we experimented, including
+            the largest GPT-3 (Figure 6). ... Models trained with null
+            templates perform far worse than all other categories of
+            templates ... with the exception of T0++ at zero shots, all models
+            perform essentially as well with some pathological prompts as they
+            do with proper prompts.},
+  verification = {Verified first-hand 2026-09-02 against arXiv:2109.01247v2
+            (21 Apr 2022; v1 2 Sep 2021), whose arXiv comment reads "NAACL
+            2022. Unabridged version"; the title is recorded as the arXiv
+            page prints it, with a lower-case "their". quote is the abstract;
+            quote_body joins section 4.2 (Irrelevant Templates and Null
+            Templates) and section 4.3 (Discussion), with the superscript for
+            footnote 4 dropped after "difference". SCOPE: NLI, mainly RTE,
+            with ANLI, HANS and Winograd in appendices; ALBERT 235M, T5
+            LM-Adapted 770M to 11B, T0 3B and 11B, T0++ 11B, and GPT-3 175B
+            via 16-shot priming. The few-shot result is prompt-based
+            FINE-TUNING with gradient updates over four seeds, and the paper
+            argues from effect size, not from the absence of significance
+            (footnote 4). THE CLAIM IT WILL BOUND, that an irrelevant document
+            matching an instructive one is expected, holds cleanly in that
+            few-shot setting, and the null-template result adds that an
+            irrelevant sentence beat adding nothing (Table 2, inst > null in
+            every row but T5 LMA 770M). IN THE ZERO-SHOT SETTING IT IS
+            WEAKER: T0 3B and 11B show no practical difference between
+            instructive and misleading templates, but T0++ is "the only model
+            in this paper that shows statistically significantly different
+            performance across all categories of prompts", including
+            irrelevant (Table 2), with the paper's caveat that it "still
+            performs arguably too well in absolute terms with pathological
+            prompts": 78\% zero-shot with a grammaticality template, the same
+            as its proper instruction. Two further findings travel with the
+            citation. Appendix A: irrelevant templates lose much of their
+            effect without the quotation and question marks, so part of what
+            they carry is punctuation shape, which is the reason a placebo is
+            matched on shape as well as on length. Section 5: the choice of
+            target words moves accuracy far more than the meaning of the
+            template (22.2\% between "yes"/"no" and "no"/"yes" at 32 shots)}
+}
+
+@inproceedings{min2022demonstrations,
+  author = {Min, Sewon and Lyu, Xinxi and Holtzman, Ari and Artetxe, Mikel and
+            Lewis, Mike and Hajishirzi, Hannaneh and Zettlemoyer, Luke},
+  title  = {Rethinking the Role of Demonstrations: What Makes In-Context
+            Learning Work?},
+  booktitle = {Proceedings of EMNLP},
+  year   = {2022},
+  note   = {arXiv:2202.12837},
+  quote  = {randomly replacing labels in the demonstrations barely hurts
+            performance on a range of classification and multi-choce tasks,
+            consistently over 12 different models including GPT-3. Instead, we
+            find that other aspects of the demonstrations are the key drivers
+            of end task performance, including the fact that they provide a
+            few examples of (1) the label space, (2) the distribution of the
+            input text, and (3) the overall format of the sequence.},
+  quote_body = {We then find that replacing gold labels with random labels
+            only marginally hurts performance. The trend is consistent over
+            nearly all models: models see performance drop in the range of
+            0-5\% absolute. ... removing the format is close to or worse than
+            no demonstrations, indicating the importance of the format. ...
+            the models can still retain up to 95\% of performance gains by
+            using either the inputs only or the label set only if the right
+            format is used},
+  verification = {Verified first-hand 2026-09-02 against arXiv:2202.12837v2
+            (20 Oct 2022; v1 25 Feb 2022), whose arXiv comment reads
+            "Published as a conference paper at EMNLP 2022 (long)".
+            "multi-choce" is the source's spelling and is left as printed.
+            quote is the abstract; quote_body joins section 4.1, section 5.3
+            and section 6. SCOPE: 12 models, six decoder-only LMs from 774M to
+            175B each run direct and channel; 26 classification and
+            multi-choice datasets; k = 16 with five seeds; GPT-3 and fairseq
+            13B on a six-dataset subset. The average drop is 1.7\% absolute
+            on multi-choice and 2.6\% on classification, and 0.1-0.9\% for
+            MetaICL. THE CLAIM IT WILL BOUND NEEDS ONE WORD NARROWED: what the
+            paper shows carries little is the CORRECTNESS of the input-label
+            pairing, and "content" is wider than that. The label space and
+            the input distribution are content the demonstration carries, and
+            the paper prices each: random English words in place of the label
+            space cost direct models 5-16\% absolute (section 5.2) and
+            out-of-distribution inputs cost 3-16\% (section 5.1). The
+            exceptions are the paper's own: GPT-J in classification drops
+            "nearly 10\%" when every label is wrong (section 4.2), the worst
+            dataset-model pair is "nearly 14\% absolute" on
+            financial\_phrasebank with GPT-J, and its Limitation section
+            cites Kim et al. 2022 finding that negated labels substantially
+            lower performance. The bridge to instructions is the paper's
+            hypothesis and is untested there: section 6 says demonstrations
+            and instructions "largely have the same role" and cites Webson
+            and Pavlick for the instruction half. A random-label
+            demonstration keeps format, label space and input distribution; a
+            placebo matched on length and shape keeps format only, so this
+            entry is cited for the direction, that shape carries much of the
+            gain, and for no magnitude}
+}
+
+@article{ma2024promptoptimizers,
+  author = {Ma, Ruotian and Wang, Xiaolei and Zhou, Xin and Li, Jian and
+            Du, Nan and Gui, Tao and Zhang, Qi and Huang, Xuanjing},
+  title  = {Are Large Language Models Good Prompt Optimizers?},
+  journal = {arXiv preprint arXiv:2402.02101},
+  year   = {2024},
+  quote  = {Our findings reveal that the LLM optimizers struggle to identify
+            the true causes of errors during reflection, tending to be biased
+            by their own prior knowledge rather than genuinely reflecting on
+            the errors. Furthermore, even when the reflection is semantically
+            valid, the LLM optimizers often fail to generate appropriate
+            prompts for the target models with a single prompt refinement
+            step, partly due to the unpredictable behaviors of the target
+            models.},
+  quote_body = {Iterative-APE achieves comparable results with reflection-based
+            methods in many tasks and generally outperforms OPRO. These
+            results are inconsistent with our expectations, given that APE
+            performs directionless resampling rather than targeted prompt
+            optimization. ... Regardless of reflecting on the true error
+            distribution or the pseudo error distribution, the LLM optimizer
+            may generate similar feedback, resulting in comparable prompt
+            optimization performance. ... Starting from step 2, the ASRR
+            consistently remains above 50\% during the prompt optimization
+            steps. ... while APO is able to improve the semantic meanings of
+            the prompts, most of the time, the LLM-based prompt optimizer
+            fails to generate an appropriate prompt around the semantic space
+            with a single refinement.},
+  verification = {Verified first-hand 2026-09-02 against arXiv:2402.02101v1
+            (3 Feb 2024), the only version; the arXiv page names no venue, so
+            it is recorded as a preprint. quote is the abstract; quote_body
+            joins section 3.3, section 4.1.1, section 4.2.3 and section
+            5.1.1. SCOPE: GPT-4 as the optimiser, GPT-3.5-Turbo and
+            Llama-2-70B-chat as targets, four BIG-bench tasks with 50 training
+            and 200 test items (106 for snarks), five updating methods under
+            one unified beam search. "Max Test Score" in Figure 1 is the best
+            test accuracy among generated prompts to that step, from the best
+            of three repeated runs, so every headline figure is a test-set
+            maximum. A term search over the full text finds no confidence
+            interval, standard deviation, p-value or error bar; "significant"
+            occurs only colloquially. THE CLAIM IT WILL BOUND SPLITS: the
+            first half, that the optimiser reflects poorly on errors, is the
+            paper's own (section 4: feedback is the same whether the errors
+            are real or fabricated by flipping predictions, and more than
+            half of each step's feedback repeats what was already raised).
+            The second half holds only in the weaker form that the gain
+            cannot be attributed to the reflected content, because a
+            directionless resampler matches it and fabricated errors produce
+            the same trend. The paper does NOT say the gain comes from
+            elsewhere: section 5.1.1 finds reflection adds valid semantics in
+            some steps (APE run on APO's step-1 prompts beats APE alone) and
+            locates the loss in the refinement step and in the target model's
+            instruction following (section 5.2), and section 6 proposes its
+            own optimiser, ABO, with positive figures. Cite it for the first
+            half and the weak second half, and never for a source of the
+            gain}
+}
