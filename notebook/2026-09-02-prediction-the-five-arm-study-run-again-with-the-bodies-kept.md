@@ -321,3 +321,23 @@ was the CLI's default seed list, not the registration. The pool is seed 0
 alone, 70 items, and the validation pool is seed 1000, 21 items, the same two
 numbers Phase 2 and the first run used. `--train-seeds 0 --limit 70
 --val-seeds 1000 --val-limit 21`, recorded in each search's `run.json`.
+
+---
+
+## Amendment, before the first study call: the seeds are what the code derives
+
+The test-sets section above lists unseen seeds (10104, 10552, 10996) and seen
+seeds (10104, 10552), which is `holdout_seeds(passphrase, 3)` and
+`holdout_seeds(passphrase, 2)` taken separately. `de study` does not derive
+them that way: it mints `unseen + seen` seeds in one draw, sorts them, and
+slices, so the two sets never share a seed. An adversarial review of the study
+code ran the registered arguments on the mock venue and read the manifest:
+
+- **Unseen:** seeds **10104, 10379, 10552**, 588 items.
+- **Seen:** seeds **10989, 10996**, 392 items.
+
+Those are the seeds this study runs at, and `run.json` will carry them. Item
+counts, templates, arms, the family, the bar and every prediction are
+unchanged. The same review found that `placebo` against `off`, listed above as
+a secondary reading, was not computed by the study code; it is being added
+before the run, and the reading stays secondary and uncorrected.
