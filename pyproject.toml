@@ -529,6 +529,16 @@ empty `results/evolution/` survives on the machine that ran the searches, so \
 the reference resolves in a working directory and cannot resolve in a clean \
 clone. Delete this entry if the searches are ever re-run and published.\
 """
+".claude/worktrees/" = """
+Named in `docs/AUTONOMOUS_WORK_ORDER.md` as where a session's worktree goes. \
+`.gitignore` excludes everything under `.claude/` except `.claude/skills/`, and \
+tracking that one directory in 54f2095 made `.claude` a top-level directory on \
+every clean clone, so the span is extracted everywhere and the worktrees \
+directory exists only on a machine where an agent has made one. Added \
+2026-09-01 after 0053651 landed red in CI and green locally, which is the \
+failure this register exists for. Delete this entry if `.claude/skills/` stops \
+being tracked.\
+"""
 
 # --------------------------------------------------------------------------- #
 # When each living document was last read, and by which commit.

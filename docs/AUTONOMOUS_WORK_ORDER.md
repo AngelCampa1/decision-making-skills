@@ -451,6 +451,14 @@ in a code span. The two spans that remain are safe in both worlds:
 `.claude/worktrees/` resolves wherever `.claude` exists and is invisible where it
 does not.
 
+**Amended 2026-09-01.** "Safe in both worlds" held for thirteen days. `54f2095`
+tracked `.claude/skills/`, so `.claude` is a top-level directory on every clean
+clone again, the span is extracted everywhere, and `.claude/worktrees/` exists
+only where an agent has made one. The next commit landed red in CI and green on
+this machine, the same shape as before with the sign flipped. The path is now
+declared under `[tool.decision-evals.docs-ignored-paths]`, which is what the
+gate's own message prescribes for a path `.gitignore` excludes on purpose.
+
 **`.venv` has the identical coupling and is left alone deliberately.**
 `.venv/Scripts/de.exe` is named in `[tool.decision-evals.docs-ignored-paths]` and
 its span flips on whether `.venv` is a directory, exactly as `.claude` did. It is
