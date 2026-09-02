@@ -97,16 +97,26 @@ def items_per_template(roots: tuple[Path, ...], seed: int, count: int) -> dict[s
     }
 
 
-def read(records: list[RunRecord], items: dict[str, list[Item]]) -> list[TemplateReading]:
+def read(
+    records: list[RunRecord], items: dict[str, list[Item]], target: str
+) -> list[TemplateReading]:
     """Per-template numbers from a checkpoint, in template order.
+
+    Only the rows this invocation asked for are read: the item at its seed,
+    answered by ``target``. A checkpoint a second screen resumed into under
+    another seed or model holds rows that are not this screen's, and reading
+    by template alone would average the two.
 
     J is computed over the parsed rows only, because
     :func:`~decision_evals.stats.signal.informedness` reads an unparsed answer
     as a confident negative, and the parse rate beside it says how many rows
     that left out.
     """
+    wanted = {(item.seed, item.item_id) for group in items.values() for item in group}
     by_template: dict[str, list[RunRecord]] = {template_id: [] for template_id in items}
     for record in records:
+        if record.model != target or (record.seed, record.item_id) not in wanted:
+            continue
         if record.template_id in by_template:
             by_template[record.template_id].append(record)
 
@@ -148,9 +158,41 @@ def render(readings: list[TemplateReading]) -> str:
     return "\n".join(lines)
 
 
-def screen_dir(repo_root: Path, git_sha: str, on: date | None = None) -> Path:
-    """``results/screens/<date>-<sha7>-templates``, the shape every run directory has."""
-    return repo_root / SCREENS_ROOT / f"{(on or date.today()).isoformat()}-{git_sha[:7]}-templates"
+def screen_dir(repo_root: Path, git_sha: str, seed: int, on: date | None = None) -> Path:
+    """``results/screens/<date>-<sha7>-s<seed>-templates``.
+
+    The shape every run directory has, with the seed in it: two screens on one
+    day at one commit are usually two seeds, and without the seed in the name
+    the second would resume into the first.
+    """
+    stamp = (on or date.today()).isoformat()
+    return repo_root / SCREENS_ROOT / f"{stamp}-{git_sha[:7]}-s{seed}-templates"
+
+
+def assert_same_screen(out: Path, asked: dict[str, object]) -> None:
+    """Refuse to resume into a directory that was asked something else.
+
+    The checkpoint resumes on ``(item_id, arm, candidate_sha, seed)`` and the
+    manifest overwrites, so a second invocation with another target, seed,
+    corpus or item count would answer its own items into the first screen's
+    file and print numbers over both. The four fields that decide which items
+    are asked, and of whom, have to agree.
+
+    Raises:
+        SystemExit: A ``run.json`` is there and disagrees.
+    """
+    manifest = out / "run.json"
+    if not manifest.is_file():
+        return
+    before = json.loads(manifest.read_text(encoding="utf-8"))
+    fields = ("target_model", "seed", "templates_root", "items_per_template")
+    differing = [name for name in fields if before.get(name) != asked[name]]
+    if differing:
+        raise SystemExit(
+            f"{manifest} was written by a screen with different "
+            f"{', '.join(differing)}. A screen resumes only into its own directory; "
+            "pass --out to start another."
+        )
 
 
 def run(
@@ -173,25 +215,20 @@ def run(
     venue = venue_for(target)
     items = items_per_template(roots, seed, per_template)
     rows = [item for group in items.values() for item in group]
+    asked: dict[str, object] = {
+        "target_model": target,
+        "templates_root": [str(root) for root in roots],
+        "seed": seed,
+        "items_per_template": per_template,
+        "templates": sorted(items),
+        "items": len(rows),
+        "max_tokens": max_tokens,
+        "num_ctx": num_ctx,
+        "arm": "off",
+    }
+    assert_same_screen(out, asked)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "run.json").write_text(
-        json.dumps(
-            {
-                "target_model": target,
-                "templates_root": [str(root) for root in roots],
-                "seed": seed,
-                "items_per_template": per_template,
-                "templates": sorted(items),
-                "items": len(rows),
-                "max_tokens": max_tokens,
-                "num_ctx": num_ctx,
-                "arm": "off",
-            },
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
+    (out / "run.json").write_text(json.dumps(asked, indent=2) + "\n", encoding="utf-8")
     ledger = BudgetLedger(
         limit_usd=0.0, bills=venue.bills, limit_calls=max_calls, limit_seconds=max_seconds
     )
@@ -206,7 +243,7 @@ def run(
             ledger=ledger,
             resume_fields=RESUME_FIELDS,
         )
-    readings = read(load_records(checkpoint), items)
+    readings = read(load_records(checkpoint), items, target)
     (out / "summary.json").write_text(
         json.dumps(
             [{**asdict(r), "accuracy": r.accuracy, "parse_rate": r.parse_rate} for r in readings],
@@ -247,7 +284,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--out",
         type=Path,
         default=None,
-        help=f"Screen directory. Defaults to {SCREENS_ROOT}/<date>-<sha7>-templates.",
+        help=f"Screen directory. Defaults to {SCREENS_ROOT}/<date>-<sha7>-s<seed>-templates.",
     )
     return parser
 
@@ -256,7 +293,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.items_per_template < 1:
         raise SystemExit("--items-per-template is at least 1")
-    out = args.out or screen_dir(REPO_ROOT, _head(REPO_ROOT))
+    out = args.out or screen_dir(REPO_ROOT, _head(REPO_ROOT), args.seed)
     readings = run(
         target=args.target,
         roots=parse_roots(args.templates_root, base=REPO_ROOT),

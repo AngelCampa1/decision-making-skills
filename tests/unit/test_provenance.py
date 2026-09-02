@@ -402,3 +402,20 @@ def test_every_working_directory_is_gitignored() -> None:
     ignored = (Path(__file__).resolve().parents[2] / ".gitignore").read_text(encoding="utf-8")
     for name in WORKING_DIRS:
         assert f"results/{name}/" in ignored
+
+
+def test_a_later_pass_under_the_run_is_checked_too(tmp_path: Path) -> None:
+    """A study's pass 2 sits under `pass-2/`. A non-recursive glob never read
+    it, so a mismatched version one directory down passed the gate."""
+    repo = _repo(
+        tmp_path,
+        readme=_STAMP + _PREDICTION,
+        records=[{"case": "p01", "set_version": 1}],
+    )
+    later = repo / "results" / "decision-making" / "2026-08-12-abc1234-arm" / "pass-2"
+    later.mkdir()
+    (later / "records-off.jsonl").write_text(
+        json.dumps({"case": "p01", "set_version": 2}) + "\n", encoding="utf-8"
+    )
+    messages = _issues(repo)
+    assert any("`pass-2/records-off.jsonl` carries [2]" in message for message in messages)

@@ -24,6 +24,7 @@ from decision_evals.runner import RunRecord
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES = REPO_ROOT / "datasets" / "templates"
+MOCK = "mockllm/deterministic"
 
 
 def _load() -> ModuleType:
@@ -113,7 +114,7 @@ class TestReadingACheckpoint:
     def test_accuracy_counts_an_unparsed_answer_as_wrong(self) -> None:
         items = {"t": [_item("t", ["a", "b"])]}
         records = [_record("t", "a", "a"), _record("t", "b", None)]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert (reading.asked, reading.parsed, reading.correct) == (2, 1, 1)
         assert reading.accuracy == 0.5
         assert reading.parse_rate == 0.5
@@ -123,45 +124,45 @@ class TestReadingACheckpoint:
         same way every time has no signal however its accuracy reads."""
         items = {"t": [_item("t", ["a", "b"])]}
         records = [_record("t", key, "a") for key in ("a", "a", "b", "b")]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert reading.accuracy == 0.5
         assert reading.informedness == 0.0
 
     def test_j_is_one_for_a_perfect_reader(self) -> None:
         items = {"t": [_item("t", ["a", "b"])]}
         records = [_record("t", key, key) for key in ("a", "a", "b", "b")]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert reading.informedness == 1.0
 
     def test_j_is_blank_with_more_than_two_options(self) -> None:
         items = {"t": [_item("t", ["a", "b", "c"])]}
         records = [_record("t", key, key) for key in ("a", "b", "c")]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert reading.informedness is None
         assert reading.accuracy == 1.0
 
     def test_j_is_blank_when_the_key_holds_one_class(self) -> None:
         items = {"t": [_item("t", ["a", "b"])]}
         records = [_record("t", "a", "a"), _record("t", "a", "b")]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert reading.informedness is None
 
     def test_j_is_blank_when_nothing_parsed(self) -> None:
         items = {"t": [_item("t", ["a", "b"])]}
         records = [_record("t", "a", None), _record("t", "b", None)]
-        (reading,) = screen.read(records, items)
+        (reading,) = screen.read(records, items, MOCK)
         assert reading.informedness is None
         assert reading.parse_rate == 0.0
 
     def test_a_template_with_no_records_still_prints(self) -> None:
         items = {"t": [_item("t", ["a", "b"])], "u": [_item("u", ["a", "b"])]}
-        readings = screen.read([_record("t", "a", "a")], items)
+        readings = screen.read([_record("t", "a", "a")], items, MOCK)
         assert [(r.template_id, r.asked) for r in readings] == [("t", 1), ("u", 0)]
         assert readings[1].accuracy == 0.0
 
     def test_a_record_from_an_unknown_template_is_ignored(self) -> None:
         items = {"t": [_item("t", ["a", "b"])]}
-        (reading,) = screen.read([_record("other", "a", "a")], items)
+        (reading,) = screen.read([_record("other", "a", "a")], items, MOCK)
         assert reading.asked == 0
 
 
@@ -182,8 +183,8 @@ class TestRendering:
 
 class TestTheScreenDirectory:
     def test_it_has_the_shape_every_run_directory_has(self, tmp_path: Path) -> None:
-        path = screen.screen_dir(tmp_path, "abcdef0123456", on=date(2026, 9, 2))
-        assert path == tmp_path / "results" / "screens" / "2026-09-02-abcdef0-templates"
+        path = screen.screen_dir(tmp_path, "abcdef0123456", 10_000, on=date(2026, 9, 2))
+        assert path == tmp_path / "results" / "screens" / "2026-09-02-abcdef0-s10000-templates"
 
 
 class TestRunningTheScreen:
@@ -265,7 +266,7 @@ class TestRunningTheScreen:
         monkeypatch.setattr(screen, "_head", lambda root: "0123456789abcdef")
         assert screen.main(["--items-per-template", "1"]) == 0
         assert seen["out"].parent == REPO_ROOT / "results" / "screens"
-        assert seen["out"].name.endswith("-0123456-templates")
+        assert seen["out"].name.endswith("-0123456-s10000-templates")
 
     def test_outside_a_repository_there_is_no_directory_to_name(
         self, monkeypatch: pytest.MonkeyPatch
@@ -278,3 +279,75 @@ class TestRunningTheScreen:
         monkeypatch.setattr(screen.subprocess, "run", failing)
         with pytest.raises(SystemExit, match="not a git repository"):
             screen.main([])
+
+
+class TestTwoScreensDoNotPool:
+    """The checkpoint resumes on the study's key and the manifest overwrites,
+    so a second screen into the first's directory would print numbers over
+    both. Each of these is a way that happened or could."""
+
+    def test_the_default_directory_carries_the_seed(self, tmp_path: Path) -> None:
+        path = screen.screen_dir(tmp_path, "abcdef0123456", 10_007, on=date(2026, 9, 2))
+        assert path.name == "2026-09-02-abcdef0-s10007-templates"
+
+    def test_reading_ignores_another_seed_and_another_model(self) -> None:
+        items = {"t": [_item("t", ["a", "b"])]}
+        mine = _record("t", "a", "a")
+        other_seed = RunRecord(**{**mine.__dict__, "seed": 10_001, "correct": False, "parsed": "b"})
+        other_model = RunRecord(**{**mine.__dict__, "model": "ollama/x", "parsed": "b"})
+        (reading,) = screen.read([mine, other_seed, other_model], items, mine.model)
+        assert (reading.asked, reading.correct) == (1, 1)
+
+    def _args(self, root: Path, out: Path, *extra: str) -> list[str]:
+        return [
+            "--templates-root",
+            str(root),
+            "--items-per-template",
+            "2",
+            "--out",
+            str(out),
+            *extra,
+        ]
+
+    def test_another_seed_into_the_same_directory_is_refused(
+        self, two_templates: Path, tmp_path: Path
+    ) -> None:
+        out = tmp_path / "screen"
+        screen.main(self._args(two_templates, out, "--seed", "10000"))
+        before = (out / "run.json").read_bytes()
+        with pytest.raises(SystemExit, match="different seed"):
+            screen.main(self._args(two_templates, out, "--seed", "10001"))
+        assert (out / "run.json").read_bytes() == before
+
+    def test_another_target_or_count_is_refused(self, two_templates: Path, tmp_path: Path) -> None:
+        out = tmp_path / "screen"
+        screen.main(self._args(two_templates, out))
+        with pytest.raises(SystemExit, match="different items_per_template"):
+            screen.main(
+                [
+                    "--templates-root",
+                    str(two_templates),
+                    "--items-per-template",
+                    "3",
+                    "--out",
+                    str(out),
+                ]
+            )
+        (out / "run.json").write_text(
+            json.dumps(
+                {
+                    **json.loads((out / "run.json").read_text(encoding="utf-8")),
+                    "target_model": "ollama/other",
+                }
+            ),
+            encoding="utf-8",
+        )
+        with pytest.raises(SystemExit, match="different target_model"):
+            screen.main(self._args(two_templates, out))
+
+    def test_the_same_screen_resumes(self, two_templates: Path, tmp_path: Path) -> None:
+        out = tmp_path / "screen"
+        screen.main(self._args(two_templates, out))
+        before = (out / "records.jsonl").read_bytes()
+        assert screen.main(self._args(two_templates, out)) == 0
+        assert (out / "records.jsonl").read_bytes() == before

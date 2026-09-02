@@ -37,7 +37,13 @@ from pathlib import Path
 from typing import Final
 
 from decision_evals.budget import BudgetLedger
-from decision_evals.evolution.checkpoints import RunPaths, paths_for, run_name, write_manifest
+from decision_evals.evolution.checkpoints import (
+    RunPaths,
+    paths_for,
+    read_manifest,
+    run_name,
+    write_manifest,
+)
 from decision_evals.evolution.holdout import POOLS, census
 from decision_evals.evolution.lineage import body_sha
 from decision_evals.evolution.run import DEFAULT_TEMPLATES_ROOT, items_for
@@ -76,6 +82,11 @@ ORDERING: Final = "item-major"
 #: What an arm may be called. The label is a file name, so it is one token, and
 #: it may not be ``aa``, which :data:`AA_RECORDS` already spells.
 _LABEL: Final = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+
+#: Request fields a resumed study may change. Both are stopping rules, and a
+#: study resumed against a raised cap is the same study given more room.
+#: Everything else in the request describes what was measured.
+RESUMABLE_CAPS: Final = frozenset({"max_calls", "max_seconds"})
 
 
 class StudyError(RuntimeError):
@@ -506,10 +517,15 @@ def run_study(
         except Exception as exc:
             raise StudyError(str(exc)) from exc
 
+    _assert_distinct(arms)
     paths = paths_for(
         repo_root, run_name(engine="study", git_sha=git_sha, on=on, slug=request.slug)
     )
     paths.root.mkdir(parents=True, exist_ok=True)
+    declared: list[dict[str, object]] = [
+        {"label": arm.label, "kind": arm.kind, "candidate_sha": arm.sha} for arm in arms
+    ]
+    _assert_resumable(paths, request, declared)
     roots = parse_roots(request.templates_root, base=repo_root)
     items = {item_set.label: item_set.items(root=roots) for item_set in request.sets}
     write_manifest(
@@ -521,9 +537,7 @@ def run_study(
             "chunk": request.chunk,
             "passes": request.passes,
             "templates_roots": [_relative(root, repo_root) for root in roots],
-            "arms": [
-                {"label": arm.label, "kind": arm.kind, "candidate_sha": arm.sha} for arm in arms
-            ],
+            "arms": declared,
             "sets": {
                 label: {
                     "items": len(rows),
@@ -592,6 +606,78 @@ def run_study(
         records=len(records) + sum(len(rows) for rows in later),
         passes=analyse_passes([records, *later], arms, request.sets) if later else (),
     )
+
+
+def _assert_distinct(arms: Sequence[Arm]) -> None:
+    """Refuse two arms that would be one on disk or one in the analysis.
+
+    Two arms with one label share ``records-<label>.jsonl``, and resume treats
+    the second's items as already answered, so it never runs. Two arms of one
+    kind with one body share a ``candidate_sha``, and :func:`_arm_of` hands
+    every record to whichever was declared first, so the second's records
+    vanish from :func:`by_arm` without a trace.
+
+    Raises:
+        StudyError: A repeated label, or a repeated body under one kind.
+    """
+    labels = [arm.label for arm in arms]
+    repeated = sorted({label for label in labels if labels.count(label) > 1})
+    if repeated:
+        raise StudyError(
+            f"arm label(s) {repeated} are declared more than once. Two arms under one "
+            "label share one checkpoint, and the second never runs."
+        )
+    bodies: dict[tuple[str, str], str] = {}
+    for arm in arms:
+        if arm.sha is None:
+            continue
+        key = (arm.kind, arm.sha)
+        if key in bodies:
+            raise StudyError(
+                f"arms {bodies[key]!r} and {arm.label!r} carry the same body "
+                f"({arm.sha[:12]}) under kind {arm.kind!r}. They would share a "
+                "candidate_sha, and every record would be read as the first arm's."
+            )
+        bodies[key] = arm.label
+
+
+def _assert_resumable(
+    paths: RunPaths, request: StudyRequest, arms: Sequence[dict[str, object]]
+) -> None:
+    """Refuse to resume a study under a different design.
+
+    :func:`~decision_evals.evolution.checkpoints.write_manifest` overwrites,
+    which is right for a cap and wrong for everything else: a study started
+    with two passes of eight-item chunks and resumed with one pass of sixteen
+    would leave ``pass-2/`` on disk under a manifest that says it never ran,
+    and the same records under a manifest naming another corpus, other arms or
+    other sets. Only :data:`RESUMABLE_CAPS` may change.
+
+    Raises:
+        StudyError: A manifest is on disk and disagrees on anything but a cap.
+    """
+    if not paths.manifest.is_file():
+        return
+    before = read_manifest(paths)
+    wanted = _plain(asdict(request))
+    assert isinstance(wanted, dict)
+    had = before.get("request", {})
+    differing = [
+        field for field in wanted if field not in RESUMABLE_CAPS and wanted[field] != had.get(field)
+    ]
+    if before.get("arms") != _plain(list(arms)):
+        differing.append("arms")
+    if differing:
+        raise StudyError(
+            f"{paths.manifest} describes a study with different {', '.join(differing)}. A "
+            "study resumes under the design it started with; only a call or clock cap "
+            "may change. Use another slug for a different design."
+        )
+
+
+def _plain(value: object) -> object:
+    """A value as JSON would give it back, so a tuple compares with a list."""
+    return json.loads(json.dumps(value, default=str))
 
 
 def _relative(path: Path, repo_root: Path) -> str:

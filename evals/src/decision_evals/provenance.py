@@ -201,7 +201,14 @@ def discover_runs(repo_root: Path) -> list[RunRecord]:
                     path=f"{RESULTS_ROOT}/{skill_dir.name}/{run_dir.name}",
                     name=run_dir.name,
                     readme=run_dir / "README.md",
-                    jsonl=tuple(sorted(run_dir.glob("*.jsonl"))),
+                    # A study's later passes sit under `pass-<k>/`, and a
+                    # checkpoint there is a record the README's answer key
+                    # binds like any beside it. Only that directory shape is
+                    # read below the top: three published runs carry working
+                    # files in nested directories that were never records.
+                    jsonl=tuple(
+                        sorted([*run_dir.glob("*.jsonl"), *run_dir.glob("pass-*/*.jsonl")])
+                    ),
                 )
             )
     return runs
@@ -288,7 +295,8 @@ def _check_answer_key(run: RunRecord, text: str) -> list[ProvenanceIssue]:
             issues.append(
                 ProvenanceIssue(
                     run.path,
-                    f"README declares answer key v{version} but `{path.name}` carries "
+                    f"README declares answer key v{version} but "
+                    f"`{path.relative_to(run.readme.parent).as_posix()}` carries "
                     f"{sorted(found)}. The prose and the data disagree about which labels "
                     "produced these numbers, which is the exact construction that put "
                     "five unearned points of recall on the shipped skill.",

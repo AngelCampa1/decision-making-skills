@@ -559,3 +559,120 @@ class TestRunningTheStudyOnTheMockVenue:
         )
         with pytest.raises(EvolveError, match="no template answers to"):
             self._run(tmp_path, request)
+
+
+class TestTwoArmsThatWouldBeOne:
+    def _sets(self) -> tuple[ItemSet, ...]:
+        return (ItemSet(label="u", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)),)
+
+    def _run(self, tmp_path: Path, arms: tuple[Arm, ...]) -> None:
+        run_study(
+            StudyRequest(target_model=MOCK_MODEL, sets=self._sets(), templates_root=TEMPLATES),
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+        )
+
+    def test_a_repeated_label_is_refused(self, tmp_path: Path) -> None:
+        """Two arms under one label share one checkpoint, and resume would treat
+        the second's items as answered."""
+        arms = (
+            ARMS[1],
+            Arm(label="gepa", kind="candidate", body="one"),
+            Arm(label="gepa", kind="candidate", body="two"),
+        )
+        with pytest.raises(StudyError, match=r"\['gepa'\] are declared more than once"):
+            self._run(tmp_path, arms)
+        assert not (tmp_path / "results").exists()
+
+    def test_a_repeated_body_under_one_kind_is_refused(self, tmp_path: Path) -> None:
+        """Two winners with one body share a candidate_sha, and `by_arm` would
+        hand the second's records to the first."""
+        arms = (
+            ARMS[1],
+            Arm(label="gepa", kind="candidate", body=GEPA_BODY),
+            Arm(label="skillopt", kind="candidate", body=GEPA_BODY),
+        )
+        with pytest.raises(StudyError, match="'gepa' and 'skillopt' carry the same body"):
+            self._run(tmp_path, arms)
+
+    def test_one_body_under_two_kinds_is_two_arms(self, tmp_path: Path) -> None:
+        """`_arm_of` reads the kind as well as the hash, so the seed body as `on`
+        and the same text as a candidate are told apart."""
+        arms = (
+            ARMS[1],
+            Arm(label="on", kind="on", body=GEPA_BODY),
+            Arm(label="same", kind="candidate", body=GEPA_BODY),
+        )
+        self._run(tmp_path, arms)
+
+
+class TestResumingUnderAnotherDesign:
+    def _request(self, **overrides: object) -> StudyRequest:
+        fields: dict[str, object] = {
+            "target_model": MOCK_MODEL,
+            "sets": (
+                ItemSet(label="u", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)),
+            ),
+            "templates_root": TEMPLATES,
+            "chunk": 8,
+            "passes": 2,
+            "run_aa": False,
+        }
+        fields.update(overrides)
+        return StudyRequest(**fields)  # type: ignore[arg-type]
+
+    def _run(self, tmp_path: Path, request: StudyRequest, arms: tuple[Arm, ...] = ARMS[:2]):
+        return run_study(
+            request,
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_a_changed_schedule_is_refused(self, tmp_path: Path) -> None:
+        """Resumed with one pass of sixteen, the study would leave `pass-2/` on
+        disk under a manifest saying it never ran."""
+        self._run(tmp_path, self._request())
+        with pytest.raises(StudyError, match="different passes, chunk"):
+            self._run(tmp_path, self._request(passes=1, chunk=16))
+
+    def test_a_changed_corpus_or_set_is_refused(self, tmp_path: Path) -> None:
+        self._run(tmp_path, self._request())
+        with pytest.raises(StudyError, match="different sets, templates_root"):
+            self._run(
+                tmp_path,
+                self._request(
+                    sets=(
+                        ItemSet(
+                            label="u", templates=("hrd-001-warranty-claim",), seeds=(HOLDOUT_FLOOR,)
+                        ),
+                    ),
+                    templates_root=HARD,
+                ),
+            )
+
+    def test_changed_arms_are_refused(self, tmp_path: Path) -> None:
+        self._run(tmp_path, self._request())
+        with pytest.raises(StudyError, match="different arms"):
+            self._run(tmp_path, self._request(), arms=ARMS[:3])
+
+    def test_a_raised_cap_resumes_and_is_recorded(self, tmp_path: Path) -> None:
+        """A cap is a stopping rule, and a study given more room is the same
+        study. The manifest carries the cap it resumed under."""
+        first = self._run(tmp_path, self._request(max_calls=100))
+        again = self._run(tmp_path, self._request(max_calls=200, max_seconds=99.0))
+        manifest = json.loads((again.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["request"]["max_calls"] == 200
+        assert manifest["request"]["max_seconds"] == 99.0
+        assert again.records == first.records
+
+    def test_the_manifest_is_untouched_by_a_refusal(self, tmp_path: Path) -> None:
+        result = self._run(tmp_path, self._request())
+        before = (result.paths.root / "run.json").read_bytes()
+        with pytest.raises(StudyError):
+            self._run(tmp_path, self._request(chunk=3))
+        assert (result.paths.root / "run.json").read_bytes() == before
