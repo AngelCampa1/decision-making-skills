@@ -1,0 +1,15 @@
+{
+  "candidate_sha": "7a2e27848a74e38d6701de9fc291132d1ab0ca3cdf023c45ad5bbc857e83628f",
+  "parent_sha": "1cbaa9d889cef7f7dafcbf3230022a8bb2b374e194a95be8f27270a8a6f332b4",
+  "generation": 9,
+  "engine": "skillopt",
+  "target_model": "ollama/qwen3:1.7b",
+  "reflector_model": "nvbuild/openai/gpt-oss-20b",
+  "score": 1.0,
+  "n_items": 20,
+  "n_calls": null,
+  "git_sha": "44d2feb9b5bfc918c1266fb5f64508d1de15da59",
+  "created_at": "2026-09-02T22:22:44+00:00",
+  "winner_source": "engine",
+  "stop_reason": ""
+}
