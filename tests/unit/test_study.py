@@ -882,14 +882,42 @@ class TestAPlaceboPerWinner:
     def test_the_secondary_block_reads_each_pair_against_the_shared_placebo(self) -> None:
         records = _records_for(MATCHED_ARMS, self._correct())
         (outcome,) = analyse_secondary(records, MATCHED_ARMS, ONE_SET)
-        assert [c.arm for c in outcome.comparisons] == [
-            "gepa",
-            "placebo-gepa",
-            "skillopt",
-            "placebo-skillopt",
+        assert [(c.arm, c.control) for c in outcome.comparisons] == [  # type: ignore[attr-defined]
+            ("placebo", "off"),
+            ("gepa", "placebo"),
+            ("placebo-gepa", "placebo"),
+            ("skillopt", "placebo"),
+            ("placebo-skillopt", "placebo"),
         ]
-        assert all(c.control_accuracy == 1.0 for c in outcome.comparisons)
+        assert {c.arm: c.control_accuracy for c in outcome.comparisons} == {
+            "placebo": 0.0,
+            "gepa": 1.0,
+            "placebo-gepa": 1.0,
+            "skillopt": 1.0,
+            "placebo-skillopt": 1.0,
+        }
         assert all(c.adjusted == c.p_value and not c.rejected for c in outcome.comparisons)
+
+    def test_the_placebo_against_off_row_is_one_sided_towards_the_placebo(self) -> None:
+        """The registered secondary reading: does a document-shaped control do
+        anything at all. A placebo that loses every pair to `off` has p = 1."""
+        arms = (MATCHED_ARMS[0], MATCHED_ARMS[2], MATCHED_ARMS[3], MATCHED_ARMS[5])
+        helps = _records_for(
+            arms, {"off": False, "placebo": True, "gepa": True, "placebo-gepa": True}
+        )
+        hurts = _records_for(
+            arms, {"off": True, "placebo": False, "gepa": True, "placebo-gepa": True}
+        )
+        (up,) = analyse_secondary(helps, arms, ONE_SET)
+        (down,) = analyse_secondary(hurts, arms, ONE_SET)
+        assert up.comparisons[0].p_value < down.comparisons[0].p_value == 1.0
+        assert (up.comparisons[0].arm_only, up.comparisons[0].control_only) == (4, 0)
+
+    def test_the_placebo_against_off_row_needs_off(self) -> None:
+        arms = (MATCHED_ARMS[2], MATCHED_ARMS[3], MATCHED_ARMS[5])
+        records = _records_for(arms, {"placebo": True, "gepa": True, "placebo-gepa": False})
+        (outcome,) = analyse_secondary(records, arms, ONE_SET)
+        assert [c.arm for c in outcome.comparisons] == ["gepa", "placebo-gepa"]
 
     def test_no_secondary_block_without_a_placebo_per_winner(self) -> None:
         records = _records_for(ARMS, dict.fromkeys(("off", "placebo", "gepa", "skillopt"), True))
@@ -951,6 +979,7 @@ class TestThePlaceboMatchIsCheckedBeforeAnyCall:
         match = gepa["match"]
         assert isinstance(match, dict)
         assert (match["skill_words"], match["placebo_words"]) == (7, 7)
+        assert (match["word_ratio"], match["ok"]) == (1.0, True), "properties, not fields"
 
     def test_a_matched_study_runs_each_placebo_into_its_own_file(self, tmp_path: Path) -> None:
         arms = (MATCHED_ARMS[0], MATCHED_ARMS[2], MATCHED_ARMS[3], MATCHED_ARMS[5])
@@ -970,7 +999,11 @@ class TestThePlaceboMatchIsCheckedBeforeAnyCall:
         }
         assert result.controls == {"gepa": "placebo-gepa"}
         assert [c.arm for c in result.sets[0].comparisons] == ["gepa"]
-        assert [c.arm for c in result.secondary[0].comparisons] == ["gepa", "placebo-gepa"]
+        assert [c.arm for c in result.secondary[0].comparisons] == [
+            "placebo",
+            "gepa",
+            "placebo-gepa",
+        ]
         manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
         assert manifest["winner_placebos"]["gepa"]["placebo"] == "placebo-gepa"
         assert {arm["label"]: arm["control"] for arm in manifest["arms"]} == {
@@ -991,12 +1024,52 @@ class TestThePlaceboMatchIsCheckedBeforeAnyCall:
         analysis = json.loads((result.paths.root / "analysis.json").read_text(encoding="utf-8"))
         assert analysis["control"] == "placebo"
         assert analysis["controls"] == {"gepa": "placebo-gepa"}
-        assert analysis["secondary"]["control"] == "placebo"
         assert analysis["secondary"]["corrected"] is False
-        assert [c["arm"] for c in analysis["secondary"]["sets"][0]["comparisons"]] == [
-            "gepa",
-            "placebo-gepa",
+        rows = analysis["secondary"]["sets"][0]["comparisons"]
+        assert [(c["arm"], c["control"]) for c in rows] == [
+            ("placebo", "off"),
+            ("gepa", "placebo"),
+            ("placebo-gepa", "placebo"),
         ]
+
+
+class TestAStudyStoppedByACap:
+    def _run(self, tmp_path: Path, max_calls: int):
+        request = StudyRequest(
+            target_model=MOCK_MODEL,
+            sets=ONE_SET,
+            templates_root=TEMPLATES,
+            run_aa=False,
+            chunk=4,
+            max_calls=max_calls,
+        )
+        return run_study(
+            request,
+            ARMS[:2],
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_a_cap_is_a_pause_with_no_numbers_and_a_reason(self, tmp_path: Path) -> None:
+        """Three calls of fifty-six. What landed is on disk, the reason is on
+        the result, and there is no family: a comparison over whichever arms
+        the cap left short would be a number about the cap."""
+        result = self._run(tmp_path, max_calls=3)
+        assert "stopping before" in result.stop_reason
+        assert result.sets == ()
+        assert result.aa is None
+        assert result.records == 3
+        assert (result.paths.root / "run.json").is_file()
+
+    def test_the_same_request_under_a_raised_cap_resumes_to_a_result(self, tmp_path: Path) -> None:
+        self._run(tmp_path, max_calls=3)
+        result = self._run(tmp_path, max_calls=1_000)
+        assert result.stop_reason == ""
+        assert result.records == 56
+        assert [c.arm for c in result.sets[0].comparisons] == []
+        assert result.sets[0].accuracy.keys() == {"off", "placebo"}
 
 
 class TestFreezeUnderTheSharedPlaceboDesign:

@@ -683,6 +683,7 @@ def run_arm(
             candidate_sha=candidate_sha,
         )
 
+    _seal(checkpoint)
     with checkpoint.open("a", encoding="utf-8") as handle:
         return _run_loop(
             pending,
@@ -696,6 +697,47 @@ def run_arm(
             concurrency=concurrency,
             backoff=backoff,
         )
+
+
+#: How far back from the end of a checkpoint to look for its last newline.
+#: Wider than any record the runner has written; a response is capped in
+#: tokens long before it reaches this.
+_TAIL: Final = 8 * 1024 * 1024
+
+
+def _seal(checkpoint: Path) -> None:
+    """Leave a checkpoint ready to be appended to on its own line.
+
+    A run killed mid-write leaves a partial last line, and :func:`load_records`
+    tolerates it because it is last. Appending to it would glue the next record
+    onto it, which turns one tolerated line into one unreadable line in the
+    middle of the file, and :func:`load_records` then refuses the whole
+    checkpoint as corruption once every later call has been paid for.
+
+    So the tail is dropped when it is not a record: :func:`completed_keys`
+    never counted it, and the item it was for is about to be run again. A last
+    line that is a record and merely lacks its newline is kept and given one.
+    """
+    if not checkpoint.is_file():
+        return
+    size = checkpoint.stat().st_size
+    if size == 0:
+        return
+    with checkpoint.open("rb") as handle:
+        handle.seek(-1, 2)
+        if handle.read(1) == b"\n":
+            return
+        handle.seek(max(size - _TAIL, 0))
+        window = handle.read()
+    head, sep, tail = window.rpartition(b"\n")
+    try:
+        json.loads(tail)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        with checkpoint.open("r+b") as handle:
+            handle.truncate(size - len(window) + len(head) + len(sep))
+        return
+    with checkpoint.open("ab") as handle:
+        handle.write(b"\n")
 
 
 def _run_one(

@@ -984,6 +984,75 @@ def test_a_truncated_final_line_is_tolerated(items: list[Item], tmp_path: Path) 
     assert len(load_records(checkpoint)) == 1
 
 
+def test_a_resume_after_a_mid_line_kill_reads_back_cleanly(
+    items: list[Item], tmp_path: Path
+) -> None:
+    """The partial line is tolerated because it is last. A resume that appended
+    to it would glue the next record on, and the file would then be refused as
+    corruption after every later call had been paid for."""
+    checkpoint = tmp_path / "run.jsonl"
+    run_arm(
+        items[:1],
+        ARM,
+        model="haiku",
+        checkpoint=checkpoint,
+        call=_answers_correctly(items),
+        ledger=BudgetLedger(limit_usd=1.0),
+    )
+    with checkpoint.open("a", encoding="utf-8") as handle:
+        handle.write('{"item_id": "rel-')
+
+    run_arm(
+        items[:3],
+        ARM,
+        model="haiku",
+        checkpoint=checkpoint,
+        call=_answers_correctly(items),
+        ledger=BudgetLedger(limit_usd=1.0),
+    )
+    records = load_records(checkpoint)
+    assert [record.item_id for record in records] == [item.item_id for item in items[:3]]
+    assert checkpoint.read_text(encoding="utf-8").endswith("\n")
+    assert '"rel-\n' not in checkpoint.read_text(encoding="utf-8")
+
+
+def test_a_complete_last_record_without_its_newline_is_kept_on_resume(
+    items: list[Item], tmp_path: Path
+) -> None:
+    """Only a line that is not a record is dropped. One that merely lacks its
+    newline is a paid-for answer and gets the newline."""
+    checkpoint = tmp_path / "run.jsonl"
+    run_arm(
+        items[:1],
+        ARM,
+        model="haiku",
+        checkpoint=checkpoint,
+        call=_answers_correctly(items),
+        ledger=BudgetLedger(limit_usd=1.0),
+    )
+    text = checkpoint.read_text(encoding="utf-8")
+    checkpoint.write_text(text.rstrip("\n"), encoding="utf-8")
+
+    run_arm(
+        items[:2],
+        ARM,
+        model="haiku",
+        checkpoint=checkpoint,
+        call=_answers_correctly(items),
+        ledger=BudgetLedger(limit_usd=1.0),
+    )
+    assert [r.item_id for r in load_records(checkpoint)] == [i.item_id for i in items[:2]]
+
+
+def test_sealing_an_absent_or_empty_checkpoint_does_nothing(tmp_path: Path) -> None:
+    runner._seal(tmp_path / "absent.jsonl")
+    empty = tmp_path / "empty.jsonl"
+    empty.write_bytes(b"")
+    runner._seal(empty)
+    assert empty.read_bytes() == b""
+    assert not (tmp_path / "absent.jsonl").exists()
+
+
 def test_unparseable_json_before_the_last_line_is_refused(tmp_path: Path) -> None:
     """Corruption in the middle of a file is not a partial write."""
     checkpoint = tmp_path / "run.jsonl"

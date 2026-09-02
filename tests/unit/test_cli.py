@@ -1151,6 +1151,7 @@ def _capture_study(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
             passes=(),
             secondary=(),
             controls={},
+            stop_reason="",
         )
 
     def fake_freeze(*args: object) -> None:
@@ -1468,6 +1469,44 @@ class TestTheRegistrationOptionsReachTheRequest:
         assert result.exit_code == 2, result.output  # type: ignore[attr-defined]
         assert "'placebo-gepa' does not match 'gepa'" in result.output  # type: ignore[attr-defined]
         assert "4 words against 7" in result.output  # type: ignore[attr-defined]
+
+
+class TestAStudyThatStops:
+    """A cap or the breaker is a pause, and the command says so without a
+    traceback: the checkpoints stay and the same command resumes."""
+
+    def test_a_cap_reported_on_the_result_exits_two_and_freezes_nothing(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+
+        def stopped(request: object, arms: object, **kwargs: object) -> object:
+            return SimpleNamespace(
+                paths=SimpleNamespace(root=cli.REPO_ROOT / "results" / "evolution-study" / "x"),
+                stop_reason="stopping before rel-001-v0: 3 of 3 calls spent",
+                records=3,
+            )
+
+        monkeypatch.setattr(cli, "run_study", stopped)
+        result = _study()
+        assert result.exit_code == 2, result.output  # type: ignore[attr-defined]
+        assert "stopping before rel-001-v0" in result.output  # type: ignore[attr-defined]
+        assert "raised cap" in result.output  # type: ignore[attr-defined]
+        assert "freeze" not in seen
+
+    def test_a_run_error_that_escapes_exits_two_with_its_reason(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = _capture_study(monkeypatch)
+
+        def tripped(request: object, arms: object, **kwargs: object) -> object:
+            raise cli.RunError("the breaker tripped after 12 rate limits")
+
+        monkeypatch.setattr(cli, "run_study", tripped)
+        result = _study()
+        assert result.exit_code == 2, result.output  # type: ignore[attr-defined]
+        assert "the breaker tripped" in result.output  # type: ignore[attr-defined]
+        assert "freeze" not in seen
 
 
 class TestTheEvolveSubsetReachesTheRequest:

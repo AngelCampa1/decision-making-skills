@@ -88,6 +88,7 @@ from decision_evals.rescore import (
     load_declared_versions,
     reconcile,
 )
+from decision_evals.runner import RunError
 from decision_evals.site import (
     MANIFEST_PATH as SITE_MANIFEST_PATH,
 )
@@ -1686,9 +1687,18 @@ def study(
         result = run_study(
             request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head
         )
-    except StudyError as exc:
+    except (StudyError, RunError) as exc:
         typer.secho(str(exc), fg=typer.colors.RED)
         raise typer.Exit(2) from exc
+    if result.stop_reason:
+        # A cap or the breaker. Nothing is frozen: a stopped study has no
+        # registered numbers, and the same command with a raised cap resumes.
+        typer.secho(f"stopped  {result.stop_reason}", fg=typer.colors.YELLOW)
+        typer.echo(
+            f"         {result.records} record(s) are checkpointed under "
+            f"{result.paths.root.relative_to(REPO_ROOT)}; run again with a raised cap to resume"
+        )
+        raise typer.Exit(2)
     freeze(result.paths, result.sets, result.aa, result.passes, result.secondary, result.controls)
     for outcome in result.sets:
         typer.echo(f"\n{outcome.label}: {outcome.n_items} item(s)")
