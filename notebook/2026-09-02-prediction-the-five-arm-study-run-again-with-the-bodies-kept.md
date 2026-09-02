@@ -341,3 +341,27 @@ counts, templates, arms, the family, the bar and every prediction are
 unchanged. The same review found that `placebo` against `off`, listed above as
 a secondary reading, was not computed by the study code; it is being added
 before the run, and the reading stays secondary and uncorrected.
+
+---
+
+## Amendment, before the first study call: parse rate is read per arm
+
+Registering a reading, not changing a design. GEPA's frozen winner restates
+the answer format with a worked example of its own, `ANSWER: honour_claim`.
+Every arm already carries `solvers.arms.FORMAT_CONTRACT`, which states the
+same format and is present in every arm without exception, so no arm is
+missing the instruction. The winner repeats it with an instance.
+
+The screen read parse rates from 0.857 to 1.000 with no document at all, so
+there is room for a document to move compliance rather than decisions. An arm
+that beats its control by parsing more often has not decided better, and the
+two are separable from the records already being written.
+
+**Reported per arm on both sets, beside the registered comparisons:** the
+parse rate, the accuracy over all items, and the accuracy over parsed rows
+only. If an arm beats its control on all items and not on parsed rows, the
+effect is format compliance and the write-up says so. These are readings, not
+members of the family, and they are uncorrected.
+
+The matched placebos carry no format instruction and no worked example, which
+is what makes the comparison able to show this.
