@@ -63,7 +63,7 @@ RESULTS_ROOT: Final = "results"
 #: is gitignored, and ``tests/unit/test_provenance.py`` is what holds those two
 #: facts together -- a working directory that got committed would otherwise
 #: escape this gate permanently and silently.
-WORKING_DIRS: Final[frozenset[str]] = frozenset({"evolution"})
+WORKING_DIRS: Final[frozenset[str]] = frozenset({"evolution", "screens"})
 
 #: Runs published before this gate existed, one per line, ``#`` for comments.
 BASELINE_PATH: Final = "results/provenance-baseline.txt"

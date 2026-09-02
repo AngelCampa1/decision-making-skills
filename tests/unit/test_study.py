@@ -8,19 +8,36 @@ plausible wrong version that produces a clean number.
 
 from __future__ import annotations
 
+import itertools
+import json
+from datetime import date
+from pathlib import Path
+
 import pytest
 
+from decision_evals.evolution import study
+from decision_evals.evolution.checkpoints import RunPaths, paths_for
 from decision_evals.evolution.holdout import HOLDOUT_FLOOR
+from decision_evals.evolution.run import EvolveError
 from decision_evals.evolution.study import (
     Arm,
+    ArmPasses,
     ItemSet,
+    PassAgreement,
+    SetPasses,
     StudyError,
     StudyRequest,
     analyse,
+    analyse_passes,
     by_arm,
     compare,
+    freeze,
+    load_pass,
+    records_path,
+    run_study,
 )
-from decision_evals.runner import RunRecord
+from decision_evals.evolution.venues import MOCK_MODEL, mock_call, venue_for
+from decision_evals.runner import RunRecord, load_records
 
 GEPA_BODY = "# GEPA winner\n\nDo the thing well."
 SKILLOPT_BODY = "# SkillOpt winner\n\nDo the thing differently."
@@ -266,3 +283,279 @@ class TestTheRequestRefusesAnUnsoundStudy:
     def test_a_study_with_no_items_is_refused(self) -> None:
         with pytest.raises(StudyError, match="at least one item set"):
             StudyRequest(target_model="mockllm/deterministic", sets=())
+
+
+# ---------------------------------------------------------------------------
+# The 2026-09-02 changes: per-arm files, passes, chunked ordering, the corpus.
+# ---------------------------------------------------------------------------
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+TEMPLATES = str(REPO_ROOT / "datasets" / "templates")
+HARD = str(REPO_ROOT / "datasets" / "templates-hard")
+
+
+class TestAnArmLabelIsAFileName:
+    def test_a_label_with_a_separator_is_refused(self) -> None:
+        """`figures.load_readings` reads the arm back off `records-<label>.jsonl`,
+        so a label that cannot name one file cannot be read back."""
+        with pytest.raises(StudyError, match="cannot name a checkpoint"):
+            Arm(label="gepa/v2", kind="candidate", body="x")
+
+    def test_the_aa_label_is_taken(self) -> None:
+        with pytest.raises(StudyError, match="cannot name a checkpoint"):
+            Arm(label="aa", kind="placebo", body="x")
+
+    def test_an_ordinary_label_is_accepted(self) -> None:
+        assert Arm(label="skillopt-2", kind="candidate", body="x").label == "skillopt-2"
+
+
+class TestWhereAnArmsRecordsGo:
+    def test_pass_one_is_the_published_layout(self, tmp_path: Path) -> None:
+        assert records_path(tmp_path, "off") == tmp_path / "records-off.jsonl"
+
+    def test_a_later_pass_is_its_own_checkpoint(self, tmp_path: Path) -> None:
+        """Resume keys carry no pass index, so a second pass into the first file
+        would be skipped as already done and report agreement it never measured."""
+        assert records_path(tmp_path, "off", 3) == tmp_path / "pass-3" / "records-off.jsonl"
+
+    def test_an_arm_with_no_file_is_left_out(self, tmp_path: Path) -> None:
+        assert load_pass(tmp_path, ARMS) == []
+
+
+class TestTheRequestRefusesAnUnsoundSchedule:
+    def _sets(self) -> tuple[ItemSet, ...]:
+        return (ItemSet(label="u", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)),)
+
+    def test_zero_passes_is_refused(self) -> None:
+        with pytest.raises(StudyError, match="at least one pass"):
+            StudyRequest(target_model="mockllm/deterministic", sets=self._sets(), passes=0)
+
+    def test_an_empty_chunk_is_refused(self) -> None:
+        with pytest.raises(StudyError, match="at least one item"):
+            StudyRequest(target_model="mockllm/deterministic", sets=self._sets(), chunk=0)
+
+    def test_the_defaults_are_one_pass_of_eight_item_chunks(self) -> None:
+        request = StudyRequest(target_model="mockllm/deterministic", sets=self._sets())
+        assert (request.passes, request.chunk, request.templates_root) == (
+            1,
+            8,
+            "datasets/templates",
+        )
+
+
+class TestPassAgreement:
+    def _set(self) -> ItemSet:
+        return ItemSet(label="unseen", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,))
+
+    def _pass(self, pattern: list[bool]) -> list[RunRecord]:
+        return [
+            _record(arm="off", item_id=f"i{index}", correct=correct)
+            for index, correct in enumerate(pattern)
+        ]
+
+    def test_identical_passes_agree_everywhere(self) -> None:
+        first = self._pass([True, False] * 5)
+        (outcome,) = analyse_passes([first, first], ARMS[:1], [self._set()])
+        (row,) = outcome.arms
+        assert row.accuracy == (0.5, 0.5)
+        (agreement,) = row.agreement
+        assert (agreement.pass_index, agreement.n_pairs) == (2, 10)
+        assert (agreement.identical, agreement.different) == (10, 0)
+        assert agreement.p_value == 1.0
+
+    def test_a_pass_that_drifts_one_way_is_seen_by_the_test(self) -> None:
+        """Every disagreement in the same direction is what a venue that changed
+        between passes looks like, and the two-sided McNemar reads it."""
+        first = self._pass([False] * 12)
+        second = self._pass([True] * 12)
+        (outcome,) = analyse_passes([first, second], ARMS[:1], [self._set()])
+        (agreement,) = outcome.arms[0].agreement
+        assert (agreement.identical, agreement.different) == (0, 12)
+        assert agreement.p_value < 0.01
+        assert outcome.arms[0].accuracy == (0.0, 1.0)
+
+    def test_only_shared_questions_are_paired(self) -> None:
+        first = self._pass([True] * 6)
+        second = self._pass([True] * 4)
+        (outcome,) = analyse_passes([first, second], ARMS[:1], [self._set()])
+        assert outcome.arms[0].agreement[0].n_pairs == 4
+
+    def test_a_pass_sharing_nothing_gets_an_accuracy_and_no_agreement(self) -> None:
+        """A McNemar over nothing would print 1.0 and read as perfect."""
+        first = self._pass([True] * 4)
+        second = [_record(arm="off", item_id="other", correct=False, seed=HOLDOUT_FLOOR + 1)]
+        (outcome,) = analyse_passes([first, second], ARMS[:1], [self._set()])
+        assert outcome.arms[0].accuracy == (1.0, 0.0)
+        assert outcome.arms[0].agreement == ()
+
+    def test_each_pass_is_measured_against_the_first(self) -> None:
+        first = self._pass([True] * 4)
+        second = self._pass([False] * 4)
+        third = self._pass([True] * 4)
+        (outcome,) = analyse_passes([first, second, third], ARMS[:1], [self._set()])
+        assert [a.pass_index for a in outcome.arms[0].agreement] == [2, 3]
+        assert [a.identical for a in outcome.arms[0].agreement] == [0, 4]
+
+
+class TestFreezingThePasses:
+    def _paths(self, tmp_path: Path) -> RunPaths:
+        paths = paths_for(tmp_path, "2026-09-02-abc1234-study")
+        paths.root.mkdir(parents=True)
+        return paths
+
+    def test_a_one_pass_study_writes_the_keys_it_always_had(self, tmp_path: Path) -> None:
+        paths = self._paths(tmp_path)
+        freeze(paths, ())
+        assert list(json.loads((paths.root / "analysis.json").read_text())) == [
+            "control",
+            "sets",
+            "aa",
+        ]
+
+    def test_a_repeated_study_writes_its_passes(self, tmp_path: Path) -> None:
+        paths = self._paths(tmp_path)
+        passes = (
+            SetPasses(
+                label="unseen",
+                arms=(
+                    ArmPasses(
+                        arm="off",
+                        accuracy=(0.5, 0.6),
+                        agreement=(
+                            PassAgreement(
+                                pass_index=2, n_pairs=10, identical=9, different=1, p_value=1.0
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        )
+        freeze(paths, (), None, passes)
+        written = json.loads((paths.root / "analysis.json").read_text())
+        assert written["passes"][0]["arms"][0]["accuracy"] == [0.5, 0.6]
+        assert written["passes"][0]["arms"][0]["agreement"][0]["identical"] == 9
+
+
+class TestRunningTheStudyOnTheMockVenue:
+    """No server. What is checked is the schedule and the files it leaves."""
+
+    def _request(self, **overrides: object) -> StudyRequest:
+        fields: dict[str, object] = {
+            "target_model": MOCK_MODEL,
+            "sets": (
+                ItemSet(
+                    label="unseen", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)
+                ),
+            ),
+            "templates_root": TEMPLATES,
+            "chunk": 4,
+        }
+        fields.update(overrides)
+        return StudyRequest(**fields)  # type: ignore[arg-type]
+
+    def _run(self, tmp_path: Path, request: StudyRequest, arms: tuple[Arm, ...] = ARMS[:2]):
+        return run_study(
+            request,
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=date(2026, 9, 2),
+        )
+
+    def test_every_arm_writes_its_own_file(self, tmp_path: Path) -> None:
+        """The published run's per-arm files were split by hand from one
+        checkpoint. `figures.load_readings` reads the arm off the file name."""
+        result = self._run(tmp_path, self._request())
+        names = sorted(path.name for path in result.paths.root.glob("*.jsonl"))
+        assert names == ["records-aa.jsonl", "records-off.jsonl", "records-placebo.jsonl"]
+        assert not result.paths.records.exists()
+        assert all(r.arm == "off" for r in load_records(result.paths.root / "records-off.jsonl"))
+
+    def test_the_manifest_records_the_schedule_and_the_corpus(self, tmp_path: Path) -> None:
+        result = self._run(tmp_path, self._request(passes=2))
+        manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["ordering"] == "item-major"
+        assert (manifest["chunk"], manifest["passes"]) == (4, 2)
+        assert manifest["request"]["templates_root"] == TEMPLATES
+        assert manifest["templates_roots"] == [TEMPLATES]
+
+    def test_arms_interleave_by_chunk(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No arm runs as one block. Four items of `off`, four of `placebo`,
+        then the next four of `off`, for the whole set."""
+        seen: list[str] = []
+        inner = mock_call()
+
+        def recording(prompt: str, system_prompt: str, append: bool):
+            seen.append(system_prompt)
+            return inner(prompt, system_prompt, append)
+
+        monkeypatch.setattr(study, "call_fn", lambda *_a, **_k: recording)
+        self._run(tmp_path, self._request(run_aa=False))
+        runs = [len(list(group)) for _, group in itertools.groupby(seen)]
+        assert len(seen) == 28 * 2
+        assert runs == [4] * 14
+        assert len(set(seen[:4])) == 1
+        assert seen[0] != seen[4]
+
+    def test_a_second_invocation_answers_nothing_again(self, tmp_path: Path) -> None:
+        """Resume is per file and per key: the run is repeated and every
+        checkpoint is byte-identical afterwards."""
+        request = self._request(passes=2)
+        first = self._run(tmp_path, request)
+        before = {p: p.read_bytes() for p in first.paths.root.rglob("*.jsonl")}
+        again = self._run(tmp_path, request)
+        after = {p: p.read_bytes() for p in again.paths.root.rglob("*.jsonl")}
+        assert before == after
+        assert again.records == first.records
+
+    def test_a_later_pass_is_a_separate_checkpoint_and_is_analysed(self, tmp_path: Path) -> None:
+        result = self._run(tmp_path, self._request(passes=2))
+        assert (result.paths.root / "pass-2" / "records-off.jsonl").is_file()
+        assert (result.paths.root / "pass-2" / "records-placebo.jsonl").is_file()
+        assert not (result.paths.root / "pass-2" / "records-aa.jsonl").exists()
+        (unseen,) = result.passes
+        assert [row.arm for row in unseen.arms] == ["off", "placebo"]
+        for row in unseen.arms:
+            assert len(row.accuracy) == 2
+            (agreement,) = row.agreement
+            assert agreement.n_pairs == 28
+        assert result.records == 28 * 2 * 2
+
+    def test_the_registered_numbers_read_pass_one_only(self, tmp_path: Path) -> None:
+        """Adding passes cannot move a registered comparison."""
+        one = self._run(tmp_path / "one", self._request(passes=1))
+        two = self._run(tmp_path / "two", self._request(passes=3))
+        assert one.sets == two.sets
+        assert one.passes == ()
+        assert len(two.passes[0].arms[0].agreement) == 2
+
+    def test_a_pooled_corpus_reaches_the_items(self, tmp_path: Path) -> None:
+        request = self._request(
+            sets=(
+                ItemSet(
+                    label="unseen",
+                    templates=("rel-001-vendor-outage", "hrd-001-warranty-claim"),
+                    seeds=(HOLDOUT_FLOOR,),
+                ),
+            ),
+            templates_root=f"{TEMPLATES},{HARD}",
+        )
+        result = self._run(tmp_path, request)
+        manifest = json.loads((result.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["sets"]["unseen"]["templates"] == [
+            "hrd-001-warranty-claim",
+            "rel-001-vendor-outage",
+        ]
+        assert manifest["templates_roots"] == [TEMPLATES, HARD]
+
+    def test_a_template_outside_the_root_is_refused_before_any_call(self, tmp_path: Path) -> None:
+        request = self._request(
+            sets=(
+                ItemSet(label="u", templates=("hrd-001-warranty-claim",), seeds=(HOLDOUT_FLOOR,)),
+            )
+        )
+        with pytest.raises(EvolveError, match="no template answers to"):
+            self._run(tmp_path, request)

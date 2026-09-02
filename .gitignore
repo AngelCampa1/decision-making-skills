@@ -76,9 +76,31 @@ results/calibration/
 # Evolution search state. Hundreds of candidates, most of them worse than the
 # seed, scored on training seeds. It has a published run's directory shape
 # without being one, so `provenance.WORKING_DIRS` skips it by name and this rule
-# keeps it out of the tree. What gets published is the study that reads the
-# frozen winners.
-results/evolution/
+# keeps the bulk of it out of the tree. What gets published is the study that
+# reads the frozen winners.
+#
+# Five files per search are tracked: the winner's body and its provenance, the
+# lineage, the manifest and the engine's log. Until 2026-09-02 the whole
+# directory was ignored, the two 2026-08-27 searches were never committed, and
+# both winning bodies are lost (see the corrections in
+# results/evolution-study/2026-08-27-53b4965-five-arm/README.md). Git cannot
+# re-include a file under an ignored directory, hence the shape below: ignore
+# the contents, keep the search directories, ignore their contents, name the
+# five.
+results/evolution/*
+!results/evolution/*/
+results/evolution/*/*
+!results/evolution/*/winner.md
+!results/evolution/*/winner.json
+!results/evolution/*/lineage.jsonl
+!results/evolution/*/run.json
+!results/evolution/*/search.log
+
+# Template screens: the `off` arm over every template, run before a study
+# registers its corpus to find the templates a model is at chance on. A
+# checkpoint like the others above, so `provenance.WORKING_DIRS` skips it and
+# what it showed goes in notebook/.
+results/screens/
 
 # Vendored third-party corpora: pinned by hash in *.lock.json, fetched by `de fetch`.
 # The payloads are large and byte-identical upstream, so the lock is committed and

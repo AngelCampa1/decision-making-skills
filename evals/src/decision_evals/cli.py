@@ -48,12 +48,12 @@ from decision_evals.drift import (
 )
 from decision_evals.drift import census as drift_census
 from decision_evals.evolution.holdout import mint, template_split
-from decision_evals.evolution.run import EvolveRequest, seed_body
+from decision_evals.evolution.run import DEFAULT_TEMPLATES_ROOT, EvolveRequest, seed_body
 from decision_evals.evolution.run import evolve as run_evolution
 from decision_evals.evolution.study import Arm, ItemSet, StudyRequest, freeze, run_study
 from decision_evals.evolution.venues import MOCK_MODEL, mock_reflector, reflection_lm, venue_for
 from decision_evals.figures import write_figures
-from decision_evals.generators import generate, load_all
+from decision_evals.generators import generate, load_all, parse_roots
 from decision_evals.prereg import (
     PreregistrationError,
     RepoState,
@@ -1356,6 +1356,14 @@ def evolve(
             "which on Ollama means 4,096 whatever the model supports."
         ),
     ] = 0,
+    templates_root: Annotated[
+        str,
+        typer.Option(
+            help="Template directory the corpus is generated from, relative to the "
+            "repository. Comma-separate two to pool them: "
+            "`datasets/templates,datasets/templates-hard`."
+        ),
+    ] = DEFAULT_TEMPLATES_ROOT,
 ) -> None:
     """Evolve a skill against the corpus, and write the search down.
 
@@ -1392,6 +1400,7 @@ def evolve(
         max_tokens=max_tokens,
         num_ctx=num_ctx,
         train_templates=tuple(name.strip() for name in train_templates.split(",") if name.strip()),
+        templates_root=templates_root,
     )
     result = run_evolution(
         request,
@@ -1473,12 +1482,33 @@ def study(
     max_seconds: Annotated[float, typer.Option(help="Whole-study wall-clock cap.")] = 86_400.0,
     alpha: Annotated[float, typer.Option(help="Family-wise error rate for Holm.")] = 0.05,
     slug: Annotated[str, typer.Option(help="Appended to the run directory name.")] = "",
+    passes: Annotated[
+        int,
+        typer.Option(
+            help="How many times every arm answers every item. Pass 1 is the study; "
+            "later passes go under `pass-<k>/` and measure agreement with the first."
+        ),
+    ] = 1,
+    chunk: Annotated[
+        int,
+        typer.Option(help="Items per chunk. Every arm answers a chunk before the next starts."),
+    ] = 8,
+    templates_root: Annotated[
+        str,
+        typer.Option(
+            help="Template directory the items are generated from, relative to the "
+            "repository. Comma-separate two to pool them: "
+            "`datasets/templates,datasets/templates-hard`."
+        ),
+    ] = DEFAULT_TEMPLATES_ROOT,
 ) -> None:
     """Score every arm against the placebo on items no search could reach.
 
     The split and the seeds are both derived from ``--passphrase`` rather than
     chosen, so the test set is reproducible from one string and cannot be
-    re-drawn until it is convenient.
+    re-drawn until it is convenient. The template split is drawn over every
+    template under ``--templates-root``, so pooling a second corpus changes
+    which scenarios are held out.
     """
     if not passphrase:
         raise typer.BadParameter("a study needs a passphrase; the split derives from it")
@@ -1486,12 +1516,13 @@ def study(
     if head is None:
         typer.secho("not a git repository, so no commit can be recorded", fg=typer.colors.RED)
         raise typer.Exit(1)
+    roots = parse_roots(templates_root, base=REPO_ROOT)
     split = template_split(
-        (template.template_id for template in load_all()),
+        (template.template_id for template in load_all(roots)),
         passphrase=passphrase,
         holdout=holdout_templates,
     )
-    seeds = mint(passphrase, unseen_seeds + seen_seeds, _generates)
+    seeds = mint(passphrase, unseen_seeds + seen_seeds, lambda seed: _generates(seed, roots))
     unseen = tuple(seeds.seeds[:unseen_seeds])
     seen = tuple(seeds.seeds[unseen_seeds:])
 
@@ -1522,13 +1553,16 @@ def study(
         max_seconds=max_seconds,
         alpha=alpha,
         slug=slug,
+        passes=passes,
+        chunk=chunk,
+        templates_root=templates_root,
     )
     typer.echo(f"held out {', '.join(split.holdout)}")
     typer.echo(f"seeds    unseen {list(unseen)}  seen {list(seen)}")
     typer.echo(f"arms     {', '.join(arm.label for arm in arms)}")
 
     result = run_study(request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head)
-    freeze(result.paths, result.sets, result.aa)
+    freeze(result.paths, result.sets, result.aa, result.passes)
     for outcome in result.sets:
         typer.echo(f"\n{outcome.label}: {outcome.n_items} item(s)")
         for label, value in outcome.accuracy.items():
@@ -1539,6 +1573,15 @@ def study(
                 f"   {comparison.arm:12s} {comparison.effect:+.3f} "
                 f"p={comparison.p_value:.4f} Holm={comparison.adjusted:.4f}  {verdict}"
             )
+    for repeat in result.passes:
+        typer.echo(f"\n{repeat.label}: passes")
+        for row in repeat.arms:
+            accuracies = " ".join(f"{value:.3f}" for value in row.accuracy)
+            agreement = "  ".join(
+                f"pass {a.pass_index}: {a.identical}/{a.n_pairs} same p={a.p_value:.4f}"
+                for a in row.agreement
+            )
+            typer.echo(f"   {row.arm:12s} {accuracies}  {agreement}".rstrip())
     typer.echo(f"\nanalysis {(result.paths.root / 'analysis.json').relative_to(REPO_ROOT)}")
 
 
@@ -1561,9 +1604,9 @@ def _body(path: Path) -> str:
     return text
 
 
-def _generates(seed: int) -> object:
+def _generates(seed: int, roots: tuple[Path, ...] | None = None) -> object:
     """Whether a seed can produce the whole corpus, which one in forty cannot."""
-    return [item for template in load_all() for item in generate(template, seed)]
+    return [item for template in load_all(roots) for item in generate(template, seed)]
 
 
 @app.command()

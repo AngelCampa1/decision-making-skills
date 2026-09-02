@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import yaml
@@ -46,16 +47,65 @@ def load_template(path: Path) -> Template:
     return template
 
 
-def load_all(root: Path | None = None) -> list[Template]:
+def parse_roots(spec: str, *, base: Path = REPO_ROOT) -> tuple[Path, ...]:
+    """The template directories a comma-separated option names.
+
+    ``datasets/templates,datasets/templates-hard`` loads both corpora. A
+    relative entry is taken from ``base``, which the CLI sets to the repository
+    root, so the string a run records in ``run.json`` reads the same on every
+    machine. Blank entries are dropped.
+
+    Raises:
+        TemplateLoadError: No directory was named.
+    """
+    roots = tuple(
+        (base / part.strip() if not Path(part.strip()).is_absolute() else Path(part.strip()))
+        for part in spec.split(",")
+        if part.strip()
+    )
+    if not roots:
+        raise TemplateLoadError("no template root was named")
+    return roots
+
+
+def load_all(root: Path | Sequence[Path] | None = None) -> list[Template]:
     """Load every template under ``root``, sorted by id.
 
     Sorted rather than filesystem-ordered so that generation, golden files, and
     any pooled analysis see templates in the same sequence on every platform.
+
+    A sequence of directories loads each in turn and pools them. Template ids
+    stay unique across the pool: ``item_id`` carries the id and nothing else
+    locates a template, so two files answering to one id would score under one
+    name and neither could be told from the other.
+
+    Raises:
+        TemplateLoadError: A root is missing or empty, no root was given, or one
+            id appears in two roots.
     """
-    directory = TEMPLATE_ROOT if root is None else root
-    if not directory.is_dir():
-        raise TemplateLoadError(f"{directory} is not a directory")
-    templates = [load_template(path) for path in sorted(directory.glob("*.yaml"))]
-    if not templates:
-        raise TemplateLoadError(f"no templates found in {directory}")
+    if root is None:
+        directories: tuple[Path, ...] = (TEMPLATE_ROOT,)
+    elif isinstance(root, Path):
+        directories = (root,)
+    else:
+        directories = tuple(root)
+    if not directories:
+        raise TemplateLoadError("no template root was named")
+    seen: dict[str, Path] = {}
+    templates: list[Template] = []
+    for directory in directories:
+        if not directory.is_dir():
+            raise TemplateLoadError(f"{directory} is not a directory")
+        loaded = [load_template(path) for path in sorted(directory.glob("*.yaml"))]
+        if not loaded:
+            raise TemplateLoadError(f"no templates found in {directory}")
+        for template in loaded:
+            if template.template_id in seen:
+                raise TemplateLoadError(
+                    f"{template.template_id!r} is in both {seen[template.template_id]} and "
+                    f"{directory}. Ids stay unique across roots because an item id names "
+                    "its template and nothing else does."
+                )
+            seen[template.template_id] = directory
+        templates.extend(loaded)
     return sorted(templates, key=lambda template: template.template_id)

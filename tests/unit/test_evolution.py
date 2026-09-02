@@ -1719,8 +1719,13 @@ def test_an_interrupt_that_is_not_the_deadline_is_re_raised(tmp_path: Path, monk
                 val_seeds=(1000,),
                 limit=2,
                 val_limit=2,
+                # The corpus is named absolutely because the run directory is
+                # the temporary one: a search here that wrote into the
+                # repository's `results/evolution/` would leave a `run.json`
+                # the tree now tracks.
+                templates_root=str(REPO_ROOT / "datasets" / "templates"),
             ),
-            repo_root=REPO_ROOT,
+            repo_root=tmp_path,
             git_sha="abc1234",
         )
 
@@ -2186,3 +2191,49 @@ def test_the_split_a_search_ran_under_reaches_the_manifest() -> None:
 
 def test_naming_no_training_templates_means_all_of_them() -> None:
     assert EvolveRequest(engine="gepa", target_model=MOCK_MODEL).train_templates == ()
+
+
+# ---------------------------------------------------------------------------
+# Which corpus a search reads
+# ---------------------------------------------------------------------------
+
+
+def test_a_search_reads_the_published_corpus_unless_told_otherwise() -> None:
+    assert EvolveRequest(engine="gepa", target_model=MOCK_MODEL).templates_root == (
+        "datasets/templates"
+    )
+
+
+def test_a_pooled_corpus_reaches_the_driver_and_the_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`--templates-root a,b` is what lets a re-run see `templates-hard`, and
+    the manifest has to say it did."""
+    seen: dict[str, object] = {}
+
+    def capture(request: EvolveRequest, **kwargs: object) -> str:
+        seen["train"] = kwargs["train"]
+        raise KeyboardInterrupt
+
+    monkeypatch.setitem(DRIVERS, "gepa", capture)
+    roots = ",".join(str(REPO_ROOT / "datasets" / name) for name in ("templates", "templates-hard"))
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        limit=19,
+        val_limit=1,
+        templates_root=roots,
+    )
+    with pytest.raises(KeyboardInterrupt):
+        evolve(request, repo_root=tmp_path, git_sha="abc1234")
+    train = seen["train"]
+    assert isinstance(train, list)
+    prefixes = {item.template_id[:4] for item in train}
+    assert prefixes == {"rel-", "hrd-"}
+    manifest = json.loads(
+        next((tmp_path / "results" / "evolution").glob("*/run.json")).read_text(encoding="utf-8")
+    )
+    assert manifest["request"]["templates_root"] == roots
+    assert any(name.startswith("hrd-") for name in manifest["templates"])

@@ -48,13 +48,17 @@ from decision_evals.evolution.venues import (
     mock_call,
     venue_for,
 )
-from decision_evals.generators import generate, load_all
+from decision_evals.generators import generate, load_all, parse_roots
 from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn, RunRecord, load_records
 from decision_evals.solvers.arms import render_item
 
 #: Where the human-written body a search starts from lives.
 SEED_SKILL: Final = "skills/decision-making/SKILL.md"
+
+#: The corpus a run reads when it is told nothing else, relative to the
+#: repository root.
+DEFAULT_TEMPLATES_ROOT: Final = "datasets/templates"
 
 
 class EvolveError(RuntimeError):
@@ -127,6 +131,13 @@ class EvolveRequest:
     #: the longest answer that ever finished, and an uncapped runaway spends a
     #: matched budget on one item.
     max_tokens: int = 0
+    #: Which corpus the search draws from, as the comma-separated list
+    #: :func:`~decision_evals.generators.parse_roots` reads. The default is the
+    #: published corpus alone, which is every run before 2026-09-02.
+    #: ``datasets/templates,datasets/templates-hard`` pools both. Relative to
+    #: the repository root, and recorded as written so ``run.json`` says which
+    #: corpus a winner was searched against.
+    templates_root: str = DEFAULT_TEMPLATES_ROOT
 
     def __post_init__(self) -> None:
         if not self.train_seeds or not self.val_seeds:
@@ -278,7 +289,7 @@ def items_for(
     *,
     limit: int = 0,
     templates: Collection[str] | None = None,
-    root: Path | None = None,
+    root: Path | Sequence[Path] | None = None,
 ) -> list[Item]:
     """Generate the corpus at each seed, in seed order.
 
@@ -321,7 +332,8 @@ def items_for(
     it because ``load_all`` reads a whole directory: dropping harder templates
     into the published one would change every fingerprint, every golden file and
     the corpus identity of runs already on disk. Two roots keep a finished study
-    reproducible while a new corpus is being built.
+    reproducible while a new corpus is being built, and a sequence of roots
+    pools them for a run that wants both.
 
     Raises:
         EvolveError: An id was named that no template answers to. A split that
@@ -432,9 +444,13 @@ def evolve(
     )
 
     templates = set(request.train_templates) or None
-    train = items_for(request.train_seeds, limit=request.limit, templates=templates)
+    roots = parse_roots(request.templates_root, base=repo_root)
+    train = items_for(request.train_seeds, limit=request.limit, templates=templates, root=roots)
     validation = items_for(
-        request.val_seeds, limit=request.val_limit or request.limit, templates=templates
+        request.val_seeds,
+        limit=request.val_limit or request.limit,
+        templates=templates,
+        root=roots,
     )
     if not train or not validation:
         raise EvolveError(

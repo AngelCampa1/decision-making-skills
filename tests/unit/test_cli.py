@@ -13,6 +13,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -1133,3 +1134,149 @@ class TestTheArmBodyReader:
         with pytest.raises(cli.typer.Exit) as caught:
             cli._body(tmp_path / "absent.md")
         assert caught.value.exit_code == 2
+
+
+class TestTheStudyOptionsReachTheRequest:
+    """The 2026-09-02 options. Each is threaded through to the request the
+    manifest records, and a flag that parsed and went nowhere would leave a
+    run.json describing a study that did not happen."""
+
+    def _capture(self, monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
+        seen: dict[str, object] = {}
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+        def fake_run_study(request: object, arms: object, **kwargs: object) -> object:
+            seen["request"] = request
+            seen["arms"] = arms
+            return SimpleNamespace(
+                paths=SimpleNamespace(root=cli.REPO_ROOT / "results" / "evolution" / "x"),
+                sets=(),
+                aa=None,
+                passes=(),
+            )
+
+        def fake_freeze(*args: object) -> None:
+            seen["freeze"] = args
+
+        monkeypatch.setattr(cli, "run_study", fake_run_study)
+        monkeypatch.setattr(cli, "freeze", fake_freeze)
+        return seen
+
+    def test_passes_chunk_and_the_corpus_are_recorded(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = self._capture(monkeypatch)
+        result = runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--passes",
+                "2",
+                "--chunk",
+                "3",
+                "--templates-root",
+                "datasets/templates,datasets/templates-hard",
+                "--unseen-seeds",
+                "1",
+                "--seen-seeds",
+                "1",
+            ],
+        )
+        assert result.exit_code == 0, result.output
+        request = seen["request"]
+        assert (request.passes, request.chunk) == (2, 3)  # type: ignore[attr-defined]
+        assert request.templates_root == "datasets/templates,datasets/templates-hard"  # type: ignore[attr-defined]
+        named = {t for s in request.sets for t in s.templates}  # type: ignore[attr-defined]
+        assert len(named) == 19, "the split is drawn over both corpora"
+        assert len(seen["freeze"]) == 4  # type: ignore[arg-type]
+
+    def test_the_defaults_are_one_pass_of_eight_over_the_published_corpus(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = self._capture(monkeypatch)
+        result = runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--unseen-seeds",
+                "1",
+                "--seen-seeds",
+                "1",
+            ],
+        )
+        assert result.exit_code == 0, result.output
+        request = seen["request"]
+        assert (request.passes, request.chunk) == (1, 8)  # type: ignore[attr-defined]
+        assert request.templates_root == "datasets/templates"  # type: ignore[attr-defined]
+        assert len({t for s in request.sets for t in s.templates}) == 10  # type: ignore[attr-defined]
+
+    def test_a_missing_root_is_refused_before_any_call(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        seen = self._capture(monkeypatch)
+        result = runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--templates-root",
+                "datasets/no-such-corpus",
+            ],
+        )
+        assert result.exit_code != 0
+        assert "request" not in seen
+
+
+class TestTheEvolveOptionsReachTheRequest:
+    def test_the_corpus_is_recorded(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen: dict[str, object] = {}
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+        def fake_evolve(request: object, **kwargs: object) -> object:
+            seen["request"] = request
+            root = cli.REPO_ROOT / "results" / "evolution" / "x"
+            return SimpleNamespace(
+                explored=2,
+                winner=SimpleNamespace(candidate_sha="a" * 64, score=1.0, n_items=3),
+                paths=SimpleNamespace(root=root, lineage=root / "lineage.jsonl"),
+                stop_reason="",
+            )
+
+        monkeypatch.setattr(cli, "run_evolution", fake_evolve)
+        result = runner.invoke(
+            app,
+            [
+                "evolve",
+                "--target",
+                "mockllm/deterministic",
+                "--templates-root",
+                "datasets/templates,datasets/templates-hard",
+            ],
+        )
+        assert result.exit_code == 0, result.output
+        assert seen["request"].templates_root == (  # type: ignore[attr-defined]
+            "datasets/templates,datasets/templates-hard"
+        )
+
+    def test_the_default_is_the_published_corpus(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        seen: dict[str, object] = {}
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+        def fake_evolve(request: object, **kwargs: object) -> object:
+            seen["request"] = request
+            raise cli.typer.Exit(0)
+
+        monkeypatch.setattr(cli, "run_evolution", fake_evolve)
+        runner.invoke(app, ["evolve", "--target", "mockllm/deterministic"])
+        assert seen["request"].templates_root == "datasets/templates"  # type: ignore[attr-defined]

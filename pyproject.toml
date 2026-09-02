@@ -521,7 +521,8 @@ Two spellings of one path rather than two paths.\
 "results/evolution/" = """
 Named in `docs/LIMITATIONS.md` and `docs/STATUS.md`, both of which are about \
 this directory being ignored: the two evolution searches wrote their winners \
-here, `.gitignore` line 79 excludes it, nothing was committed and the \
+here, `.gitignore` excluded all of it until 2026-09-02 (the rule is at line 90 \
+now and keeps five files per search), nothing was committed and the \
 directories are gone. `git add -f` is not the better fix this time because \
 there is nothing left to add, which is the case this register exists for. \
 Added 2026-08-28, after two commits landed red in CI and green locally: an \
