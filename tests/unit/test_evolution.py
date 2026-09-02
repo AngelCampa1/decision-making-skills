@@ -15,9 +15,11 @@ import json
 import os
 import re
 import time
+from collections.abc import Callable
 from dataclasses import asdict
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -36,6 +38,15 @@ from decision_evals.evolution.checkpoints import (
     read_manifest,
     run_name,
     write_manifest,
+)
+from decision_evals.evolution.credentials import (
+    CredentialError,
+    assert_clean,
+    credential_files,
+    credential_shaped,
+    redacted,
+    scrub,
+    secret_name,
 )
 from decision_evals.evolution.engine_prompts import (
     LOCK_PATH,
@@ -77,7 +88,6 @@ from decision_evals.evolution.run import (
     EvolveRequest,
     _best_validated,
     _freeze,
-    _redacted,
     budget_for,
     evolve,
     items_for,
@@ -1224,9 +1234,9 @@ def test_an_engine_with_no_driver_is_refused(tmp_path: Path) -> None:
 
 def test_a_secret_never_reaches_the_manifest() -> None:
     """`results/evolution/` is gitignored, which is a reason to be careful, not to skip it."""
-    redacted = _redacted({"target_azure_openai_api_key": "nvapi-real", "target_model": "qwen3:4b"})
-    assert redacted["target_azure_openai_api_key"] == "<redacted>"
-    assert redacted["target_model"] == "qwen3:4b"
+    clean = redacted({"target_azure_openai_api_key": "nvapi-real", "target_model": "qwen3:4b"})
+    assert clean["target_azure_openai_api_key"] == "<redacted>"
+    assert clean["target_model"] == "qwen3:4b"
 
 
 def test_a_finished_search_leaves_its_winner_on_disk(tmp_path: Path) -> None:
@@ -2376,3 +2386,287 @@ def test_a_training_template_the_cut_down_corpus_leaves_out_is_refused(
     )
     with pytest.raises(EvolveError, match="rel-002-deploy-window"):
         evolve(request, repo_root=tmp_path, git_sha="abc1234")
+
+
+# ---------------------------------------------------------------------------
+# Keys the engine writes
+#
+# On 2026-09-02 a `de evolve --engine skillopt` run put a live NVIDIA Build key
+# in plaintext into `<run>/skillopt/config.json` and `<run>/skillopt/summary.json`
+# under `optimizer_azure_openai_api_key`. `run.json` beside it was clean, because
+# the manifest goes through this repository's redactor and the engine's own files
+# go through the engine's, which matches three exact key names and not that one.
+# Nothing was committed. `.gitignore` was the only thing in the way, and the
+# study's registration asks for search artefacts to be committed.
+# ---------------------------------------------------------------------------
+
+#: Shaped like the key that was on disk, invented here. Long enough and mixed
+#: enough to match on its own, so a test that plants it exercises the rule rather
+#: than the constant.
+PLANTED_KEY = "nvapi-" + "aB3" * 20
+
+
+def _engine_state(root: Path, key: str) -> Path:
+    """A finished engine directory, with the key where the engine puts it."""
+    (root / "checkpoints").mkdir(parents=True)
+    (root / "config.json").write_text(
+        json.dumps(
+            {"optimizer_azure_openai_api_key": key, "target": "qwen3:4b", "max_tokens": 4096},
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (root / "checkpoints" / "summary.json").write_text(
+        json.dumps(
+            {
+                "config": {"optimizer_azure_openai_api_key": key, "seed": 0},
+                "token_summary": {"total_tokens": 41},
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return root
+
+
+def _loaded(path: Path) -> dict[str, Any]:
+    parsed: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return parsed
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        PLANTED_KEY,
+        "sk-" + "Xy9" * 8,
+        "Bearer " + "q7WvT2" * 8,
+        '{"authorization": "' + PLANTED_KEY + '"}',
+    ],
+)
+def test_a_credential_is_recognised_by_shape(value: str) -> None:
+    assert credential_shaped(value)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "a" * 40,
+        "3f9c1b" * 10,  # a sha, which is lower case and digits and nothing else
+        "rel-001-vendor-outage",
+        "https://integrate.api.nvidia.com/v1",
+        "dummy",
+        "<redacted>",
+    ],
+)
+def test_an_identifier_is_not_a_credential(value: str) -> None:
+    """The scan runs over lineages full of shas and manifests full of paths."""
+    assert not credential_shaped(value)
+
+
+def test_a_key_name_makes_a_string_a_secret_whatever_it_holds() -> None:
+    assert secret_name("optimizer_azure_openai_api_key")
+    assert secret_name("AUTH_TOKEN")
+    assert not secret_name("target_azure_openai_endpoint")
+
+
+def test_a_count_named_like_a_secret_survives_redaction() -> None:
+    """`max_tokens` and `token_summary` are the engine's own numbers."""
+    clean = redacted({"max_tokens": 4096, "token_summary": {"total_tokens": 41}})
+    assert clean == {"max_tokens": 4096, "token_summary": {"total_tokens": 41}}
+
+
+def test_a_key_one_level_down_is_redacted_too() -> None:
+    """An engine's summary carries the whole config inside itself."""
+    clean = redacted({"config": {"optimizer_azure_openai_api_key": PLANTED_KEY, "seed": 0}})
+    assert clean["config"] == {"optimizer_azure_openai_api_key": "<redacted>", "seed": 0}
+
+
+def test_a_key_in_a_nested_engine_file_is_redacted_in_place(tmp_path: Path) -> None:
+    engine = _engine_state(tmp_path / "skillopt", PLANTED_KEY)
+
+    moved = scrub(engine)
+
+    assert set(moved) == {engine / "config.json", engine / "checkpoints" / "summary.json"}
+    assert _loaded(engine / "config.json")["optimizer_azure_openai_api_key"] == "<redacted>"
+    nested = _loaded(engine / "checkpoints" / "summary.json")["config"]
+    assert nested["optimizer_azure_openai_api_key"] == "<redacted>"
+
+
+def test_the_fields_beside_the_key_come_through_unchanged(tmp_path: Path) -> None:
+    """A redactor that reordered or dropped fields would cost the record."""
+    engine = _engine_state(tmp_path / "skillopt", PLANTED_KEY)
+
+    scrub(engine)
+
+    config = _loaded(engine / "config.json")
+    assert list(config) == ["optimizer_azure_openai_api_key", "target", "max_tokens"]
+    assert config["target"] == "qwen3:4b"
+    assert config["max_tokens"] == 4096
+    summary = _loaded(engine / "checkpoints" / "summary.json")
+    assert summary["token_summary"] == {"total_tokens": 41}
+    assert summary["config"]["seed"] == 0
+
+
+def test_the_scan_finds_the_key_before_the_redaction_and_not_after(tmp_path: Path) -> None:
+    engine = _engine_state(tmp_path / "skillopt", PLANTED_KEY)
+
+    assert credential_files(engine) == [
+        engine / "checkpoints" / "summary.json",
+        engine / "config.json",
+    ]
+    scrub(engine)
+    assert credential_files(engine) == []
+    assert_clean(engine)
+
+
+def test_a_clean_file_keeps_its_bytes(tmp_path: Path) -> None:
+    """Re-dumping every file would put an engine's own formatting in the diff."""
+    engine = tmp_path / "skillopt"
+    engine.mkdir()
+    original = '{"target":"qwen3:4b",  "seed": 0}'
+    (engine / "config.json").write_text(original, encoding="utf-8")
+
+    assert scrub(engine) == []
+    assert (engine / "config.json").read_text(encoding="utf-8") == original
+
+
+def test_a_key_in_a_json_lines_file_is_redacted_line_by_line(tmp_path: Path) -> None:
+    engine = tmp_path / "skillopt"
+    engine.mkdir()
+    untouched = json.dumps({"step": 1, "edit_budget": 4})
+    path = engine / "lr_history.jsonl"
+    body = untouched + "\n" + json.dumps({"api_key": PLANTED_KEY}) + "\n"
+    path.write_text(body, encoding="utf-8")
+
+    assert scrub(engine) == [path]
+
+    first, second = path.read_text(encoding="utf-8").splitlines()
+    assert first == untouched, "a line carrying nothing is not rewritten"
+    assert json.loads(second) == {"api_key": "<redacted>"}
+
+
+def test_a_half_written_json_file_is_scrubbed_as_text(tmp_path: Path) -> None:
+    """What a killed search leaves. It parses as nothing and holds a key anyway."""
+    engine = tmp_path / "skillopt"
+    engine.mkdir()
+    path = engine / "config.json"
+    path.write_text(f'{{"optimizer_azure_openai_api_key": "{PLANTED_KEY}", "targ', encoding="utf-8")
+
+    assert scrub(engine) == [path]
+    assert PLANTED_KEY not in path.read_text(encoding="utf-8")
+
+
+def test_a_file_that_is_not_text_is_read_for_the_vendor_prefix(tmp_path: Path) -> None:
+    """GEPA pickles its state, and a pickle of prose is mostly ASCII."""
+    engine = tmp_path / "gepa"
+    engine.mkdir()
+    state = engine / "gepa_state.bin"
+    state.write_bytes(b"\x80\x05\xff\xfe" + PLANTED_KEY.encode("utf-8"))
+
+    assert scrub(engine) == [], "a pickle is not JSON and is not rewritten"
+    assert credential_files(engine) == [state]
+
+
+def test_a_json_file_that_is_not_text_is_left_to_the_scan(tmp_path: Path) -> None:
+    engine = tmp_path / "skillopt"
+    engine.mkdir()
+    path = engine / "config.json"
+    path.write_bytes(b"\xff\xfe" + PLANTED_KEY.encode("utf-8"))
+
+    assert scrub(engine) == []
+    assert credential_files(engine) == [path]
+
+
+def test_a_directory_no_engine_wrote_is_clean(tmp_path: Path) -> None:
+    """Every search that stops before its engine writes leaves this case."""
+    assert scrub(tmp_path / "absent") == []
+    assert credential_files(tmp_path / "absent") == []
+    assert_clean(tmp_path / "absent")
+
+
+def test_a_stubborn_key_is_refused_by_name(tmp_path: Path) -> None:
+    (tmp_path / "gepa").mkdir()
+    leak = f"Authorization: Bearer {PLANTED_KEY}"
+    (tmp_path / "gepa" / "search.log").write_text(leak, encoding="utf-8")
+
+    with pytest.raises(CredentialError, match=r"gepa.search\.log"):
+        assert_clean(tmp_path)
+
+
+def _searching(plant: dict[str, str]) -> Callable[..., str]:
+    """A driver that writes the named files under the run, then searches."""
+
+    def driver(request: EvolveRequest, **kwargs: Any) -> str:
+        del request
+        root = kwargs["paths"].root
+        for name, body in plant.items():
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(body, encoding="utf-8")
+        for body in ("A skill.", "Another skill."):
+            kwargs["adapter"].score(body, list(kwargs["validation"]))
+        return "Another skill."
+
+    return driver
+
+
+def _mock_request() -> EvolveRequest:
+    return EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        limit=2,
+        val_limit=2,
+        templates_root=PUBLISHED_ROOT,
+    )
+
+
+def test_a_finished_search_leaves_no_key_in_the_engines_own_files(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The 2026-09-02 exposure, read off the run rather than off the redactor."""
+    planted = json.dumps({"config": {"optimizer_azure_openai_api_key": PLANTED_KEY, "seed": 0}})
+    monkeypatch.setitem(DRIVERS, "gepa", _searching({"gepa/state/summary.json": planted}))
+
+    result = evolve(_mock_request(), repo_root=tmp_path, git_sha="abc1234")
+
+    summary = _loaded(result.paths.root / "gepa" / "state" / "summary.json")
+    assert summary["config"] == {"optimizer_azure_openai_api_key": "<redacted>", "seed": 0}
+    assert credential_files(result.paths.root) == []
+
+
+def test_a_run_that_cannot_be_made_safe_stops_after_freezing_its_winner(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A log is a record and is reported rather than rewritten, so the run stops."""
+    leak = f"proposal 1 rejected: 401 from Bearer {PLANTED_KEY}\n"
+    monkeypatch.setitem(DRIVERS, "gepa", _searching({"gepa/search.log": leak}))
+
+    with pytest.raises(CredentialError, match=r"search\.log"):
+        evolve(_mock_request(), repo_root=tmp_path, git_sha="abc1234")
+
+    root = next((tmp_path / "results" / "evolution").glob("*-gepa"))
+    assert (root / "winner.md").is_file(), "the search is frozen before the refusal"
+
+
+def test_a_key_inside_a_list_is_redacted() -> None:
+    """An engine's config carries argument lists, and a key reaches one as text."""
+    clean = redacted({"argv": ["--model", "qwen3:4b", f"--api-key={PLANTED_KEY}"]})
+    assert clean["argv"] == ["--model", "qwen3:4b", "--api-key=<redacted>"]
+
+
+def test_a_json_lines_file_of_mixed_shapes_is_scrubbed_whole(tmp_path: Path) -> None:
+    """A blank line and a log line share the file with the records."""
+    engine = tmp_path / "skillopt"
+    engine.mkdir()
+    path = engine / "lr_history.jsonl"
+    path.write_text(f"\nstep 1 called with {PLANTED_KEY}\n", encoding="utf-8")
+
+    assert scrub(engine) == [path]
+
+    blank, logged = path.read_text(encoding="utf-8").splitlines()
+    assert blank == ""
+    assert logged == "step 1 called with <redacted>"

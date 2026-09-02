@@ -26,6 +26,7 @@ from typing import Any, Final, cast
 from decision_evals.budget import BudgetError, BudgetLedger, NestedBudget
 from decision_evals.evolution.adapter import COMPONENT, DecisionAdapter
 from decision_evals.evolution.checkpoints import RunPaths, paths_for, run_name, write_manifest
+from decision_evals.evolution.credentials import assert_clean, redacted, scrub
 from decision_evals.evolution.engine_prompts import LOCK_PATH as PROMPT_LOCK
 from decision_evals.evolution.engine_prompts import ensure_installed
 from decision_evals.evolution.holdout import POOLS, assert_evolvable, census
@@ -575,12 +576,25 @@ def evolve(
         if not deadline.expired:
             raise
         stop_reason = deadline.reason()
+    finally:
+        # The engine's directory is final here, whichever way the search ended,
+        # and what is in it is the engine's own writing. SkillOpt's redactor
+        # matches three exact key names and the flattened one this harness hands
+        # it is none of them, so on 2026-09-02 a live NVIDIA Build key went into
+        # `skillopt/config.json` and `skillopt/summary.json` in plaintext. In a
+        # `finally` because a search that raised wrote those files too.
+        scrub(paths.root / request.engine)
 
     lineage = load_lineage(paths.lineage)
     assert_searched(lineage)
     selection = None if body else _best_validated(lineage, paths.records, validation)
     winner = find(lineage, body_sha(body)) if body else cast(Validated, selection).candidate
     _freeze(paths, winner, selection=selection, stop_reason=stop_reason)
+    # After the freeze, so a run refused here still leaves its winner where the
+    # next attempt can read it, and over the whole directory rather than the
+    # engine's corner of it: redaction that missed a file reads exactly like
+    # redaction that worked.
+    assert_clean(paths.root)
     return EvolveResult(
         paths=paths,
         winner=winner,
@@ -810,7 +824,7 @@ def _drive_skillopt(
     # holds the request and is what `read_manifest` returns. Two manifests each
     # describing one layer beat one describing neither.
     (out_root / "config.json").write_text(
-        json.dumps(_redacted(config), indent=2, ensure_ascii=False, default=str) + "\n",
+        json.dumps(redacted(config), indent=2, ensure_ascii=False, default=str) + "\n",
         encoding="utf-8",
     )
 
@@ -830,20 +844,6 @@ def _drive_skillopt(
 #: Which engines can actually be run, and what runs them. A dict rather than a
 #: chain of ``if``, so the refusal message above names exactly what is wired.
 DRIVERS: Final[dict[str, Any]] = {"gepa": _drive_gepa, "skillopt": _drive_skillopt}
-
-
-def _redacted(config: dict[str, Any]) -> dict[str, Any]:
-    """The config with every secret removed, for the manifest.
-
-    Keys live in the environment and never in the tree, and a manifest is a
-    file. ``results/evolution/`` is gitignored, which is a reason to be careful
-    here rather than a reason not to be: an ignore rule is one line away from
-    not applying.
-    """
-    return {
-        key: ("<redacted>" if "api_key" in key or "token" in key else value)
-        for key, value in config.items()
-    }
 
 
 def _train(config: dict[str, Any], env: Any) -> Any:
