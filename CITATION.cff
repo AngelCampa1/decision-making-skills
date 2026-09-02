@@ -7,7 +7,8 @@ message: >-
   fires when it should; one five-arm study has measured decision quality, and no
   skill in this repository carries a verdict, because that study's target model
   is registered to a tier that emits none. SCORECARD.md holds the verdicts and
-  is empty. `paper/` is a draft, so there is no paper to cite.
+  is empty. The paper in `paper/` is complete and, as of 2026-09-01, submitted
+  to nowhere yet; until it carries an arXiv identifier, cite the software.
 type: software
 authors:
   - family-names: Campa
@@ -63,5 +64,5 @@ keywords:
   - multi-agent systems
   - decision making
 license: Apache-2.0
-version: 0.1.0
-date-released: "2026-08-13"
+version: 1.0.0
+date-released: "2026-09-01"

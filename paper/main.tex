@@ -127,9 +127,11 @@
 under a Creative Commons Attribution 4.0 International licence,
 \protect\url{https://creativecommons.org/licenses/by/4.0/}, whose full text is
 in \texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}\\
-\texttt{github.com/AngelCampa1/decision-making-skills}}
+\texttt{github.com/AngelCampa1/decision-making-skills}, release \texttt{v1.0.0}}
 
-\date{\today}
+% A fixed date, because arXiv rebuilds PDFs from source now and then and a
+% \today would move with each rebuild.
+\date{1 September 2026}
 
 \begin{document}
 \maketitle
@@ -193,6 +195,19 @@ literature runs.
 \input{sections/results}
 \input{sections/discussion}
 \input{sections/limitations}
+
+% arXiv's moderation policy asks authors to report any significant use of
+% text-to-text generative AI. This paper had a great deal of it, and says so.
+\section*{Disclosure of tools}
+
+Claude (Anthropic), run through Claude Code, drafted and revised the prose of
+this paper from the committed run records under the author's direction, and
+ran the review passes that the repository's notebook records. Every number
+about our own runs is written into the source by \texttt{de figures} from
+those records; the classes of number that are typed by hand are listed in the
+source of \texttt{main.tex}. Claims about cited work were checked against the
+full text of each paper, and each check is recorded beside the entry in
+\texttt{refs.bib}. The author is responsible for every sentence.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

@@ -7,12 +7,13 @@ work happens rather than the week before submission, and kept in the repository
 so the gap between what is claimed and what exists is visible at every commit.
 
 `[x]` means the artifact exists and is committed; `[ ]` means it does not. A box
-is never ticked on the strength of an intention. Two boxes below are marked
+is never ticked on the strength of an intention. Three boxes below are marked
 **blocked**: they need someone outside this repository, and a blocked box is
-still an open box. A third was blocked on this machine having no TeX toolchain,
-and installing one closed it.
+still an open box. A fourth was blocked on this machine having no TeX
+toolchain, and installing one closed it. What the maintainer does with the
+three, in order, is [`SUBMISSION.md`](SUBMISSION.md).
 
-Last worked through 2026-08-31, against the five-arm study at
+Last worked through 2026-09-01, against the five-arm study at
 [`../results/evolution-study/2026-08-27-53b4965-five-arm/`](../results/evolution-study/2026-08-27-53b4965-five-arm/).
 
 ## Claims
@@ -253,8 +254,34 @@ Last worked through 2026-08-31, against the five-arm study at
 
 ## Submission logistics
 
-- [ ] **Blocked on the maintainer.** arXiv endorsement for `cs.AI`/`cs.CL`
-      confirmed. **Check early, it can take weeks**
+- [ ] **Blocked on the maintainer.** arXiv endorsement for `cs.AI` confirmed.
+      **Check early, it can take weeks.** Since 2026-01-21 an institutional
+      email address no longer endorses on its own: a new author needs one
+      *and* a prior arXiv paper in the domain, or a personal endorsement from
+      an author with three `cs.*` papers between three months and five years
+      old. The whole `cs.*` archive is one endorsement domain, so one
+      endorsement covers the cross-lists too
+- [ ] **Blocked on the maintainer.** Release `v1.0.0` tagged at the landed
+      commit. The title page names that tag beside the repository URL, so the
+      tag has to point at the commit the package was built from. It waits on
+      Zenodo being enabled for the repository first, because the release is
+      what mints the DOI
+- [x] The metadata abstract fits arXiv's field. The PDF abstract runs to about
+      2,890 characters and arXiv refuses more than 1,920. A 1,914-character
+      version is in [`SUBMISSION.md`](SUBMISSION.md); every figure in it was
+      read against `generated/macros.tex` on 2026-09-01 and the 2.6 ratio is
+      paired with the seen-set MDE it was computed from
+- [x] The package compiles with no bibliography step. arXiv does not run
+      BibTeX, `main.bbl` is gitignored, and the copy on disk on 2026-09-01
+      predated the last `refs.bib` change and rendered one citation as `[?]`.
+      `make arxiv` now rebuilds before it packs. The file set it packs was
+      compiled with three passes of `pdflatex` and nothing else on 2026-09-01:
+      27 pages, no warnings, no undefined references
+- [x] `\date` carries a fixed date. It was `\today` until 2026-09-01, and
+      arXiv rebuilds PDFs from source
+- [x] Use of generative AI disclosed in the paper, as arXiv's moderation policy
+      asks. An unnumbered section before the bibliography names the tool, what
+      it did, where the numbers come from instead, and who is responsible
 - [x] `\draftmode` switched off, so `\TODO` expands to nothing, and no `\TODO`
       survives anywhere in the source
 - [x] All `% VERIFY` author lists in `refs.bib` checked. All eleven were read

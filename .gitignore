@@ -41,6 +41,8 @@ paper/*.bbl
 paper/*.blg
 paper/*.synctex.gz
 paper/main.pdf
+paper/arxiv-submission/
+paper/arxiv-submission.zip
 
 # Site build artifacts. `site/build-manifest.json` is deliberately *not* here:
 # it is the committed record of which version of these documents the published

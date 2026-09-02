@@ -1,6 +1,7 @@
 # Paper build.
 #
 #   make paper    regenerate figures from ../results, then compile main.pdf
+#   make arxiv    build, then zip the exact file set arXiv needs
 #   make figures  regenerate figures and generated/macros.tex only
 #   make watch    continuous rebuild while drafting
 #   make clean    remove build intermediates (keeps main.pdf)
@@ -11,15 +12,32 @@
 # them by hand is a defect, not a shortcut.
 #
 # Requires latexmk and a TeX distribution. `uv` is invoked as `python -m uv`
-# because a pip-installed uv does not land on PATH on Windows.
+# because a pip-installed uv does not land on PATH on Windows. Where it is the
+# other way round, `make UV=uv paper`.
 
 UV      := python -m uv
 LATEXMK := latexmk -pdf -interaction=nonstopmode -halt-on-error
 
-.PHONY: paper figures watch clean distclean
+.PHONY: paper arxiv figures watch clean distclean
 
 paper: figures
 	$(LATEXMK) main.tex
+
+# arXiv does not run BibTeX, so the package carries main.bbl and not refs.bib,
+# and it compiles from the root of the archive with pdflatex alone. This is the
+# file set that was test-compiled that way on 2026-09-01, three pdflatex passes
+# with no bibliography step: the source, the sections, the generated macros and
+# tables, the pgfplots figures, and the bibliography as built. Nothing else. The
+# .bbl is gitignored, which is why this target builds before it packs: a stale
+# one on disk compiles to a `[?]` wherever refs.bib has moved since.
+arxiv: paper
+	rm -rf arxiv-submission arxiv-submission.zip
+	mkdir arxiv-submission
+	cp main.tex main.bbl arxiv-submission/
+	cp -r sections generated figures arxiv-submission/
+	cd arxiv-submission && zip -qr ../arxiv-submission.zip .
+	rm -rf arxiv-submission
+	@unzip -l arxiv-submission.zip | tail -1
 
 # `de figures` reads the latest run under ../results/evolution-study/ and writes
 # generated/macros.tex, generated/tables.tex and figures/*.tex. Everything is
@@ -45,6 +63,7 @@ watch: figures
 clean:
 	latexmk -c main.tex
 	rm -f main.bbl main.run.xml
+	rm -rf arxiv-submission arxiv-submission.zip
 
 distclean: clean
 	latexmk -C main.tex
