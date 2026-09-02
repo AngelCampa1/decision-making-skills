@@ -648,6 +648,7 @@ def test_a_stopped_search_is_frozen_with_the_reason(
             val_seeds=(1000,),
             limit=2,
             val_limit=2,
+            templates_root=str(REPO_ROOT / "datasets" / "templates"),
         ),
         repo_root=tmp_path,
         git_sha="abc1234",
