@@ -18,7 +18,7 @@ neither. `docs.py` refuses a living document that does not declare which.
 | Audience | Where they read | What they want |
 |---|---|---|
 | **Cold reader** | [`../README.md`](../README.md), the site landing page, the GitHub description and topics, `CITATION.cff` | Thirty seconds to decide whether this deserves their attention |
-| **Evaluating reader** | [`../SCORECARD.md`](../SCORECARD.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md), [`README.md`](README.md), [`ARCHITECTURE.md`](ARCHITECTURE.md), [`METHODS.md`](METHODS.md), [`PROTOCOL.md`](PROTOCOL.md), [`LIMITATIONS.md`](LIMITATIONS.md), [`RELATED_WORK.md`](RELATED_WORK.md), [`RESEARCH_PROGRAMME.md`](RESEARCH_PROGRAMME.md) and the other living documents | To judge whether the method holds up |
+| **Evaluating reader** | [`../SCORECARD.md`](../SCORECARD.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md), [`README.md`](README.md), [`ARCHITECTURE.md`](ARCHITECTURE.md), [`METHODS.md`](METHODS.md), [`PROTOCOL.md`](PROTOCOL.md), [`LIMITATIONS.md`](LIMITATIONS.md), [`RELATED_WORK.md`](RELATED_WORK.md), [`RESEARCH_PROGRAMME.md`](RESEARCH_PROGRAMME.md), [`posts/`](posts/what-an-eval-harness-found-about-itself.md) and the other living documents | To judge whether the method holds up |
 | **Agent mid-task** | [`../AGENTS.md`](../AGENTS.md), [`../CLAUDE.md`](../CLAUDE.md), [`AUTONOMOUS_WORK_ORDER.md`](AUTONOMOUS_WORK_ORDER.md), this file | The rule that applies right now, at the lowest context cost |
 | **The record** | [`../notebook/`](../notebook/), [`../results/`](../results/), [`DECISIONS.md`](DECISIONS.md), [`STATUS.md`](STATUS.md), [`RUN_INDEX.md`](RUN_INDEX.md), [`superpowers/plans/`](superpowers/plans/) | What was true on the day it was written |
 
@@ -49,6 +49,7 @@ flowchart TB
         L2["docs/*.md — the living documents"]
         L3["docs/programme/ — the eight parts"]
         L4["docs/reviews/ — three review briefs"]
+        L5["docs/posts/ — the findings, standalone,<br/>for a reader arriving from outside"]
     end
 
     subgraph gen["<b>Generated</b> — never hand-edited, names its generator"]

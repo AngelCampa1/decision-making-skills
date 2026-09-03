@@ -9,6 +9,7 @@ Every document here, and the question each one answers.
 | Document | Answers |
 | --- | --- |
 | [`WHAT_WE_FOUND.md`](WHAT_WE_FOUND.md) | What the harness found, findings first: the ceiling nothing could fail, the instrument, venue and gate defects it caught in itself, the one placebo-controlled study and its arithmetic, and what a reader can reuse. Every number links to its record. Five minutes, then thirty. |
+| [`posts/what-an-eval-harness-found-about-itself.md`](posts/what-an-eval-harness-found-about-itself.md) | The same findings written for a stranger: four defects the instrument found in itself, every term glossed in the sentence that uses it, and nothing that has to be clicked. The standalone version of `WHAT_WE_FOUND.md`, at under half the length. |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | What the pieces are and how a run flows through them: the skill, the harness, the datastore, the gate, the site. Read it before the programme. |
 | [`STATUS.md`](STATUS.md) | Where the work actually is. Every run on record, what it showed, which measurements turned out to be broken, which tracks are untouched. The ledger. |
 | [`QUALITY_STATE.md`](QUALITY_STATE.md) | Where the decision-quality track is, and what the next three units are. The resumption point: read it first, rewrite it before you finish. |
