@@ -64,7 +64,7 @@ CallFn = Callable[[str, str, bool], CliResult]
 class RunRecord:
     """One item, in one arm, with everything needed to analyse or re-check it.
 
-    The trailing fields carry position in a run tree, named after the
+    The node columns carry position in a run tree, named after the
     OpenTelemetry GenAI semantic conventions (see :mod:`decision_evals.telemetry`
     for why the names are pinned rather than imported).
 
@@ -92,6 +92,48 @@ class RunRecord:
     output_tokens: int
     duration_ms: int
     response: str
+
+    #: What the model reasoned before answering, and what the backend said
+    #: ended the generation. Both read ``""`` where nothing was recorded, and
+    #: every row carries the columns rather than omitting them: an absent column
+    #: and an empty one read the same in an analysis and mean opposite things
+    #: about whether anyone looked.
+    #:
+    #: **An empty pair does not mean the backend was silent.** Added
+    #: 2026-09-03; every earlier row reads empty, and Ollama's native surface
+    #: had been reporting both to
+    #: :func:`~decision_evals.providers.openai_compatible.parse_native` for
+    #: weeks before that. The provider read them and this record dropped them,
+    #: which is what the change fixed. So empty means unrecorded, and for a row
+    #: written before this date it says nothing about what the server sent.
+    #:
+    #: ``reasoning`` is stored whole. A thinking model puts most of its output
+    #: tokens here and none of them reach the scorer, so a zero beside an empty
+    #: ``response`` cannot be read at all without it, which is the state the
+    #: rows in
+    #: ``notebook/2026-09-03-a-thinking-model-spent-its-whole-budget-reasoning.md``
+    #: were in. Truncating it would keep the column and throw the evidence away.
+    #: The cost is real and is the opposite way round from ``response``: on
+    #: exactly the rows this exists for, ``response`` is empty and the chain is
+    #: the whole generation, so a checkpoint now grows with a search's output
+    #: tokens rather than with its answers, and
+    #: :func:`decision_evals.evolution.adapter.DecisionAdapter.evaluate` re-reads
+    #: the file per candidate.
+    #:
+    #: ``stop_reason`` is the backend's own word, unmapped: ``length`` from
+    #: Ollama's ``done_reason`` and from an OpenAI-compatible ``finish_reason``.
+    #: :func:`decision_evals.scorers.answer.hit_output_cap` is what reads a cap
+    #: out of it, in one place, so the record keeps a fact and the
+    #: interpretation stays re-derivable.
+    #:
+    #: The name is taken elsewhere in this package with a different referent:
+    #: :mod:`decision_evals.evolution.run` and
+    #: :mod:`decision_evals.evolution.study` use ``stop_reason`` for why a
+    #: *search* stopped, and write it into a run manifest. A manifest reading
+    #: ``budget exhausted`` sits beside rows reading ``length``, and they are
+    #: answers to different questions at different levels.
+    reasoning: str = ""
+    stop_reason: str = ""
 
     schema_version: int = 1
     conversation_id: str | None = None
@@ -786,7 +828,7 @@ def _run_one(
             candidate_sha=candidate_sha,
         )
 
-    score = score_item(item, result.text)
+    score = score_item(item, result.text, stop_reason=result.status)
     return _record(
         item,
         arm,
@@ -903,6 +945,8 @@ def _record(
         output_tokens=result.output_tokens if result else 0,
         duration_ms=result.duration_ms if result else 0,
         response=response,
+        reasoning=result.reasoning if result else "",
+        stop_reason=result.status if result else "",
         schema_version=RECORD_SCHEMA_VERSION,
         conversation_id=identity.conversation_id if identity else None,
         node_name=identity.node_name if identity else None,

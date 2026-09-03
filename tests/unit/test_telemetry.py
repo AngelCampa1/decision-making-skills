@@ -215,7 +215,7 @@ class TestRecordSchema:
             response="r",
             schema_version=RECORD_SCHEMA_VERSION,
         )
-        assert record.schema_version == 2
+        assert record.schema_version == 3
 
     def test_an_old_record_defaults_to_schema_one(self, tmp_path: Path) -> None:
         """It describes itself accurately rather than claiming to be current."""
@@ -243,6 +243,12 @@ class TestRecordSchema:
         assert loaded[0].schema_version == 1
         assert loaded[0].conversation_id is None
         assert loaded[0].turn_index is None
+        # Empty rather than absent, so every row is one shape. It reads as
+        # "unrecorded" and not as "the backend said nothing": Ollama's native
+        # surface reported both to the provider before this record carried
+        # them, and the runner dropped them on the floor.
+        assert loaded[0].reasoning == ""
+        assert loaded[0].stop_reason == ""
 
     def test_an_unknown_column_still_fails_loudly(self, tmp_path: Path) -> None:
         """Defaults must not have turned the loud failure back into a silent one."""

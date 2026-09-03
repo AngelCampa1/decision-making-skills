@@ -337,11 +337,15 @@ between runs is.
 We test verifiers before trusting them: fixtures of known-correct, known-wrong,
 paraphrased, and boundary responses, run through the verifier first. Every zero
 score is classified rather than assumed to be the model's fault. The code admits
-six causes, not the four this section listed until 2026-08-19: `agent_wrong`,
-`format_violation`, `infrastructure`, `item_defect`, `verifier_defect` and
-`environment_leak`. Separating a bad item from a bad checker is the deliberate
-one: they have completely different fixes, and the omission here had the spec
-disagreeing with `scorers/answer.py` for as long as both existed.
+seven causes, not the four this section listed until 2026-08-19: `agent_wrong`,
+`format_violation`, `output_truncated`, `infrastructure`, `item_defect`,
+`verifier_defect` and `environment_leak`. Separating a bad item from a bad
+checker is the deliberate one: they have completely different fixes, and the
+omission here had the spec disagreeing with `scorers/answer.py` for as long as
+both existed. `output_truncated` is the seventh, added 2026-09-03, and it holds
+the reply the output cap stopped before it reached an answer line. The record
+carries the backend's own stop reason and the reasoning text the cap was spent
+on, so which of the two a zero is stays readable after the run.
 
 Judges produce secondary metrics only; no primary metric is ever a judge score.
 They emit a binary verdict plus a written critique rather than a Likert rating,

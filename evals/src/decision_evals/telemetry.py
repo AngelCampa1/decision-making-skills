@@ -77,8 +77,20 @@ ARM: Final = "decision_evals.arm"
 SCHEMA_VERSION: Final = "decision_evals.schema.version"
 
 #: Bumped whenever ``RunRecord`` gains or loses a field. Version 1 is the
-#: single-call schema every record in ``results/`` was written under.
-RECORD_SCHEMA_VERSION: Final = 2
+#: single-call schema every record in ``results/`` was written under. Version 2
+#: added the node columns, the corpus seed and the candidate body. Version 3
+#: added ``reasoning`` and ``stop_reason``, so that a row scored zero beside an
+#: empty ``response`` says whether the output cap is what emptied it.
+#:
+#: **It counts ``RunRecord``'s shape and four record types stamp it.**
+#: ``ShardedRecord``, ``NodeRecord`` and the elicitation record carry the same
+#: number, so a bump moves them without changing their columns and a v2 and a
+#: v3 of those three are identical in shape. One counter is still the right
+#: arrangement: it says which release of this harness wrote a row, which is the
+#: question a checkpoint from an unknown date raises. What it does not say is
+#: that any particular column is present, so read the record type before
+#: reading the version.
+RECORD_SCHEMA_VERSION: Final = 3
 
 
 @dataclass(frozen=True, slots=True)

@@ -92,6 +92,11 @@ def _why(trace: Any) -> str:
     """
     if trace.zero_cause == "infrastructure":
         return "the call did not complete, so this item says nothing about the skill"
+    if trace.zero_cause == "output_truncated":
+        return (
+            "the reply spent its whole output budget reasoning and never reached an "
+            f"answer line; the format is not what failed, and {trace.expected!r} was correct"
+        )
     if trace.parsed is None:
         return (
             f"no answer could be read from the reply ({trace.parse_status}); "

@@ -21,6 +21,7 @@ from decision_evals.generators.generate import Item, generate
 from decision_evals.generators.schema import Template
 from decision_evals.scorers.answer import (
     ParseStatus,
+    hit_output_cap,
     last_answer_line,
     parse_answer,
     score_item,
@@ -158,6 +159,88 @@ def test_infrastructure_failure_outranks_everything(item: Item) -> None:
 def test_a_correct_response_that_never_happened_is_still_infrastructure(item: Item) -> None:
     score = score_item(item, f"ANSWER: {item.answer}", infrastructure_error=True)
     assert score.zero_cause == "infrastructure"
+
+
+class TestRunningOutOfOutputBudget:
+    """A reply the cap stopped is not a reply that got the format wrong.
+
+    Found by reading the first 42 calls of the 14,700-call study: 6 rows carried
+    4,096 output tokens against a 4,096 cap and an empty response, because a
+    thinking model spent the whole budget inside its chain. All 6 were labelled
+    ``format_violation``, and four of them were the one arm whose document makes
+    the model reason longest, so the label was arm-dependent and said nothing
+    about the format.
+    """
+
+    def test_a_reply_cut_off_before_its_answer_line_is_a_budget_zero(self, item: Item) -> None:
+        score = score_item(item, "", stop_reason="length")
+        assert not score.correct
+        assert score.zero_cause == "output_truncated"
+        assert score.parse_failed, "the parse is unchanged; only the cause moved"
+
+    @pytest.mark.parametrize("reason", ["length", "LENGTH", " length ", "max_tokens"])
+    def test_every_spelling_a_backend_uses_for_the_cap_is_read(
+        self, item: Item, reason: str
+    ) -> None:
+        assert score_item(item, "", stop_reason=reason).zero_cause == "output_truncated"
+
+    @pytest.mark.parametrize("reason", ["", "stop", "ERROR", "SUCCESS", "tool_use", "lengthy"])
+    def test_any_other_stop_reason_leaves_the_format_violation_alone(
+        self, item: Item, reason: str
+    ) -> None:
+        """Including silence, which is what both original providers report.
+
+        ``ERROR`` is the case the whole-field match exists for: ``agy`` returns
+        it beside a valid answer, and a substring rule would eventually read it
+        as a truncation.
+        """
+        assert score_item(item, "I decline to pick.", stop_reason=reason).zero_cause == (
+            "format_violation"
+        )
+
+    @pytest.mark.parametrize("answer", ["not_an_option", "wait or file_sla_claim"])
+    def test_an_off_menu_answer_line_keeps_its_format_violation(
+        self, item: Item, answer: str
+    ) -> None:
+        """The boundary, and the reason it is ``no_answer_line`` and not ``ok``.
+
+        A reply that wrote a whole answer line and then kept talking until the
+        cap reached an answer line, so the cap is not what stopped it from
+        reaching one. Qwen3's 87 ``ANSWER: monitor /think`` rows are this shape
+        on this venue, and they are a ``verifier_defect`` rather than a budget
+        failure.
+        """
+        score = score_item(item, f"ANSWER: {answer}", stop_reason="length")
+        assert score.parsed.status == "unlisted_option"
+        assert score.zero_cause == "format_violation"
+
+    def test_a_reply_that_answered_before_the_cap_fell_is_still_the_agents(
+        self, item: Item
+    ) -> None:
+        """``agent_wrong`` keeps exactly the meaning it had.
+
+        A model that wrote its answer line and was still going when the budget
+        ran out has answered, and the answer is what it is scored on.
+        """
+        other = next(option for option in item.options if option != item.answer)
+        score = score_item(item, f"ANSWER: {other}", stop_reason="length")
+        assert score.zero_cause == "agent_wrong"
+
+    def test_a_truncated_reply_that_named_the_key_still_scores(self, item: Item) -> None:
+        score = score_item(item, f"ANSWER: {item.answer}", stop_reason="length")
+        assert score.correct
+        assert score.zero_cause is None
+
+    def test_infrastructure_still_outranks_it(self, item: Item) -> None:
+        """A call that never completed says nothing about the token budget."""
+        score = score_item(item, "", infrastructure_error=True, stop_reason="length")
+        assert score.zero_cause == "infrastructure"
+
+    def test_the_cap_reading_is_one_function_the_record_can_be_re_read_through(self) -> None:
+        assert hit_output_cap("length")
+        assert hit_output_cap("MAX_TOKENS")
+        assert not hit_output_cap("")
+        assert not hit_output_cap("stop")
 
 
 def test_scores_carry_their_clustering_key(item: Item) -> None:

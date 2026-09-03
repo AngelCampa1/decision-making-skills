@@ -384,6 +384,12 @@ def build_payload(
 def parse_completion(payload: Any, *, label: str, duration_ms: int, cost_usd: float) -> CliResult:
     """Turn a ``/chat/completions`` response into a :class:`CliResult`.
 
+    ``finish_reason`` is read into ``status``, which is what this surface calls
+    :func:`parse_native`'s ``done_reason`` and carries the same value,
+    ``"length"``, when the output cap was reached. Both paths record it, so a
+    row that ran out of budget is separable from a row that answered off-menu
+    whichever surface answered.
+
     Token accounting deliberately does *not* copy
     :func:`~decision_evals.providers.claude_code.parse_result`, which sums
     ``input_tokens`` with the two cache fields. That sum corrects a quirk of one
@@ -432,6 +438,18 @@ def parse_completion(payload: Any, *, label: str, duration_ms: int, cost_usd: fl
     # OpenAI-compatible shims say `reasoning_content`. Both are read.
     reasoning = message.get("reasoning") or message.get("reasoning_content") or ""
 
+    # Why the generation stopped, on the choice rather than the envelope. A
+    # thinking model that runs out of budget inside its chain returns an empty
+    # `content`, a full reasoning field, and this reading `"length"`, and
+    # without it the row is a blank answer with nothing saying why.
+    #
+    # The 2026-09-03 measurement behind that is on the *native* surface, quoted
+    # in `parse_native` where the field names match it. What carries across is
+    # the server, not the wire format: the same Ollama build answers this
+    # surface, and `length` is what both call the cap. The equivalent reading
+    # here is asserted against a fake rather than measured live.
+    finish = choices[0].get("finish_reason")
+
     usage = payload.get("usage") or {}
     return CliResult(
         text=text,
@@ -443,6 +461,7 @@ def parse_completion(payload: Any, *, label: str, duration_ms: int, cost_usd: fl
         session_id="",
         context_window=int(_number(usage.get("context_window"))),
         reasoning=reasoning if isinstance(reasoning, str) else "",
+        status=finish if isinstance(finish, str) else "",
     )
 
 
@@ -508,6 +527,15 @@ def parse_native(payload: Any, *, label: str, duration_ms: int, cost_usd: float)
     reads ``"length"`` when the cap was reached. That is the signal that would
     have named the 2026-08-27 runaways on the day they happened rather than
     three weeks later, so it is recorded in ``status``.
+
+    An empty ``content`` is a well-formed reply here and passes through as one.
+    A thinking model that reaches the cap inside its chain answers with
+    ``content`` empty, ``thinking`` full and ``done_reason`` ``"length"``:
+    measured against ``qwen3:1.7b`` on 2026-09-03 at ``num_predict: 120``,
+    ``content`` 0 characters against ``thinking`` 470 and 120 tokens generated.
+    Refusing it would turn an audit trail into a :class:`CliError` scored
+    ``infrastructure``, which is the one cause that means the call never
+    happened.
 
     Raises:
         CliError: The reply was not a well-formed chat response.

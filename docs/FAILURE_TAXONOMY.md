@@ -33,6 +33,55 @@ the *agent* until the corpus is hard enough to produce agent failures, and
 attempting one earlier produces a taxonomy of your own mistakes wearing the
 model's name.
 
+## Running out of output budget is its own code
+
+`output_truncated`, added 2026-09-03, holds the reply the output cap stopped
+before it reached an answer line. It is the fourth cause the scorer assigns
+without anyone reading a trace, and it comes out of a live evolution run rather
+than out of the 280 traces coded above.
+
+A thinking model returns its chain in one field and its answer in another. When
+the cap falls inside the chain, the answer field comes back empty and the
+backend's stop reason reads `length`. Labelled `format_violation`, that row
+says the model could not follow the output contract; what happened is that the
+run gave it too few tokens to reach one.
+
+Read off the first 42 calls of a 14,700-call study: 6 rows carried an
+output-token count at the run's cap and an empty response. **Four of the six
+were the one arm whose document makes the model reason longest.** Truncation is
+therefore arm-dependent, and it moves comparisons instead of moving every arm
+together, which is the shape the control-token defect already had. An arm can
+lose on budget and be read as an arm that cannot follow a format.
+
+Those figures were reported to the session that wrote this code and are not
+re-derived here, because the run's records sit outside the tree it could read.
+[`notebook/2026-09-03-a-thinking-model-spent-its-whole-budget-reasoning.md`](../notebook/2026-09-03-a-thinking-model-spent-its-whole-budget-reasoning.md)
+carries them with that provenance attached, and carries the one number that
+does not yet cohere: 4,096 both as the cap and as the window a cap has to fit
+inside.
+
+Two columns are what make it a reading rather than an inference. The record
+carries the backend's own stop reason and the full reasoning text, so a zero
+beside an empty response says how the budget was spent and what ended the
+generation. Neither reached the record before, which is why those six rows were
+found by somebody reading a live run and not by a gate. Ollama's native surface
+had been reporting both to the provider for weeks; the record dropped them, and
+a field a provider parses and a record discards is invisible to every gate here.
+
+**The code is `no_answer_line` and nothing wider.** A reply that wrote a
+complete answer line naming something off the menu keeps its `format_violation`
+however it stopped, because it reached an answer line and the cap fell after it.
+The 87 `ANSWER: monitor /think` rows are that shape, on this venue, on a verbose
+thinking model. The cost of the narrow rule is that a reply cut off mid-option
+reads as a format violation, and no field separates those two readings.
+
+**No committed record is relabelled.** A row written before the change carries
+an empty stop reason, so its cause cannot be re-derived and it keeps the
+`format_violation` it was scored with. One checkpoint that spans the change
+therefore holds both labels for one physical failure, which is the same rule the
+control-token defect follows and needs saying out loud for anyone counting
+causes over a study that resumed.
+
 ## Item defects, open-coded
 
 Three sub-kinds, each found by a real run rather than by a test, and each with a

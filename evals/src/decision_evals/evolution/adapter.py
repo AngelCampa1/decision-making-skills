@@ -381,11 +381,27 @@ REFLECTION_EXAMPLES: Final = 5
 
 
 def _feedback(trace: Trace) -> str:
-    """One sentence a reflector can act on, naming the cause rather than the score."""
+    """One sentence a reflector can act on, naming the cause rather than the score.
+
+    The truncation branch is the reason this reads the cause and not the parse.
+    A reply the output cap stopped has no answer line, so it used to arrive here
+    as "the reply did not end with a parseable line" and the reflector was
+    pointed at the format instructions. Truncation is arm-dependent and
+    concentrates on the arm whose document makes the model reason longest, so
+    that feedback pushes hardest on the arm that reasoned most, for a fault the
+    skill cannot fix.
+    """
     if trace.zero_cause == "infrastructure":
         return (
             "This item never got an answer back from the venue. Nothing about the skill "
             "caused it; ignore this example."
+        )
+    if trace.zero_cause == "output_truncated":
+        return (
+            "The reply ran out of output budget while still reasoning and never got as far "
+            "as an answer line, so it scored zero without stating a choice. The format "
+            "instructions are not what failed. What would have helped is reaching a "
+            f"decision in fewer tokens. The correct option was {trace.expected!r}."
         )
     if trace.parsed is None:
         return (
@@ -436,8 +452,15 @@ def _traces(batch: Sequence[Item], records: Sequence[RunRecord], sha: str) -> li
                 f"{sha[:12]}. The batch and the trajectories have to line up one to one, "
                 "and a missing row is a wrong score rather than a missing one."
             )
+        # `stop_reason` travels with the response for the same reason
+        # `infrastructure_error` does: this re-derives the score from a
+        # committed row, and a re-derivation that drops an input lands on a
+        # different cause than the row carries.
         score = score_item(
-            item, record.response, infrastructure_error=record.zero_cause == "infrastructure"
+            item,
+            record.response,
+            infrastructure_error=record.zero_cause == "infrastructure",
+            stop_reason=record.stop_reason,
         )
         traces.append(
             Trace(

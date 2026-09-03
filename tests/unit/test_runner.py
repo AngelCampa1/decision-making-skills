@@ -1290,3 +1290,134 @@ def test_a_429_from_an_openai_compatible_server_is_waited_out_rather_than_scored
     assert len(records) == 1
     assert records[0].zero_cause is None
     assert records[0].model == "ollama/qwen3:4b"
+
+
+# -- what a zero says about itself ------------------------------------------
+
+
+def _server(monkeypatch: pytest.MonkeyPatch, reply: dict[str, Any]) -> list[Any]:
+    """One canned reply from a fake endpoint; returns the requests it saw."""
+    seen: list[Any] = []
+
+    def fake_urlopen(request: Any, timeout: float = 0.0) -> Any:
+        seen.append(request)
+        return _Response(json.dumps(reply).encode())
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    return seen
+
+
+def _one(
+    items: list[Item], tmp_path: Path, *, num_ctx: int | None = None
+) -> tuple[runner.RunRecord, runner.RunRecord]:
+    """One item against the fake endpoint, as returned and as read back off disk."""
+    checkpoint = tmp_path / "run.jsonl"
+    records = run_arm(
+        items[:1],
+        ARM,
+        model="ollama/qwen3:1.7b",
+        checkpoint=checkpoint,
+        call=local_call("ollama/qwen3:1.7b", num_ctx=num_ctx),
+        ledger=BudgetLedger(limit_usd=10.0),
+        backoff=Backoff(base_delay=0.0, max_delay=0.0),
+    )
+    assert len(records) == 1
+    return records[0], load_records(checkpoint)[0]
+
+
+def test_a_truncated_thinking_model_lands_as_a_budget_zero_on_the_native_surface(
+    items: list[Item], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The defect, end to end, on the surface the study runs on.
+
+    Ollama answers a reasoning model that hit its cap mid-chain with an empty
+    ``content``, a full ``thinking`` and ``done_reason`` ``"length"``. Before
+    2026-09-03 the record kept only the empty answer, so the row read as a
+    format violation with nothing in it saying the budget is what ended it.
+    """
+    _server(
+        monkeypatch,
+        {
+            "model": "qwen3:1.7b",
+            "message": {"role": "assistant", "content": "", "thinking": "x" * 470},
+            "done": True,
+            "done_reason": "length",
+            "prompt_eval_count": 32,
+            "eval_count": 120,
+        },
+    )
+    record, reloaded = _one(items, tmp_path, num_ctx=4096)
+
+    assert record.response == ""
+    assert len(record.reasoning) == 470, "recorded whole, which is the evidence"
+    assert record.stop_reason == "length"
+    assert record.zero_cause == "output_truncated"
+    assert not record.correct
+    assert (reloaded.reasoning, reloaded.stop_reason) == (record.reasoning, "length")
+
+
+def test_the_same_truncation_is_recorded_on_the_openai_compatible_surface(
+    items: list[Item], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two surfaces, one row shape. The names differ and nothing else does."""
+    _server(
+        monkeypatch,
+        {
+            "model": "qwen3:1.7b",
+            "choices": [
+                {
+                    "message": {"role": "assistant", "content": "", "reasoning": "y" * 470},
+                    "finish_reason": "length",
+                }
+            ],
+            "usage": {"prompt_tokens": 32, "completion_tokens": 120},
+        },
+    )
+    record, reloaded = _one(items, tmp_path)
+
+    assert record.response == ""
+    assert len(record.reasoning) == 470
+    assert record.stop_reason == "length"
+    assert record.zero_cause == "output_truncated"
+    assert (reloaded.reasoning, reloaded.stop_reason) == (record.reasoning, "length")
+
+
+def test_an_answered_call_scores_exactly_as_it_did_and_carries_both_new_columns(
+    items: list[Item], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The other half of the change, and the half that could have broken a run.
+
+    The scorer reads the answer text and nothing else, so reasoning reaching
+    the record may not reach the parse. A model that reasons and then answers
+    scores what it always scored, with the chain and the stop reason recorded
+    beside it rather than folded into either.
+    """
+    other = next(option for option in items[0].options if option != items[0].answer)
+    _server(
+        monkeypatch,
+        {
+            "model": "qwen3:1.7b",
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": f"ANSWER: {items[0].answer}",
+                        "reasoning": f"ANSWER: {other}",
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {"prompt_tokens": 32, "completion_tokens": 240},
+        },
+    )
+    record, reloaded = _one(items, tmp_path)
+
+    assert record.parsed == items[0].answer
+    assert record.parse_status == "parsed"
+    assert record.correct
+    assert record.zero_cause is None
+    assert record.reasoning == f"ANSWER: {other}", (
+        "the chain is recorded and is not read: an answer line inside it is not the answer"
+    )
+    assert record.stop_reason == "stop"
+    assert reloaded.stop_reason == "stop"

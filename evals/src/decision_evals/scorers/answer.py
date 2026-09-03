@@ -31,7 +31,7 @@ from decision_evals.generators.generate import Item
 
 ParseStatus = Literal["parsed", "no_answer_line", "unlisted_option", "ambiguous"]
 
-#: Why an item scored zero. The first three are assigned automatically; the rest
+#: Why an item scored zero. The first four are assigned automatically; the rest
 #: require a human reading the trace, and exist so that "we did not look" is
 #: distinguishable from "we looked and it was the model".
 #:
@@ -47,14 +47,59 @@ ParseStatus = Literal["parsed", "no_answer_line", "unlisted_option", "ambiguous"
 #: parser and the comparison were correct and the *item* was wrong, and the two
 #: have completely different fixes: one is a code change, the other is a
 #: template change and a re-blessed golden.
+#:
+#: ``output_truncated`` is the fourth automatic cause, added 2026-09-03. It
+#: splits off the reply that produced **no answer line at all** because the
+#: output cap stopped it, which until then arrived as ``format_violation``
+#: beside a reply that reached the end of its own argument and got the format
+#: wrong. The two have nothing in common: a format violation is about the
+#: skill's instructions and a truncation is about the token budget the run was
+#: given. It is arm-dependent, which is what makes it worth a code of its own,
+#: and the figures behind that are in
+#: ``notebook/2026-09-03-a-thinking-model-spent-its-whole-budget-reasoning.md``
+#: rather than here.
+#:
+#: **The boundary is ``no_answer_line`` and nothing wider.** A reply that wrote
+#: a complete answer line naming something off the menu stays a
+#: ``format_violation`` however it stopped, because it demonstrably reached an
+#: answer line and the cap fell after it. The 87 ``ANSWER: monitor /think`` rows
+#: below are that shape, on this venue, on a verbose thinking model, and they
+#: are already classified ``verifier_defect``. A cap-hit ``unlisted_option``
+#: therefore keeps the cause it had, at the cost of reading a reply cut off
+#: mid-option as a format violation. That trade is deliberate: it holds every
+#: existing cause's meaning fixed, and no field distinguishes the two readings.
+#:
+#: **This does not relabel a committed record.** A row written before this date
+#: carries ``stop_reason`` empty, so its cause cannot be re-derived and it keeps
+#: the ``format_violation`` it was scored with, the same rule the control token
+#: below follows. One checkpoint spanning the change therefore carries both
+#: labels for one failure.
 ZeroCause = Literal[
     "agent_wrong",
     "format_violation",
+    "output_truncated",
     "infrastructure",
     "item_defect",
     "verifier_defect",
     "environment_leak",
 ]
+
+#: Stop reasons that mean the output cap ended the generation.
+#:
+#: ``length`` is the one a provider here produces: Ollama's native
+#: ``done_reason`` and an OpenAI-compatible ``finish_reason`` both say it.
+#: ``max_tokens`` is the Anthropic Messages API's spelling and **no backend
+#: wired into this harness emits it today**, so it is a forward guard rather
+#: than a measurement, kept because a second venue arriving is the moment
+#: nobody re-reads this set.
+#:
+#: Matched case-folded on the whole field rather than as a substring, so a
+#: backend reporting anything else keeps its own word for it and reads as no
+#: claim about the cap. ``agy``'s ``SUCCESS`` and ``ERROR`` are what that
+#: protects against as the set widens; today ``agy`` reaches
+#: ``scripts/run_triggers.py`` and never a :class:`Score`, so the protection is
+#: also untested against a live value.
+_CAP_REASONS: Final[frozenset[str]] = frozenset({"length", "max_tokens"})
 
 #: Matches an answer line, tolerating the decorations models add: bold markers,
 #: leading bullets, code ticks, trailing punctuation.
@@ -150,7 +195,29 @@ def parse_answer(response: str, options: Sequence[str]) -> ParsedAnswer:
     return ParsedAnswer(status="unlisted_option", value=None, raw=raw)
 
 
-def score_item(item: Item, response: str, *, infrastructure_error: bool = False) -> Score:
+def hit_output_cap(stop_reason: str) -> bool:
+    """Whether a backend's stop reason says the output cap ended the generation.
+
+    An empty string reads as no claim either way, and it has to: it is what a
+    record carries when nobody read a stop reason off the backend, which is
+    every row written before 2026-09-03 and every row from the Claude Code
+    provider. That provider is not silent at the wire, and the gap is worth
+    naming rather than explaining away: its result event carries a ``subtype``,
+    ``success`` in this repository's own fixture, and
+    :func:`decision_evals.providers.claude_code.parse_result` does not read it.
+    Until it does, a truncated reply on the CLI venue is still an unexplained
+    ``format_violation``.
+    """
+    return stop_reason.strip().casefold() in _CAP_REASONS
+
+
+def score_item(
+    item: Item,
+    response: str,
+    *,
+    infrastructure_error: bool = False,
+    stop_reason: str = "",
+) -> Score:
     """Score one response against its item.
 
     Args:
@@ -160,6 +227,13 @@ def score_item(item: Item, response: str, *, infrastructure_error: bool = False)
             never happened are indistinguishable from the response text alone,
             and conflating them would let a rate-limited run masquerade as a
             model that stopped answering.
+        stop_reason: What the backend said ended the generation, verbatim, or
+            empty where it said nothing. It changes ``zero_cause`` and it never
+            touches the parse: a reply is read exactly as it was before this
+            argument existed, so a parsed answer scores identically whatever
+            the backend reports. Defaulted for the same reason
+            ``infrastructure_error`` is, and every caller that omits it gets
+            the labels it got before.
     """
     parsed = parse_answer(response, item.options)
     correct = parsed.ok and parsed.value == item.answer
@@ -169,17 +243,30 @@ def score_item(item: Item, response: str, *, infrastructure_error: bool = False)
         expected=item.answer,
         parsed=parsed,
         correct=correct,
-        zero_cause=_zero_cause(correct, parsed, infrastructure_error),
+        zero_cause=_zero_cause(correct, parsed, infrastructure_error, stop_reason),
     )
 
 
 def _zero_cause(
-    correct: bool, parsed: ParsedAnswer, infrastructure_error: bool
+    correct: bool, parsed: ParsedAnswer, infrastructure_error: bool, stop_reason: str
 ) -> ZeroCause | None:
+    """Why this item scored zero, or ``None`` where it did not.
+
+    The order is the reading of the row, narrowest claim last. A call that
+    never completed says nothing about the model. Then a reply with no answer
+    line anywhere in it, which splits on whether the cap is what stopped it.
+    Then everything else, unchanged: a reply that named an option off the menu
+    or named two is a ``format_violation`` however it stopped, and a reply that
+    answered and was wrong is ``agent_wrong`` however it stopped. Both of those
+    reached an answer line, so the cap fell after the model had committed to
+    something, and neither cause moves.
+    """
     if infrastructure_error:
         return "infrastructure"
     if correct:
         return None
+    if parsed.status == "no_answer_line" and hit_output_cap(stop_reason):
+        return "output_truncated"
     if not parsed.ok:
         return "format_violation"
     return "agent_wrong"

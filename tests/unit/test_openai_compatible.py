@@ -267,6 +267,42 @@ def test_a_model_that_does_not_reason_records_an_empty_chain() -> None:
     )
 
 
+def test_a_finish_reason_is_recorded_so_a_truncation_can_be_named() -> None:
+    """``finish_reason`` is this surface's ``done_reason``, and it was dropped.
+
+    Until 2026-09-03 the native path recorded the stop reason and this one did
+    not, so the same truncation was auditable on one surface and invisible on
+    the other.
+    """
+    payload = _completion()
+    payload["choices"][0]["finish_reason"] = "length"
+    assert parse_completion(payload, label="ollama", duration_ms=1, cost_usd=0.0).status == "length"
+
+
+@pytest.mark.parametrize("value", [None, 3, {"reason": "length"}])
+def test_a_choice_that_reports_no_finish_reason_reads_as_empty(value: Any) -> None:
+    payload = _completion()
+    payload["choices"][0]["finish_reason"] = value
+    assert parse_completion(payload, label="ollama", duration_ms=1, cost_usd=0.0).status == ""
+
+
+def test_a_thinking_model_that_spent_its_budget_reasoning_still_parses() -> None:
+    """Empty ``content``, full reasoning, ``length``: the shape of the defect.
+
+    Measured against ``qwen3:1.7b`` on 2026-09-03 at a 120-token cap. Refusing
+    this reply would score it ``infrastructure``, the one cause that means the
+    call never happened, and the reasoning is the only evidence the row has.
+    """
+    payload = _completion(content="", completion_tokens=120)
+    payload["choices"][0]["message"]["reasoning"] = "so the SLA clock starts at"
+    payload["choices"][0]["finish_reason"] = "length"
+    result = parse_completion(payload, label="ollama", duration_ms=1, cost_usd=0.0)
+    assert result.text == ""
+    assert result.reasoning == "so the SLA clock starts at"
+    assert result.status == "length"
+    assert result.output_tokens == 120
+
+
 def test_a_non_object_response_is_refused() -> None:
     with pytest.raises(CliError, match="expected a completion object"):
         parse_completion(["nope"], label="ollama", duration_ms=1, cost_usd=0.0)
@@ -815,6 +851,34 @@ def test_a_truncated_generation_says_so() -> None:
         _native(done_reason="length"), label="ollama", duration_ms=1, cost_usd=0.0
     )
     assert result.status == "length"
+
+
+def test_an_empty_answer_beside_a_full_chain_is_a_reply_rather_than_a_refusal() -> None:
+    """A regression guard on behaviour that was already right, not a new feature.
+
+    This path has captured all three fields since before 2026-09-03, and this
+    case stays green with that day's change reverted. It is here because the
+    live shape of the defect was measured against it and nothing pinned the
+    combination: ``qwen3:1.7b`` with ``num_predict: 120`` answers ``content`` 0
+    characters, ``thinking`` 470, ``done_reason`` ``length``, ``eval_count``
+    120. Refusing that reply, or dropping any of the three, is what would make
+    the row unreadable, and the record-level assertions are in
+    ``tests/unit/test_runner.py``.
+    """
+    result = parse_native(
+        _native(
+            message={"role": "assistant", "content": "", "thinking": "x" * 470},
+            done_reason="length",
+            eval_count=120,
+        ),
+        label="ollama",
+        duration_ms=1,
+        cost_usd=0.0,
+    )
+    assert result.text == ""
+    assert len(result.reasoning) == 470
+    assert result.status == "length"
+    assert result.output_tokens == 120
 
 
 @pytest.mark.parametrize(

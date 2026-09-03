@@ -53,10 +53,11 @@ that mean aggregation carries unbounded bias under any positive contamination
 repository**: there is no such estimator in `stats/`.
 
 **A zero is classified rather than assumed.** `ZeroCause` in that same scorer
-module admits six causes (`agent_wrong`, `format_violation`, `infrastructure`,
-`item_defect`, `verifier_defect`, `environment_leak`), and `Score` carries the
-field as mandatory, though it accepts `None` for a scoring item and three of
-the six need a person reading the trace. Splitting `item_defect` from
+module admits seven causes (`agent_wrong`, `format_violation`,
+`output_truncated`, `infrastructure`, `item_defect`, `verifier_defect`,
+`environment_leak`), and `Score` carries the field as mandatory, though it
+accepts `None` for a scoring item and three of the seven need a person reading
+the trace. Splitting `item_defect` from
 `verifier_defect` is the deliberate departure the module argues for: a bad item
 and a bad checker have completely different fixes. It shares `answer.py`'s
 scope, so no zero in a published trigger run has been through it. The runner's

@@ -102,6 +102,7 @@ from decision_evals.evolution.skillopt_env import (
     TASK_TYPES,
     SkillOptError,
     _deployment,
+    _why,
     build_env,
     train_config,
     venue_config,
@@ -1028,6 +1029,30 @@ def test_an_infrastructure_zero_tells_the_reflector_to_ignore_it() -> None:
 
 def test_an_unparseable_reply_is_named_as_a_format_failure() -> None:
     assert "parseable" in _feedback(_trace())
+
+
+def test_a_truncated_reply_is_not_named_as_a_format_failure() -> None:
+    """Otherwise the reflector rewrites the format instructions over a token budget.
+
+    Truncation concentrates on the arm whose document makes the model reason
+    longest, so the wrong sentence here pushes hardest exactly where the search
+    can do the most damage with it.
+    """
+    feedback = _feedback(_trace(zero_cause="output_truncated"))
+    assert "output budget" in feedback
+    assert "parseable" not in feedback
+    assert "'act'" in feedback, "the key is still named, as it is for every other cause"
+
+
+def test_the_other_engines_analyst_gets_the_same_distinction() -> None:
+    """`_why` writes SkillOpt's `fail_reason` header, and it branched the same way.
+
+    Two engines under one protocol means one reading of a cause, so the two
+    functions move together or the comparison is between the integrations.
+    """
+    assert "output budget" in _why(_trace(zero_cause="output_truncated"))
+    assert "no answer could be read" in _why(_trace())
+    assert "says nothing about the skill" in _why(_trace(zero_cause="infrastructure"))
 
 
 def test_a_wrong_answer_names_both_options() -> None:
