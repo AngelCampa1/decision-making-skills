@@ -1245,3 +1245,25 @@ arm lose on output budget instead of on judgement, so collection is halted
 until the record carries the reasoning text and a cause for the zero. That is
 the same class as the control-token refusals corrected on 2026-09-01, caught
 this time before it became a number.
+
+## Correction, 2026-09-03: the study is collecting, and the pause is a decision not a defect
+
+Appended, not rewritten. The entry above says the re-run is "stopped at 0.3%"
+until truncated records are auditable. That was true when written and is no
+longer: the fix landed at `54600da`, every record now carries its reasoning
+and stop reason, and a runaway scores `output_truncated` rather than
+`format_violation`.
+
+The run restarted at the registered configuration and stands at **1,190 calls
+of 14,700**, about 8%, in an untracked checkpoint at
+`results/evolution/2026-09-03-514dd6c-study-seven-unseen-v2/`. It is paused on
+one open question — whether to spend part of the design to finish in less than
+the 62 hours it now projects — and that is the maintainer's to answer. Nothing
+is discarded and nothing in the registration has moved.
+
+Two readings from those 1,190 calls, neither of them a result: truncation runs
+at 8.0% overall and is arm-dependent, from `placebo-gepa` at 4.2% to the
+shipped skill at 14.4%; and the longest reply that ends on its own is 3,252
+tokens, which is what rules out the shorter output cap that an earlier
+estimate off 83 calls had recommended. Both are in
+[`notebook/2026-09-03-the-study-is-paused-at-1190-calls-and-the-speed-options-were-costed-on-a-bad-sample.md`](../notebook/2026-09-03-the-study-is-paused-at-1190-calls-and-the-speed-options-were-costed-on-a-bad-sample.md).
