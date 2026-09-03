@@ -452,3 +452,45 @@ This is written before the first kept call. The 46 discarded calls were made
 under the old cap, the old record shape and the old cause set; keeping them
 would have put two labels on one failure inside one checkpoint, and 46 calls
 of 14,700 is not worth that.
+
+## Amendment, before the first kept call: the raised cap rescued nothing, and it goes back
+
+The amendment above is wrong and stays where it is. It read a cap that binds
+on two arms as a cap set too low. Ten calls at 12,288 tokens say it is not.
+
+| arm | item | output | seconds | stop | parse |
+| --- | --- | --- | --- | --- | --- |
+| `off` | `hrd-003-deposit-notice#v0-d1-early` | 12,288 | 202.7 | `length` | `no_answer_line` |
+| `off` | `hrd-003-deposit-notice#v0-d1-late` | 12,288 | 219.9 | `length` | `no_answer_line` |
+| `off` | `hrd-003-deposit-notice#v0-d4-early` | 1,689 | 25.1 | `stop` | parsed |
+| `off` | `hrd-003-deposit-notice#v0-d0-none` | 1,666 | 21.3 | `stop` | parsed |
+| `off` | `hrd-003-deposit-notice#v0-d4-middle` | 702 | 10.1 | `stop` | parsed |
+| `off` | `hrd-003-deposit-notice#v1-d0-none` | 653 | 9.2 | `stop` | parsed |
+| `off` | `hrd-003-deposit-notice#v0-d4-late` | 599 | 8.6 | `stop` | parsed |
+| `off` | `hrd-003-deposit-notice#v0-d1-middle` | 453 | 6.2 | `stop` | parsed |
+| `on` | `hrd-003-deposit-notice#v0-d1-early` | 12,288 | 249.4 | `length` | `no_answer_line` |
+| `on` | `hrd-003-deposit-notice#v0-d0-none` | 888 | 14.1 | `stop` | parsed |
+
+**Not one call finished between 4,096 and 12,288 tokens.** Every reply either
+ends on its own well under the old cap — the longest is 1,689 — or runs to
+whatever number it is given. The distribution is two populations, not one with
+a tail, and the cap is a boundary between them rather than a constraint on
+either. `off` hit the cap on two of eight items at 4,096 and on the same two at
+12,288.
+
+So tripling the budget rescued no row, changed no score, and cost three times
+the wall clock on exactly the rows it could not help: 203 to 249 seconds a call
+against 69 to 80 at the old cap. The whole run projected to 313 hours, past its
+own 604,800-second stop.
+
+**The cap returns to 4,096, as registered.** It clears the longest reply that
+ends on its own by more than double, and the runaway rows are runaway at any
+number. What the 2026-09-03 fix bought is the thing that was actually missing:
+those rows now score `output_truncated` and carry their reasoning and stop
+reason, so a zero on a runaway is separable from a zero on a model that
+answered off the menu. That was always the fix. The cap was never the fix, and
+raising it was a hypothesis about a bimodal distribution that ten calls
+falsified.
+
+The ten calls are discarded with the earlier 46. Nothing in the design, the
+arms, the items, the seeds, the family, the bar or the predictions moves.
