@@ -62,7 +62,7 @@ compiled with three passes of `pdflatex` and nothing else on 2026-09-01.
 | Title | `Do Automated Skill Optimisers Survive a Placebo Control? A Pre-Registered Five-Arm Study of GEPA and SkillOpt` |
 | Authors | `Angel Campa` |
 | Abstract | the block below, verbatim |
-| Comments | `29 pages, 2 figures, 4 tables. Code, data and every run record: https://github.com/AngelCampa1/decision-making-skills (release v1.0.0)` with a space after the URL. No copyright line here; arXiv forbids one in this field |
+| Comments | `31 pages, 2 figures, 4 tables. Code, data and every run record: https://github.com/AngelCampa1/decision-making-skills (release v1.0.0)` with a space after the URL. No copyright line here; arXiv forbids one in this field |
 | Primary category | `cs.AI` |
 | Cross-lists | `cs.LG`, whose description names evaluation methodology, and `cs.SE` for the agent tooling. Not `cs.CL`: the paper is not natural-language processing. Moderators add and strip cross-lists either way |
 | ACM class | optional; `I.2.7` if any |

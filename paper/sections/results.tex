@@ -467,20 +467,39 @@ ratchet, and not a certain one. Neither engine was asked to memorise.
 
 \paragraph{What each engine accepted its winner on.} SkillOpt scored all
 nine of its candidates on all 21 validation items: seed 18, winner 21, one
-unreplicated comparison with no interval on either side. GEPA's record is
-thinner than a first draft of this paper made it. Our lineage writes a
-candidate once, with the first score it received, and GEPA scores a new
-candidate first on a reflection minibatch of three; so the lineage carries
-generation zero on 21 items and every later candidate on three, and
-\texttt{winner.json}, which falls back to the lineage score when the engine
-chose, closes at $1.000$ over $n = 3$ with \texttt{winner\_source = engine}.
-GEPA's documented return rule evaluates accepted candidates on the validation
-pool and hands back the best aggregate, so the three-item figure is most
-likely our logging and not the engine's acceptance; the search records that
-would settle it were in the directory that no longer exists. What survives is
-narrower than the draft's claim and still worth stating: GEPA's $1.000$ over
-three and its seed's $0.762$ over 21 are not one measurement and cannot be
-differenced, and the document the search handed back had memorised.
+unreplicated comparison with no interval on either side. GEPA's record for
+the tested run is thinner. Our lineage writes a candidate once, with the
+first score it received, and GEPA scores a new candidate first on a
+reflection minibatch of three; so the lineage carries generation zero on 21
+items and every later candidate on three, and \texttt{winner.json}, which
+falls back to the lineage score when the engine chose, closes at $1.000$ over
+$n = 3$ with \texttt{winner\_source = engine}. That run's own search log is
+gone, so its validation-pool aggregate cannot be recovered.
+
+A later GEPA search, on a different template set and run under the same
+adapter, committed its search log in full and settles what the three-item
+figure was. At the iteration that produced its frozen winner, the log
+records a validation aggregate of $20/21 = 0.952$, individual scores for
+every one of the 21 items, and names that candidate the best program on the
+valset; the proposal text at that iteration is byte-identical to the run's
+\texttt{winner.md} and hashes to the \texttt{candidate\_sha} in its
+\texttt{winner.json}, which itself closes at \texttt{score 1.0} over
+\texttt{n\_items 3}, the same two fields the tested run's file carries.
+\textbf{GEPA evaluates and selects its winner on the full validation pool;
+\texttt{n\_items 3} is our own adapter recording the first score a candidate
+was seen on, which for GEPA is the reflection minibatch, and not the
+engine's acceptance evidence.} The mechanism runs in the same adapter that
+produced the tested run's lineage, so the three-item figure this paper
+reports for that run is the same artifact and not a measure of what GEPA
+accepted its winner on. What stays unrecoverable is that run's own
+aggregate, because its search log does not exist: GEPA's $1.000$ over three
+and its seed's $0.762$ over 21 remain not one measurement and cannot be
+differenced. What the settled mechanism moves is where the finding lands:
+not a criticism of GEPA's acceptance rule, which evaluates on the full pool
+as documented, but a defect in our own instrumentation of someone else's
+optimiser, caught only because a later run kept the engine's own search log
+rather than our adapter's summary of it. The document the search handed back
+had memorised regardless.
 
 \subsection{Controls}
 
@@ -506,8 +525,10 @@ every figure with a macro is given as one.
 \begin{enumerate}
   \item \emph{Both searches produce a winner that beats its seed on the seven
     training templates.} Met for SkillOpt, 21 of 21 against 18 of 21.
-    Unanswerable for GEPA: its winner's score is over three items and its
-    seed's over 21 (\Cref{sec:whatengines}).
+    Unanswerable for GEPA on this run: the search log that would carry its
+    winner's validation-pool aggregate is gone, and the $n = 3$ figure our
+    lineage recorded is the reflection minibatch the candidate was first
+    scored on, not GEPA's acceptance evidence (\Cref{sec:whatengines}).
   \item \emph{Both winners write training-template content into the skill.}
     Met for this pair. Across the six frozen winners the notebook counted,
     three carried constants and three did not, so the general form of the

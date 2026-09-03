@@ -59,9 +59,12 @@ engine ran once, under a call guard, with an OpenAI-compatible reflection
 model. A different reflector, a larger budget, or a different stopping point
 could produce a different winner. SkillOpt scored nine candidates on the full
 validation pool and took the one that answered all 21. GEPA's search ran to
-completion and its own acceptance rule declared a winner scored on three
-items (\Cref{sec:whatengines}). Neither is the engines' fault, and the
-second is arguably the point.
+completion; its own return rule evaluates and selects candidates on the same
+full validation pool, confirmed by a later search whose log survived, though
+the tested run's own log is gone and its winner's aggregate on that pool
+cannot be recovered (\Cref{sec:whatengines}). Neither is the engines' fault,
+and neither acceptance rule tests for chance at any pool size, which is the
+point that survives the correction.
 
 \paragraph{Self-generated items, so we own their biases.} Generating our own
 items removes contamination and buys the ownership of every idiosyncrasy

@@ -5,8 +5,11 @@
 % characterisations in this section were verified first-hand against the full
 % texts of the cited papers on 2026-08-31 (SkillOpt, the Xu-Wu SkillsBench
 % study, GEPA, the coin-flip audit, both harness papers, the AGENTS.md study,
-% the authoring paper, and Prompting Inversion); where this section and the
-% docs file diverge, this section is the more recently checked.
+% the authoring paper, and Prompting Inversion) and on 2026-09-02 (Webson and
+% Pavlick, Min et al., Ma et al., the three placebo priors in
+% ../docs/RELATED_WORK.md's "What a placebo should be expected to do"); where
+% this section and the docs file diverge, this section is the more recently
+% checked.
 
 \subsection{Skills as an intervention, and where the tension is}
 
@@ -75,6 +78,28 @@ added context length, calling for length-matched baselines of random or
 irrelevant text as future work. In a design without that baseline, ``the
 skill helped'' and ``a document-shaped block of tokens in the system prompt
 helped'' are the same observation.
+
+What a document-shaped placebo should be expected to do is not new to skill
+evaluation. Webson and Pavlick find that NLI models learn as fast from
+templates that are intentionally irrelevant or misleading as from
+instructive ones in the few-shot setting, while a null template with no text
+at all does worse than an irrelevant
+one~\citep{webson2022understand}. Min et al. find that scrambling which
+label goes with which example in an in-context demonstration, while keeping
+its label set, input distribution and format, costs little, and that
+removing the format instead costs as much as dropping the demonstration
+entirely; the label set and the input distribution are content by the
+paper's own accounting, so we read this for the correctness of the pairing
+and not for content in general~\citep{min2022demonstrations}. Ma et al. find
+that a reflective prompt optimiser's feedback is much the same whether it
+reflects on real errors or on errors fabricated by flipping predictions, and
+that a directionless resampler matches its gains; the paper does not say
+where those gains come from, and we do not read it that
+way~\citep{ma2024promptoptimizers}. Together the three say that a block of
+structured text with no method in it is expected to move a model, by an
+amount that tracks its shape more than its content, in settings adjacent to
+ours: a skill that beats an empty prompt has shown less than it appears to
+until it also beats a placebo built to the same shape.
 
 Our placebo is generated to match the shipped skill on word count and on
 structural shape, and it ships in the repository beside the skill so the

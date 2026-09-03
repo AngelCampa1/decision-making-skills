@@ -49,9 +49,13 @@ it trained against, which does not survive multiplicity. The skill we wrote
 falls below the placebo on both sets. Both winners had written training-item
 constants into their own bodies, each asserting a different threshold for the
 same rule on a variable the corpus redraws for every item. Our lineage holds
-GEPA's winner with a score over three items; GEPA's own return rule evaluates
-on the validation pool, and the search records that would say which happened
-are gone (\Cref{sec:whatengines}).
+GEPA's winner with a score over three items, the reflection minibatch the
+candidate was first scored on. A later search under the same adapter, with
+its own search log committed in full, confirms that GEPA evaluates and
+selects its winner on the full validation-pool aggregate: the three-item
+figure is our own logging and not what GEPA accepted its winner on. The
+tested run's own search log is gone, so its aggregate cannot be recovered
+(\Cref{sec:whatengines}).
 
 The registered figures also carry a defect in our scorer, found after a first
 draft of this paper had read it as a result. The target model echoes its
@@ -125,7 +129,11 @@ below $J = \NUM{\lowSignalThreshold}$ in every arm, so a
     constants written into the skill body for the same redrawn-per-item
     rule (\Cref{sec:whatengines}). A pre-study probe anticipated exactly
     this channel, and the holdout was rebuilt to catch it before either
-    engine ran (\Cref{sec:corpus}).
+    engine ran (\Cref{sec:corpus}). A later search settled what our own
+    adapter had recorded as GEPA's acceptance evidence: GEPA selects on the
+    full validation pool, and the three-item figure this paper carries for
+    the tested run is our own instrumentation of someone else's optimiser,
+    not a weakness in its acceptance rule (\Cref{sec:whatengines}).
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}

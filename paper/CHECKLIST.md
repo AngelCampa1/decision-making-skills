@@ -287,8 +287,8 @@ Last worked through 2026-09-01, against the five-arm study at
       BibTeX, `main.bbl` is gitignored, and the copy on disk on 2026-09-01
       predated the last `refs.bib` change and rendered one citation as `[?]`.
       `make arxiv` now rebuilds before it packs. The file set it packs was
-      compiled with three passes of `pdflatex` and nothing else on 2026-09-01:
-      27 pages, no warnings, no undefined references
+      compiled with three passes of `pdflatex` and nothing else on 2026-09-03:
+      31 pages, no warnings, no undefined references
 - [x] `\date` carries a fixed date. It was `\today` until 2026-09-01, and
       arXiv rebuilds PDFs from source
 - [x] Use of generative AI disclosed in the paper, as arXiv's moderation policy
@@ -313,7 +313,7 @@ Last worked through 2026-09-01, against the five-arm study at
       Windows machine of `docs/STATUS.md` and built a different, shorter draft.
       None of it is a
       dependency of the gate. From a clean worktree at the commit this box was
-      last checked, 2026-08-31, the build is 29 pages and 446,805 bytes, with no overfull or underfull boxes, no LaTeX warnings and
+      last checked, 2026-09-03, the build is 31 pages and 476,205 bytes, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`
