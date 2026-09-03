@@ -682,6 +682,81 @@ class TestResumingUnderAnotherDesign:
         assert (result.paths.root / "run.json").read_bytes() == before
 
 
+class TestPinningTheRunDirectoryWithOut:
+    """`--out` keeps a study that outlives midnight or a new commit writing
+    into the directory it started in, instead of forking a second one."""
+
+    def _request(self, **overrides: object) -> StudyRequest:
+        fields: dict[str, object] = {
+            "target_model": MOCK_MODEL,
+            "sets": (
+                ItemSet(
+                    label="unseen", templates=("rel-001-vendor-outage",), seeds=(HOLDOUT_FLOOR,)
+                ),
+            ),
+            "templates_root": TEMPLATES,
+            "chunk": 4,
+            "run_aa": False,
+        }
+        fields.update(overrides)
+        return StudyRequest(**fields)  # type: ignore[arg-type]
+
+    def _run(
+        self,
+        tmp_path: Path,
+        request: StudyRequest,
+        *,
+        out: Path | None = None,
+        arms: tuple[Arm, ...] = ARMS[:2],
+        on: date | None = date(2026, 9, 2),
+    ):
+        return run_study(
+            request,
+            arms,
+            venue=venue_for(MOCK_MODEL),
+            repo_root=tmp_path,
+            git_sha="abc1234",
+            on=on,
+            out=out,
+        )
+
+    def test_out_creates_one_directory_and_a_second_call_resumes_into_it(
+        self, tmp_path: Path
+    ) -> None:
+        pinned = tmp_path / "pinned-run"
+        request = self._request()
+        first = self._run(tmp_path, request, out=pinned)
+        assert first.paths.root == pinned
+        before = {p: p.read_bytes() for p in pinned.rglob("*.jsonl")}
+
+        # A second call a day later, under `--out`, still lands in the same
+        # directory rather than deriving a new one from the new date.
+        again = self._run(tmp_path, request, out=pinned, on=date(2026, 9, 3))
+        after = {p: p.read_bytes() for p in pinned.rglob("*.jsonl")}
+
+        assert again.paths.root == pinned
+        assert before == after
+        assert again.records == first.records
+        # No second, date-derived directory was ever created beside the pinned one.
+        assert not (tmp_path / "results" / "evolution" / "2026-09-03-abc1234-study").exists()
+
+    def test_out_with_a_changed_passes_is_still_refused(self, tmp_path: Path) -> None:
+        pinned = tmp_path / "pinned-run"
+        self._run(tmp_path, self._request(passes=1), out=pinned)
+        with pytest.raises(StudyError, match="different passes"):
+            self._run(tmp_path, self._request(passes=2), out=pinned)
+
+    def test_out_pinned_is_true_with_out_and_false_without(self, tmp_path: Path) -> None:
+        pinned = tmp_path / "pinned-run"
+        with_out = self._run(tmp_path, self._request(), out=pinned)
+        manifest = json.loads((with_out.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["out_pinned"] is True
+
+        without_out = self._run(tmp_path, self._request())
+        manifest = json.loads((without_out.paths.root / "run.json").read_text(encoding="utf-8"))
+        assert manifest["out_pinned"] is False
+
+
 # ---------------------------------------------------------------------------
 # The 2026-09-02 registration: a subset, an explicit holdout, a placebo per winner.
 # ---------------------------------------------------------------------------

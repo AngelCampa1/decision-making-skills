@@ -36,7 +36,9 @@ from decision_evals.evolution.checkpoints import (
     CheckpointError,
     paths_for,
     read_manifest,
+    resolve_run_paths,
     run_name,
+    sibling_runs,
     write_manifest,
 )
 from decision_evals.evolution.credentials import (
@@ -408,6 +410,88 @@ def test_the_three_files_sit_under_one_directory(tmp_path: Path) -> None:
     assert {p.parent for p in (paths.records, paths.lineage, paths.manifest)} == {paths.root}
 
 
+# -- pinning a run directory with --out --------------------------------------
+
+
+def test_sibling_runs_finds_a_same_design_directory_under_another_date_or_commit(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "results" / "evolution"
+    (root / "2026-09-02-abc1234-gepa").mkdir(parents=True)
+    (root / "2026-09-03-def5678-gepa").mkdir(parents=True)
+    assert sibling_runs(tmp_path, engine="gepa") == sorted(
+        [root / "2026-09-02-abc1234-gepa", root / "2026-09-03-def5678-gepa"]
+    )
+
+
+def test_sibling_runs_ignores_another_engine_or_another_slug(tmp_path: Path) -> None:
+    root = tmp_path / "results" / "evolution"
+    (root / "2026-09-02-abc1234-gepa").mkdir(parents=True)
+    (root / "2026-09-02-abc1234-skillopt").mkdir(parents=True)
+    (root / "2026-09-02-abc1234-gepa-first-try").mkdir(parents=True)
+    assert sibling_runs(tmp_path, engine="gepa") == [root / "2026-09-02-abc1234-gepa"]
+    assert sibling_runs(tmp_path, engine="gepa", slug="First Try!") == [
+        root / "2026-09-02-abc1234-gepa-first-try"
+    ]
+
+
+def test_sibling_runs_is_empty_when_the_root_does_not_exist(tmp_path: Path) -> None:
+    assert sibling_runs(tmp_path, engine="gepa") == []
+
+
+def test_resolve_run_paths_with_out_is_rooted_exactly_there_and_creates_nothing(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "wherever" / "i-said"
+    paths = resolve_run_paths(
+        tmp_path, engine="gepa", git_sha="abc1234", out=Path("wherever/i-said")
+    )
+    assert paths.root == target
+    assert paths.records == target / "records.jsonl"
+    assert not target.exists()
+
+
+def test_resolve_run_paths_with_an_absolute_out_is_not_rejoined_to_repo_root(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "elsewhere"
+    paths = resolve_run_paths(tmp_path, engine="gepa", git_sha="abc1234", out=target)
+    assert paths.root == target
+
+
+def test_resolve_run_paths_is_unchanged_when_no_sibling_exists(tmp_path: Path) -> None:
+    paths = resolve_run_paths(tmp_path, engine="gepa", git_sha="abc1234def", on=date(2026, 9, 2))
+    assert paths == paths_for(tmp_path, "2026-09-02-abc1234-gepa")
+
+
+def test_resolve_run_paths_derives_normally_when_the_derived_directory_already_exists(
+    tmp_path: Path,
+) -> None:
+    """Continuing the run its own name already names is not forking a sibling."""
+    existing = paths_for(tmp_path, "2026-09-02-abc1234-gepa")
+    existing.root.mkdir(parents=True)
+    paths = resolve_run_paths(tmp_path, engine="gepa", git_sha="abc1234def", on=date(2026, 9, 2))
+    assert paths.root == existing.root
+
+
+def test_resolve_run_paths_refuses_a_sibling_that_differs_only_in_date(tmp_path: Path) -> None:
+    existing = paths_for(tmp_path, "2026-09-02-abc1234-gepa")
+    existing.root.mkdir(parents=True)
+    with pytest.raises(CheckpointError, match=r"already holds a run for this design") as exc:
+        resolve_run_paths(tmp_path, engine="gepa", git_sha="abc1234def", on=date(2026, 9, 3))
+    assert str(existing.root) in str(exc.value)
+    assert "--out" in str(exc.value)
+
+
+def test_resolve_run_paths_refuses_a_sibling_that_differs_only_in_sha(tmp_path: Path) -> None:
+    existing = paths_for(tmp_path, "2026-09-02-abc1234-gepa")
+    existing.root.mkdir(parents=True)
+    with pytest.raises(CheckpointError, match=r"already holds a run for this design") as exc:
+        resolve_run_paths(tmp_path, engine="gepa", git_sha="def5678aaa", on=date(2026, 9, 2))
+    assert str(existing.root) in str(exc.value)
+    assert "--out" in str(exc.value)
+
+
 # -- venues -----------------------------------------------------------------
 
 
@@ -669,6 +753,41 @@ def test_a_stopped_search_is_frozen_with_the_reason(
     assert recorded["stop_reason"] == result.stop_reason
     assert recorded["winner_source"] != "engine"
     assert (result.paths.root / "winner.md").read_text(encoding="utf-8") == result.winner.body
+
+
+def test_out_pins_the_run_directory_and_the_manifest_says_so(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A run pointed at a fixed directory writes there, whatever today's date
+    or the commit says, and the manifest records that it was pinned."""
+
+    def two_candidates(
+        request: object, *, adapter: DecisionAdapter, validation: list[Item], **_: object
+    ) -> str:
+        del request
+        for body in ("A skill.", "Another skill."):
+            adapter.score(body, list(validation))
+        return "Another skill."
+
+    monkeypatch.setitem(DRIVERS, "gepa", two_candidates)
+    request = EvolveRequest(
+        engine="gepa",
+        target_model=MOCK_MODEL,
+        train_seeds=(0,),
+        val_seeds=(1000,),
+        limit=2,
+        val_limit=2,
+        templates_root=str(REPO_ROOT / "datasets" / "templates"),
+    )
+    pinned = tmp_path / "pinned-run"
+    result = evolve(request, repo_root=tmp_path, git_sha="abc1234", out=pinned)
+    assert result.paths.root == pinned
+    manifest = json.loads((pinned / "run.json").read_text(encoding="utf-8"))
+    assert manifest["out_pinned"] is True
+
+    unpinned = evolve(request, repo_root=tmp_path, git_sha="abc1234")
+    manifest = json.loads((unpinned.paths.root / "run.json").read_text(encoding="utf-8"))
+    assert manifest["out_pinned"] is False
 
 
 def test_a_rate_limited_residency_probe_is_waited_out(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -1144,6 +1144,7 @@ def _capture_study(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
     def fake_run_study(request: object, arms: object, **kwargs: object) -> object:
         seen["request"] = request
         seen["arms"] = arms
+        seen["kwargs"] = kwargs
         return SimpleNamespace(
             paths=SimpleNamespace(root=cli.REPO_ROOT / "results" / "evolution" / "x"),
             sets=(),
@@ -1245,6 +1246,47 @@ class TestTheStudyOptionsReachTheRequest:
         assert result.exit_code != 0
         assert "request" not in seen
 
+    def test_out_reaches_run_study_and_defaults_to_unset(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        seen = self._capture(monkeypatch)
+        pinned = tmp_path / "pinned-run"
+        result = runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--unseen-seeds",
+                "1",
+                "--seen-seeds",
+                "1",
+                "--out",
+                str(pinned),
+            ],
+        )
+        assert result.exit_code == 0, result.output
+        assert seen["kwargs"]["out"] == pinned  # type: ignore[index]
+
+        seen = self._capture(monkeypatch)
+        runner.invoke(
+            app,
+            [
+                "study",
+                "--target",
+                "mockllm/deterministic",
+                "--passphrase",
+                "x",
+                "--unseen-seeds",
+                "1",
+                "--seen-seeds",
+                "1",
+            ],
+        )
+        assert seen["kwargs"]["out"] is None  # type: ignore[index]
+
 
 class TestTheEvolveOptionsReachTheRequest:
     def test_the_corpus_is_recorded(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1288,6 +1330,34 @@ class TestTheEvolveOptionsReachTheRequest:
         monkeypatch.setattr(cli, "run_evolution", fake_evolve)
         runner.invoke(app, ["evolve", "--target", "mockllm/deterministic"])
         assert seen["request"].templates_root == "datasets/templates"  # type: ignore[attr-defined]
+
+    def test_out_reaches_run_evolution_and_defaults_to_unset(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        seen: dict[str, object] = {}
+        monkeypatch.setattr(cli, "_git_output", lambda args: "0" * 40)
+
+        def fake_evolve(request: object, **kwargs: object) -> object:
+            seen["kwargs"] = kwargs
+            root = cli.REPO_ROOT / "results" / "evolution" / "x"
+            return SimpleNamespace(
+                explored=2,
+                winner=SimpleNamespace(candidate_sha="a" * 64, score=1.0, n_items=3),
+                paths=SimpleNamespace(root=root, lineage=root / "lineage.jsonl"),
+                stop_reason="",
+            )
+
+        monkeypatch.setattr(cli, "run_evolution", fake_evolve)
+        pinned = tmp_path / "pinned-run"
+        result = runner.invoke(
+            app, ["evolve", "--target", "mockllm/deterministic", "--out", str(pinned)]
+        )
+        assert result.exit_code == 0, result.output
+        assert seen["kwargs"]["out"] == pinned  # type: ignore[index]
+
+        seen = {}
+        runner.invoke(app, ["evolve", "--target", "mockllm/deterministic"])
+        assert seen["kwargs"]["out"] is None  # type: ignore[index]
 
 
 #: The shape `check_placebo_match` reads: seven words, one heading, no fence.

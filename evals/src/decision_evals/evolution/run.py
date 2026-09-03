@@ -25,7 +25,7 @@ from typing import Any, Final, cast
 
 from decision_evals.budget import BudgetError, BudgetLedger, NestedBudget
 from decision_evals.evolution.adapter import COMPONENT, DecisionAdapter
-from decision_evals.evolution.checkpoints import RunPaths, paths_for, run_name, write_manifest
+from decision_evals.evolution.checkpoints import RunPaths, resolve_run_paths, write_manifest
 from decision_evals.evolution.credentials import assert_clean, redacted, scrub
 from decision_evals.evolution.engine_prompts import LOCK_PATH as PROMPT_LOCK
 from decision_evals.evolution.engine_prompts import ensure_installed
@@ -458,6 +458,7 @@ def evolve(
     git_sha: str,
     reflection_lm: Callable[[str], str] | None = None,
     on: date | None = None,
+    out: Path | None = None,
 ) -> EvolveResult:
     """Run one search and return its checked winner.
 
@@ -468,6 +469,9 @@ def evolve(
             is meant to read. SkillOpt ignores it and reads its optimizer out of
             its own config, which is a difference between the engines rather
             than an inconsistency here.
+        out: Pins the run directory instead of deriving it from today's date
+            and the commit, so a search that outlives midnight keeps writing
+            into itself. See :func:`~decision_evals.evolution.checkpoints.resolve_run_paths`.
 
     Raises:
         EvolveError: An unsupported engine, or the engine is not installed.
@@ -480,8 +484,13 @@ def evolve(
         )
 
     venue = venue_for(request.target_model)
-    paths = paths_for(
-        repo_root, run_name(engine=request.engine, git_sha=git_sha, on=on, slug=request.slug)
+    paths = resolve_run_paths(
+        repo_root,
+        engine=request.engine,
+        git_sha=git_sha,
+        on=on,
+        slug=request.slug,
+        out=out,
     )
 
     roots = parse_roots(request.templates_root, base=repo_root)
@@ -507,6 +516,7 @@ def evolve(
             # `default=str`, which writes a Python repr into a JSON file.
             "request": asdict(request),
             "git_sha": git_sha,
+            "out_pinned": out is not None,
             "pools": {name: [span.start, span.stop] for name, span in POOLS.items()},
             "templates": sorted({item.template_id for item in train}),
             "train": {"items": len(train), "seeds": census([i.seed for i in train])},

@@ -1391,6 +1391,14 @@ def evolve(
             "picks from within this subset."
         ),
     ] = "",
+    out: Annotated[
+        Path | None,
+        typer.Option(
+            help="Pins the run directory instead of deriving it from today's date and "
+            "the commit, so a search longer than a day resumes into itself instead of "
+            "forking a new directory at midnight or at the next commit."
+        ),
+    ] = None,
 ) -> None:
     """Evolve a skill against the corpus, and write the search down.
 
@@ -1435,6 +1443,7 @@ def evolve(
         repo_root=REPO_ROOT,
         git_sha=head,
         reflection_lm=_reflector(request),
+        out=out,
     )
     typer.echo(f"explored {result.explored} candidate(s)")
     # The item count belongs beside the score. A lineage records the *first*
@@ -1444,8 +1453,8 @@ def evolve(
         f"winner   {result.winner.candidate_sha[:12]} scored "
         f"{result.winner.score:.3f} on {result.winner.n_items} item(s)"
     )
-    typer.echo(f"lineage  {result.paths.lineage.relative_to(REPO_ROOT)}")
-    typer.echo(f"frozen   {(result.paths.root / 'winner.md').relative_to(REPO_ROOT)}")
+    typer.echo(f"lineage  {_display(result.paths.lineage)}")
+    typer.echo(f"frozen   {_display(result.paths.root / 'winner.md')}")
     if result.stop_reason:
         typer.secho(
             "stopped  the engine did not declare a winner; this body was chosen here "
@@ -1453,6 +1462,20 @@ def evolve(
             fg=typer.colors.YELLOW,
         )
         typer.echo(f"         {result.stop_reason}")
+
+
+def _display(path: Path) -> str:
+    """A path for the terminal: relative to the repository when it is under
+    it, absolute otherwise.
+
+    ``--out`` can pin a run directory anywhere, and `Path.relative_to` raises
+    on one that is not under `REPO_ROOT` rather than returning something
+    printable.
+    """
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def _ids(text: str) -> tuple[str, ...]:
@@ -1578,6 +1601,14 @@ def study(
             "`datasets/templates,datasets/templates-hard`."
         ),
     ] = DEFAULT_TEMPLATES_ROOT,
+    out: Annotated[
+        Path | None,
+        typer.Option(
+            help="Pins the run directory instead of deriving it from today's date and "
+            "the commit, so a study longer than a day resumes into itself instead of "
+            "forking a new directory at midnight or at the next commit."
+        ),
+    ] = None,
 ) -> None:
     """Score every arm against the placebo on items no search could reach.
 
@@ -1685,7 +1716,7 @@ def study(
 
     try:
         result = run_study(
-            request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head
+            request, arms, venue=venue_for(target), repo_root=REPO_ROOT, git_sha=head, out=out
         )
     except (StudyError, RunError) as exc:
         typer.secho(str(exc), fg=typer.colors.RED)
@@ -1696,7 +1727,7 @@ def study(
         typer.secho(f"stopped  {result.stop_reason}", fg=typer.colors.YELLOW)
         typer.echo(
             f"         {result.records} record(s) are checkpointed under "
-            f"{result.paths.root.relative_to(REPO_ROOT)}; run again with a raised cap to resume"
+            f"{_display(result.paths.root)}; run again with a raised cap to resume"
         )
         raise typer.Exit(2)
     freeze(result.paths, result.sets, result.aa, result.passes, result.secondary, result.controls)
@@ -1726,7 +1757,7 @@ def study(
                 for a in row.agreement
             )
             typer.echo(f"   {row.arm:12s} {accuracies}  {agreement}".rstrip())
-    typer.echo(f"\nanalysis {(result.paths.root / 'analysis.json').relative_to(REPO_ROOT)}")
+    typer.echo(f"\nanalysis {_display(result.paths.root / 'analysis.json')}")
 
 
 def _body(path: Path) -> str:

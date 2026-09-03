@@ -39,9 +39,8 @@ from typing import Final
 from decision_evals.budget import BudgetLedger
 from decision_evals.evolution.checkpoints import (
     RunPaths,
-    paths_for,
     read_manifest,
-    run_name,
+    resolve_run_paths,
     write_manifest,
 )
 from decision_evals.evolution.holdout import POOLS, census
@@ -636,6 +635,7 @@ def run_study(
     repo_root: Path,
     git_sha: str,
     on: date | None = None,
+    out: Path | None = None,
 ) -> StudyResult:
     """Score every arm over every item set, resuming from the checkpoints.
 
@@ -645,6 +645,11 @@ def run_study(
     whole arms, and what it has of each arm was answered against the same hour
     of the venue as what it has of the others. Each arm writes its own
     ``records-<label>.jsonl`` and resumes from it.
+
+    Args:
+        out: Pins the run directory instead of deriving it from today's date
+            and the commit, so a study that outlives midnight keeps writing
+            into itself. See :func:`~decision_evals.evolution.checkpoints.resolve_run_paths`.
 
     Raises:
         StudyError: The venue cannot hold the output cap it was given, or a
@@ -658,8 +663,8 @@ def run_study(
 
     _assert_distinct(arms)
     pairings = _assert_matched(arms)
-    paths = paths_for(
-        repo_root, run_name(engine="study", git_sha=git_sha, on=on, slug=request.slug)
+    paths = resolve_run_paths(
+        repo_root, engine="study", git_sha=git_sha, on=on, slug=request.slug, out=out
     )
     paths.root.mkdir(parents=True, exist_ok=True)
     # A control is recorded for the arms that are tested, and null for the
@@ -687,6 +692,7 @@ def run_study(
             "passes": request.passes,
             "templates_roots": [_relative(root, repo_root) for root in roots],
             "holdout_source": "explicit" if request.holdout_ids else "passphrase",
+            "out_pinned": out is not None,
             "arms": declared,
             "winner_placebos": pairings,
             "sets": {

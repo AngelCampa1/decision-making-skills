@@ -83,6 +83,80 @@ def paths_for(repo_root: Path, name: str) -> RunPaths:
     )
 
 
+def _suffix(*, engine: str, slug: str = "") -> str:
+    """The part of :func:`run_name` that survives a change of date or commit."""
+    parts = [engine]
+    if slug:
+        parts.append(_SLUG.sub("-", slug.lower()).strip("-"))
+    return "-" + "-".join(part for part in parts if part)
+
+
+def sibling_runs(repo_root: Path, *, engine: str, slug: str = "") -> list[Path]:
+    """Existing run directories for the same design, whatever date or commit built them.
+
+    Two runs of one design share :func:`run_name`'s ``-<engine>[-<slug>]`` tail
+    and differ only in the ``<date>-<sha7>`` in front of it, so matching on that
+    tail is what tells a resumable sibling from an unrelated run. Sorted, and
+    ``[]`` when :data:`EVOLUTION_ROOT` does not exist yet, which is the ordinary
+    state before a search has written to it at all.
+    """
+    root = repo_root / EVOLUTION_ROOT
+    if not root.is_dir():
+        return []
+    tail = _suffix(engine=engine, slug=slug)
+    return sorted(p for p in root.iterdir() if p.is_dir() and p.name.endswith(tail))
+
+
+def resolve_run_paths(
+    repo_root: Path,
+    *,
+    engine: str,
+    git_sha: str,
+    on: date | None = None,
+    slug: str = "",
+    out: Path | None = None,
+) -> RunPaths:
+    """Where one run writes: pinned by ``out``, or derived as :func:`run_name` always has.
+
+    ``out`` given: the run writes exactly there, resolved against ``repo_root``
+    when it is relative. Nothing about the directory is derived from the date
+    or the commit, and nothing is created here -- the same as :func:`paths_for`.
+    This is how a run that will outlast midnight, or a commit landed mid-run,
+    keeps writing into itself instead of forking a second directory.
+
+    ``out`` unset: the name is derived exactly as before. If that derived
+    directory is new but :func:`sibling_runs` finds one for the same design
+    already on disk, the derived name would start a second directory for a run
+    already under way, orphaning the first -- which is what happened to a
+    109-hour study that crossed midnight. That is refused rather than done
+    silently.
+
+    Raises:
+        CheckpointError: The derived directory does not exist yet and a sibling
+            for this design does. The message names the sibling and says
+            continuing it needs ``--out``.
+    """
+    if out is not None:
+        root = out if out.is_absolute() else repo_root / out
+        return RunPaths(
+            root=root,
+            records=root / RECORDS,
+            lineage=root / LINEAGE,
+            manifest=root / MANIFEST,
+        )
+    paths = paths_for(repo_root, run_name(engine=engine, git_sha=git_sha, on=on, slug=slug))
+    if not paths.root.exists():
+        siblings = [p for p in sibling_runs(repo_root, engine=engine, slug=slug) if p != paths.root]
+        if siblings:
+            existing = siblings[-1]
+            raise CheckpointError(
+                f"{existing} already holds a run for this design, at another date or "
+                f"commit. {paths.root} would start a second directory and orphan the "
+                f"first. Pass --out {existing} to continue it."
+            )
+    return paths
+
+
 def write_manifest(paths: RunPaths, manifest: Any) -> None:
     """Write what the run was asked to do, before it does any of it.
 
