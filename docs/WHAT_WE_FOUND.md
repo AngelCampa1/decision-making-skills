@@ -123,11 +123,12 @@ expected to ceiling, which is stated as an expectation.
 first, built on the hypothesis that a rule stated as a fact rather than a
 conditional is what makes an item hard, scored 24 of 24 on a 30B
 (`nvidia/nemotron-3-nano-30b-a3b`, through NVIDIA Build). The second
-hypothesis, two policies and a precedence rule, produced `hrd-002` at 0.722 on
-the same model, and the six selection templates built on it landed at 111 of
-117 = 0.949 as a set against a registered band of 0.60 to 0.75. `hrd-002` holds
-a 30B off the ceiling by answering one-sidedly, sensitivity 1.000 against
-specificity between 0.167 and 0.250. Every template authored either sits at
+hypothesis, two policies and a precedence rule, produced `hrd-002` at 0.583
+and 0.625 across two 24-item passes on the same model, and the six selection
+templates built on it landed at 111 of 117 = 0.949 as a set against a
+registered band of 0.60 to 0.75. `hrd-002` holds a 30B off the ceiling by
+answering one-sidedly, sensitivity 1.000 against specificity of 0.167 and
+0.250, which on a balanced key caps accuracy at 0.625. Every template authored either sits at
 the ceiling or has room and no signal.
 [`2026-08-28-policy-selection-is-the-lever-and-it-costs-the-small-model.md`](../notebook/2026-08-28-policy-selection-is-the-lever-and-it-costs-the-small-model.md);
 [`STATUS.md`](STATUS.md), "The harder corpus is blocked".
@@ -276,8 +277,9 @@ the placebo, one-sided, Holm over the registered family of three.
 
 **Result.** No arm rejects on either set. The best showing is SkillOpt's
 winner at +0.041 on the seen set, raw p = 0.034, Holm 0.102. GEPA's winner
-scored 0.6280 on the unseen set against 0.6845 for no document, the only arm
-below an empty prompt as registered. The A/A control returned 728 of 728 items
+scored 0.6280 on the unseen set against 0.6845 for no document, the widest
+shortfall against an empty prompt in the study. The shipped skill is below an
+empty prompt on that set too, 0.6786 against 0.6845. The A/A control returned 728 of 728 items
 identical between two scorings of the placebo, which bounds venue drift
 without removing it, since the pass repeats one arm and the arms ran in blocks.
 [`2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md`](../notebook/2026-08-27-two-engines-evolved-a-skill-and-neither-one-beat-a-placebo.md).
@@ -308,7 +310,7 @@ outcome. `cluster_sign_flip` in
 that floor as a property of the design. The pre-registered minimum detectable
 effect was 0.081 unseen and 0.075 seen at a design effect of 1.0; at the
 design effect of about 2.0 that [`PROTOCOL.md`](PROTOCOL.md) specifies it is
-0.1137 and 0.1053, about 2.6 times the largest gain observed.
+0.1137 and 0.1054, about 2.6 times the largest gain observed.
 [`2026-08-27-prediction-the-five-arm-study-before-the-first-call.md`](../notebook/2026-08-27-prediction-the-five-arm-study-before-the-first-call.md);
 [`2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md`](../notebook/2026-08-31-the-paper-described-a-search-we-did-not-run-and-a-test-that-could-not-fail.md).
 
