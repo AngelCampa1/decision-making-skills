@@ -232,7 +232,7 @@ turns within an item are not, and are not meant to be.
 | Field | Value |
 | --- | --- |
 | Concurrency | Serial within a cell, and every published number was produced that way. `run_arm` gained a concurrent path on 2026-08-19 and it defaults to 1 |
-| Arm ordering | **Blocks, not interleaved.** `runner.iter_items` returns item-major pairs and nothing in production calls it. Corrected 2026-08-28; this row read "arms interleaved per item so quota drift cannot align with an arm" until the paper's appendix was written against the code |
+| Arm ordering | **Blocks for the published study; chunked and interleaved since.** `runner.iter_items` returns item-major pairs and is still uncalled. The five-arm study of 2026-08-27 ran every item of one arm before the next; corrected 2026-08-28, this row read "arms interleaved per item so quota drift cannot align with an arm" until the paper's appendix was written against the code. Since 2026-09-02, `evolution/study.py` schedules `de study` and `de evolve` calls in item-major chunks through `run_arm`, so a study run interleaves arms per chunk without ever calling `iter_items` |
 | Checkpointing | Resumable across sessions: rate limits, not dollars, are the budget |
 | Ordering | Item order seeded and recorded |
 | Wall-clock | Recorded but not a metric, since it is not comparable across days on a shared quota |

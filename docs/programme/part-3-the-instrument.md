@@ -298,22 +298,25 @@ The two mechanisms this reuses already exist, checked by reading the code:
 
 1. A secure multi-turn transport, already used by every `claude` trigger call.
    `Conversation` (`evals/src/decision_evals/providers/claude_code.py`, line
-   603). Its class docstring states the isolation finding directly:
+   655). Its class docstring states the isolation finding directly:
    `--no-session-persistence` (one of `ISOLATION_FLAGS`, line 54) blocks
    `--resume`, which is cross-process, but does not block turns sent
    in-process over `--input-format stream-json`. Multi-turn needed no
    isolation flag relaxed to work. `run_triggers.py`'s `ask()` (line 354)
-   reaches it through `run_isolated` (`claude_code.py`, line 756), which opens
+   reaches it through `run_isolated` (`claude_code.py`, line 808), which opens
    the `Conversation`, sends one turn and asserts the receipt.
 2. An `in_situ` mechanism, already a first-class parameter.
    `build_command` (same file, `def build_command` at line 223) sets
    `prompt_flag = "--append-system-prompt" if in_situ else "--system-prompt"`
-   at line 269; `Conversation.__init__` (line 633) already accepts and
+   at line 269; `Conversation.__init__` (line 685) already accepts and
    threads through `in_situ: bool = False`. `evals/src/decision_evals/solvers/arms.py`
-   already treats `in_situ` as a fifth named arm (`ARM_NAMES`, line 40) for
-   Track G, deliberately ordered last because "it answers a different
-   question from the other four: not 'does the skill help' but 'does it
-   still help when it is not the only thing in the prompt'" (lines 37 to 39).
+   already treats `in_situ` as one of six named arms (`ARM_NAMES`, line 48) for
+   Track G. A sixth arm, `candidate`, was appended after it for the
+   evolution work, so `in_situ` no longer sits last on its own: the module
+   comment now says `in_situ` and `candidate` are both last "because they
+   answer different questions from the first four: whether the skill still
+   helps when it is not the only thing in the prompt, and whether a body no
+   human wrote helps at all" (lines 40 to 43).
    `run_triggers.py` has no such arm, though it has carried an `--in-situ`
    flag (line 1271) and its own checkpoint since this row was written. Wiring
    one through was the only new code this row needed; both machines it calls

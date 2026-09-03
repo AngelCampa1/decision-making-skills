@@ -325,14 +325,16 @@ null stands and both readings are reported.
 [`STATUS.md`](STATUS.md), correction of 2026-09-01.
 
 **What is lost.** Both searches wrote into `results/evolution/`, which
-`.gitignore` excludes, nothing was committed, and the directories are gone. A
-content-hash search of 40,936 files on the machine found neither body. Their
-SHA-256 hashes are on every record of the arms they drove, so each arm is
-provably one fixed body that nobody can obtain
-([`STATUS.md`](STATUS.md), appended 2026-08-28). A re-run with the winners'
-bodies committed and seven or more unseen templates is being prepared. Its
-prediction entry is not yet committed, no study call has been made, and
-nothing here predicts its result.
+`.gitignore` excluded outright at the time, nothing was committed, and the
+directories are gone. A content-hash search of 40,936 files on the machine
+found neither body. Their SHA-256 hashes are on every record of the arms they
+drove, so each arm is provably one fixed body that nobody can obtain
+([`STATUS.md`](STATUS.md), appended 2026-08-28). Since 2026-09-02 the rule
+re-includes each search's `winner.md`, `winner.json`, `lineage.jsonl`,
+`run.json` and `search.log`, which would have kept both bodies had it landed
+before the run. A re-run with the winners' bodies committed and seven or more
+unseen templates is being prepared. Its prediction entry is not yet committed,
+no study call has been made, and nothing here predicts its result.
 
 ## 6. The opener sentence
 

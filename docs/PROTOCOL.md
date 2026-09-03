@@ -90,7 +90,9 @@ expected; carrying that iteration into the verdict is not.
 written.** `evals/src/decision_evals/providers/openai_compatible.py` speaks the
 wire format Ollama, vLLM, LM Studio and `llama.cpp` all serve, and
 `runner.local_call` is the substitution `CallFn` was designed for, so a local
-run needs no second run loop. Nothing has been measured on it yet.
+run needs no second run loop. **Measured since 2026-08-27**: the five-arm
+evolution study ran 4,368 calls on `ollama/qwen3:1.7b` through this backend,
+emitting no verdict as `dev` requires ([`STATUS.md`](STATUS.md)).
 
 Two things it changes and one it does not. It costs nothing and consumes no
 quota, which is what makes the standing rules affordable. Running a falsifier
