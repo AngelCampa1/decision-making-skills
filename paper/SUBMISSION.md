@@ -31,12 +31,18 @@ against arXiv's help pages and the January 2026 endorsement policy on
    **GitHub**, **Sync now**, and toggle `AngelCampa1/decision-making-skills`
    on. Zenodo reads `CITATION.cff` for the record's metadata; there is no
    `.zenodo.json`, so that file is authoritative.
-2. Tag the landed commit. The title page says `release v1.0.0`, so the tag
-   must point at the commit the package was built from:
+2. Tag the landed commit. The title page names a release, so the tag must
+   point at the commit the package was built from:
 
    ```bash
-   gh release create v1.0.0 --title "v1.0.0: paper submission" --notes "Snapshot the arXiv preprint reports on. Paper source in paper/, run records in results/."
+   gh release create v1.0.1 --title "v1.0.1: the corrected paper" --notes "Snapshot the arXiv preprint reports on. Paper source in paper/, run records in results/."
    ```
+
+   `v1.0.0` was cut on 2026-09-02 at `1589826`, which is one commit before the
+   acceptance-claim rewrite and the three added citations landed at `30a2dc1`.
+   Its two assets are that earlier paper and stay as they are: they are what
+   was published that day. `v1.0.1` is the release the title page names and the
+   one to upload from.
 
 3. Zenodo ingests the release within minutes and shows a version DOI and a
    concept DOI. The DOI goes in `README.md` and `CITATION.cff` after the paper
@@ -62,7 +68,7 @@ compiled with three passes of `pdflatex` and nothing else on 2026-09-01.
 | Title | `Do Automated Skill Optimisers Survive a Placebo Control? A Pre-Registered Five-Arm Study of GEPA and SkillOpt` |
 | Authors | `Angel Campa` |
 | Abstract | the block below, verbatim |
-| Comments | `31 pages, 2 figures, 4 tables. Code, data and every run record: https://github.com/AngelCampa1/decision-making-skills (release v1.0.0)` with a space after the URL. No copyright line here; arXiv forbids one in this field |
+| Comments | `31 pages, 2 figures, 4 tables. Code, data and every run record: https://github.com/AngelCampa1/decision-making-skills (release v1.0.1)` with a space after the URL. No copyright line here; arXiv forbids one in this field |
 | Primary category | `cs.AI` |
 | Cross-lists | `cs.LG`, whose description names evaluation methodology, and `cs.SE` for the agent tooling. Not `cs.CL`: the paper is not natural-language processing. Moderators add and strip cross-lists either way |
 | ACM class | optional; `I.2.7` if any |

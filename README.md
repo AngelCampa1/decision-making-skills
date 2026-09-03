@@ -36,7 +36,7 @@ the record of what it found: its own decision corpus could not fail.
 
 [**The write-up**](docs/WHAT_WE_FOUND.md) ·
 [Architecture](docs/ARCHITECTURE.md) ·
-[v1.0.0 release](https://github.com/AngelCampa1/decision-making-skills/releases/tag/v1.0.0)
+[v1.0.1 release](https://github.com/AngelCampa1/decision-making-skills/releases/tag/v1.0.1)
 
 Twenty runs are published, raw transcripts included, indexed in
 [`docs/RUN_INDEX.md`](docs/RUN_INDEX.md); two predate the provenance rule and

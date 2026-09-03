@@ -1212,3 +1212,36 @@ commit-dated seven hours after the run, and "GEPA accepted its winner on three
 items" is the first score our lineage recorded for that candidate, which
 GEPA's own return rule says is not the acceptance score. The entry is
 [`notebook/2026-09-01-the-scorer-refused-a-control-token-and-the-paper-read-the-refusals-as-findings.md`](../notebook/2026-09-01-the-scorer-refused-a-control-token-and-the-paper-read-the-refusals-as-findings.md).
+
+## Appended 2026-09-03: released, and the release was a commit early
+
+Appended, not rewritten. Nothing above this line moves.
+
+**`v1.0.0` is public and its attached paper is the uncorrected one.** The tag
+points at `1589826`, cut on 2026-09-02, one commit before `30a2dc1` rewrote the
+acceptance claim and added the three citations the assessment asked for. Both
+assets have `downloadCount` 0. `v1.0.1` at the current commit carries the
+corrected build, `v1.0.0` stays as published, and the title page, `README.md`,
+`CITATION.cff` and the arXiv `Comments` field all name `v1.0.1` now. No gate
+reads a GitHub release and none has been added, because the check would need a
+token and the network; the entry is
+[`notebook/2026-09-03-the-release-was-cut-one-commit-before-the-paper-was-corrected.md`](../notebook/2026-09-03-the-release-was-cut-one-commit-before-the-paper-was-corrected.md).
+
+**The programme is not paused.** Since 2026-09-01 the harness has grown
+rate-limit handling with a stop that GEPA's `except Exception` cannot swallow,
+credential scrubbing that refuses to finish a search with a key left on disk,
+a pinned run directory so a checkpoint survives midnight and the next commit,
+per-arm records, two passes, held-out templates, and a structure-matched
+placebo per winner. Two searches are frozen and committed with their winners
+and lineages. The findings that do not depend on the re-run are written up in
+[`WHAT_WE_FOUND.md`](WHAT_WE_FOUND.md) and
+[`posts/what-an-eval-harness-found-about-itself.md`](posts/what-an-eval-harness-found-about-itself.md).
+
+**The re-run is registered and stopped at 0.3%.** Its first 42 calls returned
+6 records with an empty response, every one of them at the 4,096-token output
+cap with the model still inside its reasoning field, and four of the six in a
+single arm. A record that cannot tell a truncated answer from a refusal lets an
+arm lose on output budget instead of on judgement, so collection is halted
+until the record carries the reasoning text and a cause for the zero. That is
+the same class as the control-token refusals corrected on 2026-09-01, caught
+this time before it became a number.
