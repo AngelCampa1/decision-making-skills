@@ -401,3 +401,54 @@ registered.
 
 The registered call count, split, arms, seeds, family, bar and every
 prediction are unchanged.
+
+## Amendment, before the first kept call: the output cap was binding on two arms
+
+The 4,096-token output cap is not a ceiling the arms sit under. It is the
+answer for half the calls in one of them.
+
+Forty-six calls were collected before the run was stopped, and they are
+discarded rather than resumed into, so nothing below reads on a kept record.
+Output tokens per arm over those calls:
+
+| arm | n | median output | at the 4,096 cap |
+| --- | --- | --- | --- |
+| `on` | 8 | 4,096 | 4 |
+| `off` | 8 | 1,666 | 2 |
+| `placebo` | 8 | 1,171 | 0 |
+| `gepa` | 8 | 569 | 0 |
+| `placebo-gepa` | 6 | 1,090 | 0 |
+| `skillopt` | 8 | 406 | 0 |
+
+The shipped skill's median call *is* the cap. Six of the 46 produced no answer
+line at all, every one of them at 4,096 output tokens with the model still
+inside its reasoning field, and four of those six were `on`. A cap that binds
+on two arms and no others is a second treatment applied to those two arms, and
+the study would have read it as those arms failing to follow a format.
+
+**The cap rises from 4,096 to 12,288 output tokens.** The window stays at
+16,384. The longest prompt in the study is `skillopt` at 2,678 tokens, so
+2,678 + 12,288 = 14,966 fits the window with room, and `assert_cap_fits` is
+satisfied.
+
+That guard is weaker than the arithmetic above, and this run is what shows it.
+`PROMPT_ALLOWANCE` is a flat 2,048 tokens, and the `skillopt` arm's prompt
+measures 2,678 — so the check reserves less than the longest prompt the study
+actually sends, and would pass a cap of 14,336 that the `skillopt` arm could
+not fit. The cap chosen here clears the real number, not just the guard's, and
+the guard is left as it is rather than tuned mid-registration.
+
+Nothing else changes: the arms, the items, the seeds, the passes,
+the family, the bar and every prediction stand as registered. A generation
+that ends on its own costs the same as it did, so the cap is only paid for
+where it was binding.
+
+**Truncation is now auditable wherever it survives.** The record carries the
+reasoning text and the stop reason from 2026-09-03, and a reply with no answer
+line that stopped at the cap scores its zero as `output_truncated` rather than
+`format_violation`. A row that runs out of budget at 12,288 will say so.
+
+This is written before the first kept call. The 46 discarded calls were made
+under the old cap, the old record shape and the old cause set; keeping them
+would have put two labels on one failure inside one checkpoint, and 46 calls
+of 14,700 is not worth that.
