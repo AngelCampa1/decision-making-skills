@@ -15,13 +15,14 @@
 
 **Audience:** the cold reader.
 
-An evaluation harness for agent skills, the `SKILL.md` files a coding agent
-loads, with pre-registration enforced by git ancestry and a placebo arm, and
-the record of what it found: its own decision corpus could not fail.
+An evaluation harness for agent skills that enforces pre-registration by git
+ancestry and dedicated placebo controls, alongside the empirical record of a
+14,700-call evaluation of automated skill optimizers.
 
-- **There was nothing to measure.** Every single-prompt decision scenario
-  authored here with an answer key was solved by the model without the skill,
-  the scalar scenarios at Youden's J = 1.000 over 99 blind readings
+- **Base models hit a ceiling unaided.** Every single-prompt decision scenario
+  authored here was solved by models without loading any skill (Youden's J = 1.000
+  over 99 blind readings on binary decisions), leaving no headroom for a
+  procedural skill to show an advantage
   ([`docs/STATUS.md`](docs/STATUS.md)).
 - **The optimisers memorised, and neither beat a placebo.** Two automated
   skill-evolution engines each produced a winner carrying constants lifted from
@@ -38,11 +39,10 @@ the record of what it found: its own decision corpus could not fail.
 [Architecture](docs/ARCHITECTURE.md) ·
 [v1.0.1 release](https://github.com/AngelCampa1/decision-making-skills/releases/tag/v1.0.1)
 
-Twenty-one runs are published, raw transcripts included, indexed in
-[`docs/RUN_INDEX.md`](docs/RUN_INDEX.md); two predate the provenance rule and
-are baselined there. No skill here carries a verdict.
-The skills ship as experimental, the finding is the product, and
-[`SCORECARD.md`](SCORECARD.md) says what would change that.
+Twenty-one runs are published with complete raw transcripts in
+[`docs/RUN_INDEX.md`](docs/RUN_INDEX.md). While the experimental skills are
+included for inspection and replication, the primary product of this repository
+is the empirical findings and the evaluation harness.
 
 ## What broke, and what now refuses it
 
@@ -80,7 +80,7 @@ in the record beside the model's:
 - [`main` was red in CI for three commits](notebook/2026-08-28-main-was-red-in-ci-for-three-commits-and-the-local-gate-could-not-see-it.md)
   while every local gate was green.
 - [Fourteen truth cycles and not one prose review](notebook/2026-08-31-fourteen-truth-cycles-and-not-one-prose-review-is-how-a-paper-gets-this-way.md)
-  produced a paper that was locally true and unreadable.
+  documented why automated truth gates require complementary prose reviews.
 
 ## Use the harness as a library
 

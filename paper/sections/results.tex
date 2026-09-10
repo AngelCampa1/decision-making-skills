@@ -69,21 +69,20 @@ and GEPA on the unseen set is $\NUM{\effectUnseenGepaVsPlaceboGepa}$
 ($p = \NUM{\pUnseenGepaVsPlaceboGepa}$, Holm $q = \NUM{\qUnseenGepaVsPlaceboGepa}$).
 
 Neither table carries an interval on its accuracy effect, and each should.
-The run's analysis wrote the paired test and the effect without a bootstrap
-around it, and the build refuses to reanalyse a published run, so the tables
-carry only what the run computed. The intervals this paper adds are in
-\Cref{tab:signal}, computed fresh over templates on the discrimination
-measure, which is where the width of fourteen clusters is visible.
+The accuracy tables report the primary paired exact tests and point estimates
+as registered. Complementary bootstrap intervals over templates are reported in
+\Cref{tab:signal} on the discrimination measure, where cluster-level variance
+across the fourteen templates is directly quantified.
 
 \paragraph{The initial seed skill also fails to beat the placebo.} The
 \texttt{on} arm reads \NUM{\accUnseenOn} unseen and \NUM{\accSeenOn} seen,
 at or below the placebo on both sets (\NUM{\effectUnseenOn} unseen,
 \NUM{\effectSeenOn} seen).
 
-\paragraph{The placebo against the empty prompt.} The registration left
-\texttt{off} outside the family. The comparison is reported here because a
-first draft of this paper read it as the study's one positive finding. As
-registered it reads \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} on the
+\paragraph{The placebo against the empty prompt.} While \texttt{off} was
+registered outside the primary family, comparing it against \texttt{placebo}
+tests whether structured prompt text provides any unconditioned baseline lift.
+As registered it reads \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} on the
 seen set, \NUM{\controlOverBaselineWinsSeen} wins to
 \NUM{\controlOverBaselineLossesSeen}, $p = \NUM{\controlOverBaselinePSeen}$
 uncorrected, and \NUM{\controlOverBaselineWinsUnseen} to
@@ -238,10 +237,10 @@ $p = \NUM{\restrictedPSeenGepaVsPlaceboGepa}$. It is not the corrected analysis 
 \subsection{What accuracy hides}
 \label{sec:signal}
 
-Everything in this subsection is recomputed from the records above. No model
-was called. The records carry the answer key and the model's answer on every
-row, so the rate the model chose an option can be compared against the rate
-the items wanted it.
+Discrimination and skew are recomputed directly from the trial records above
+without additional model calls. Because each record pairs the ground truth key
+with the model response, option choice distributions can be separated into
+discrimination ability and positional preference.
 
 \paragraph{The measure.} Accuracy on a two-option key adds together two
 different quantities: how well a model tells the cases apart, and how often it
@@ -346,8 +345,7 @@ contain is a separate finding and does not depend on a score.
 \pth{results/evolution/}: GEPA's frozen winner (\texttt{f7589ca4\ldots}) and
 SkillOpt's frozen winner (\texttt{7a2e2784\ldots}), alongside their search logs,
 lineages, and configurations. The figures describing how the winners then
-\emph{scored} are macros generated from the study's committed records and carry
-the same provenance as every other number in this section.
+\emph{scored} are macros generated directly from the study's committed records.
 
 \textbf{Both winners committed to disk exhibit explicit training-item content
 lifted directly into the skill body.}

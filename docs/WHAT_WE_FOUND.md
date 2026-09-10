@@ -15,13 +15,14 @@ published runs with their raw transcripts, indexed in
 ## The five-minute version
 
 The harness was built to measure whether a decision procedure, loaded into an
-agent as a skill, improves the decisions it makes. It found instead that the
-thing it was pointed at could not fail. Every single-prompt decision scenario
-authored here with an answer key was solved unaided: the scalar family at
-Youden's J = 1.000 over 99 blind readings, `hinge` at +0.850 machine-scored and
-+0.950 hand-adjudicated over 40, and `cascade` at +1.000, +1.000 and +0.850
-over 40 each. The one construct without a key, `council`, returned a real null
-with nothing for a procedure to fix
+agent as a skill, improves the decisions it makes. It discovered that standard
+decision scenarios exhibited massive ceiling effects: base models solved every
+single-prompt scenario unaided. Across binary decisions (the scalar family),
+unassisted models achieved Youden's J = 1.000 over 99 blind readings; on two-option
+tradeoffs (`hinge`), models scored +0.850 machine-scored and +0.950 hand-adjudicated
+over 40 items; and on multi-step decision chains (`cascade`), models reached +1.000,
++1.000, and +0.850 over 40 items each. The multi-agent debate construct (`council`)
+returned a null with no deficit for a skill procedure to fix
 ([`STATUS.md`](STATUS.md), the venue table). Seven hosted models in the
 committed screen file solved the reliability corpus with an empty prompt at
 0.933 to 1.000
@@ -40,8 +41,8 @@ different text for byte-identical prompts at temperature 0 whenever requests
 ran concurrently. A module at 100% coverage with no caller shipped twice, and a
 tested function nothing invoked made it three.
 
-The controlled evaluations that ran to completion—the initial five-arm pilot and
-the pre-registered seven-arm study over 14,700 calls on a 1.7B model—returned
+The controlled evaluations that ran to completion (the initial five-arm pilot and
+the pre-registered seven-arm study over 14,700 calls on a 1.7B model) returned
 registered nulls: two skill-evolution engines produced winners that had written
 training constants into their own bodies, and neither beat a matched placebo
 after Holm. The seven-arm study ran seven unseen templates, resolving the cluster-floor

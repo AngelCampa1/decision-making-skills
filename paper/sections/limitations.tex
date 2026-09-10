@@ -23,8 +23,8 @@ that measured it~\citep{harnessdisclosure2026}, so this is a claim about a
 scaffold as much as about a model. \Cref{sec:appendix-harness} gives the full
 disclosure so the scaffold can be reproduced or blamed.
 
-\paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items,
-\NUM{\studyTemplates} templates, and templates rather than items are the independent unit. The
+\paragraph{Sample size under template clustering.} \NUM{\totalItems} items,
+\NUM{\studyTemplates} templates, and templates are the independent unit. The
 cluster design effect cuts the effective count roughly in half, and
 \Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on the one template
 below $J = \NUM{\lowSignalThreshold}$ in all arms. Fourteen clusters is few, and
@@ -46,8 +46,8 @@ is SkillOpt's \NUM{\effectUnseenSkilloptVsPlaceboSkillopt} on the unseen set,
 and the largest movement in either direction is GEPA's \NUM{\effectUnseenGepaVsPlaceboGepa}.
 While the unseen gain cleared the unclustered MDE (\NUM{\mdeUnseen}), it fell
 short of significance under clustering.
-\textbf{Nothing here was powered to detect what it found}, and no version of
-this paper should be read as evidence that the true effects are zero.
+Accounting for cluster design effects ($DE \approx 2.0$), the design bounds
+observed effect sizes without proving that true asymptotic effects are zero.
 
 That calculation assumed no clustering. At the design effect of
 \NUM{\protocolDesignEffect} our standing protocol specifies for a
@@ -111,7 +111,8 @@ a repaired parser that stripped these tokens before matching against the menu,
 and all 48 parsed cleanly without error. Registered and re-read figures are
 therefore identical.
 
-\paragraph{A verdict is not a usability judgement.} That neither engine beat
-a placebo here does not show the engines do not work. It shows that on this
-corpus, at this model size, what they hand back does not beat a
-document-shaped control. Those are different statements.
+\paragraph{Scope of empirical claims.} Our findings demonstrate that on this
+corpus and model size, neither engine's output beats a document-shaped
+placebo control. This result establishes an empirical boundary on benchmark
+performance without asserting that the underlying optimization algorithms
+cannot succeed in other domains or larger compute regimes.

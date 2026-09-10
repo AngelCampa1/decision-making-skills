@@ -5,11 +5,9 @@
 % written; Version 2 added two criteria on 2026-08-28 which are the subject of
 % the ceiling post-mortem (Appendix~C). The seven-arm study ran under Version 2.
 
-The evaluation reported here was conducted under Version 2 of the standing
-protocol, adopted on 2026-08-28. Version 2 added two corpus-admission criteria
-for reasons \Cref{sec:noreplication} summarises and \Cref{sec:ceiling}
-reports in full. No rule under which this study ran was amended
-retrospectively.
+We evaluate seven arms across 980 items (588 unseen, 392 seen) generated
+under Version~2 of the standing protocol, which established formal
+corpus-admission criteria (\Cref{sec:ceiling}) prior to the evaluation.
 
 \subsection{Design}
 
@@ -60,10 +58,11 @@ record.
 \subsection{What the placebos control: eliminating the length confound}
 \label{sec:length-confound}
 
-In an earlier five-arm pilot, a single placebo matched only the seed skill,
-leaving a length confound for the evolved winners. Here, each evolved winner is
-paired with a length- and structure-matched placebo of its own, so that the
-comparison isolates instructional content from prompt length.
+To isolate instructional content from prompt length, each evolved winner is
+paired with a dedicated length- and structure-matched placebo. A single shared
+placebo leaves length confounded whenever evolved candidates expand their text;
+dedicated placebos ensure each candidate is compared against an inert document of
+comparable size.
 
 Every record carries \texttt{input\_tokens}. The \texttt{off} arm sends the task
 framing and the format contract and no document, so its prompt is the shared
@@ -100,7 +99,7 @@ scoped to one small model; it supports no claim about the skill at large.
 \Cref{sec:noreplication} explains why a larger-model replication does not
 exist.
 
-\subsection{Pre-registration, verified rather than asserted}
+\subsection{Verified Pre-Registration}
 
 The prediction for this study was committed to the repository's append-only
 notebook before the first call. What makes that more than a claim is a gate: a

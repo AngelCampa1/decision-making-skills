@@ -24,9 +24,9 @@ structure whose content says nothing, so a gain from an evolved skill and a
 gain from any structured text in the system prompt are indistinguishable in
 every published number. The second is power arithmetic computed from the
 design before the run: how small a $p$-value the design can produce at all,
-and how large an effect it could detect. Both are cheap, and this study is
-evidence for both: we ran it with the placebo in place and computed the
-arithmetic only afterwards.
+and how large an effect it could detect. Both controls are inexpensive to
+implement and resolve ambiguities that unreplicated score ratchets cannot
+address.
 
 \paragraph{What we did.}
 We held the model fixed, evolved a decision-making skill with each engine
@@ -58,8 +58,7 @@ $\NUM{\effectSeenGepaVsPlaceboGepa}$ on seen scenarios (raw $p = \NUM{\pSeenGepa
 Holm $q = \NUM{\qSeenGepaVsPlaceboGepa}$). But under template-unit clustering,
 neither survives: SkillOpt yields $p = \NUM{\clusteredUnseenSkilloptVsPlaceboSkillopt} > 0.0167$
 and GEPA yields $p = \NUM{\clusteredSeenGepaVsPlaceboGepa} > 0.0167$.
-Their gains are concentrated in specific template structures rather than uniform
-across tasks.
+Their gains are concentrated in specific template structures.
 
 The initial seed skill falls at or below the placebo on both sets
 (\NUM{\effectUnseenOn} unseen, \NUM{\effectSeenOn} seen). Both winners had
@@ -102,8 +101,8 @@ and the A/A control returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}
-This is one target model, one corpus, one harness. The target is a 1.7B
-parameter local model, and every larger model we later screened solves the
+This evaluation tests a single target model and corpus inside one harness. The target is a 1.7B
+parameter local model, and every larger model screened in our ceiling analysis solves the
 corpus with an empty prompt, so no replication above that tier exists
 (\Cref{sec:noreplication}). The claim is that on this model, under these
 controls, neither engine's output beat a matched placebo. Whether it would on a

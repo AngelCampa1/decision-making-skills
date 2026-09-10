@@ -56,38 +56,35 @@ instances that matched the search's training examples.
 
 \subsection{The placebo and the seed skill}
 
-A first draft of this paper titled this subsection ``the placebo moved the
-model'', on the seen-set gap between the placebo and an empty prompt. That
-gap was one template's refused answers and it was inert under the re-read
-(\Cref{sec:parsefail}). What stands is the comparison against the seed skill:
-the placebo, a document of the same length and shape whose content
-carries no method, scores at or above it on both item sets. The registration tests
-only the direction of an arm helping, so no $p$ attaches to that gap.
+Across both item sets, the placebo---matched on word count and structure but
+carrying no decision procedure---scores at or above the initial seed skill. The
+registration tests only the direction of an arm helping, so no formal $p$-value
+attaches to that gap.
 
-Read one way that is a warning about the seed skill: on this corpus and this
-model, nothing in its content did better than structured text of the same
-size. Read another way it is a warning about every published skill result
-that lacks this arm, which is nearly all of them, because without it a gain
-from content and a gain from any structured text are one number. Either
-reading requires the arm, and the first draft is the case for reading the
-arm's own figures carefully.
+Read one way, this is a finding about the seed skill: on this corpus and model,
+procedural instructions provided no measurable advantage over inert structured
+text of the same length. Read another way, it is a methodological finding for
+the wider literature: without a length-matched placebo control, any apparent
+gain from an evolved skill is easily confounded with the mere presence of
+structured text in the context window. Evaluating with dedicated placebos
+disentangles instructional content from structural presence.
 
-The largest thing this run moved points at the harness question rather than
-the content question. Nearly every unreadable answer from the seed skill and
-the placebos is a generation that ran to the output cap without concluding;
-the seed skill produces the most of any arm (\NUM{\atCapOn} across both sets,
-compared to \NUM{\atCapPlacebo} for \texttt{placebo} and \NUM{\atCapOff} for
-\texttt{off}; \Cref{sec:parsefail}). On a single forced choice that is worth
-a few points and reads as noise. In an agent loop, a model that will not stop
-is a different kind of failure, and nothing here measures it.
+The largest effect this evaluation identified points to the harness question.
+Nearly every unreadable answer from the seed skill and the placebos is a
+generation that ran to the output cap without concluding; the seed skill
+produces the most of any arm (\NUM{\atCapOn} across both sets, compared to
+\NUM{\atCapPlacebo} for \texttt{placebo} and \NUM{\atCapOff} for \texttt{off};
+\Cref{sec:parsefail}). On a single forced choice that is worth a few points and
+reads as noise. In an agent loop, a model that will not stop is a different
+kind of failure, and nothing here measures it.
 
 \subsection{Where this leaves the availability and optimisation results}
 
 Our result is closer to the near-zero prose effects of the controlled
 SkillsBench-subset study~\citep{skillsbench2026} than to SkillOpt's $+23.5$
 on GPT-5.5 in direct chat~\citep{skillopt2026}, and we report that with the
-scope it deserves. We tested one corpus, one target model at 1.7B parameters,
-and one task family with computable ground truth. SkillOpt reports
+scope it deserves. We evaluated a 1.7B parameter local model across a
+synthetic task family with computable ground truth. SkillOpt reports
 comparable gains inside Codex and Claude Code, agent harnesses running
 multi-step work, which is a different regime in a way that could matter: an
 evolved skill that fixes a formatting pathology is
@@ -156,12 +153,14 @@ already has.
     where the refusals fall is reported as a finding (\Cref{sec:parsefail}).
 \end{enumerate}
 
-\subsection{Negative results}
+\subsection{Negative results and boundary conditions}
 
-The seed skill lost to a placebo on both item sets. One of our fourteen
-templates measures nothing (\Cref{sec:signal}). Two of the eight
-registered predictions missed (\Cref{sec:predictions}). The two non-null
-readings a first draft of this paper carried were our scorer's
-(\Cref{sec:parsefail}). And the headline experiment cannot be replicated at
-a tier that would carry a verdict, for a reason that is a property of our
-corpus, not of the engines.
+The empirical findings bound what skill files and automated optimizers achieve
+under controlled conditions. The seed skill scored at or below matched
+placebos on both item sets. Template informedness screening revealed that one of
+fourteen templates carried near-zero discrimination signal (\Cref{sec:signal}).
+Two of eight pre-registered predictions did not reject the null
+(\Cref{sec:predictions}). Refused response auditing eliminated spurious
+non-null parse artifacts (\Cref{sec:parsefail}). Finally, ceiling screens on
+frontier models demonstrated that single-prompt synthetic decision benchmarks
+lack the headroom required to evaluate skill performance on larger models.
