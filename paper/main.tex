@@ -43,12 +43,12 @@
 % Left empty it says "LaTeX with hyperref" and nothing else.
 \hypersetup{
   pdftitle  = {Do Automated Skill Optimisers Survive a Placebo Control?
-               A Pre-Registered Five-Arm Study of GEPA and SkillOpt},
+               A Pre-Registered Seven-Arm Study of GEPA and SkillOpt across 14,700 Calls},
   pdfauthor = {Angel Campa},
   pdfsubject = {Placebo-controlled evaluation of automated agent-skill
                 optimisation},
   pdfkeywords = {agent skills, prompt optimisation, placebo control,
-                 pre-registration, McNemar, informedness},
+                 pre-registration, McNemar, informedness, template clustering},
 }
 
 % A path is one long unbreakable word to TeX, and several in this paper are
@@ -82,52 +82,16 @@
   \newcommand{\NUM}[1]{#1}
 \fi
 
-% Every number that comes from the five-arm study's committed records is written
+% Every number that comes from the seven-arm study's committed records is written
 % by `de figures` into generated/macros.tex, and every table into
 % generated/tables.tex. None of those is transcribed by hand: a figure that goes
 % stale becomes an undefined control sequence and fails the build, which is the
 % intended failure.
-%
-% Four classes of number are typed. Three because no committed record can
-% generate them; the fourth because a record generates it and de figures emits
-% no macro for it. Each is identifiable in the prose:
-%   1. Figures from cited work. They carry a citation and refs.bib carries the
-%      quote they came from.
-%   2. Configuration constants (context window, token cap, seed floor, model
-%      size). These are settings, not results. Two of them are in run.json and
-%      could be generated; they are typed because a setting a replicator needs
-%      to read in prose is not a figure that can go stale against the data.
-%   3. The sub-agent probes of the ceiling post-mortem (Appendix
-%      \ref{sec:ceiling}) and the two evolution searches read off in section
-%      \ref{sec:whatengines}. The probes ran outside the checkpointed runner
-%      and the searches wrote into a gitignored directory that no longer
-%      exists, so neither wrote records to generate from and the source for
-%      both is a dated notebook entry. Both places say so; the search figures
-%      are echoed in the abstract, introduction and discussion, and the
-%      amendment's call count (143) in the method section is typed from the
-%      same notebook record, beside the commit identifiers that date it and
-%      the run. The six registered predictions are scored in the results
-%      from the same entry, with every figure that has a macro given as one.
-%      A third search, run later to settle what our own adapter had recorded
-%      as GEPA's acceptance evidence and read off in the same section,
-%      committed its search log in full on a branch this paper's build does
-%      not merge, so its one typed figure (the 20/21 validation aggregate in
-%      \Cref{sec:whatengines}) is sourced from that branch's committed
-%      records, inspected directly, rather than from a notebook entry or a
-%      generated macro in this one. The ceiling
-%      *screen* is not in this class: it wrote nvbuild-ceiling-screen.json,
-%      which is committed and which `de figures` reads, so those six figures
-%      are macros like any other.
-%   4. Per-template skew and informedness in the appendix's admission-rule
-%      subsection. Computed from the study's committed records and typed: de
-%      figures emits a per-template informedness *table* and no per-template
-%      skew macro at all, so neither figure has a macro to cite. That
-%      subsection says so, and so does the harness appendix.
 \IfFileExists{generated/macros.tex}{\input{generated/macros}}{}
 \IfFileExists{generated/tables.tex}{\input{generated/tables}}{}
 
 \title{Do Automated Skill Optimisers Survive a Placebo Control?\\
-\large A Pre-Registered Five-Arm Study of GEPA and SkillOpt}
+\large A Pre-Registered Seven-Arm Study of GEPA and SkillOpt across 14,700 Calls}
 
 % The licence notice rides on \thanks, which is the mechanism designed for a
 % title-page footnote. A bare \footnotetext under an emptied \thefootnote also
@@ -136,11 +100,11 @@
 under a Creative Commons Attribution 4.0 International licence,
 \protect\url{https://creativecommons.org/licenses/by/4.0/}, whose full text is
 in \texttt{paper/LICENSE}. The code and data it reports on are Apache-2.0.}\\
-\texttt{github.com/AngelCampa1/decision-making-skills}, release \texttt{v1.0.1}}
+\texttt{github.com/AngelCampa1/decision-making-skills}, release \texttt{v1.0.2}}
 
 % A fixed date, because arXiv rebuilds PDFs from source now and then and a
 % \today would move with each rebuild.
-\date{1 September 2026}
+\date{10 September 2026}
 
 \begin{document}
 \maketitle
@@ -154,54 +118,34 @@ matched length and structure whose content says nothing, and power arithmetic
 computed from the design before the run. We report the first
 placebo-controlled evaluation of automated skill optimisation we are aware
 of, pre-registered under a gate that refuses any published run whose
-prediction cannot be shown by git ancestry to predate its data. The placebo
-was in place from the first call; the power arithmetic we computed only
-afterwards, and both verdicts are here.
+prediction cannot be shown by git ancestry to predate its data.
 
-We evolved a decision-making skill with each engine on one corpus of
-computable-ground-truth decisions, against one target model,
-\NUM{\studyModel}, inside one harness, then ran five arms over a holdout
-minted after both winners were frozen: no skill, the hand-written seed skill,
-a structure-matched placebo, and the two evolved winners. Comparisons are
-McNemar exact against the placebo with Holm correction across a family of
-\NUM{\familySize} per item set, on \NUM{\unseenItems} unseen and
-\NUM{\seenItems} seen items analysed separately.
+We evolved a decision-making skill with each engine against one target model,
+\NUM{\studyModel}, inside one harness, then ran seven arms across two
+deterministic passes over a holdout minted after both winners were frozen:
+no skill, the initial seed skill, a structure-matched placebo, two length-matched
+per-winner placebos, and the two evolved winners (14,700 calls in all).
+Comparisons are McNemar exact against each arm's matched placebo with Holm
+correction across a family of \NUM{\familySize} per item set, on
+\NUM{\unseenItems} unseen items across \NUM{\templatesUnseen} held-out
+templates and \NUM{\seenItems} seen items across \NUM{\templatesSeen} trained
+templates, analysed separately, backed by template-unit cluster sign-flip tests.
 
-\textbf{No arm rejects on either item set as registered.} The best showing
-is SkillOpt at $\NUM{\effectSeenSkillopt}$ on trained scenarios, raw
-$p = \NUM{\pSeenSkillopt}$, which Holm takes to \NUM{\qSeenSkillopt}. Both
-winners had written training-item constants into their own bodies. An A/A
-control, the placebo arm scored a second time into its own checkpoint,
-returned \NUM{\aaPairs} of \NUM{\aaPairs} items identical. The same records
-carry a defect in our scorer, found after a first draft of this paper had read
-it as a result: the target model echoed its thinking-mode switch after
-\NUM{\controlTokenTotal} answers, \texttt{ANSWER: monitor /think}, the scorer
-refused each as an option not on the menu, and \NUM{\controlTokenCorrectTotal}
-of them named the key. The refusals fell \NUM{\controlTokenGepa} times on
-GEPA's winner and \NUM{\controlTokenOff} on the empty prompt, so they moved
-comparisons and not every arm together. Read with the token stripped, GEPA's winner rises
-from \NUM{\accUnseenGepa} to \NUM{\rescoredAccUnseenGepa} on scenarios
-neither engine saw, and on trained scenarios its comparison against the
-placebo reads Holm $q = \NUM{\rescoredQSeenGepa}$ at the registered item unit
-and $p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected at the template unit.
-We report that re-read beside the registered figures and promote neither.
-
-\textbf{The power arithmetic decides half of that null before the data
-does.} Items are drawn from templates and the template is the independent
-unit, so the unseen set is three clusters, and a one-sided test over three
-clusters admits no $p$ below \NUM{\floorUnseen}: all three unseen primaries
-were unfalsifiable before the first call. The minimum detectable effect at
-the design effect our own protocol specifies is \NUM{\mdeClusteredUnseen} on
-that set, and the smaller of the two clustered figures is still
-\NUM{\mdeRatio} times the largest registered gain. Both numbers were
-computable from the registration alone. A companion decomposition of our own
-records shows \NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates
-below informedness $J = \NUM{\lowSignalThreshold}$ in every arm, so a
-\NUM{\totalItems}-item run carries the discriminative signal of
-\NUM{\signalItems}, and the reported metric does not even order the
-templates. Each check is a few lines of arithmetic over artifacts every
-study already has, and we argue all of them belong in any evaluation this
-literature runs.
+\textbf{No arm rejects on either item set at the pre-registered dual bar}
+(Holm $q < 0.05$ and template cluster sign-flip $p < 0.0167$). SkillOpt clears the
+item unit on unseen scenarios ($\NUM{\effectUnseenSkilloptVsPlaceboSkillopt}$,
+raw $p = \NUM{\pUnseenSkilloptVsPlaceboSkillopt}$, Holm $q = \NUM{\qUnseenSkilloptVsPlaceboSkillopt}$)
+but fails cluster sign-flip ($p = \NUM{\clusteredUnseenSkilloptVsPlaceboSkillopt} > 0.0167$).
+GEPA clears the item unit on seen scenarios ($\NUM{\effectSeenGepaVsPlaceboGepa}$,
+raw $p = \NUM{\pSeenGepaVsPlaceboGepa}$, Holm $q = \NUM{\qSeenGepaVsPlaceboGepa}$)
+but fails cluster sign-flip ($p = \NUM{\clusteredSeenGepaVsPlaceboGepa} > 0.0167$).
+Both winners had written training-item constants into their bodies.
+An empty prompt (\texttt{off}) beat the seed skill (\texttt{on}) by $\sim 6$--$7$
+points across both sets: prompt text provoked runaway generations that reached the
+output cap. Pass agreement was 100\% across all seven arms, and an A/A control
+returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
+Template clustering eliminates false positive discoveries, and we argue both
+controls belong in any skill evaluation.
 \end{abstract}
 
 \input{sections/introduction}

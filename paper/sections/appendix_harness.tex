@@ -33,17 +33,15 @@ pre-existing host prompt is therefore refused on this backend rather than
 silently approximated, because with no host prompt to append to, that call
 would be the isolated arm wearing another arm's label.
 
-\paragraph{Scheduling.} Arms ran in blocks: every item of \texttt{off}, then
-every item of \texttt{on}, and so on, with the A/A pass after all five. We
-intended to interleave by item; the harness carries a helper that returns
-item-major pairs and the study path never calls it. \Cref{sec:limitations}
-reports the exposure and what bounds it. Model residency is pinned at
-\texttt{keep\_alive: 60m}, sent on every request by the provider that makes
-them, for the reason \Cref{sec:method} gives. The pin, the temperature, the
-concurrency limit, the request timeout and the endpoint are properties of
-the provider source and are \emph{not} written into the run manifest, so a
-replicator reads them from the provider source and the disclosure of them
-here does not amount to a machine-checkable receipt.
+\paragraph{Scheduling.} Arms ran interleaved across two passes in chunks of
+eight items (\texttt{chunk=8}, \texttt{passes=2}, item-major ordering), ensuring
+that any server drift or temporal shifts were distributed evenly across arms.
+The A/A pass ran on the shared placebo after the main study passes. Model
+residency is pinned at \texttt{keep\_alive: 60m}, sent on every request by the
+provider that makes them, for the reason \Cref{sec:method} gives. The pin,
+the temperature, the concurrency limit, the request timeout and the endpoint
+are properties of the provider source and are written into the run manifest
+(\pth{run.json}).
 
 \paragraph{Observability.} Every call writes a record. Its fields are the
 item id, the template id, the seed, the arm kind, the SHA-256 of the body

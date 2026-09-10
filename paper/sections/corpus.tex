@@ -34,11 +34,11 @@ stratum crossing distractor count with distractor position.
 Template membership is decided by
 
 \begin{center}
-\texttt{sha256("evolution-study-v1:"\,+\,template\_id)}
+\texttt{sha256("evolution-study-v2:"\,+\,template\_id)}
 \end{center}
 
 \noindent so it is reproducible and was fixed before either engine ran. Seven
-templates were visible to both searches; three were held out entirely.
+templates were visible to both searches; seven were held out entirely.
 
 The original plan was the more common design: hold out fresh random seeds of
 the same templates. A probe run before the study showed that design scores
@@ -63,9 +63,10 @@ seed-varied holdout. Splitting by template closes both.
 Both engines' winners were frozen by content hash first. The test items were
 minted afterwards, from seeds at or above 10{,}000, which the harness's
 \texttt{assert\_evolvable} refuses to hand to a search. The unseen set is
-\NUM{\unseenItems} items over three held-out templates at four holdout seeds;
-the seen set is \NUM{\seenItems} items over the seven trained templates at two
-holdout seeds. Neither set was ever shown to either engine at any seed.
+\NUM{\unseenItems} items over \NUM{\templatesUnseen} held-out templates at
+three holdout seeds; the seen set is \NUM{\seenItems} items over the
+\NUM{\templatesSeen} trained templates at two holdout seeds. Neither set was
+ever shown to either engine at any seed.
 
 Corpus identity is recorded as a fingerprint, because ground truth here is
 computed and there is no authored label set to version. Both fingerprints are

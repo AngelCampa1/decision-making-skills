@@ -100,7 +100,7 @@ survives the template-unit clustering.
 ## The finding on prompting cost
 
 Across both the unseen and seen test sets, having no prompt at all (`off`) scored
-higher than the human-written skill (`on`):
+higher than the seed skill (`on`):
 - Unseen: `off` 0.7500 vs `on` 0.6803 (-0.0697 difference).
 - Seen: `off` 0.8673 vs `on` 0.8061 (-0.0612 difference).
 

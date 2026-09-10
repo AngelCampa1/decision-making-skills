@@ -1288,7 +1288,7 @@ on either set.**
   failed the cluster sign-flip test (p = 0.0781 > 0.0167). SkillOpt was +0.0026
   against `placebo-skillopt` (Holm q = 1.0000, cluster p = 0.5000).
 - **Prompting cost:** Across both sets, an empty prompt (`off`) scored higher
-  than the human-written skill (`on`): 0.7500 vs 0.6803 on unseen (-0.0697), and
+  than the seed skill (`on`): 0.7500 vs 0.6803 on unseen (-0.0697), and
   0.8673 vs 0.8061 on seen (-0.0612).
 - **Controls:** Pass agreement was 100% (588/588 unseen, 392/392 seen, p = 1.0000)
   across all seven arms, and the A/A was 980 of 980 identical (p = 1.0000). Control

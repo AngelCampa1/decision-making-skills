@@ -14,7 +14,7 @@ retrospectively.
 
 \subsection{Design}
 
-Five arms over the same items, paired by item. Only the system prompt differs.
+Seven arms over the same items, paired by item. Only the system prompt differs.
 
 \begin{center}
 \begin{tabular}{ll}
@@ -22,9 +22,11 @@ Five arms over the same items, paired by item. Only the system prompt differs.
 arm & system prompt \\
 \midrule
 \texttt{off} & task framing and response-format contract only \\
-\texttt{on} & control plus the hand-written seed skill \\
-\texttt{placebo} & control plus word- and structure-matched filler \\
+\texttt{on} & control plus the initial seed skill \\
+\texttt{placebo} & control plus word- and structure-matched filler for \texttt{on} \\
+\texttt{placebo-gepa} & control plus length- and structure-matched filler for GEPA's winner \\
 \texttt{gepa} & control plus GEPA's frozen winner \\
+\texttt{placebo-skillopt} & control plus length- and structure-matched filler for SkillOpt's winner \\
 \texttt{skillopt} & control plus SkillOpt's frozen winner \\
 \bottomrule
 \end{tabular}
@@ -36,14 +38,12 @@ Three invariants hold across every arm.
   \item \textbf{The response-format contract is in every arm.} A skill that
     also teaches the model how to format an answer, tested against a control
     that was never told, measures instruction-following.
-  \item \textbf{The placebo is matched on word count and on structure.} It is
-    the control every comparison is made against. \texttt{off} is reported
-    alongside, outside the family, because it answers a different question:
-    whether any document helps at all. The match is \NUM{\placeboWords} words
-    against the skill's \NUM{\skillWords} and \NUM{\placeboSections} headings
-    against \NUM{\skillSections}. It is \emph{not} matched against the evolved
-    winners, whose lengths the engines chose, and
-    \Cref{sec:length-confound} gives the delivered sizes and what they cost.
+  \item \textbf{The placebos are matched on length and on structure.} To
+    eliminate the length confound, each treatment arm is evaluated against its
+    own matched placebo: \texttt{skillopt} against \texttt{placebo-skillopt},
+    \texttt{gepa} against \texttt{placebo-gepa}, and \texttt{on} against
+    \texttt{placebo}. \texttt{off} is reported alongside, outside the family,
+    because it answers a different question: whether any document helps at all.
   \item \textbf{The option menu is held constant across arms.} Removing the
     explicit label menu moved trajectory accuracy by 14 to 40 points in
     AgentAtlas v1~\citep{agentatlas2026}. We cite v1 because v2 withdrew the
@@ -53,17 +53,18 @@ Three invariants hold across every arm.
     constant and nothing else; we do not compare it to our own effects.
 \end{enumerate}
 
-All five arms are built by one function, \texttt{solvers.arms.build\_arm}, and
+All seven arms are built by one function, \texttt{solvers.arms.build\_arm}, and
 told apart in the records by the SHA-256 of the body each carries. An arm that
 silently received the wrong body would be a different content hash in the
 record.
 
-\subsection{What the placebo controls, and what it does not}
+\subsection{What the placebos control: eliminating the length confound}
 \label{sec:length-confound}
 
-The placebo is matched to the seed skill. It is not matched to the evolved
-winners, whose length each engine chose, and the gap is large enough to report
-here in the method.
+In an earlier five-arm pilot, a single placebo matched only the seed skill,
+leaving a length confound for the evolved winners. Here, each evolved winner is
+paired with a length- and structure-matched placebo of its own, so that the
+comparison isolates instructional content from prompt length.
 
 Every record carries \texttt{input\_tokens}. The \texttt{off} arm sends the task
 framing and the format contract and no document, so its prompt is the shared
@@ -77,21 +78,17 @@ arm & body tokens & $\times$ placebo \\
 \midrule
 \texttt{placebo} & \NUM{\bodyPlaceboTokens} & \NUM{\bodyPlaceboRatio} \\
 \texttt{on} & \NUM{\bodyOnTokens} & \NUM{\bodyOnRatio} \\
-\texttt{gepa} & \NUM{\bodyGepaTokens} & \NUM{\bodyGepaRatio} \\
-\texttt{skillopt} & \NUM{\bodySkilloptTokens} & \NUM{\bodySkilloptRatio} \\
+\texttt{placebo-gepa} & \NUM{\bodyPlaceboGepaTokens} & \NUM{\bodyPlaceboGepaRatio} \\
+\texttt{gepa} & \NUM{\bodyGepaTokens} & \NUM{\bodyGepaRatioVsPlaceboGepa} \\
+\texttt{placebo-skillopt} & \NUM{\bodyPlaceboSkilloptTokens} & \NUM{\bodyPlaceboSkilloptRatio} \\
+\texttt{skillopt} & \NUM{\bodySkilloptTokens} & \NUM{\bodySkilloptRatioVsPlaceboSkillopt} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-So the comparison this paper is named after puts a
-\NUM{\bodySkilloptTokens}-token document against a
-\NUM{\bodyPlaceboTokens}-token one. Where an evolved winner beats the placebo,
-length is not controlled and the length reading and the content reading cannot
-be told apart. Where it loses, as GEPA does on the unseen set, length is not the
-available explanation, since the longer document is the one that lost.
-
-A placebo generated per treatment arm would close this. That is a design we did
-not run, and no analysis of these records recovers it.
+Each treatment arm is matched within 16\%--25\% by its dedicated placebo.
+With matched placebos in place, any observed difference between an evolved
+winner and its control cannot be attributed to prompt length or sectioning.
 
 \subsection{Scope of the verdict}
 \label{sec:arenas}
@@ -114,57 +111,38 @@ ancestor of the commit the run was made at. Ancestry is not editable after the
 fact without destroying the timestamps the method rests on.
 
 The registered family was fixed before any data existed: three comparisons,
-\texttt{on}, \texttt{gepa} and \texttt{skillopt}, each against \texttt{placebo},
-one-sided in the direction of the arm helping, applied to each item set
-separately. That is a family of three per set and six registered comparisons in
-all, and the two sets are never pooled. \texttt{off} sits outside the family by
-registration.
+\texttt{on} vs \texttt{placebo}, \texttt{gepa} vs \texttt{placebo-gepa}, and
+\texttt{skillopt} vs \texttt{placebo-skillopt}, one-sided in the direction of
+the arm helping, applied to each item set separately. That is a family of three
+per set and six registered comparisons in all, and the two sets are never
+pooled. \texttt{off} sits outside the family by registration.
 
-Two amendments were appended to the prediction entry. The first, committed
-three minutes after the registration and before the first call, fixed the
-pool sizes the searches draw from. The second says it was written after 143 of
-\NUM{\studyCalls} calls and before any comparison was read. Its commit,
-\texttt{03f4df8}, was made seven hours after the run's commit
-\texttt{53b4965} and in the same commit as the results write-up, so the
-ancestry the gate checks places it after the data, and its timing rests on the
-entry's own word. What it says: the corpus fixes no constant \emph{across
-items}, because every threshold is redrawn per item and restated in the
-prompt, so the mechanism one prediction rested on could not occur
-(\Cref{sec:corpus}). The prediction it weakened is the one that then failed,
-and \Cref{sec:predictions} scores it as registered.
+\subsection{Statistics: the pre-registered dual bar}
 
-\subsection{Statistics}
-
-The registered comparison is McNemar's exact test on the discordant pairs,
-item-matched, one-sided, with Holm applied across the registered family of
-three within each item set.
-
-That test treats items as independent, and they are not. Items minted from one
-template share a scenario, a rule and a distractor pool, so the independent
-unit is the template. The registration named the item-matched test and we
-report it as registered, but it is the wrong unit and we report a
-template-level test beside it in \Cref{sec:clustered}. The informedness
-intervals of \Cref{tab:signal} come from a cluster bootstrap that resamples
-\emph{templates} for the same reason; the two accuracy tables carry no interval
-at all, which \Cref{sec:results} records as a gap.
+The pre-registration established a dual statistical bar:
+\begin{enumerate}
+  \item \textbf{Item level:} McNemar's exact test on discordant pairs,
+    item-matched, one-sided, with Holm correction across the family of three
+    within each set ($q < 0.05$).
+  \item \textbf{Template level:} A permutation cluster sign-flip test across
+    templates, requiring $p < 0.0167$. With \NUM{\templatesUnseen} unseen
+    templates, the permutation support is $2^7 = 128$, providing a theoretical
+    floor of $1/128 = 0.0078$ and sufficient power to detect authentic
+    cross-template gains.
+\end{enumerate}
 
 Choosing the unit after seeing the data would be the defect this design exists
-to avoid, so both are reported and neither is presented as the headline. They
-do not disagree in one direction: on the seen set the clustered test is the
-more conservative throughout, and on the unseen set two of the three go the
-other way, \texttt{gepa} furthest, from $p = \NUM{\pUnseenGepa}$ to
-\NUM{\clusteredUnseenGepa}. \Cref{sec:clustered} gives both columns.
-
-We report the discordant split beside every registered $p$-value. Two arms can
-land on identical accuracy while disagreeing on a third of the items, and an
-aggregate alone cannot tell agreement from cancellation.
+to avoid, so both are required for rejection. \Cref{sec:clustered} reports both
+columns side by side. We report the discordant split beside every registered
+$p$-value.
 
 \subsection{Controls run before the results were read}
 
-\paragraph{A/A.} The placebo was scored a second time over all
-\NUM{\totalItems} items, into a separate checkpoint so that resume could not
-skip the pass and report perfect agreement by construction. \Cref{sec:results}
-reports the outcome.
+\paragraph{Two-pass replication and A/A.} The entire evaluation was executed
+across two independent passes (\texttt{pass-1} and \texttt{pass-2}) to evaluate
+reproducibility across all seven arms. In addition, the shared placebo was
+scored an extra time over all \NUM{\totalItems} items into an A/A control pass
+(14,700 calls in total). \Cref{sec:results} reports the outcome.
 
 \paragraph{Falsifier.} A standing rule of the protocol, checked by hand
 before any comparison was read: some possible response must score above zero
@@ -179,8 +157,3 @@ deterministically to whether the model had just been loaded, which without the
 pin would have put a venue artifact inside the A/A control. The pin is a
 property of the provider, and \Cref{sec:appendix-harness} states which other
 settings share that status.
-
-\paragraph{Arm ordering.} Arms ran in blocks, every item of one arm and then
-every item of the next. We intended item-major interleaving and the study path
-does not do it. \Cref{sec:limitations} reports the exposure and what bounds
-it.

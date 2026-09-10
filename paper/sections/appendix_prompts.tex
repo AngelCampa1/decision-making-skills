@@ -44,9 +44,11 @@ arm & body appended to the prefix & content hash \\
 \midrule
 \texttt{off} & none & --- \\
 \texttt{on} & the seed skill & \texttt{edc3ee70\ldots} \\
-\texttt{placebo} & the matched placebo & \texttt{16ed9ebf\ldots} \\
-\texttt{gepa} & GEPA's frozen winner & \texttt{54f99040\ldots} \\
-\texttt{skillopt} & SkillOpt's frozen winner & \texttt{80d7187a\ldots} \\
+\texttt{placebo} & the shared placebo & \texttt{16ed9ebf\ldots} \\
+\texttt{gepa} & GEPA's frozen winner & \texttt{f7589ca4\ldots} \\
+\texttt{placebo-gepa} & GEPA-matched placebo & \texttt{f5bf2378\ldots} \\
+\texttt{skillopt} & SkillOpt's frozen winner & \texttt{7a2e2784\ldots} \\
+\texttt{placebo-skillopt} & SkillOpt-matched placebo & \texttt{461accfd\ldots} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -55,17 +57,10 @@ Hashes are SHA-256 of the body with its YAML frontmatter stripped, recorded
 on every row of every arm that carries a body. \texttt{off} is empty and its
 \texttt{candidate\_sha} is null; \texttt{on} is
 \pth{skills/decision-making/SKILL.md}; \texttt{placebo} is
-\pth{skills/decision-making/placebo.md}. Both hashes reproduce from those
-files at the commit this paper is built from.
-
-\textbf{The two evolved bodies are not published and cannot be}
-(\Cref{sec:limitations}). A content-hash search of every file on the machine
-under 300\,KB on 2026-08-28, 40{,}936 of them, found neither. What survives
-is the hash, on all \NUM{\totalItems} records of each arm, which proves that
-one fixed body produced every reading in that arm and gives nobody a way to
-obtain it. The engines, the seed skill, the corpus, the split and the search
-configuration are all published, so a replicator can run both searches; what
-they cannot do is rerun ours.
+\pth{skills/decision-making/placebo.md}; the matched placebos are in
+\pth{datasets/placebos/}; and the evolved winners are committed under
+\pth{results/evolution/}. All hashes reproduce from those files at the commit
+this paper is built from.
 
 \subsection{The placebo, and how closely it matches}
 

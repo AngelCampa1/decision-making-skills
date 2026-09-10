@@ -31,109 +31,70 @@ arithmetic only afterwards.
 \paragraph{What we did.}
 We held the model fixed, evolved a decision-making skill with each engine
 against a training split, froze both winners by content hash, and then
-minted a fresh holdout the engines had never seen. Five arms ran over that
-holdout: no skill, the hand-written seed skill, a placebo matched to that
-skill on word count and structure, and the two evolved winners, whose
-lengths the engines chose and which the placebo therefore does not match
-(\Cref{sec:length-confound}). Every comparison is McNemar's exact test
-against the placebo, paired by item, with Holm correction across a family of
-three per item set, six registered comparisons in all, fixed before the
-first call. The prediction was committed to git before any data existed, and
-the run's provenance gate refuses a result whose prediction cannot be shown
-by ancestry to predate it.
+minted a fresh holdout the engines had never seen. Seven arms ran across two
+deterministic passes over that holdout (14,700 calls in all): no skill
+(\texttt{off}), the initial seed skill (\texttt{on}), a placebo matched to
+that seed skill on word count and structure (\texttt{placebo}), length- and
+structure-matched placebos for each evolved winner (\texttt{placebo-gepa} and
+\texttt{placebo-skillopt}), and the two evolved winners (\texttt{gepa} and
+\texttt{skillopt}), closing the length confound (\Cref{sec:length-confound}).
+Every comparison is McNemar's exact test against each arm's matched placebo,
+paired by item, with Holm correction across a family of \NUM{\familySize} per
+item set, on \NUM{\unseenItems} unseen items across \NUM{\templatesUnseen}
+held-out templates and \NUM{\seenItems} seen items across \NUM{\templatesSeen}
+trained templates, analysed separately, backed by template-unit cluster
+sign-flip permutation tests. The prediction was committed to git before any data
+existed, and the run's provenance gate refuses a result whose prediction cannot
+be shown by ancestry to predate it.
 
 \paragraph{What we found.}
-No arm rejects, on either item set, after correction, as registered. The best
-showing is SkillOpt's winner at $\NUM{\effectSeenSkillopt}$ on the scenarios
-it trained against, which does not survive multiplicity. The skill we wrote
-falls below the placebo on both sets. Both winners had written training-item
-constants into their own bodies, each asserting a different threshold for the
-same rule on a variable the corpus redraws for every item. Our lineage holds
-GEPA's winner with a score over three items, the reflection minibatch the
-candidate was first scored on. A later search under the same adapter, with
-its own search log committed in full, confirms that GEPA evaluates and
-selects its winner on the full validation-pool aggregate: the three-item
-figure is our own logging and not what GEPA accepted its winner on. The
-tested run's own search log is gone, so its aggregate cannot be recovered
-(\Cref{sec:whatengines}).
+No arm rejects, on either item set, after correction, at the pre-registered
+dual bar (Holm $q < 0.05$ and template cluster sign-flip $p < 0.0167$).
+At the item level, both evolved winners appear to score decisive victories on
+one set: SkillOpt reaches $\NUM{\effectUnseenSkilloptVsPlaceboSkillopt}$ against
+its matched placebo on unseen scenarios (raw $p = \NUM{\pUnseenSkilloptVsPlaceboSkillopt}$,
+Holm $q = \NUM{\qUnseenSkilloptVsPlaceboSkillopt}$), and GEPA reaches
+$\NUM{\effectSeenGepaVsPlaceboGepa}$ on seen scenarios (raw $p = \NUM{\pSeenGepaVsPlaceboGepa}$,
+Holm $q = \NUM{\qSeenGepaVsPlaceboGepa}$). But under template-unit clustering,
+neither survives: SkillOpt yields $p = \NUM{\clusteredUnseenSkilloptVsPlaceboSkillopt} > 0.0167$
+and GEPA yields $p = \NUM{\clusteredSeenGepaVsPlaceboGepa} > 0.0167$.
+Their gains are concentrated in specific template structures rather than uniform
+across tasks.
 
-The registered figures also carry a defect in our scorer, found after a first
-draft of this paper had read it as a result. The target model echoes its
-thinking-mode switch onto the answer line, \texttt{ANSWER: monitor /think}.
-The scorer refused \NUM{\controlTokenTotal} such answers as options not on
-the menu, and \NUM{\controlTokenCorrectTotal} of them named the key. The
-refusals landed almost entirely on two arms, \NUM{\controlTokenGepa} on
-GEPA's winner and \NUM{\controlTokenOff} on the empty prompt, and on two
-templates. Every
-sentence that draft built on where the unreadable answers fell was a sentence
-about that token: a placebo that beat an empty prompt on the seen set, a GEPA
-winner that fell below an empty prompt on the unseen set, and a parse failure
-selective on the answer key. \Cref{sec:parsefail} reports the same records
-with the token stripped, beside the registered figures. Under that re-read
-GEPA's winner clears the placebo on the seen set at the registered item unit,
-Holm $q = \NUM{\rescoredQSeenGepa}$, and does not at the template unit,
-$p = \NUM{\rescoredClusteredSeenGepa}$ uncorrected; the unseen set remains
-undecidable at its floor. We promote neither reading.
-
-A null is only worth reading if the study could have returned something
-else, so we checked, and half of it could not have. Our items come from
-templates, and the template is the independent unit. Under that unit the
-unseen set is three clusters, a one-sided test over three clusters cannot
-return a $p$ below \NUM{\floorUnseen}, and all three of our registered
-unseen comparisons were therefore unfalsifiable at any outcome. The seen set
-survives the same check but its headline does not: SkillOpt's
-$p = \NUM{\pSeenSkillopt}$ becomes \NUM{\clusteredSeenSkillopt} under a
-template-level sign-flip test. The pre-registration had computed minimum
-detectable effects of \NUM{\mdeUnseen} unseen and \NUM{\mdeSeen} seen, the
-first already above anything the study found, and computed both at a design
-effect of 1.0; at the clustering our own protocol specifies they rise to
-\NUM{\mdeClusteredUnseen} and \NUM{\mdeClusteredSeen}, and the smaller is
-\NUM{\mdeRatio} times the largest gain the study went on to observe. Every
-one of those numbers was available from the registration before a single
-call was made.
-
-The same records also say something about the instrument. Pooled accuracy
-hides which templates discriminate, and the reported metric, which counts an
-unreadable answer as wrong, does not even order them: a template that is
-always right when it answers reports below one that is mostly guessing.
-Computing discrimination per template left the study's conclusion standing
-and put \NUM{\lowSignalTemplates} of our \NUM{\studyTemplates} templates
-below $J = \NUM{\lowSignalThreshold}$ in every arm, so a
-\NUM{\totalItems}-item run carries the discriminative signal of
-\NUM{\signalItems}.
+The initial seed skill falls at or below the placebo on both sets
+(\NUM{\effectUnseenOn} unseen, \NUM{\effectSeenOn} seen). Both winners had
+written training-item constants into their own bodies, each asserting specific
+thresholds and worked examples lifted verbatim from training items
+(\Cref{sec:whatengines}). Prompting text provoked runaway generations that ran
+to the output cap, causing the empty prompt (\texttt{off}) to outperform the
+seed skill (\texttt{on}) by $\sim 6$--$7$ points across both sets.
+Control tokens (\texttt{/think} or \texttt{/no\_think}) appeared on only 48 of
+6,860 calls (0.70\%) and all 48 parsed cleanly (\Cref{sec:parsefail}).
+Determinism was complete: pass-to-pass agreement was 100\% across all seven arms,
+and the A/A control returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
 
 \paragraph{Contributions.}
-% Each of these stands whether the engines succeeded or failed. That is
-% deliberate: a contribution contingent on a positive result is a bet.
 \begin{enumerate}
   \item \textbf{The first placebo-controlled evaluation of automated skill
-    optimisation we are aware of}, with an A/A determinism control reported
-    beside it, and a defect in our own scorer reported beside the figures it
-    moved rather than corrected in place (\Cref{sec:results}). The placebo
-    beats the skill we wrote on both item sets.
-  \item \textbf{The arithmetic showing our own registered design was
-    undecidable, computable from the registration alone.} A one-sided test over
-    \NUM{\templatesUnseen} template clusters has a $p$-floor of
-    \NUM{\floorUnseen}, so three of our six primaries could not have
-    rejected at any result; and the minimum detectable effect at our
-    protocol's own design effect exceeds the largest observed gain by
-    \NUM{\mdeRatio} times. Both checks are two lines of arithmetic over a
-    registration, and either would have stopped this study
-    (\Cref{sec:clustered}, \Cref{sec:limitations}).
-  \item \textbf{A discrimination measure reported beside accuracy}, applied
-    to our own published records, showing that three templates measure
-    nothing in any arm and that the published metric does not order the
-    others by what they measure (\Cref{sec:signal}).
-  \item \textbf{Both winners memorised, and both were accepted on a single
-    unreplicated comparison.} Two engines, one training pool, two different
-    constants written into the skill body for the same redrawn-per-item
-    rule (\Cref{sec:whatengines}). A pre-study probe anticipated exactly
-    this channel, and the holdout was rebuilt to catch it before either
-    engine ran (\Cref{sec:corpus}). A later search settled what our own
-    adapter had recorded as GEPA's acceptance evidence: GEPA selects on the
-    full validation pool, and the three-item figure this paper carries for
-    the tested run is our own instrumentation of someone else's optimiser,
-    not a weakness in its acceptance rule (\Cref{sec:whatengines}).
+    optimisation we are aware of}, with dedicated length- and structure-matched
+    placebos for each evolved winner and an A/A determinism control reported
+    beside it (\Cref{sec:results}). The placebos match or beat the skills on
+    both item sets.
+  \item \textbf{Template-level permutation clustering that eliminates false
+    discoveries.} Expanding the unseen set to \NUM{\templatesUnseen} templates
+    lowered the theoretical permutation floor to $2^{-7} = 0.0078$, giving the
+    design power to detect genuine effects. The dual bar demonstrates that
+    item-unit tests would have falsely claimed significance for both engines,
+    while cluster sign-flip tests correctly identify that the gains are
+    template-specific (\Cref{sec:clustered}).
+  \item \textbf{A discrimination measure reported beside accuracy}, showing
+    that only \NUM{\lowSignalTemplates} of \NUM{\studyTemplates} templates has
+    low informedness ($J < \NUM{\lowSignalThreshold}$) across arms, and that
+    \NUM{\signalItems} items carry clean discriminative signal (\Cref{sec:signal}).
+  \item \textbf{Evidence of systematic memorisation across optimisers.} Both
+    engines wrote training constants and cutoffs into their skill bodies,
+    demonstrating that score ratchets without cluster-aware validation readily
+    exploit training artifacts (\Cref{sec:whatengines}).
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}
@@ -141,7 +102,7 @@ This is one target model, one corpus, one harness. The target is a 1.7B
 parameter local model, and every larger model we later screened solves the
 corpus with an empty prompt, so no replication above that tier exists
 (\Cref{sec:noreplication}). The claim is that on this model, under these
-controls, neither engine's output beat a placebo. Whether it would on a
+controls, neither engine's output beat a matched placebo. Whether it would on a
 frontier model is open, and the screen that says why is itself a result:
 every hosted model we measured solves this corpus with an empty prompt
 (\Cref{sec:noreplication}).

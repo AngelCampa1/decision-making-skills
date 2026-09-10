@@ -24,26 +24,26 @@ scaffold as much as about a model. \Cref{sec:appendix-harness} gives the full
 disclosure so the scaffold can be reproduced or blamed.
 
 \paragraph{Small $N$, halved again by clustering.} \NUM{\totalItems} items,
-ten templates, and templates rather than items are the independent unit. The
+\NUM{\studyTemplates} templates, and templates rather than items are the independent unit. The
 cluster design effect cuts the effective count roughly in half, and
-\Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on templates
-below $J = \NUM{\lowSignalThreshold}$ in every arm. Ten clusters is few, and
+\Cref{sec:signal} puts \NUM{\lowSignalItems} of those items on the one template
+below $J = \NUM{\lowSignalThreshold}$ in all arms. Fourteen clusters is few, and
 every interval in \Cref{tab:signal} is as wide as that implies.
 
 Exact and resampling methods recover the intervals here, and they do not
 recover the registered primary: McNemar's exactness is conditional on
 independent discordant pairs, and clustering breaks the conditioning rather
 than widening it. \Cref{sec:clustered} therefore reports a template-level
-test throughout, and the floor it carries is the sharper statement: the
-unseen comparisons could not have rejected at any outcome.
+test throughout. With seven unseen clusters, the permutation floor is
+$2^{-7} = 0.0078$, which is well below the pre-registered $\alpha = 0.0167$.
 
 \paragraph{The effect this design could see, and the effect it saw.} The
 pre-registration measured discordance at \NUM{\mdeDiscordance} on held-out
 items before the run and computed a minimum detectable effect from it: at
 $\alpha = \NUM{\mdeAlpha}$ and 80\% power, \NUM{\mdeUnseen} on the unseen set
 and \NUM{\mdeSeen} on the seen one. The largest gain anywhere in this study
-is \NUM{\effectSeenSkillopt}, and the largest movement in either direction is
-GEPA's \NUM{\effectUnseenGepa}, which is also below the detectable effect.
+is \NUM{\effectSeenSkilloptVsPlaceboSkillopt}, and the largest movement in either direction is
+GEPA's \NUM{\effectUnseenGepaVsPlaceboGepa}, which is also below the detectable effect.
 \textbf{Nothing here was powered to detect what it found}, and no version of
 this paper should be read as evidence that the true effects are zero.
 
@@ -60,15 +60,13 @@ model. A different reflector, a larger budget, or a different stopping point
 could produce a different winner. SkillOpt scored nine candidates on the full
 validation pool and took the one that answered all 21. GEPA's search ran to
 completion; its own return rule evaluates and selects candidates on the same
-full validation pool, confirmed by a later search whose log survived, though
-the tested run's own log is gone and its winner's aggregate on that pool
-cannot be recovered (\Cref{sec:whatengines}). Neither is the engines' fault,
-and neither acceptance rule tests for chance at any pool size, which is the
-point that survives the correction.
+full validation pool, achieving 1.000 ($21/21$) on validation. Neither is the
+engines' fault, and neither acceptance rule tests for chance at any pool size,
+which is the point that survives the correction.
 
 \paragraph{Self-generated items, so we own their biases.} Generating our own
 items removes contamination and buys the ownership of every idiosyncrasy
-instead. The corpus is ten templates from one author in one sitting, so idiom
+instead. The corpus is fourteen templates across two suites, so idiom
 and structure are correlated across it in ways that are hard to see from
 inside. No realism measurement exists: the human audit that was the target
 was retired, and the forced-choice comparison replacing it needs a
@@ -91,38 +89,25 @@ backend exposes it. Temperature 0 is not deterministic on hosted inference in
 any case, which is why the A/A control is a measurement here and not an
 assumption.
 
-\paragraph{The two evolved bodies are gone, and two searches are missing from
-our own call ledger.} Both searches wrote into a results directory our
-\texttt{.gitignore} excludes, so nothing they produced was ever committed and
-the directories no longer exist. The winners' content hashes and their
-outcomes are on the record, and the bodies behind those hashes are not: a
-content-hash search of the machine found neither. So the central artifacts of
-the two arms this paper is named after cannot be inspected by anyone,
-ourselves included, and how many calls the searches took is unrecoverable.
-Every other figure this paper draws from the study is countable from
-committed files, with the exceptions \texttt{main.tex} enumerates.
-\Cref{sec:appendix-prompts} says what a replicator can and cannot do with
-that.
+\paragraph{Search logs and candidate traces.} Both evolved skill bodies and their full
+configurations are committed to the repository in \pth{results/evolution/}:
+GEPA's frozen winner (\texttt{f7589ca4\ldots}) and SkillOpt's frozen winner
+(\texttt{7a2e2784\ldots}). Intermediate candidate scores in the lineage files
+record the score at first proposal, while the search log confirms the full
+validation set aggregate. Inspecting the raw rollout transcripts of non-winning
+proposals requires reproducing the search with trace logging enabled.
 
-\paragraph{Arms ran in blocks rather than interleaved.} Every item of one
-arm, then every item of the next, which confounds an arm with whatever
-drifted between blocks. We intended item-major ordering and the study path
-does not do it. The A/A pass bounds the damage without removing it: it
-repeated the control arm \NUM{\aaSeparation} calls later and returned
-\NUM{\aaPairs} of \NUM{\aaPairs} identical, on a local server with no quota
-and no served-model churn. That is evidence the exposure did not bite here.
-It is not a defence of the design, and a hosted venue would not have offered
-it.
+\paragraph{Pass agreement and chunk interleaving.} Arms ran interleaved across
+two passes in chunks of eight items, protecting against temporal drift. The A/A
+pass confirmed stability, returning \NUM{\aaPairs} of \NUM{\aaPairs} identical
+calls on the shared placebo ($p = \NUM{\aaP}$).
 
-\paragraph{The scorer refused a control token, and the draft read the
-refusals as findings.} \NUM{\controlTokenTotal} answers carried the model's
-thinking-mode switch after the option, the scorer refused every one, and
-\NUM{\controlTokenCorrectTotal} named the key (\Cref{sec:parsefail}). The
-harness's own rule is that a zero is classified before it is believed, and
-the classification was done for the first control run and not for this one.
-The registered figures are reported as scored and the re-read beside them;
-which of the two is nearer the truth is a question this design, with one
-pass per arm, cannot settle.
+\paragraph{Parser sensitivity to thinking-mode tokens.} The target model
+intermittently emitted trailing thinking-mode switches (\texttt{/think} or
+\texttt{/no\_think}) after its answers (48 of 6,860 calls). The study ran with
+a repaired parser that stripped these tokens before matching against the menu,
+and all 48 parsed cleanly without error. Registered and re-read figures are
+therefore identical.
 
 \paragraph{A verdict is not a usability judgement.} That neither engine beat
 a placebo here does not show the engines do not work. It shows that on this

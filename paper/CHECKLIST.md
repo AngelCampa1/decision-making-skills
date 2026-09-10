@@ -13,8 +13,8 @@ still an open box. A fourth was blocked on this machine having no TeX
 toolchain, and installing one closed it. What the maintainer does with the
 three, in order, is [`SUBMISSION.md`](SUBMISSION.md).
 
-Last worked through 2026-09-01, against the five-arm study at
-[`../results/evolution-study/2026-08-27-53b4965-five-arm/`](../results/evolution-study/2026-08-27-53b4965-five-arm/).
+Last worked through 2026-09-10, against the seven-arm study at
+[`../results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/`](../results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/).
 
 ## Claims
 
