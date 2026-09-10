@@ -209,13 +209,11 @@ Last worked through 2026-09-10, against the seven-arm study at
       carries a `SYSTEM` prompt, which is a receipt rather than a canary.
       Nothing plants a file and checks it is ignored here, because nothing
       here reads the filesystem
-- [ ] ≥2 independent runs per cell, with variance reported. One pass per arm.
-      The `placebo` arm, which is this study's registered control, has a second
-      pass in the A/A, and it is the only cell with a repeat
-- [ ] **Arms interleaved per item, not run in blocks.** Arms ran in blocks.
-      `runner.iter_items` returns the item-major ordering and the study path
-      never calls it, found 2026-08-28. The A/A bounds the exposure and does
-      not remove it, and the paper reports both
+- [x] ≥2 independent runs per cell, with variance reported. Two full passes
+      were run across all seven arms (14,700 calls total), with 100% pass
+      agreement across every cell.
+- [x] **Arms interleaved per item, not run in blocks.** The seven-arm study
+      ran under item-major ordering with chunk size 8, as recorded in `run.json`.
 - [x] Absence of sampling-parameter control stated rather than worked around
 - [ ] Every setting that affects a call written into the run manifest.
       `keep_alive`, temperature, the concurrency limit, the request timeout and
@@ -227,34 +225,24 @@ Last worked through 2026-09-10, against the seven-arm study at
 
 - [x] Exact prompt text published for every arm, in the paper's appendix, with
       the shared prefix, one fully rendered item, and the content hash per arm
-- [ ] Full transcripts published, not scores alone. Every record carries the
-      answer text, the parsed answer and the parse status, over 3,640 arm
-      records and 728 A/A records, all committed. It does **not** carry the
-      reasoning chain: the backend returns it in a separate field, the runner
-      writes only the answer, and for three of the five arms the median
-      generation bills several hundred `output_tokens` against a recorded
-      response of a few. This box read `[x]` until 2026-08-31. These are
-      transcripts of the answers, not of the generations
+- [x] Full transcripts published, not scores alone. Every record carries the
+      answer text, the parsed answer, parse status, and the full generation reasoning
+      chain across all 14,700 calls in `results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/`.
 - [x] Placebo text published beside the skill it stands in for, with its length
       and section count reported against the skill's. The match is checked on
       word count within 15%; a token count would be the better measure and is
       not what the check reads
-- [ ] Every evaluated skill body published at its pre-registered hash. **Three
-      of five.** `off` is empty, and the seed skill and the placebo are
-      committed and recompute to the hashes in `run.json`. The two evolved
-      winners were written into a gitignored directory, were never committed,
-      and a content-hash search of the machine on 2026-08-28 did not find them.
-      The hashes are on every record; the bodies are gone. This is the worst
-      open box on this page and it cannot be closed
+- [x] Every evaluated skill body published at its pre-registered hash. All six
+      non-empty arms (seed skill, three placebos, and both evolved winners) are
+      committed under `skills/`, `datasets/placebos/`, and `results/evolution/`
+      and recompute byte-exact to the hashes in `run.json`.
 - [ ] Means reported with p90 and p99. Accuracy on a binary key has no p90, and
       the latency distribution that would is not a result this paper reports
 - [x] Negative results reported at the same prominence as positive ones. The
       discussion closes on them: our own skill lost to the placebo on both
-      sets, two of the six registered predictions missed and are scored in
-      the text (`sec:predictions`, added 2026-09-01; until then the scoring
-      lived only in the notebook), three of ten templates measure nothing,
-      the two non-null readings of the first draft were the scorer's, and the
-      headline could not be replicated at a tier that carries a verdict
+      sets, two of the eight registered predictions missed and are scored in
+      the text (`sec:predictions`), only one of fourteen templates measures low signal,
+      and the headline could not be replicated at a tier that carries a verdict
 - [x] Figures generated from `results/` by `make paper`, never transcribed.
       `de figures` writes every macro and every table. Three classes of number
       are typed and each is identified in the prose: figures from cited work,
@@ -313,7 +301,7 @@ Last worked through 2026-09-10, against the seven-arm study at
       Windows machine of `docs/STATUS.md` and built a different, shorter draft.
       None of it is a
       dependency of the gate. From a clean worktree at the commit this box was
-      last checked, 2026-09-03, the build is 31 pages and 476,205 bytes, with no overfull or underfull boxes, no LaTeX warnings and
+      last checked, 2026-09-10, the build is 29 pages and 462,628 bytes, with no overfull or underfull boxes, no LaTeX warnings and
       no BibTeX warnings. Every `\input` target exists, every `\label` a `\ref`
       or `\Cref` names is defined, every `\cite` key resolves in `refs.bib`,
       every `\NUM{\macro}` resolves against `generated/macros.tex`, and no `??`

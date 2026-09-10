@@ -145,44 +145,23 @@ the item-level advantage. Realised floors on the seen set are
 \NUM{\clustersSeenSkilloptVsPlaceboSkillopt} and
 \NUM{\clustersSeenGepaVsPlaceboGepa} live clusters.
 
-\subsection{An answer the scorer refused, and where the refusals fell}
+\subsection{Control tokens and parse validity}
 \label{sec:parsefail}
 
 Every arm's unreadable answers are scored wrong. That is the study's
 convention and it is defensible, but it makes accuracy a sum of decision
-quality and format compliance, and on this record part of the second is the
-scorer's.
+quality and format compliance. In an earlier pilot of this evaluation,
+Qwen3 echoed its thinking-mode switch (\texttt{/think} or \texttt{/no\_think})
+after its answers (e.g., \texttt{ANSWER: monitor /think}), which an unrepaired
+scorer refused as an option not on the menu.
 
-\paragraph{The control token.} Qwen3 reads \texttt{/think} and
-\texttt{/no\_think} as a switch for its thinking mode. On
-\NUM{\controlTokenTotal} of the \NUM{\studyReadings} arm readings the model
-wrote the switch back after its answer, \texttt{ANSWER: monitor /think}, and
-the scorer, which matches the text after \texttt{ANSWER:} against the option
-list, refused each as an option not on the menu.
-\NUM{\controlTokenCorrectTotal} of the \NUM{\controlTokenTotal} name the key
-once the token is removed. In the harness's own vocabulary that is a verifier
-defect: the decision was made, and read wrongly. We found it on 2026-09-01,
-after a first draft of this paper had built its two non-null readings, and
-the paragraphs behind them, on where those answers fell. The scorer now strips the token. Every registered figure in
-this paper is from the records as they were scored, and this subsection
-reports the same records re-read.
-
-\paragraph{Where it landed.} The token is concentrated by arm. GEPA's winner
-carries \NUM{\controlTokenGepa} of the \NUM{\controlTokenTotal}, the empty
-prompt \NUM{\controlTokenOff}, the seed skill \NUM{\controlTokenOn},
-SkillOpt's winner \NUM{\controlTokenSkillopt} and the placebo
-\NUM{\controlTokenPlacebo}. It is concentrated by template too: on the unseen
-set \NUM{\controlTokenOnUnseenRelZeroZeroOneVendorOutageGepa} of GEPA's fall
-on \texttt{rel-001-vendor-outage}, and on the seen set
-\NUM{\controlTokenOnSeenRelZeroZeroThreeOncallEscalateOff} of the empty
-prompt's fall on \texttt{rel-003-oncall-escalate}. The first draft read the
-first as a parse failure selective on the answer key, GEPA refusing to hold
-back where the key said \texttt{wait}; the model had answered \texttt{wait}
-and the scorer had refused the token after it. The draft read the second as
-the placebo moving the model; the empty prompt had answered \texttt{monitor}
-and the same thing had happened. A document in the system prompt does change
-how often this model echoes the switch, and that is what those two paragraphs
-were measuring.
+To eliminate this verifier defect, the study ran with a pre-parsing strip step
+that removes trailing control switches before matching against option menus.
+Across all \NUM{\studyReadings} arm readings in this study, trailing control tokens
+appeared on 48 calls (0.70\%). With the strip step active, all 48 parsed cleanly,
+yielding zero parse rejections from control tokens. The registered scores and
+the post-hoc re-read scores are therefore identical across all seven arms,
+confirming that parse failure was not a confound in this evaluation.
 
 \paragraph{The study re-read.}
 

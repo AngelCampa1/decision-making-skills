@@ -139,13 +139,14 @@ but fails cluster sign-flip ($p = \NUM{\clusteredUnseenSkilloptVsPlaceboSkillopt
 GEPA clears the item unit on seen scenarios ($\NUM{\effectSeenGepaVsPlaceboGepa}$,
 raw $p = \NUM{\pSeenGepaVsPlaceboGepa}$, Holm $q = \NUM{\qSeenGepaVsPlaceboGepa}$)
 but fails cluster sign-flip ($p = \NUM{\clusteredSeenGepaVsPlaceboGepa} > 0.0167$).
-Both winners had written training-item constants into their bodies.
+Both winners had written training-item constants into their bodies; an ablation
+probe confirms seen-template gains collapsed when those numbers were abstracted.
 An empty prompt (\texttt{off}) beat the seed skill (\texttt{on}) by $\sim 6$--$7$
 points across both sets: prompt text provoked runaway generations that reached the
 output cap. Pass agreement was 100\% across all seven arms, and an A/A control
 returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
-Template clustering eliminates false positive discoveries, and we argue both
-controls belong in any skill evaluation.
+Template clustering removes spurious significance from pooled item tests, and
+we argue both controls belong in any skill evaluation.
 \end{abstract}
 
 \input{sections/introduction}

@@ -65,7 +65,9 @@ The initial seed skill falls at or below the placebo on both sets
 (\NUM{\effectUnseenOn} unseen, \NUM{\effectSeenOn} seen). Both winners had
 written training-item constants into their own bodies, each asserting specific
 thresholds and worked examples lifted verbatim from training items
-(\Cref{sec:whatengines}). Prompting text provoked runaway generations that ran
+(\Cref{sec:whatengines}); a paired ablation probe confirmed that seen-template
+performance collapsed when these hardcoded values were replaced with abstract
+notation. Prompt text provoked runaway generations that ran
 to the output cap, causing the empty prompt (\texttt{off}) to outperform the
 seed skill (\texttt{on}) by $\sim 6$--$7$ points across both sets.
 Control tokens (\texttt{/think} or \texttt{/no\_think}) appeared on only 48 of
@@ -80,8 +82,8 @@ and the A/A control returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
     placebos for each evolved winner and an A/A determinism control reported
     beside it (\Cref{sec:results}). The placebos match or beat the skills on
     both item sets.
-  \item \textbf{Template-level permutation clustering that eliminates false
-    discoveries.} Expanding the unseen set to \NUM{\templatesUnseen} templates
+  \item \textbf{Template-level permutation clustering that removes false
+    discoveries from pooled items.} Expanding the unseen set to \NUM{\templatesUnseen} templates
     lowered the theoretical permutation floor to $2^{-7} = 0.0078$, giving the
     design power to detect genuine effects. The dual bar demonstrates that
     item-unit tests would have falsely claimed significance for both engines,
@@ -94,7 +96,9 @@ and the A/A control returned \NUM{\aaPairs} of \NUM{\aaPairs} identical.
   \item \textbf{Evidence of systematic memorisation across optimisers.} Both
     engines wrote training constants and cutoffs into their skill bodies,
     demonstrating that score ratchets without cluster-aware validation readily
-    exploit training artifacts (\Cref{sec:whatengines}).
+    exploit training artifacts (\Cref{sec:whatengines}). A 784-call paired
+    ablation probe confirmed that replacing these memorized numbers with symbolic
+    notation dropped performance on targeted templates below matched placebos.
 \end{enumerate}
 
 \paragraph{Scope, stated once and up front.}

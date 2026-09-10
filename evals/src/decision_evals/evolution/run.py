@@ -60,7 +60,7 @@ from decision_evals.generators.generate import Item
 from decision_evals.runner import CallFn, RunRecord, load_records
 from decision_evals.solvers.arms import render_item
 
-#: Where the human-written body a search starts from lives.
+#: Where the seed skill body a search starts from lives.
 SEED_SKILL: Final = "skills/decision-making/SKILL.md"
 
 #: The corpus a run reads when it is told nothing else, relative to the
@@ -181,7 +181,7 @@ class EvolveResult:
 
 
 def seed_body(repo_root: Path, path: str = SEED_SKILL) -> str:
-    """The human-written skill, frontmatter stripped.
+    """The seed skill, frontmatter stripped.
 
     Frontmatter is the install contract -- name, description, the fields
     ``de check`` lints -- and not part of what the model reads. Handing it to an
