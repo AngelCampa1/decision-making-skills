@@ -46,13 +46,13 @@ change on this corpus, where every threshold is redrawn per item
 (\Cref{sec:corpus}). \textbf{Split by template, or the rule channel stays
 open.}
 
-Whether the transcription paid is a question this design cannot answer.
-\Cref{sec:whatengines} gives the per-template accounting. In summary, the
-second largest contribution to the study's largest gain sits on the one
-template the winning engine memorised a threshold for, and a template with
-no lifted constant contributes more. A corpus with a fixed threshold would
-have rewarded the same behaviour outright. This one rewarded it on the
-template it could, and no design we ran can separate the two.
+The constant ablation probe (\Cref{sec:whatengines}) demonstrates that the
+transcription paid directly on the templates it targeted. Replacing SkillOpt's
+hardcoded cutoffs for Loan Review with abstract notation dropped performance on
+that template by 10.7 percentage points, below its matched placebo. A corpus
+with fixed thresholds would have rewarded transcription outright. This one
+redrew thresholds per seed, so the lifted numbers helped only on the template
+instances that matched the search's training examples.
 
 \subsection{The placebo and the seed skill}
 

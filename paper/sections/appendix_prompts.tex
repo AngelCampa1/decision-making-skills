@@ -62,6 +62,21 @@ on every row of every arm that carries a body. \texttt{off} is empty and its
 \pth{results/evolution/}. All hashes reproduce from those files at the commit
 this paper is built from.
 
+\subsection{The ablated variants}
+
+The constant ablation probe (\Cref{sec:whatengines}) evaluated ablated variants of
+both evolved winners committed in \pth{datasets/ablations/}:
+\begin{itemize}
+  \item \texttt{gepa-ablated}: replaces verbatim warranty claim details
+    (\texttt{ticket 40078}, 23/22 months) with generic duration extraction and
+    replaces the unconditional \texttt{ANSWER: honour\_claim} with balanced
+    conditional logic (613 words vs 612 original, 25 sections).
+  \item \texttt{skillopt-ablated}: replaces hardcoded numerical cutoffs in worked
+    examples (Warranty $22 < 23$, Shipping $10 > 4$, Loan Review $737 \ge 665$,
+    Appeal Court $44 \le 56$) with abstract algebraic variables ($S \ge T$,
+    $D > T$, $E < T$) (1,735 words vs 1,723 original, 23 sections).
+\end{itemize}
+
 \subsection{The placebo, and how closely it matches}
 
 A placebo the reader cannot inspect is a placebo the reader cannot trust, so

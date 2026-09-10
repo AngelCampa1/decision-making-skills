@@ -1297,3 +1297,22 @@ on either set.**
 Detailed write-up:
 [`notebook/2026-09-10-the-second-evolution-study-two-passes-seven-unseen-and-neither-winner-beats-a-placebo.md`](../notebook/2026-09-10-the-second-evolution-study-two-passes-seven-unseen-and-neither-winner-beats-a-placebo.md).
 
+## Appended 2026-09-10: prompt constant ablation probe confirms memorization collapse
+
+784 calls on `ollama/qwen3:1.7b` at temperature 0, context window 16,384, output cap 4,096
+across all 392 items of the seven seen templates (seeds 10989 and 10996). Checkpointed at
+`results/evolution/2026-09-10-prompt-constant-ablation/`.
+
+Evaluated ablated variants of both evolved winners with hardcoded constants and worked-example
+numbers abstracted into generalized notation:
+- On `rel-010-loan-review`, abstracting SkillOpt's hardcoded numbers (`threshold 665, score 737`)
+  dropped accuracy from 0.9286 to 0.8214 (-0.1071), falling below its matched placebo (0.8571).
+- On `hrd-002-shipping-escalation`, removing GEPA's unconditional warranty recommendation dropped
+  accuracy from 0.8036 to 0.5714 (-0.2321).
+- Across all 392 seen items, having no prompt at all (`off`: 0.8673) outperformed original SkillOpt
+  (0.8112), ablated SkillOpt (0.8367), and ablated GEPA (0.8597).
+
+Detailed write-up:
+[`notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md`](../notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md).
+
+

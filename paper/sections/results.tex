@@ -405,6 +405,21 @@ accepted their frozen winners on what appeared to be perfect validation performa
 yet neither winner produced a generalizable advantage over a matched placebo
 when evaluated across holdout scenarios.
 
+\paragraph{The constant ablation probe.} To test whether the seen-set scores were
+sustained by these transcribed constants rather than general procedural rules, we
+evaluated ablated variants of both winners across all 392 seen items under
+identical conditions (784 calls, \pth{datasets/ablations/}). The ablated variants
+preserved section structure and word count (within 1\%) while abstracting worked-example
+numbers and scenario constants into symbolic notation (e.g., $S \ge T$ for Loan Review)
+and replacing unconditional positive answers with balanced conditional logic.
+On \texttt{rel-010-loan-review}, where SkillOpt quoted \texttt{threshold 665, score 737},
+abstracting to general notation dropped accuracy from 0.9286 (52 of 56) to 0.8214
+(46 of 56), falling below its matched placebo (0.8571).
+On \texttt{hrd-002-shipping-escalation}, removing GEPA's unconditional warranty recommendation
+dropped accuracy from 0.8036 to 0.5714 (a 23.2 percentage point loss). Across all 392 seen
+items, both ablated variants (0.8597 for GEPA, 0.8367 for SkillOpt) remained below the
+unprompted baseline (\texttt{off}: 0.8673).
+
 \subsection{Controls}
 
 \paragraph{A/A: \NUM{\aaPairs} of \NUM{\aaPairs} identical.} The placebo
