@@ -7,7 +7,7 @@ data goes, and which gate stands between each step and the next. Read it before
 `docs/RESEARCH_PROGRAMME.md`, which says what the experiments are and assumes
 you already know what runs them.
 
-Two things live here. `decision-making` is a skill someone installs: eight
+Two things live here. `decision-making` is a skill someone installs: nine
 markdown files and no runtime. `decision_evals` is the harness built to find out
 whether that skill helps, and it is most of the code.
 
@@ -368,8 +368,8 @@ Every file the skill ships beside `SKILL.md`, and whether the router names it:
 | `timing.md` | yes |
 <!-- /de:generated -->
 
-The two the router never names are control arms. `placebo.md` is token- and
-structure-matched to `SKILL.md`, and `placebo-council.md` to `council.md`. Each
+The two the router never names are control arms. `placebo.md` is word-count-
+and structure-matched to `SKILL.md`, and `placebo-council.md` to `council.md`. Each
 exists so that "the skill helped" and "any document of that length helped" are
 not the same observation. Which control stands in for which body is declared in
 `[tool.decision-evals.placebos]` and repeated in each file's own `matched_to`

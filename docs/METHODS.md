@@ -208,7 +208,7 @@ question and is not part of the comparison:
 | `placebo` | A document matched to the skill on word count and structure, so that a gain over `off` can be told apart from a gain from any document that size. |
 | `cot` | The plainest step-by-step instruction. The tripwire for whether the skill is an expensive way to say think. |
 | `in_situ` | The skill delivered the way an install delivers it, alongside whatever else is in the prompt. Ecological validity, not effect size. |
-| `candidate` | A machine-written body, delivered exactly as `on` delivers a human one. The arm an evolution engine's output is scored in, so that what changed between them is the author. |
+| `candidate` | An evolved body, delivered exactly as `on` delivers the seed skill. The arm an evolution engine's output is scored in, so that what changed between them is the optimizer. |
 <!-- /de:generated -->
 
 A placebo is word-count- and structure-matched filler, and the match is enforced

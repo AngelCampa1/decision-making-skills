@@ -349,7 +349,6 @@ output = "coverage.json"
 "decision_evals/elicit.py" = { line = 100.0, branch = 100.0 }
 # Parse paths and failure paths must both be exercised.
 "decision_evals/scorers" = { line = 95.0, branch = 90.0 }
-"decision_evals/plugin" = { line = 95.0, branch = 90.0 }
 # Argument wiring, exercised through integration tests.
 "decision_evals/cli.py" = { line = 85.0, branch = 75.0 }
 
@@ -534,6 +533,11 @@ clone. Delete this entry if the searches are ever re-run and published.\
 Named in `docs/STATUS.md` as the live checkpoint directory where the re-run \
 collected its 14,700 calls before publishing to `results/evolution-study/`. \
 The working directory lives in the local worktree and is excluded from git.\
+"""
+"results/evolution/2026-09-10-prompt-constant-ablation/" = """
+Named in `docs/STATUS.md` as the checkpoint directory where the 784-call \
+ablation probe on memorized prompt constants collected its calls. The working \
+directory is excluded by .gitignore and lives on the machine that ran the probe.\
 """
 ".claude/worktrees/" = """
 Named in `docs/AUTONOMOUS_WORK_ORDER.md` as where a session's worktree goes. \

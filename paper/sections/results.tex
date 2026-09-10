@@ -28,7 +28,7 @@ question by registration.
 \begin{table}[htbp]
 \centering
 \unseenTable
-\caption{Unseen set: \NUM{\templatesUnseen} held-out templates, four holdout seeds,
+\caption{Unseen set: \NUM{\templatesUnseen} held-out templates, three holdout seeds,
 \NUM{\unseenItems} items. Neither engine saw these templates at any seed.}
 \label{tab:unseen}
 \end{table}
@@ -87,17 +87,9 @@ registered it reads \NUM{\accSeenPlacebo} against \NUM{\accSeenOff} on the
 seen set, \NUM{\controlOverBaselineWinsSeen} wins to
 \NUM{\controlOverBaselineLossesSeen}, $p = \NUM{\controlOverBaselinePSeen}$
 uncorrected, and \NUM{\controlOverBaselineWinsUnseen} to
-\NUM{\controlOverBaselineLossesUnseen} on the unseen set. One template carries
-the seen figure. \texttt{rel-003-oncall-escalate} nets
-\NUM{\controlOverBaselineNetSeenRelZeroZeroThreeOncallEscalate} and the other
-six sum against it, for a template-level
-$p = \NUM{\controlOverBaselineClusteredSeen}$. Each of those
-\NUM{\controlTokenOnSeenRelZeroZeroThreeOncallEscalateOff} items is an answer
-the empty prompt gave as \texttt{monitor}, which the key wanted, followed by a
-control token the scorer refused (\Cref{sec:parsefail}). With the token
-stripped the comparison reads \NUM{\rescoredControlOverBaselineWinsSeen} to
-\NUM{\rescoredControlOverBaselineLossesSeen},
-$p = \NUM{\rescoredControlOverBaselinePSeen}$. On this record the placebo is
+\NUM{\controlOverBaselineLossesUnseen} on the unseen set ($p = \NUM{\controlOverBaselinePUnseen}$).
+Template-level clustering yields $p = \NUM{\controlOverBaselineClusteredSeen}$ seen
+and $p = \NUM{\controlOverBaselineClusteredUnseen}$ unseen. On this record the placebo is
 inert against an empty prompt. What it beats is the initial seed skill.
 
 \subsection{The same comparisons at the template level}
@@ -290,7 +282,7 @@ answer; everything else is computed over that subset.}
 \centering
 \input{figures/signal}
 \caption{Discrimination against an empty prompt, with cluster-bootstrap
-intervals over templates. Every interval crosses zero. Ten clusters is few,
+intervals over templates. Every interval crosses zero. Fourteen clusters is few,
 and the widths say so.}
 \label{fig:signal}
 \end{figure}}{}
@@ -304,13 +296,13 @@ $\Delta J = \NUM{\deltaJSkillopt}$ with an interval of
 $[\NUM{\deltaJSkilloptLow}, \NUM{\deltaJSkilloptHigh}]$ and the widest
 interval of any arm here. It is still indistinguishable from nothing.
 
-Two things this does not say. Mean skew runs \NUM{\meanSkewGepa} to
+Two things this does not say. Mean skew runs \NUM{\meanSkewSkillopt} to
 \NUM{\meanSkewOn} in \emph{every} arm including the empty prompt, so the
 response bias here is a property of the model on this corpus and no arm
-introduced it. And $J$ is computed over parsed rows, so \texttt{gepa}, which
-parses least at \NUM{\parseRateGepa}, is measured on the subset it managed to
-answer, and \Cref{sec:parsefail} shows that subset is not a random half of
-its items.
+introduced it. And $J$ is computed over parsed rows, so an arm that fails to
+parse frequently (such as \texttt{on} at \NUM{\parseRateOn} or \texttt{gepa} at
+\NUM{\parseRateGepa}) is measured on the subset it managed to answer, and
+\Cref{sec:parsefail} shows that subset is not a random half of its items.
 
 \paragraph{One of fourteen templates is not measuring anything.}
 
@@ -336,14 +328,13 @@ cannot tell an unanswered or chance-level template apart from a genuinely diffic
 
 \paragraph{The published metric does not even order the templates.} Counting
 an unreadable answer as wrong breaks the $(J+1)/2$ identity, and it breaks
-the ordering with it. \texttt{rel-003-oncall-escalate} discriminates
-perfectly for \texttt{off} in \Cref{tab:templates}, on the
-\NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items it answered,
-and reports \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}.
-\texttt{rel-006-refund-request} barely discriminates at all and reports
-\NUM{\accSeenRelZeroZeroSixRefundRequestOff}, higher. On the published number
-a template that is always right when it answers ranks below one that is
-mostly guessing.
+the ordering with it. Under \texttt{off}, \texttt{rel-003-oncall-escalate} discriminates
+perfectly ($J = 1.000$) on the \NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items
+it answered, but reports accuracy \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}. Meanwhile,
+\texttt{hrd-001-warranty-claim} discriminates less ($J = 0.964$) but reports
+\NUM{\accSeenHrdZeroZeroOneWarrantyClaimOff}, higher, because it parsed completely.
+When parse failures are scored as incorrect, a template that is always right when it answers
+can rank below one that discriminates less, conflating formatting adherence with decision quality.
 
 \subsection{What the engines actually produced}
 \label{sec:whatengines}

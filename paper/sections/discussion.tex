@@ -30,7 +30,7 @@ acceptance gate, or any test that asks how often a no-better candidate would
 pass it, would close the gap, and nothing about either architecture prevents
 that.
 
-\subsection{Memorisation is the reachable optimum, not a bug}
+\subsection{Memorisation as the reachable optimum}
 
 Both winners wrote training-item constants into the skill body, and both
 landed on the same training template with different numbers
@@ -58,10 +58,10 @@ instances that matched the search's training examples.
 
 A first draft of this paper titled this subsection ``the placebo moved the
 model'', on the seen-set gap between the placebo and an empty prompt. That
-gap was one template's refused answers and it closes under the re-read
+gap was one template's refused answers and it was inert under the re-read
 (\Cref{sec:parsefail}). What stands is the comparison against the seed skill:
 the placebo, a document of the same length and shape whose content
-carries no method, scores above it on both item sets. The registration tests
+carries no method, scores at or above it on both item sets. The registration tests
 only the direction of an arm helping, so no $p$ attaches to that gap.
 
 Read one way that is a warning about the seed skill: on this corpus and this
@@ -74,12 +74,12 @@ arm's own figures carefully.
 
 The largest thing this run moved points at the harness question rather than
 the content question. Nearly every unreadable answer from the seed skill and
-the placebo is a generation that ran to the output cap without concluding,
-and the placebo produces the most of any arm (\Cref{sec:parsefail}). On a
-single forced choice that is worth a few points and reads as noise. In an
-agent loop, a model that will not stop is a different kind of failure, and
-nothing here measures it. One winner suppresses the runaways and one does
-not, and the arm that provokes them hardest is a document with no content.
+the placebos is a generation that ran to the output cap without concluding;
+the seed skill produces the most of any arm (\NUM{\atCapOn} across both sets,
+compared to \NUM{\atCapPlacebo} for \texttt{placebo} and \NUM{\atCapOff} for
+\texttt{off}; \Cref{sec:parsefail}). On a single forced choice that is worth
+a few points and reads as noise. In an agent loop, a model that will not stop
+is a different kind of failure, and nothing here measures it.
 
 \subsection{Where this leaves the availability and optimisation results}
 
@@ -120,8 +120,7 @@ rule.
 
 The claim we are entitled to is that on \NUM{\studyModel}, on this corpus,
 under these controls, neither engine's output beat a document-shaped placebo
-as registered, and the one that scored below an empty prompt did so on our
-scorer's reading of a control token. Harness variance exceeds model variance
+as registered. Harness variance exceeds model variance
 by roughly $7.8\times$ on one factorial design~\citep{harnessdisclosure2026},
 so transfer to another scaffold should not be assumed. That is the warning
 that literature issues about everyone else's numbers, and we apply it to

@@ -24,13 +24,15 @@ One skill, four arms, the same items in every arm, paired by item.
 | `placebo` | Control + word- and structure-matched filler | Isolates the length effect |
 | `cot` | Control + "Think step by step" | Isolates the generic-reasoning effect |
 
-Four arms, and the harness names five. The fifth, `in_situ`, holds the
-treatment fixed and changes the venue: the same skill body delivered by
-`--append-system-prompt`, which is how an install delivers it. It asks whether
-the effect survives a real host prompt, a question about ecological validity, so
-it stays out of this table. [`METHODS.md`](METHODS.md) renders all five from
-`solvers/arms.py`. Noted 2026-08-21; every rule of Version 1 stands unchanged,
-and no completed run was conducted under anything but what is written here.
+Four arms, and the harness names six in `solvers/arms.py` (adding `in_situ`
+and `candidate`). The fifth, `in_situ`, holds the treatment fixed and changes the
+venue: the same skill body delivered by `--append-system-prompt`, which is how
+an install delivers it. It asks whether the effect survives a real host prompt,
+a question about ecological validity, so it stays out of this table. The sixth,
+`candidate`, evaluates an evolved skill candidate body. [`METHODS.md`](METHODS.md)
+renders the arms from `solvers/arms.py`. Noted 2026-08-21; every rule of Version 1
+stands unchanged, and no completed run was conducted under anything but what is
+written here.
 
 Three rules make this a fair comparison rather than a demonstration:
 

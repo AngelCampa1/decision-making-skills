@@ -67,14 +67,10 @@ Ollama's \pth{/api/show} card can be read as an isolation receipt, and
 \texttt{assert\_isolated} refuses a card carrying a \texttt{SYSTEM} prompt,
 the local analogue of a planted instruction file. The study path does not
 call it: the only callers of \texttt{isolation\_receipt} in the repository
-are tests, so this run holds no isolation receipt. Reasoning output arrives in
-a field separate from the answer, and it is not recorded. The runner writes
-the answer text only, so a chain that is billed in \texttt{output\_tokens}
-leaves no other trace: for three of the five arms the median generation
-bills several hundred tokens against a recorded response of a few. That is
-the largest gap between what this study spent and what it published, and
-\citet{biderman2024lessons}, which we cite for publishing transcripts
-rather than scores, is the standard it misses.
+are tests, so this run holds no isolation receipt. Unlike the initial pilot
+where reasoning output was omitted, the seven-arm study records the full
+reasoning chain in the \texttt{reasoning} field on every record, satisfying
+the transcript-level disclosure standard of \citet{biderman2024lessons}.
 
 \paragraph{Governance.} The run is checkpointed and resumable, keyed so that
 a resume cannot silently re-run or silently skip. The A/A pass has its own

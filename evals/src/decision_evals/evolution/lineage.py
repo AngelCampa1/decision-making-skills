@@ -34,9 +34,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Final
 
-#: Engines whose candidates may appear in a lineage. ``seed`` is the human-
-#: written body the search started from, recorded as generation 0 so the
-#: comparison a study makes -- machine author against human author -- has both
+#: Engines whose candidates may appear in a lineage. ``seed`` is the seed
+#: skill body the search started from, recorded as generation 0 so the
+#: comparison a study makes -- evolved candidate against seed baseline -- has both
 #: sides in one file.
 ENGINES: Final[frozenset[str]] = frozenset({"seed", "gepa", "skillopt"})
 

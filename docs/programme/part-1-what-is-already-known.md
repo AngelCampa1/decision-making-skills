@@ -92,7 +92,7 @@ Project under IRT and concluded the training and teaming effects may not be
 real. Calibration training is still the strongest candidate *and* is one
 re-analysis away from the rest.
 
-Calibration has no counterpart among the four shipped procedures. Nothing in
+Calibration has no counterpart among the six shipped procedures. Nothing in
 `decision-making` elicits a probability from the *user's* decision, so no shipped
 procedure can be scored for calibration. `stats/calibration.py` is no longer
 uncalled, and this paragraph said it was until 2026-08-19: the `--confidence`

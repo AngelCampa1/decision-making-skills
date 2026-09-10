@@ -174,7 +174,8 @@ a clean checkout, which sees what a working directory cannot. A second workflow,
 `evals/src/decision_evals/` is the harness and the gates. `gate_steps()` in
 `cli.py` is the whole of `de check`, in order, and each step lives in the module
 it is named after: `docs.py`, `citations.py`, `provenance.py`, `decisions.py`,
-`wiring.py`, `skills.py`, `sync.py`, `drift.py`.
+`wiring.py`, `skills.py`, `sync.py`, `drift.py`, `claims.py`, `site.py`,
+`adjudication.py`, `corrections.py`, `rescore.py`.
 `scripts/run_triggers.py` is the runner behind every checkpointed model call on
 record. Track H's probes go through sub-agents instead, which is why they carry
 no checkpoint, no `total_cost_usd` and nothing for `SCORECARD.md`.

@@ -8,7 +8,7 @@ each with the record it comes from. The first section is the five-minute
 version. The rest is the same story with the arithmetic, and every number in it
 links to the run README, notebook entry or source file it was read from. The
 skill under test is [`decision-making`](../skills/decision-making/SKILL.md),
-six procedures behind one router, and the record behind the findings is twenty
+six procedures behind one router, and the record behind the findings is twenty-one
 published runs with their raw transcripts, indexed in
 [`RUN_INDEX.md`](RUN_INDEX.md).
 
@@ -40,12 +40,14 @@ different text for byte-identical prompts at temperature 0 whenever requests
 ran concurrently. A module at 100% coverage with no caller shipped twice, and a
 tested function nothing invoked made it three.
 
-The one controlled study that ran to completion, five arms over 728 items on a
-1.7B model, returned a registered null: two skill-evolution engines produced
-winners that had written the answer key into their own bodies, and neither beat
-a word-count-matched placebo after Holm. The unseen half of that design had
-three template clusters, which floors a one-sided sign test at 0.125, so those
-primaries could never have rejected. The bodies of both winners are lost.
+The controlled evaluations that ran to completion—the initial five-arm pilot and
+the pre-registered seven-arm study over 14,700 calls on a 1.7B model—returned
+registered nulls: two skill-evolution engines produced winners that had written
+training constants into their own bodies, and neither beat a matched placebo
+after Holm. The seven-arm study ran seven unseen templates, resolving the cluster-floor
+limitation of the pilot, and committed both winners' bodies under `results/evolution/`.
+A subsequent 784-call ablation probe confirmed that seen-template gains collapsed
+when memorized constants were removed.
 
 The one finding that repeats across every corpus version is small and about
 firing, which is upstream of helping: the opener sentence of the skill's
@@ -334,9 +336,12 @@ drove, so each arm is provably one fixed body that nobody can obtain
 ([`STATUS.md`](STATUS.md), appended 2026-08-28). Since 2026-09-02 the rule
 re-includes each search's `winner.md`, `winner.json`, `lineage.jsonl`,
 `run.json` and `search.log`, which would have kept both bodies had it landed
-before the run. A re-run with the winners' bodies committed and seven or more
-unseen templates is being prepared. Its prediction entry is not yet committed,
-no study call has been made, and nothing here predicts its result.
+before the run. The re-run was conducted on 2026-09-03 as a pre-registered
+seven-arm study across 14,700 calls with seven unseen templates
+([the run](../results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/README.md)),
+with both winner bodies committed under `results/evolution/` and tested alongside
+matched placebos. A follow-up targeted ablation probe on 2026-09-10 confirmed the
+memorisation findings ([`notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md`](../notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md)).
 
 ## 6. The opener sentence
 

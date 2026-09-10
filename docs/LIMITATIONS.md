@@ -74,16 +74,15 @@ local server with no quota and no served-model churn. The exposure did not bite
 in this run. It is still there, and a hosted venue would not have handed us that
 control for free.
 
-*Added 2026-08-28.* **The two evolved skill bodies were never committed and are
-now unrecoverable.** Both searches wrote into `results/evolution/`, which
-`.gitignore` excludes, and the directories are gone. Their SHA-256 hashes are on
-every record of the arms they drove, so the study can prove one fixed body
-produced each arm, and nobody outside this repository can obtain either body or
-check what the write-up says is in it. The seed skill, the placebo, the engines,
-the corpus, the split and the search configuration are all published, so both
-searches can be re-run; these two cannot be reproduced. The fix is to stop
-writing search output under an ignored path, and it does not recover what is
-already lost.
+*Added 2026-08-28, updated 2026-09-03.* **The two evolved skill bodies from the
+August 27 pilot were never committed and are unrecoverable.** Both pilot searches
+wrote into `results/evolution/`, which `.gitignore` excluded at the time, and the
+directories are gone. Their SHA-256 hashes are on every record of the arms they
+drove, so the study can prove one fixed body produced each arm, and nobody outside
+this repository can obtain either body or check what the write-up says is in it.
+The fix was implemented on 2026-09-02: `.gitignore` was amended to track five
+files per search, and the 2026-09-03 seven-arm study committed both winner bodies
+in full under `results/evolution/` alongside their lineages, manifests, and search logs.
 
 ## The statistics
 

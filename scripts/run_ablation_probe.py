@@ -11,18 +11,29 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
-
-from decision_evals.budget import BudgetLedger
-from decision_evals.evolution.run import items_for
-from decision_evals.evolution.venues import assert_cap_fits, call_fn, context_window, venue_for
-from decision_evals.generators import parse_roots
-from decision_evals.runner import run_arm
-from decision_evals.solvers.arms import build_arm
-from decision_evals.stats.paired import mcnemar_exact
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "evals" / "src"))
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+from decision_evals.budget import BudgetLedger  # noqa: E402
+from decision_evals.evolution.lineage import body_sha  # noqa: E402
+from decision_evals.evolution.run import items_for  # noqa: E402
+from decision_evals.evolution.venues import (  # noqa: E402
+    assert_cap_fits,
+    call_fn,
+    context_window,
+    venue_for,
+)
+from decision_evals.generators import parse_roots  # noqa: E402
+from decision_evals.runner import run_arm  # noqa: E402
+from decision_evals.solvers.arms import build_arm  # noqa: E402
+from decision_evals.stats.paired import mcnemar_exact  # noqa: E402
 
 SEEN_TEMPLATES = [
     "hrd-001-warranty-claim",
@@ -44,7 +55,7 @@ ABLATED_ARMS = {
 }
 
 
-def load_study_records(arm_label: str) -> dict[tuple[str, int], dict]:
+def load_study_records(arm_label: str) -> dict[tuple[str, int], dict[str, Any]]:
     """Load seen-set records from the published frozen study."""
     path = FROZEN_STUDY_DIR / f"records-{arm_label}.jsonl"
     if not path.exists():
@@ -60,11 +71,11 @@ def load_study_records(arm_label: str) -> dict[tuple[str, int], dict]:
 
 
 def analyze_ablation(
-    ablated_records: dict[str, dict],
-    original_records: dict[str, dict],
-    placebo_records: dict[str, dict],
-    off_records: dict[str, dict],
-) -> dict:
+    ablated_records: dict[tuple[str, int], dict[str, Any]],
+    original_records: dict[tuple[str, int], dict[str, Any]],
+    placebo_records: dict[tuple[str, int], dict[str, Any]],
+    off_records: dict[tuple[str, int], dict[str, Any]],
+) -> dict[str, Any]:
     """Compute paired statistics between original and ablated arms."""
     common_ids = sorted(
         set(ablated_records.keys())
@@ -190,6 +201,8 @@ def main() -> None:
             call=call,
             ledger=ledger,
             concurrency=1,
+            candidate_sha=body_sha(skill_body),
+            resume_fields=("item_id", "arm", "seed"),
         )
 
     # 4. Analysis and Comparison

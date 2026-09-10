@@ -76,17 +76,22 @@ considerably more than an evidence channel that only ever agrees with itself.
 [`docs/PROTOCOL.md`](docs/PROTOCOL.md) carries the standing methodology, and
 [`notebook/`](notebook/) the running research log.
 
-### One measurement now bears on this table, and leaves it empty
+### The controlled evaluations on decision quality, and why the table stays empty
 
-The shipped skill has been measured on decision quality. On 2026-08-27 it ran as
-the `on` arm of a five-arm study over 728 items, against an empty prompt, a
-word-count- and structure-matched placebo, and two automatically evolved skills.
-[The run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md) carries
-its records, its A/A control and its analysis.
+The shipped skill has been measured on decision quality across two major studies.
+On 2026-08-27 it ran as the `on` arm of an initial five-arm pilot study over 728 items
+([the pilot run](results/evolution-study/2026-08-27-53b4965-five-arm/README.md)).
+On 2026-09-03, it was evaluated in a pre-registered seven-arm study across two passes
+(14,700 calls total) against an empty prompt, a word-count- and structure-matched placebo,
+two length-matched per-winner placebos, and the frozen winners of GEPA and SkillOpt
+across 588 unseen and 392 seen items ([the study run](results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/README.md)).
+A follow-up 784-call targeted ablation probe on 2026-09-10 evaluated the effect of removing
+memorized prompt constants ([notebook](notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md)).
 
-It scored below the placebo on both item sets: 0.6786 against 0.6875 on unseen
-scenarios, 0.7398 against 0.7679 on the trained ones. Neither difference is
-significant, and neither is a verdict.
+In the seven-arm study, the seed skill scored at or below the placebo on both item sets:
+0.6803 against 0.7143 on unseen scenarios, and 0.8061 tied with 0.8061 on the trained ones.
+No arm beat its matched placebo at the pre-registered dual threshold (Holm $q < 0.05$ and
+template cluster sign-flip $p < 0.0167$).
 
 The arena rule is what keeps the table empty, and it would have kept it empty
 had the skill won. `arenas.py` registers `ollama` as `dev`, the study's target
@@ -97,7 +102,7 @@ carry a verdict and cannot be built on the current corpus, which every hosted
 model measured so far solves with an empty prompt; the evidence is in
 [`docs/STATUS.md`](docs/STATUS.md).
 
-The question has now been asked once, under controls, and the answer it got is
+The question has now been asked under rigorous controls, and the answer it got is
 scoped to one 1.7B model.
 
 ## The caveat that used to qualify every number on record
@@ -127,15 +132,15 @@ three arms, one corpus revision. It says this instrument, on this corpus, is
 not solved by a trivial feature. It does not say the skill works, does not
 touch `verdict: UNTESTED`, and does not fill in the table above. A trigger
 measurement asks whether the skill fires. Whether firing produces a better
-decision is the other question, and the five-arm study above is the one
-measurement of it on record.
+decision is the other question, and the evolution studies above are the
+measurements of it on record.
 
 The rebuild is Track N, which has published through N10, and the corpus's own gates
 (Track N1) still apply to v4 going forward exactly as they applied to v1
 through v3. See [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md).
 
 None of this touches the table above, whose emptiness the section on the
-five-arm study accounts for.
+controlled studies accounts for.
 
 ## Corrections
 

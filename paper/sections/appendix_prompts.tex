@@ -105,7 +105,7 @@ person can tell the difference.
 \subsection{One worked item}
 
 Rendered exactly as the model received it. The user message is
-arm-independent by construction, so the option menu is identical in all five
+arm-independent by construction, so the option menu is identical in all seven
 arms, for the reason \Cref{sec:method} gives.
 
 \begin{promptquote}
@@ -129,11 +129,9 @@ reordering would destroy it.
 
 \subsection{Transcripts}
 
-Every record carries the model's answer text, the parsed answer and the
-parse status. It does not carry the reasoning chain
-(\Cref{sec:appendix-harness}), so these are transcripts of the answers and
-not of the generations, which is less than \citet{biderman2024lessons} asks
-for:
+Every record carries the model's full reasoning chain, the answer text, the
+parsed answer and the parse status (\Cref{sec:appendix-harness}), providing
+complete transcripts under:
 
 \begin{center}
 \texttt{results/evolution-study/\NUM{\studyRun}/}

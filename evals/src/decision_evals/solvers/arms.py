@@ -39,8 +39,8 @@ ArmName = Literal["off", "on", "placebo", "cot", "in_situ", "candidate"]
 
 #: Every arm, in reporting order. ``in_situ`` and ``candidate`` are last because
 #: they answer different questions from the first four: whether the skill still
-#: helps when it is not the only thing in the prompt, and whether a body no
-#: human wrote helps at all.
+#: helps when it is not the only thing in the prompt, and whether an evolved
+#: candidate body helps at all.
 #:
 #: ``candidate`` is appended rather than inserted, and the four published arms
 #: keep their positions, because a reporting order that shifts silently
@@ -76,9 +76,9 @@ ARM_PURPOSE: Final[dict[ArmName, str]] = {
         "else is in the prompt. Ecological validity, not effect size."
     ),
     "candidate": (
-        "A machine-written body, delivered exactly as `on` delivers a human one. "
+        "An evolved body, delivered exactly as `on` delivers the seed skill. "
         "The arm an evolution engine's output is scored in, so that what changed "
-        "between them is the author."
+        "between them is the optimizer."
     ),
 }
 

@@ -112,7 +112,7 @@ would be the error this document exists to avoid.
 | Residency | Pinned at `keep_alive: 60m` since 2026-08-27, sent on every request by the provider that builds them. A probe that day found two items answering deterministically to whether the model had just been loaded, which would have put a venue artifact inside the study's A/A control. **Not written into the run manifest**, so a replicator reads it from the provider source; corrected 2026-08-28, this row claimed it was recorded per pass |
 | No receipt from the hosted tier | NVIDIA Build offers no model card, so no receipt is obtainable there. That is recorded as *no receipt obtainable* and never as *isolation verified* |
 | In-situ arm | **Refused.** There is no pre-existing system prompt to append to, so the call would be the isolated arm under another arm's label |
-| Reasoning output | Returned in a field separate from the answer, carried on `CliResult` and **not written to the record**. Measured on `qwen3:4b`, 2026-08-19: 277 completion tokens for a `content` of `"4"`, the other 276 in `reasoning`; the runner writes the answer text only, so the 276 are billed and leave no trace. Corrected 2026-08-31, this row claimed the chain was recorded |
+| Reasoning output | Returned in a field separate from the answer. Omitted in the initial 2026-08-27 pilot, and **recorded on every row** in the 2026-09-03 seven-arm study under the `reasoning` column |
 
 **The `cot` arm is not safely measurable against a reasoning model, and that is
 a live threat to any grid run here.** `solvers/arms.py` compares a
@@ -321,7 +321,7 @@ and a reader given only `total_cost_usd` could not tell.
 | Ground truth | Computed from template rules, never authored |
 | Verifier | Deterministic code where the answer is objective |
 | Verifier testing | Fixtures of known-correct, known-wrong, paraphrased, and boundary responses, run before the verifier is trusted |
-| Zero-score triage | Every zero classified as agent failure / verifier defect / environment leak / infrastructure error |
+| Zero-score triage | Every zero classified across seven failure modes: `agent_wrong`, `format_violation`, `output_truncated`, `infrastructure`, `item_defect`, `verifier_defect`, `environment_leak` |
 | Judges | Secondary metrics only; binary verdict plus written critique; TPR and TNR reported separately |
 
 ### G: Governance

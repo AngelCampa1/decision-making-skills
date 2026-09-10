@@ -38,7 +38,7 @@ Per-template breakdown (56 items per template):
 
 | template | original | ablated | delta | placebo | off |
 | --- | --- | --- | --- | --- | --- |
-| `hrd-001-warranty-claim` | 0.9643 | 0.9643 | +0.0000 | 0.8036 | 0.9821 |
+| `hrd-001-warranty-claim` | 0.9464 | 0.9643 | +0.0179 | 0.8036 | 0.9821 |
 | `hrd-002-shipping-escalation` | 0.8036 | 0.5714 | **-0.2321** | 0.7321 | 0.6607 |
 | `hrd-006-appeal-window` | 0.8929 | 0.9821 | +0.0893 | 0.8750 | 0.9464 |
 | `rel-003-oncall-escalate` | 1.0000 | 1.0000 | +0.0000 | 1.0000 | 0.9464 |

@@ -1315,4 +1315,13 @@ numbers abstracted into generalized notation:
 Detailed write-up:
 [`notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md`](../notebook/2026-09-10-prompt-constant-ablation-confirms-memorization-collapse.md).
 
+### Call ledger update, appended 2026-09-10
 
+Incorporating the 14,700 calls of the seven-arm evolution study and the 784 calls of the prompt constant ablation probe:
+
+| run | calls | from |
+|---|---|---|
+| previous total | 19,940 | from table above |
+| seven-arm evolution study | 14,700 | `2026-09-03-e235b98-seven-unseen-v2/`, 7 arms × 980 × 2 passes + 980 A/A |
+| prompt constant ablation probe | 784 | `results/evolution/2026-09-10-prompt-constant-ablation/`, 2 arms × 392 items |
+| **new total** | **~35,424** | 19,940 + 14,700 + 784 |

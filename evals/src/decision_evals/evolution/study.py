@@ -98,9 +98,9 @@ class Arm:
 
     ``label`` is for people and ``kind`` is what
     :func:`~decision_evals.solvers.arms.build_arm` renders. They differ because
-    two arms of this study are both ``candidate``: a body no human wrote reaches
-    the model through one code path whichever engine wrote it, on purpose, so
-    that authorship is not confounded with delivery.
+    two arms of this study are both ``candidate``: an evolved candidate body reaches
+    the model through one code path whichever engine optimized it, on purpose, so
+    that candidate optimization is not confounded with delivery.
 
     The label is also the arm's file name, ``records-<label>.jsonl``, and the
     figures read the arm back off that name. So it is one token, and it is
