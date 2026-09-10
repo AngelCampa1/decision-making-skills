@@ -16,9 +16,10 @@ would be the error the disclosure exists to prevent.
 \paragraph{Execution.} An OpenAI-compatible HTTP server, reached through
 Ollama's native \pth{/api/chat}. The target is \texttt{\NUM{\studyModel}}, at
 a context window of 16{,}384, output capped at 4{,}096 tokens,
-\texttt{temperature=0}, one process at a time. \NUM{\studyReadings} arm calls
-plus \NUM{\aaPairs} for the A/A control. The server is local, so the
-notional cost is zero and the guard is call count and wall clock.
+\texttt{temperature=0}, one process at a time. Across two deterministic
+passes, the study executed $2 \times \NUM{\studyReadings} = 13{,}720$ arm calls,
+plus \NUM{\aaPairs} calls for the A/A control (14,700 calls in all). The server
+is local, so the notional cost is zero and the guard is call count and wall clock.
 
 \paragraph{Tools.} None. No tool use, no retrieval, no MCP, no filesystem
 access. Nothing reads a working directory, so the auto-memory and

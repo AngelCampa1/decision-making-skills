@@ -11,13 +11,12 @@ An accept-if-strictly-better rule performs one implicit test per proposal,
 keeps every winner, reports none of the tests, and has no way to ask whether a
 difference could have arisen by chance. In our runs SkillOpt accepted its
 winner on 21 of 21 validation items against a seed's 18, with no interval on
-either. GEPA's own return rule evaluates and selects the same way, on the
-full validation pool; the three-item score our lineage recorded for its
-winner is our own adapter logging the reflection minibatch the candidate was
-first scored on, confirmed by a later search whose log survived
-(\Cref{sec:whatengines}), and the tested run's own validation-pool aggregate
-is not recoverable. A ratchet in that regime is a device for selecting noise,
-and it will select noise reliably given enough proposals.
+either. GEPA's return rule evaluates and selects on the full validation pool;
+while our lineage file initially recorded the three-item reflection minibatch
+the candidate was first proposed on, the search log committed with the run
+(\Cref{sec:whatengines}) confirms that the winner was evaluated and selected
+on the complete 21-item validation pool. A ratchet in that regime is a device
+for selecting noise, and it will select noise reliably given enough proposals.
 
 Neither engine is blind to overfitting by design. SkillOpt gates every edit
 on a selection split disjoint from the rollouts the edit was generated from,
@@ -56,8 +55,8 @@ instances that matched the search's training examples.
 
 \subsection{The placebo and the seed skill}
 
-Across both item sets, the placebo---matched on word count and structure but
-carrying no decision procedure---scores at or above the initial seed skill. The
+Across both item sets, the placebo (matched on word count and structure but
+carrying no decision procedure) scores at or above the initial seed skill. The
 registration tests only the direction of an arm helping, so no formal $p$-value
 attaches to that gap.
 

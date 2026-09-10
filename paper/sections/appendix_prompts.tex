@@ -137,9 +137,10 @@ complete transcripts under:
 \texttt{results/evolution-study/\NUM{\studyRun}/}
 \end{center}
 
-\noindent One file per arm of \NUM{\totalItems} records each, plus the A/A
-pass in its own file. \NUM{\studyReadings} arm records and \NUM{\aaPairs}
-control records, all committed.
+\noindent One file per arm of \NUM{\totalItems} records each per pass, plus
+the A/A pass in its own file. Across both passes, 13{,}720 arm records and
+\NUM{\aaPairs} control records are committed (14,700 records in all), with
+the second pass preserved under \pth{pass-2/}.
 
 Holdout seeds are published with them. Contamination here is managed by
 regeneration between runs: a reader can mint the exact item set this study

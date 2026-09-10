@@ -582,7 +582,7 @@ def cluster_sign_flip(
     totals = np.array(
         [diffs[labels == label].sum() for label in np.unique(labels)], dtype=np.float64
     )
-    live = totals[totals != 0.0]
+    live = totals[~np.isclose(totals, 0.0, atol=1e-12)]
     k = int(live.size)
     if k == 0:
         return SignFlipResult(0.0, 1.0, 0, 1.0, True)

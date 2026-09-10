@@ -6,7 +6,10 @@
 \subsection{Generation}
 
 Items are minted from parameterised YAML templates with \emph{computed} ground
-truth, in the style of GSM-Symbolic~\citep{gsmsymbolic2024}. Each template
+truth, in the style of GSM-Symbolic~\citep{gsmsymbolic2024}. The 14 templates
+span two distinct task suites: six hard rule-selection templates (\texttt{hrd-})
+requiring conditional threshold selection, and eight operational reliability
+scenarios (\texttt{rel-}) evaluating policy trade-offs. Each template
 declares variables, a set of short factual statements, a question, a fixed
 two-option menu, and a solution expression evaluated against the sampled
 variables. The expression is restricted to a whitelisted abstract syntax tree:

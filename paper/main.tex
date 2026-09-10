@@ -87,6 +87,13 @@
 % generated/tables.tex. None of those is transcribed by hand: a figure that goes
 % stale becomes an undefined control sequence and fails the build, which is the
 % intended failure.
+%
+% Three classes of numbers are typed by hand and identified in the prose:
+%   Class 1: Figures from cited literature (verified against refs.bib quotes).
+%   Class 2: Benchmark configuration constants (context window, output cap).
+%   Class 3: Exploratory sub-agent probes and validation search logs (the ceiling
+%            probes in Appendix C, search logs and constant ablations in Section 4.4,
+%            and per-template skew figures in Section 4.3).
 \IfFileExists{generated/macros.tex}{\input{generated/macros}}{}
 \IfFileExists{generated/tables.tex}{\input{generated/tables}}{}
 

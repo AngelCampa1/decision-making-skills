@@ -120,7 +120,7 @@ _DECORATION: Final = re.compile(r"^[\s*_`\"'\[]+|[\s*_`\"'\].,;:!]+$")
 #: rescore a committed record: a record's ``correct`` is what the scorer read
 #: at the time, and ``figures.rescored_macros`` reports the difference beside
 #: the registered figures rather than in their place.
-_CONTROL_TOKEN: Final = re.compile(r"\s*/(?:no_)?think\s*$", re.IGNORECASE)
+_CONTROL_TOKEN: Final = re.compile(r"(?:\s*/(?:no_)?think)+\s*$", re.IGNORECASE)
 
 
 def last_answer_line(response: str) -> str | None:

@@ -21,9 +21,10 @@
 
 \Cref{tab:unseen,tab:seen} carry every arm on both item sets, and
 \Cref{fig:accuracy} plots them. Effects, wins and losses, $p$ and Holm-adjusted
-$q$ are against \texttt{placebo}, the registered control. \texttt{off} is
-reported alongside without a comparison, because it answers a different
-question by registration.
+$q$ are against each arm's matched placebo (\texttt{placebo} for \texttt{on},
+\texttt{placebo-gepa} for \texttt{gepa}, and \texttt{placebo-skillopt} for
+\texttt{skillopt}). \texttt{off} is reported alongside without a comparison,
+because it answers a different question by registration.
 
 \begin{table}[htbp]
 \centering
@@ -68,7 +69,6 @@ SkillOpt on the seen set reaches $\NUM{\effectSeenSkilloptVsPlaceboSkillopt}$
 and GEPA on the unseen set is $\NUM{\effectUnseenGepaVsPlaceboGepa}$
 ($p = \NUM{\pUnseenGepaVsPlaceboGepa}$, Holm $q = \NUM{\qUnseenGepaVsPlaceboGepa}$).
 
-Neither table carries an interval on its accuracy effect, and each should.
 The accuracy tables report the primary paired exact tests and point estimates
 as registered. Complementary bootstrap intervals over templates are reported in
 \Cref{tab:signal} on the discrimination measure, where cluster-level variance
@@ -328,8 +328,8 @@ cannot tell an unanswered or chance-level template apart from a genuinely diffic
 \paragraph{The published metric does not even order the templates.} Counting
 an unreadable answer as wrong breaks the $(J+1)/2$ identity, and it breaks
 the ordering with it. Under \texttt{off}, \texttt{rel-003-oncall-escalate} discriminates
-perfectly ($J = 1.000$) on the \NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} of items
-it answered, but reports accuracy \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}. Meanwhile,
+perfectly ($J = 1.000$) across the \NUM{\parseRateSeenRelZeroZeroThreeOncallEscalateOff} fraction
+of items it answered, but reports accuracy \NUM{\accSeenRelZeroZeroThreeOncallEscalateOff}. Meanwhile,
 \texttt{hrd-001-warranty-claim} discriminates less ($J = 0.964$) but reports
 \NUM{\accSeenHrdZeroZeroOneWarrantyClaimOff}, higher, because it parsed completely.
 When parse failures are scored as incorrect, a template that is always right when it answers

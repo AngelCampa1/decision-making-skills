@@ -261,22 +261,21 @@ Last worked through 2026-09-10, against the seven-arm study at
       an author with three `cs.*` papers between three months and five years
       old. The whole `cs.*` archive is one endorsement domain, so one
       endorsement covers the cross-lists too
-- [ ] **Blocked on the maintainer.** Release `v1.0.0` tagged at the landed
+- [ ] **Blocked on the maintainer.** Release `v1.0.2` tagged at the landed
       commit. The title page names that tag beside the repository URL, so the
       tag has to point at the commit the package was built from. It waits on
       Zenodo being enabled for the repository first, because the release is
       what mints the DOI
 - [x] The metadata abstract fits arXiv's field. The PDF abstract runs to about
-      2,890 characters and arXiv refuses more than 1,920. A 1,914-character
+      2,890 characters and arXiv refuses more than 1,920. A 1,785-character
       version is in [`SUBMISSION.md`](SUBMISSION.md); every figure in it was
-      read against `generated/macros.tex` on 2026-09-01 and the 2.6 ratio is
-      paired with the seen-set MDE it was computed from
+      read against `generated/macros.tex` on 2026-09-10
 - [x] The package compiles with no bibliography step. arXiv does not run
       BibTeX, `main.bbl` is gitignored, and the copy on disk on 2026-09-01
       predated the last `refs.bib` change and rendered one citation as `[?]`.
       `make arxiv` now rebuilds before it packs. The file set it packs was
-      compiled with three passes of `pdflatex` and nothing else on 2026-09-03:
-      31 pages, no warnings, no undefined references
+      compiled with three passes of `pdflatex` and nothing else on 2026-09-10:
+      29 pages, no warnings, no undefined references
 - [x] `\date` carries a fixed date. It was `\today` until 2026-09-01, and
       arXiv rebuilds PDFs from source
 - [x] Use of generative AI disclosed in the paper, as arXiv's moderation policy
