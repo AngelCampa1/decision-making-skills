@@ -530,6 +530,11 @@ empty `results/evolution/` survives on the machine that ran the searches, so \
 the reference resolves in a working directory and cannot resolve in a clean \
 clone. Delete this entry if the searches are ever re-run and published.\
 """
+"results/evolution/2026-09-03-514dd6c-study-seven-unseen-v2/" = """
+Named in `docs/STATUS.md` as the live checkpoint directory where the re-run \
+collected its 14,700 calls before publishing to `results/evolution-study/`. \
+The working directory lives in the local worktree and is excluded from git.\
+"""
 ".claude/worktrees/" = """
 Named in `docs/AUTONOMOUS_WORK_ORDER.md` as where a session's worktree goes. \
 `.gitignore` excludes everything under `.claude/` except `.claude/skills/`, and \

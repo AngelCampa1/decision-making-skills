@@ -1267,3 +1267,33 @@ shipped skill at 14.4%; and the longest reply that ends on its own is 3,252
 tokens, which is what rules out the shorter output cap that an earlier
 estimate off 83 calls had recommended. Both are in
 [`notebook/2026-09-03-the-study-is-paused-at-1190-calls-and-the-speed-options-were-costed-on-a-bad-sample.md`](../notebook/2026-09-03-the-study-is-paused-at-1190-calls-and-the-speed-options-were-costed-on-a-bad-sample.md).
+
+## Appended 2026-09-10: the second evolution study completes all 14,700 calls
+
+Appended, not rewritten. The re-run resumed from its 10,023-call checkpoint on
+disk and ran to completion across both passes and the A/A pass, scoring all
+14,700 calls (Exit 0). Published at
+[`results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/`](../results/evolution-study/2026-09-03-e235b98-seven-unseen-v2/).
+
+At the registered bar — Holm-adjusted item-unit q < 0.05 **and** template-unit
+cluster sign-flip p < 0.0167 — **neither evolved winner beat its matched placebo
+on either set.**
+
+- **Unseen set (588 items, seven templates):** SkillOpt gained +0.0918 against
+  `placebo-skillopt` at the item unit (115 wins to 61 losses, Holm q = 0.000086),
+  but failed the cluster sign-flip test at the template unit (p = 0.0313 > 0.0167).
+  GEPA scored -0.0561 against `placebo-gepa` (Holm q = 1.0000, cluster p = 0.9453).
+- **Seen set (392 items, seven templates):** GEPA gained +0.0510 against
+  `placebo-gepa` at the item unit (43 wins to 23 losses, Holm q = 0.0280), but
+  failed the cluster sign-flip test (p = 0.0781 > 0.0167). SkillOpt was +0.0026
+  against `placebo-skillopt` (Holm q = 1.0000, cluster p = 0.5000).
+- **Prompting cost:** Across both sets, an empty prompt (`off`) scored higher
+  than the human-written skill (`on`): 0.7500 vs 0.6803 on unseen (-0.0697), and
+  0.8673 vs 0.8061 on seen (-0.0612).
+- **Controls:** Pass agreement was 100% (588/588 unseen, 392/392 seen, p = 1.0000)
+  across all seven arms, and the A/A was 980 of 980 identical (p = 1.0000). Control
+  tokens appeared on 48 of 6,860 calls (0.70%) and all 48 parsed cleanly.
+
+Detailed write-up:
+[`notebook/2026-09-10-the-second-evolution-study-two-passes-seven-unseen-and-neither-winner-beats-a-placebo.md`](../notebook/2026-09-10-the-second-evolution-study-two-passes-seven-unseen-and-neither-winner-beats-a-placebo.md).
+

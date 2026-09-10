@@ -1,0 +1,524 @@
+{
+  "control": "placebo",
+  "sets": [
+    {
+      "label": "unseen",
+      "n_items": 588,
+      "accuracy": {
+        "off": 0.75,
+        "on": 0.6802721088435374,
+        "placebo": 0.7142857142857143,
+        "gepa": 0.6972789115646258,
+        "skillopt": 0.8044217687074829,
+        "placebo-gepa": 0.7534013605442177,
+        "placebo-skillopt": 0.7125850340136054
+      },
+      "comparisons": [
+        {
+          "item_set": "unseen",
+          "arm": "on",
+          "n_pairs": 588,
+          "accuracy": 0.6802721088435374,
+          "control_accuracy": 0.7142857142857143,
+          "arm_only": 64,
+          "control_only": 84,
+          "p_value": 0.9580166913780348,
+          "adjusted": 1.0,
+          "rejected": false
+        },
+        {
+          "item_set": "unseen",
+          "arm": "gepa",
+          "n_pairs": 588,
+          "accuracy": 0.6972789115646258,
+          "control_accuracy": 0.7534013605442177,
+          "arm_only": 82,
+          "control_only": 115,
+          "p_value": 0.9923970632202772,
+          "adjusted": 1.0,
+          "rejected": false
+        },
+        {
+          "item_set": "unseen",
+          "arm": "skillopt",
+          "n_pairs": 588,
+          "accuracy": 0.8044217687074829,
+          "control_accuracy": 0.7125850340136054,
+          "arm_only": 115,
+          "control_only": 61,
+          "p_value": 2.8573178415272396e-05,
+          "adjusted": 8.571953524581719e-05,
+          "rejected": true
+        }
+      ]
+    },
+    {
+      "label": "seen",
+      "n_items": 392,
+      "accuracy": {
+        "off": 0.8673469387755102,
+        "on": 0.8061224489795918,
+        "placebo": 0.8061224489795918,
+        "gepa": 0.8724489795918368,
+        "skillopt": 0.8112244897959183,
+        "placebo-gepa": 0.8214285714285714,
+        "placebo-skillopt": 0.8086734693877551
+      },
+      "comparisons": [
+        {
+          "item_set": "seen",
+          "arm": "on",
+          "n_pairs": 392,
+          "accuracy": 0.8061224489795918,
+          "control_accuracy": 0.8061224489795918,
+          "arm_only": 42,
+          "control_only": 42,
+          "p_value": 0.5433988188877013,
+          "adjusted": 0.9999999999999989,
+          "rejected": false
+        },
+        {
+          "item_set": "seen",
+          "arm": "gepa",
+          "n_pairs": 392,
+          "accuracy": 0.8724489795918368,
+          "control_accuracy": 0.8214285714285714,
+          "arm_only": 43,
+          "control_only": 23,
+          "p_value": 0.009328630177010504,
+          "adjusted": 0.027985890531031513,
+          "rejected": true
+        },
+        {
+          "item_set": "seen",
+          "arm": "skillopt",
+          "n_pairs": 392,
+          "accuracy": 0.8112244897959183,
+          "control_accuracy": 0.8086734693877551,
+          "arm_only": 43,
+          "control_only": 42,
+          "p_value": 0.49999999999999944,
+          "adjusted": 0.9999999999999989,
+          "rejected": false
+        }
+      ]
+    }
+  ],
+  "aa": {
+    "item_set": "a/a",
+    "arm": "placebo (second pass)",
+    "n_pairs": 980,
+    "accuracy": 0.7510204081632653,
+    "control_accuracy": 0.7510204081632653,
+    "arm_only": 0,
+    "control_only": 0,
+    "p_value": 1.0,
+    "adjusted": 1.0,
+    "rejected": false
+  },
+  "passes": [
+    {
+      "label": "unseen",
+      "arms": [
+        {
+          "arm": "off",
+          "accuracy": [
+            0.75,
+            0.75
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "on",
+          "accuracy": [
+            0.6802721088435374,
+            0.6802721088435374
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo",
+          "accuracy": [
+            0.7142857142857143,
+            0.7142857142857143
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "gepa",
+          "accuracy": [
+            0.6972789115646258,
+            0.6972789115646258
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "skillopt",
+          "accuracy": [
+            0.8044217687074829,
+            0.8044217687074829
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo-gepa",
+          "accuracy": [
+            0.7534013605442177,
+            0.7534013605442177
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo-skillopt",
+          "accuracy": [
+            0.7125850340136054,
+            0.7125850340136054
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 588,
+              "identical": 588,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "seen",
+      "arms": [
+        {
+          "arm": "off",
+          "accuracy": [
+            0.8673469387755102,
+            0.8673469387755102
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "on",
+          "accuracy": [
+            0.8061224489795918,
+            0.8061224489795918
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo",
+          "accuracy": [
+            0.8061224489795918,
+            0.8061224489795918
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "gepa",
+          "accuracy": [
+            0.8724489795918368,
+            0.8724489795918368
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "skillopt",
+          "accuracy": [
+            0.8112244897959183,
+            0.8112244897959183
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo-gepa",
+          "accuracy": [
+            0.8214285714285714,
+            0.8214285714285714
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        },
+        {
+          "arm": "placebo-skillopt",
+          "accuracy": [
+            0.8086734693877551,
+            0.8086734693877551
+          ],
+          "agreement": [
+            {
+              "pass_index": 2,
+              "n_pairs": 392,
+              "identical": 392,
+              "different": 0,
+              "p_value": 1.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "controls": {
+    "gepa": "placebo-gepa",
+    "skillopt": "placebo-skillopt"
+  },
+  "secondary": {
+    "corrected": false,
+    "sets": [
+      {
+        "label": "unseen",
+        "n_items": 588,
+        "accuracy": {
+          "off": 0.75,
+          "on": 0.6802721088435374,
+          "placebo": 0.7142857142857143,
+          "gepa": 0.6972789115646258,
+          "skillopt": 0.8044217687074829,
+          "placebo-gepa": 0.7534013605442177,
+          "placebo-skillopt": 0.7125850340136054
+        },
+        "comparisons": [
+          {
+            "item_set": "unseen",
+            "arm": "placebo",
+            "n_pairs": 588,
+            "accuracy": 0.7142857142857143,
+            "control_accuracy": 0.75,
+            "arm_only": 64,
+            "control_only": 85,
+            "p_value": 0.9644303628204435,
+            "adjusted": 0.9644303628204435,
+            "rejected": false,
+            "control": "off"
+          },
+          {
+            "item_set": "unseen",
+            "arm": "gepa",
+            "n_pairs": 588,
+            "accuracy": 0.6972789115646258,
+            "control_accuracy": 0.7142857142857143,
+            "arm_only": 89,
+            "control_only": 99,
+            "p_value": 0.7887605452120806,
+            "adjusted": 0.7887605452120806,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "unseen",
+            "arm": "placebo-gepa",
+            "n_pairs": 588,
+            "accuracy": 0.7534013605442177,
+            "control_accuracy": 0.7142857142857143,
+            "arm_only": 76,
+            "control_only": 53,
+            "p_value": 0.02616176661195923,
+            "adjusted": 0.02616176661195923,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "unseen",
+            "arm": "skillopt",
+            "n_pairs": 588,
+            "accuracy": 0.8044217687074829,
+            "control_accuracy": 0.7142857142857143,
+            "arm_only": 113,
+            "control_only": 60,
+            "p_value": 3.4125819721243835e-05,
+            "adjusted": 3.4125819721243835e-05,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "unseen",
+            "arm": "placebo-skillopt",
+            "n_pairs": 588,
+            "accuracy": 0.7125850340136054,
+            "control_accuracy": 0.7142857142857143,
+            "arm_only": 69,
+            "control_only": 70,
+            "p_value": 0.5673132445486326,
+            "adjusted": 0.5673132445486326,
+            "rejected": false,
+            "control": "placebo"
+          }
+        ]
+      },
+      {
+        "label": "seen",
+        "n_items": 392,
+        "accuracy": {
+          "off": 0.8673469387755102,
+          "on": 0.8061224489795918,
+          "placebo": 0.8061224489795918,
+          "gepa": 0.8724489795918368,
+          "skillopt": 0.8112244897959183,
+          "placebo-gepa": 0.8214285714285714,
+          "placebo-skillopt": 0.8086734693877551
+        },
+        "comparisons": [
+          {
+            "item_set": "seen",
+            "arm": "placebo",
+            "n_pairs": 392,
+            "accuracy": 0.8061224489795918,
+            "control_accuracy": 0.8673469387755102,
+            "arm_only": 23,
+            "control_only": 47,
+            "p_value": 0.998726217550873,
+            "adjusted": 0.998726217550873,
+            "rejected": false,
+            "control": "off"
+          },
+          {
+            "item_set": "seen",
+            "arm": "gepa",
+            "n_pairs": 392,
+            "accuracy": 0.8724489795918368,
+            "control_accuracy": 0.8061224489795918,
+            "arm_only": 50,
+            "control_only": 24,
+            "p_value": 0.001686116667074035,
+            "adjusted": 0.001686116667074035,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "seen",
+            "arm": "placebo-gepa",
+            "n_pairs": 392,
+            "accuracy": 0.8214285714285714,
+            "control_accuracy": 0.8061224489795918,
+            "arm_only": 35,
+            "control_only": 29,
+            "p_value": 0.2661543880139211,
+            "adjusted": 0.2661543880139211,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "seen",
+            "arm": "skillopt",
+            "n_pairs": 392,
+            "accuracy": 0.8112244897959183,
+            "control_accuracy": 0.8061224489795918,
+            "arm_only": 42,
+            "control_only": 40,
+            "p_value": 0.4560783037763019,
+            "adjusted": 0.4560783037763019,
+            "rejected": false,
+            "control": "placebo"
+          },
+          {
+            "item_set": "seen",
+            "arm": "placebo-skillopt",
+            "n_pairs": 392,
+            "accuracy": 0.8086734693877551,
+            "control_accuracy": 0.8061224489795918,
+            "arm_only": 40,
+            "control_only": 39,
+            "p_value": 0.4999999999999993,
+            "adjusted": 0.4999999999999993,
+            "rejected": false,
+            "control": "placebo"
+          }
+        ]
+      }
+    ]
+  }
+}

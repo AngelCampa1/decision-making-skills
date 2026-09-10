@@ -1,0 +1,203 @@
+{
+  "request": {
+    "target_model": "ollama/qwen3:1.7b",
+    "sets": [
+      {
+        "label": "unseen",
+        "templates": [
+          "hrd-003-deposit-notice",
+          "hrd-005-customs-clearance",
+          "hrd-008-deposit-notice-costed",
+          "rel-001-vendor-outage",
+          "rel-002-deploy-window",
+          "rel-005-security-patch",
+          "rel-008-contract-renew"
+        ],
+        "seeds": [
+          10104,
+          10379,
+          10552
+        ]
+      },
+      {
+        "label": "seen",
+        "templates": [
+          "hrd-001-warranty-claim",
+          "hrd-002-shipping-escalation",
+          "hrd-006-appeal-window",
+          "rel-003-oncall-escalate",
+          "rel-006-refund-request",
+          "rel-007-capacity-scale",
+          "rel-010-loan-review"
+        ],
+        "seeds": [
+          10989,
+          10996
+        ]
+      }
+    ],
+    "run_aa": true,
+    "num_ctx": 16384,
+    "max_tokens": 4096,
+    "max_calls": 16000,
+    "max_seconds": 604800.0,
+    "alpha": 0.05,
+    "slug": "seven-unseen-v2",
+    "passes": 2,
+    "chunk": 8,
+    "templates_root": "datasets/templates,datasets/templates-hard",
+    "only_templates": [
+      "hrd-001-warranty-claim",
+      "hrd-002-shipping-escalation",
+      "hrd-003-deposit-notice",
+      "hrd-005-customs-clearance",
+      "hrd-006-appeal-window",
+      "hrd-008-deposit-notice-costed",
+      "rel-001-vendor-outage",
+      "rel-002-deploy-window",
+      "rel-003-oncall-escalate",
+      "rel-005-security-patch",
+      "rel-006-refund-request",
+      "rel-007-capacity-scale",
+      "rel-008-contract-renew",
+      "rel-010-loan-review"
+    ],
+    "holdout_ids": [
+      "hrd-003-deposit-notice",
+      "hrd-005-customs-clearance",
+      "hrd-008-deposit-notice-costed",
+      "rel-001-vendor-outage",
+      "rel-002-deploy-window",
+      "rel-005-security-patch",
+      "rel-008-contract-renew"
+    ]
+  },
+  "git_sha": "e235b981f83bb46f158376d4005d4923c59c4f00",
+  "ordering": "item-major",
+  "chunk": 8,
+  "passes": 2,
+  "templates_roots": [
+    "datasets/templates",
+    "datasets/templates-hard"
+  ],
+  "holdout_source": "explicit",
+  "out_pinned": true,
+  "arms": [
+    {
+      "label": "off",
+      "kind": "off",
+      "candidate_sha": null,
+      "control": null
+    },
+    {
+      "label": "on",
+      "kind": "on",
+      "candidate_sha": "edc3ee707754deaf533f924528c8515af891784b61376578b71f7f813c8800de",
+      "control": "placebo"
+    },
+    {
+      "label": "placebo",
+      "kind": "placebo",
+      "candidate_sha": "16ed9ebfceb94d0faa0839fce607ced7aeb7b3c2129027d33d59b47e922406bb",
+      "control": null
+    },
+    {
+      "label": "gepa",
+      "kind": "candidate",
+      "candidate_sha": "f7589ca49b4dda93956720a16c61d08828feeb0616e133bc69805a3739a4fafa",
+      "control": "placebo-gepa"
+    },
+    {
+      "label": "skillopt",
+      "kind": "candidate",
+      "candidate_sha": "7a2e27848a74e38d6701de9fc291132d1ab0ca3cdf023c45ad5bbc857e83628f",
+      "control": "placebo-skillopt"
+    },
+    {
+      "label": "placebo-gepa",
+      "kind": "placebo",
+      "candidate_sha": "f5bf23782274c0c8afd5c850dda439eda875947a284cb141edd25d41d48283c6",
+      "control": null
+    },
+    {
+      "label": "placebo-skillopt",
+      "kind": "placebo",
+      "candidate_sha": "461accfda038cc370516fb903ebb428a6c680487d577838922eaa89022ecdf6a",
+      "control": null
+    }
+  ],
+  "winner_placebos": {
+    "gepa": {
+      "placebo": "placebo-gepa",
+      "path": "datasets/placebos/placebo-gepa.md",
+      "sha": "f5bf23782274c0c8afd5c850dda439eda875947a284cb141edd25d41d48283c6",
+      "match": {
+        "skill_words": 612,
+        "placebo_words": 626,
+        "skill_sections": 8,
+        "placebo_sections": 8,
+        "tolerance": 0.15,
+        "skill_templates": 2,
+        "placebo_templates": 2,
+        "word_ratio": 1.022875816993464,
+        "ok": true
+      }
+    },
+    "skillopt": {
+      "placebo": "placebo-skillopt",
+      "path": "datasets/placebos/placebo-skillopt.md",
+      "sha": "461accfda038cc370516fb903ebb428a6c680487d577838922eaa89022ecdf6a",
+      "match": {
+        "skill_words": 1723,
+        "placebo_words": 1731,
+        "skill_sections": 11,
+        "placebo_sections": 11,
+        "tolerance": 0.15,
+        "skill_templates": 0,
+        "placebo_templates": 0,
+        "word_ratio": 1.0046430644225188,
+        "ok": true
+      }
+    }
+  },
+  "sets": {
+    "unseen": {
+      "items": 588,
+      "templates": [
+        "hrd-003-deposit-notice",
+        "hrd-005-customs-clearance",
+        "hrd-008-deposit-notice-costed",
+        "rel-001-vendor-outage",
+        "rel-002-deploy-window",
+        "rel-005-security-patch",
+        "rel-008-contract-renew"
+      ],
+      "seeds": {
+        "train": 0,
+        "validation": 0,
+        "holdout": 588,
+        "unassigned": 0
+      },
+      "fingerprint": "2633c1eab15c1dfbfad029c2692cd100951d9869333609edaef00202c6887037"
+    },
+    "seen": {
+      "items": 392,
+      "templates": [
+        "hrd-001-warranty-claim",
+        "hrd-002-shipping-escalation",
+        "hrd-006-appeal-window",
+        "rel-003-oncall-escalate",
+        "rel-006-refund-request",
+        "rel-007-capacity-scale",
+        "rel-010-loan-review"
+      ],
+      "seeds": {
+        "train": 0,
+        "validation": 0,
+        "holdout": 392,
+        "unassigned": 0
+      },
+      "fingerprint": "0d0f3f002024193b1167ccf951580e393ddd91df40e90ce283fb1524b4a1e916"
+    }
+  }
+}
